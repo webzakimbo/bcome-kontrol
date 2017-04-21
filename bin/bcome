@@ -27,5 +27,4 @@ BCOME.set( {
 ## Load the shell
 require 'irb/ext/multi-irb'
 IRB.parse_opts_with_ignoring_script
-#irb_method = (@direct_command && @direct_shell_commands.include?(@direct_command)) ? @direct_command.to_sym : nil
 IRB.irb nil, context
