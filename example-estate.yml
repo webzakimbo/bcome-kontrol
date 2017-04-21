@@ -1,0 +1,63 @@
+views:
+  - type: "collection"         ##-wbz
+    identifier: "wbz"
+        
+    views:
+      - type: "collection"     ##----prod
+        identifier: "prod"
+        network_driver:
+          - type: "ec2"
+            fog_key: "webzakimbo"
+            ec2_region: "us-west-1"   ### Should be some kind of division, rather than a specifier?
+
+        proxy_host:
+          by_host_or_ip: "52.212.121.50"
+
+        tag_filters:
+          - stage: "WbzProd"
+
+        views:
+          - type: "inventory"    ##------ all servers
+            identifier: "all"
+            network_driver: 
+              - type: "static"   ##------ just app servers
+
+          - type: "inventory"
+            identifier: "appautoscale"
+            tag_filters: 
+              - function: "static_application_server"
+
+  - type: "collection"           ##--ewok  
+    identifier: "ewok"      
+    network_driver:
+      - type: "ec2"
+        fog_key: "econsultancy"
+
+    views:
+      - type: "collection"        ##----dev
+        identifier: "dev"
+        proxy_host:
+          by_identifier: "EwokDevbastionserver"
+        tag_filters:
+          - stage: "EwokDev"
+        views:
+          - type: "inventory"     ##------all servers
+            identifier: "all"
+
+      - type: "collection"        ##----prod
+        identifier: "prod"    
+        proxy_host:
+          by_identifier: "EwokProdbastionserver"
+        tag_filters:
+          - stage: "EwokProd"
+        views:
+          - type: "inventory"     ##------all servers
+            identifier: "all"
+
+          - type: "inventory"     ##------all app servers
+            identifier: "appservers"
+            tag_filters:
+              - function: ["application_server", "worker_server", "sign_on_service"]
+
+
+
