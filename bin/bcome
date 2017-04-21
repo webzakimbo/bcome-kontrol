@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+# (C) Guillaume Roderick (webzakimbo)
+# MIT licence.
+
+require 'irb'
+require "irb/completion"
+require 'bcome'
+require 'yaml'
+
+load "#{File.dirname(__FILE__)}/../patches/irb.rb"
+
+START_PROMPT = "bcome"
+BCOME = ::Bcome::WorkspaceManager.new
+VERBOSE = true
+
+IRB.setup nil
+IRB.conf[:MAIN_CONTEXT] = IRB::Irb.new.context
+
+context = ::Bcome::Estate.init
+
+BCOME.set( {
+  :context => context,
+  :spawn => true
+})
+
+## Load the shell
+require 'irb/ext/multi-irb'
+IRB.parse_opts_with_ignoring_script
+#irb_method = (@direct_command && @direct_shell_commands.include?(@direct_command)) ? @direct_command.to_sym : nil
+IRB.irb nil, context
