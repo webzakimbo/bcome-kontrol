@@ -8,8 +8,6 @@ require "irb/completion"
 require 'bcome'
 require 'yaml'
 
-load "#{File.dirname(__FILE__)}/../patches/irb.rb"
-
 START_PROMPT = "bcome"
 BCOME = ::Bcome::WorkspaceManager.new
 VERBOSE = true
