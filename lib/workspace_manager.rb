@@ -15,6 +15,14 @@ class ::Bcome::WorkspaceManager
     return
   end
 
+  def invoke_on_current_context(method)
+    @context.send(method)
+  end
+
+  def object_is_current_context?(object)
+    @context == object
+  end
+
   def spawn_for_context(context)
     require 'irb/ext/multi-irb'
     IRB.parse_opts_with_ignoring_script

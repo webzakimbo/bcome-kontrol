@@ -18,7 +18,6 @@ module Bcome::CommonWorkspaceCommands
         :context => resource,
         :spawn => true
       })
-
     else
       puts "#{identifier} not found"
     end

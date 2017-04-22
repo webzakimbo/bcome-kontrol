@@ -24,7 +24,7 @@ module Bcome::Node
     end
 
     def prompt_breadcrumb
-      "#{parent.prompt_breadcrumb}> #{identifier}"
+      "#{parent.prompt_breadcrumb}> #{ is_current_context? ? identifier.cyan(:highlight) : identifier}"
     end
 
     def create_tree(views, top_level = false)

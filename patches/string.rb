@@ -1,4 +1,12 @@
 class String
+
+  # Simple palette with bold & background highlighting
+  # usage: "Foo bar".cyan
+  #        "Foo bar".cyan.bold
+  #        "Foo bar".cyan(:highlight)
+  #        "Foo bar".cyan(:highlight).bold
+
+
   # with thanks to http://simianuprising.com/wp-content/uploads/2012/08/solarized-reference-horizontal.png
   def colour_codes
     {
@@ -27,6 +35,10 @@ class String
     }
   end
 
+  def bold
+    return "\e[1m#{self}\033[0m"
+  end
+
   def method_missing(method_sym, *arguments, &black)
     unless colour_code = colour_codes[method_sym]
       super
@@ -40,8 +52,9 @@ class String
   end
 
   def swatch
+    puts "Colour | Colour Bold | Colour Highlight | Colour Highlight & Bold"
     colour_codes.keys.each do |colour_code|
-      puts "#{colour_code}:  #{send(colour_code)} #{send(colour_code, :highlight)}"
+      puts "#{colour_code}:  #{send(colour_code)} #{send(colour_code, :bold)} | #{send(colour_code, :highlight)}, #{send(colour_code, :highlight).bold}"
     end
   end
 end
