@@ -2,6 +2,7 @@ module Bcome::CommonWorkspaceCommands
 
   def ls
     new_line
+    puts view_title("\s#{@description}\n")
     @resources.each do |resource|
       puts "\t#{resource.identifier}"
     end
