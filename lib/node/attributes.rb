@@ -11,20 +11,24 @@ module Bcome::Node::Attributes
   end  
 
   def network_driver
-
+    return nil unless network_data
+    @network_driver ||= ::Bcome::Driver::Base.create_from_config(network_data)
+    return @network_driver
   end
 
-  def proxy
-
+  def ssh_proxy
+    return nil unless proxy_data
+    @ssh_proxy ||= ::Bcome::Ssh::Proxy.new(proxy_data)
+    return @ssh_proxy
   end
 
   ##-- end Attributes
 
-  def network_driver_data
-    get_instance_variable_for(:network_driver)      
+  def network_data
+    get_instance_variable_for(:network)      
   end  
 
-  def proxy_host_data
+  def proxy_data
     get_instance_variable_for(:proxy)
   end
 
