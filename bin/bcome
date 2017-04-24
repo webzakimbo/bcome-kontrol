@@ -26,16 +26,7 @@ IRB.conf[:MAIN_CONTEXT] = IRB::Irb.new.context
 
 estate = ::Bcome::Estate.init
 
-if @context_crumbs.any?
-  puts "deep loading"
-  BCOME.deep_set(estate, @context_crumbs) 
-else
-
-  BCOME.set( {
-    :context => estate,
-    :spawn => true
-  })
-end
+BCOME.deep_set(estate, @context_crumbs)
 
 ## Load the shell
 #require 'irb/ext/multi-irb'

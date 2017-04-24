@@ -6,9 +6,15 @@ class ::Bcome::WorkspaceManager
     set( { :context => context, :spawn => false})
     depth = crumbs.size
     crumbs.each_with_index do |crumb, index|
-      spawn = (depth == index-1) ? true : false
-      context = context.resources.select{|r| r.identifier == crumb }
-      set({ :context => context, :spawn => spawn } )
+      last_context = context
+      spawn = (depth == index+1) ? true : false
+      context = context.resources.select{|r| r.identifier == crumb }.first # TODO:  resource for identifier TODO identifiers must be unique at any given level
+      if context
+        set({ :context => context, :spawn => spawn } )
+      else
+        # The last crumb is not a context. We're going to invoke a method on the last context instead
+        last_context.send(crumb)  
+      end
     end
   end
 

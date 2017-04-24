@@ -22,6 +22,18 @@ module Bcome::Node
       set_view_attributes
     end
 
+    def foo
+      puts "bar"
+    end
+
+    def moo(woo)
+      puts "yeah: #{woo}"
+    end
+
+    def resources
+      @resources
+    end
+
     def prompt_breadcrumb
       "#{parent.prompt_breadcrumb}> #{ is_current_context? ? identifier.cyan(:highlight) : identifier}"
     end
