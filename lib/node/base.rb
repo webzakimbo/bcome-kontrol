@@ -5,6 +5,7 @@ module Bcome::Node
 
     include Bcome::Context
     include Bcome::CommonWorkspaceCommands
+    include Bcome::ConsoleColours
 
     INVENTORY_KEY = "inventory"
     COLLECTION_KEY = "collection"
@@ -14,7 +15,8 @@ module Bcome::Node
 
       @parent = params[:parent]
       @identifier = view_data["identifier"]
- 
+      @description = view_data["description"] 
+      raise ::Bcome::Exception::MissingDescriptionOnView.new unless @description
       raise ::Bcome::Exception::MissingIdentifierOnView.new unless @identifier
       @resources = []
     end

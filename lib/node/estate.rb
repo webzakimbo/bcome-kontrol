@@ -2,12 +2,17 @@ module Bcome::Node
   class Bcome::Estate < Bcome::Node::Base
 
     CONFIG_PATH = "config/bcome/estate.yml"
+
     ESTATE_IDENTIFIER = "bcome"
+    ESTATE_DESCRIPTION = "Estate - available views"
 
     class << self
       def init
         estate = new(
-          :view_data => { "identifier" => ESTATE_IDENTIFIER }
+          :view_data => { 
+            "identifier" => ESTATE_IDENTIFIER,
+            "description" => ESTATE_DESCRIPTION
+          }
         )
         estate.load_resources
         return estate
