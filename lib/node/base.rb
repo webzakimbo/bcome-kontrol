@@ -6,27 +6,28 @@ module Bcome::Node
     include Bcome::Context
     include Bcome::CommonWorkspaceCommands
     include Bcome::ConsoleColours
+    include Bcome::Node::Attributes
 
     INVENTORY_KEY = "inventory"
     COLLECTION_KEY = "collection"
 
     def initialize(params)
-      view_data = params[:view_data]
-
+      @raw_view_data = params[:view_data]
+      set_view_attributes
       @parent = params[:parent]
-      @identifier = view_data["identifier"]
-      @description = view_data["description"] 
-      raise ::Bcome::Exception::MissingDescriptionOnView.new(view_data.inspect) unless @description
-      raise ::Bcome::Exception::MissingIdentifierOnView.new(view_data.inspect) unless @identifier
-      @resources = []
-    end
 
-    def identifier
-      @identifier
+      raise ::Bcome::Exception::MissingDescriptionOnView.new(@raw_view_data.inspect) unless @description
+      raise ::Bcome::Exception::MissingIdentifierOnView.new(@raw_view_data.inspect) unless @identifier
+      @resources = []
+      set_view_attributes
     end
 
     def prompt_breadcrumb
       "#{parent.prompt_breadcrumb}> #{ is_current_context? ? identifier.cyan(:highlight) : identifier}"
+    end
+
+    def has_parent?
+      !@parent.nil?
     end
 
     def create_tree(views)
@@ -61,6 +62,19 @@ module Bcome::Node
 
     def is_valid_view_type?(view_type)
       klass_for_view_type.keys.include?(view_type)
+    end
+
+    private
+
+    def set_view_attributes
+      @raw_view_data.keys.each do |view_attribute_key|
+        next if view_attributes_to_skip_on_setup.include?(view_attribute_key)
+        instance_variable_set("@#{view_attribute_key}", @raw_view_data[view_attribute_key])
+      end
+    end
+
+    def view_attributes_to_skip_on_setup
+      ["views"] 
     end
 
   end
