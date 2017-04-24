@@ -8,6 +8,15 @@ require "irb/completion"
 require 'bcome'
 require 'yaml'
 
+def get_context_crumbs
+  if ARGV && ARGV[0]
+    # TODO - validation on format here foobar:foobar:foobar
+    return ARGV[0].split(":")    
+  end
+  return []
+end
+@context_crumbs = get_context_crumbs
+
 START_PROMPT = "bcome"
 BCOME = ::Bcome::WorkspaceManager.new
 VERBOSE = true
@@ -15,14 +24,20 @@ VERBOSE = true
 IRB.setup nil
 IRB.conf[:MAIN_CONTEXT] = IRB::Irb.new.context
 
-context = ::Bcome::Estate.init
+estate = ::Bcome::Estate.init
 
-BCOME.set( {
-  :context => context,
-  :spawn => true
-})
+if @context_crumbs.any?
+  puts "deep loading"
+  BCOME.deep_set(estate, @context_crumbs) 
+else
+
+  BCOME.set( {
+    :context => estate,
+    :spawn => true
+  })
+end
 
 ## Load the shell
-require 'irb/ext/multi-irb'
-IRB.parse_opts_with_ignoring_script
-IRB.irb nil, context
+#require 'irb/ext/multi-irb'
+#IRB.parse_opts_with_ignoring_script
+#IRB.irb nil, estate

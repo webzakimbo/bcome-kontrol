@@ -2,6 +2,16 @@ class ::Bcome::WorkspaceManager
 
   attr_reader :context
 
+  def deep_set(context, crumbs)
+    set( { :context => context, :spawn => false})
+    depth = crumbs.size
+    crumbs.each_with_index do |crumb, index|
+      spawn = (depth == index-1) ? true : false
+      context = context.resources.select{|r| r.identifier == crumb }
+      set({ :context => context, :spawn => spawn } )
+    end
+  end
+
   def set(params) # { :context => context, :current_context => current_context, :spawn => spawn }
     @context = params[:context]
     main_context = IRB.conf[:MAIN_CONTEXT]
