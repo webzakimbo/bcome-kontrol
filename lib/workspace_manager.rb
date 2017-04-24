@@ -2,9 +2,16 @@ class ::Bcome::WorkspaceManager
 
   attr_reader :context
 
+
+  ### TODO
+  ##  bcome run "whatever"
+  ##  bcome wbz:prod
+  ##  bcome wbz:prod:run "whatever"
+
   def deep_set(context, crumbs)
     set( { :context => context, :spawn => false})
     depth = crumbs.size
+
     crumbs.each_with_index do |crumb, index|
       last_context = context
       spawn = (depth == index+1) ? true : false
