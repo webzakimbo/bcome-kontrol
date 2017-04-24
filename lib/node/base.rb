@@ -16,8 +16,8 @@ module Bcome::Node
       @parent = params[:parent]
       @identifier = view_data["identifier"]
       @description = view_data["description"] 
-      raise ::Bcome::Exception::MissingDescriptionOnView.new(view_data) unless @description
-      raise ::Bcome::Exception::MissingIdentifierOnView.new(view_data) unless @identifier
+      raise ::Bcome::Exception::MissingDescriptionOnView.new(view_data.inspect) unless @description
+      raise ::Bcome::Exception::MissingIdentifierOnView.new(view_data.inspect) unless @identifier
       @resources = []
     end
 
@@ -29,11 +29,12 @@ module Bcome::Node
       "#{parent.prompt_breadcrumb}> #{ is_current_context? ? identifier.cyan(:highlight) : identifier}"
     end
 
-    def create_tree(views, top_level = false)
+    def create_tree(views)
       views.each do |view|
-        raise ::Bcome::Exception::InvalidEstateConfig.new unless is_valid_view_type?(view["type"])
-        raise ::Bcome::Exception::NoInventoriesAtTopLevel.new if top_level && view["type"] == INVENTORY_KEY
+        raise ::Bcome::Exception::InvalidEstateConfig.new("Invalid view type for (#{view.inspect})") unless is_valid_view_type?(view["type"])
+        raise ::Bcome::Exception::InventoriesCannotHaveSubViews.new(view) if has_subviews?(view) && view["type"] == INVENTORY_KEY
         klass = klass_for_view_type[view["type"]]
+
         view_instance = klass.new({
           :view_data => view,
           :parent => self
@@ -45,6 +46,10 @@ module Bcome::Node
 
         @resources << view_instance
       end     
+    end
+
+    def has_subviews?(view)
+      return view["views"] && !view["views"].empty?
     end
 
     def klass_for_view_type

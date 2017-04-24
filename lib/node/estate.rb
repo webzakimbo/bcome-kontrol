@@ -26,7 +26,7 @@ module Bcome::Node
       raise ::Bcome::Exception::NoConfiguredViews.new if (!views && !views.is_a?(Array)) || views.empty?
 
       top_level = true 
-      create_tree(views, top_level) 
+      create_tree(views)
     end
 
     def prompt_breadcrumb
