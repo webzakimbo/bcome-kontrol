@@ -16,8 +16,8 @@ module Bcome::Node
       @parent = params[:parent]
       @identifier = view_data["identifier"]
       @description = view_data["description"] 
-      raise ::Bcome::Exception::MissingDescriptionOnView.new unless @description
-      raise ::Bcome::Exception::MissingIdentifierOnView.new unless @identifier
+      raise ::Bcome::Exception::MissingDescriptionOnView.new(view_data) unless @description
+      raise ::Bcome::Exception::MissingIdentifierOnView.new(view_data) unless @identifier
       @resources = []
     end
 
