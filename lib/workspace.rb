@@ -7,11 +7,7 @@ class ::Bcome::Workspace
   end
 
   def set(params)
-    unless console_set?
-      IRB.setup nil
-      IRB.conf[:MAIN_CONTEXT] = IRB::Irb.new.context
-      console_set!
-    end
+    init_irb unless console_set?
 
     @context = params[:context]
     main_context = IRB.conf[:MAIN_CONTEXT]
@@ -55,6 +51,14 @@ class ::Bcome::Workspace
 
   def is_sudo?
     @context.is_sudo?
+  end
+
+  protected
+
+  def init_irb
+    IRB.setup nil
+    IRB.conf[:MAIN_CONTEXT] = IRB::Irb.new.context
+    console_set!
   end
 
 end

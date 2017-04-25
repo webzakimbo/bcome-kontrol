@@ -24,12 +24,25 @@ module Bcome::Node
       set_view_attributes
     end
 
-    def moo(woo)
-      puts "yeah: #{woo}"
-    end
-
     def resources
       @resources
+    end
+
+    def invoke(method_name, command = nil)
+      if respond_to?(method_name)
+        if self.class.method_is_appropriate_for_command_line_invocation(method_name)
+          unless command
+            raise ::Bcome::Exception::MethodInvocationRequiresParameter.new("Calling '#{method_name}' at namespace #{namespace} requires a parameter")
+          else
+            send(method_name, command)
+          end
+        else
+          send(method_name)
+        end
+      else
+        # Final crumb is neither a node level context nor an executable method on the penultimate node level context
+        raise ::Bcome::Exception::InvalidBreadcrumb.new("Method '#{method_name}' is not available on bcome node of type #{self.class}, at namespace #{namespace}")
+      end
     end
 
     def resource_for_identifier(identifier)

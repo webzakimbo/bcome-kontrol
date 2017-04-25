@@ -1,13 +1,16 @@
-module Bcome
-  class BreadcrumbParser
+module Bcome::Parser
+  class BreadCrumb
 
     attr_reader :crumbs
 
     def initialize(raw_crumbs)
       @raw_crumbs = raw_crumbs
-      @crumbs = [] if @raw_crumbs.nil?
-      validate!
-      parse!
+      if @raw_crumbs.nil?
+        @crumbs = []
+      else 
+        validate!
+        parse!
+      end
     end
 
     def parse!
