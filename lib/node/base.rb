@@ -28,6 +28,10 @@ module Bcome::Node
       @resources
     end
 
+    def list_key
+      :view
+    end
+
     def invoke(method_name, command = nil)
       if respond_to?(method_name)
         if self.class.method_is_appropriate_for_command_line_invocation(method_name)

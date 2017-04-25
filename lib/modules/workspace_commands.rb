@@ -2,7 +2,7 @@ module Bcome::WorkspaceCommands
 
   def ls
     puts "\n\n" + visual_hierarchy.orange + "\n"
-    puts "\tAvailable views: ".cyan.bold + "\n\n"
+    puts "\tAvailable #{list_key}s: ".cyan.bold + "\n\n"
     @resources.each do |resource|
       puts "\t" + "Identifier: ".cyan + resource.identifier.green
       puts "\t" + "Description: ".cyan + resource.description.green
@@ -22,6 +22,10 @@ module Bcome::WorkspaceCommands
     else
       puts "#{identifier} not found"
     end
+  end
+
+  def back
+    exit
   end
 
   ## Helpers --

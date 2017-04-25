@@ -5,5 +5,9 @@ module Bcome::Node
       "inventory"
     end
 
+    def list_key
+      :server
+    end
+
   end
 end
