@@ -14,14 +14,14 @@ module Bcome::Node
 
     def initialize(params)
       @raw_view_data = params[:view_data]
-      set_view_attributes
       @parent = params[:parent]
       @type = params[:type]
+
+      set_view_attributes
 
       raise ::Bcome::Exception::MissingDescriptionOnView.new(@raw_view_data.inspect) unless @description
       raise ::Bcome::Exception::MissingIdentifierOnView.new(@raw_view_data.inspect) unless @identifier
       @resources = []
-      set_view_attributes
     end
 
     def resources
@@ -97,6 +97,14 @@ module Bcome::Node
 
     def is_valid_view_type?(view_type)
       klass_for_view_type.keys.include?(view_type)
+    end
+
+    def list_attributes
+      { 
+        "Identifier": :identifier,
+        "Description": :description,
+        "Type": :type
+      }
     end
 
     private

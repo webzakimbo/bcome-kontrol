@@ -4,9 +4,12 @@ module Bcome::WorkspaceCommands
     puts "\n\n" + visual_hierarchy.orange + "\n"
     puts "\tAvailable #{list_key}s: ".cyan.bold + "\n\n"
     @resources.each do |resource|
-      puts "\t" + "Identifier: ".cyan + resource.identifier.green
-      puts "\t" + "Description: ".cyan + resource.description.green
-      puts "\t" + "Type: ".cyan + resource.type.green
+      list_attributes.each do |key, value| 
+        if (resource.respond_to?(value) || resource.instance_variable_defined?("@#{value}"))        
+          attribute_value = resource.send(value)
+          puts "\t" + "#{key}:\s".cyan + attribute_value.green if attribute_value
+        end
+      end 
       puts "\n"
     end
     new_line
@@ -37,9 +40,11 @@ module Bcome::WorkspaceCommands
   def method_missing(method_sym, *arguments, &block)
     if resource_identifiers.include?(method_sym.to_s)
       return method_sym.to_s
-    else  
-      super
-    end 
+    elsif instance_variable_defined?("@#{method_sym}")
+      return instance_variable_get("@#{method_sym}")
+    else
+     super
+    end
   end
 
   def visual_hierarchy
