@@ -25,4 +25,4 @@ VERBOSE = true
 IRB.setup nil
 IRB.conf[:MAIN_CONTEXT] = IRB::Irb.new.context
 
-BCOME.init_workspace(context_crumbs)
+BCOME.init_workspace({ :crumbs => context_crumbs, :args => ARGV[1] })

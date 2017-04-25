@@ -3,6 +3,8 @@ module Bcome::Node
 
     attr_reader :parent
 
+    extend  Bcome::Node::Extensions
+
     include Bcome::Context
     include Bcome::CommonWorkspaceCommands
     include Bcome::ConsoleColours
@@ -20,10 +22,6 @@ module Bcome::Node
       raise ::Bcome::Exception::MissingIdentifierOnView.new(@raw_view_data.inspect) unless @identifier
       @resources = []
       set_view_attributes
-    end
-
-    def foo
-      puts "bar"
     end
 
     def moo(woo)
