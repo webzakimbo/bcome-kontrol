@@ -4,12 +4,7 @@ module Bcome::WorkspaceCommands
     puts "\n\n" + visual_hierarchy.orange + "\n"
     puts "\tAvailable #{list_key}s: ".cyan.bold + "\n\n"
     @resources.each do |resource|
-      list_attributes.each do |key, value| 
-        if (resource.respond_to?(value) || resource.instance_variable_defined?("@#{value}"))        
-          attribute_value = resource.send(value)
-          puts "\t" + "#{key}:\s".cyan + attribute_value.green if attribute_value
-        end
-      end 
+      puts resource.pretty_description
       puts "\n"
     end
     new_line
@@ -25,6 +20,17 @@ module Bcome::WorkspaceCommands
     else
       puts "#{identifier} not found"
     end
+  end
+
+  def pretty_description
+    desc = ""
+    list_attributes.each do |key, value|
+      if (self.respond_to?(value) || self.instance_variable_defined?("@#{value}"))
+        attribute_value = self.send(value)
+        desc += "\t" + "#{key}:\s".cyan + attribute_value.green + "\n" if attribute_value
+      end
+    end
+    return desc
   end
 
   def back

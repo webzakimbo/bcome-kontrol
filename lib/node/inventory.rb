@@ -1,10 +1,20 @@
 module Bcome::Node
   class Inventory < ::Bcome::Node::Base
 
-    def self.to_s
-      "inventory"
-    end
+    class << self
+      def to_s
+        "inventory"
+      end
 
+      def list_attributes
+        {
+         "identifier": :identifier,
+         "internal ip": :internal_interface_address,
+         "public ip": :public_ip_address,
+        }
+      end
+    end
+ 
     def list_key
       :server
     end
@@ -22,11 +32,7 @@ module Bcome::Node
     end
 
     def list_attributes
-      {
-        "identifier": :identifier,
-        "internal ip": :internal_interface_address,
-        "public ip": :public_ip_address,
-      }
+      ::Bcome::Node::Inventory.list_attributes
     end
 
   end

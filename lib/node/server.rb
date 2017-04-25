@@ -23,7 +23,13 @@ module Bcome::Node
     end
 
     def ls
-      puts "\n\n" + visual_hierarchy.orange + "\n"
+      puts "\n" + visual_hierarchy.orange + "\n"
+      puts pretty_description
+      puts "\s\s\nHit 'menu' to see your options\n\n".green
+    end
+
+    def list_attributes
+      ::Bcome::Node::Inventory.list_attributes
     end
 
   end
