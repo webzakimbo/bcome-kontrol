@@ -8,21 +8,15 @@ require "irb/completion"
 require 'bcome'
 require 'yaml'
 
-def get_context_crumbs
-  if ARGV && ARGV[0]
-    # TODO - validation on format here foobar:foobar:foobar
-    return ARGV[0].split(":")    
-  end
-  return []
-end
-
-context_crumbs = get_context_crumbs
-
 START_PROMPT = "bcome"
-BCOME = ::Bcome::WorkspaceManager.new
 VERBOSE = true
 
-IRB.setup nil
-IRB.conf[:MAIN_CONTEXT] = IRB::Irb.new.context
+BCOME = ::Bcome::Workspace.new
 
-BCOME.init_workspace({ :crumbs => context_crumbs, :args => ARGV[1] })
+begin
+  ::Bcome::Bootup.do(
+    raw_breadcrumbs: ARGV[0]
+  )
+rescue Bcome::Exception::Base => e
+  puts "\t\n#{e.message}\n".red 
+end

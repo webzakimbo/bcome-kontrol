@@ -17,6 +17,10 @@ module Bcome::Node
         estate.load_resources
         return estate
       end
+
+      def to_s
+        "estate"
+      end
     end  
 
     def load_resources
