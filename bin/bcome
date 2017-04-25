@@ -10,13 +10,10 @@ require 'yaml'
 
 START_PROMPT = "bcome"
 VERBOSE = true
-
 BCOME = ::Bcome::Workspace.new
 
 begin
-  ::Bcome::Bootup.do(
-    raw_breadcrumbs: ARGV[0]
-  )
+  Bcome::Bootup.do(raw_breadcrumbs: ARGV[0])
 rescue Bcome::Exception::Base => e
   puts "\t\n#{e.message}\n".red 
 end

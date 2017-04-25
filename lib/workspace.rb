@@ -2,7 +2,17 @@ class ::Bcome::Workspace
 
   attr_reader :context
 
+  def initialize
+    @console_set = false
+  end
+
   def set(params)
+    unless console_set?
+      IRB.setup nil
+      IRB.conf[:MAIN_CONTEXT] = IRB::Irb.new.context
+      console_set!
+    end
+
     @context = params[:context]
     main_context = IRB.conf[:MAIN_CONTEXT]
 
@@ -11,6 +21,14 @@ class ::Bcome::Workspace
 
     spawn_into_console_for_context(@context) 
     return
+  end
+
+  def console_set!
+    @console_set = true
+  end
+
+  def console_set?
+    @console_set
   end
 
   def invoke_on_current_context(method)

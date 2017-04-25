@@ -9,9 +9,6 @@ module Bcome
     end
 
     def initialize(params)
-      # TODO - only setup IRB if we're going to need it
-      IRB.setup nil
-      IRB.conf[:MAIN_CONTEXT] = IRB::Irb.new.context
       @raw_breadcrumbs = params[:raw_breadcrumbs]
     end
 
