@@ -10,6 +10,10 @@ module Bcome::Node::Attributes
     @description
   end  
 
+  def type
+    @type
+  end  
+
   def network_driver
     return nil unless network_data
     @network_driver ||= ::Bcome::Driver::Base.create_from_config(network_data)

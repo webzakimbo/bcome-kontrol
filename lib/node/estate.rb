@@ -3,15 +3,13 @@ module Bcome::Node
 
     CONFIG_PATH = "config/bcome/estate.yml"
 
-    ESTATE_IDENTIFIER = "bcome"
-    ESTATE_DESCRIPTION = "Estate - available views"
-
     class << self
       def init_tree
         estate = new(
           :view_data => { 
-            "identifier" => ESTATE_IDENTIFIER,
-            "description" => ESTATE_DESCRIPTION
+            "identifier" => "bcome",
+            "description" => "Your estate",
+            "type" => "collection"
           }
         )
         estate.load_resources

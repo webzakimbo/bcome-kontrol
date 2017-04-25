@@ -6,8 +6,7 @@ module Bcome::Node
     extend  Bcome::Node::Extensions
 
     include Bcome::Context
-    include Bcome::CommonWorkspaceCommands
-    include Bcome::ConsoleColours
+    include Bcome::WorkspaceCommands
     include Bcome::Node::Attributes
 
     INVENTORY_KEY = "inventory"
@@ -17,6 +16,7 @@ module Bcome::Node
       @raw_view_data = params[:view_data]
       set_view_attributes
       @parent = params[:parent]
+      @type = params[:type]
 
       raise ::Bcome::Exception::MissingDescriptionOnView.new(@raw_view_data.inspect) unless @description
       raise ::Bcome::Exception::MissingIdentifierOnView.new(@raw_view_data.inspect) unless @identifier
@@ -50,7 +50,7 @@ module Bcome::Node
     end
 
     def prompt_breadcrumb
-      "#{parent.prompt_breadcrumb}> #{ is_current_context? ? identifier.cyan(:highlight) : identifier}"
+      "#{parent.prompt_breadcrumb}> #{ is_current_context? ? identifier.cyan : identifier}"
     end
 
     def namespace
