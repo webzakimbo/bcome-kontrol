@@ -11,13 +11,10 @@ module Bcome::CommonWorkspaceCommands
   end
 
   def cd(identifier)
-    resource = @resources.select{|r| r.identifier == identifier}.first
-    if resource
-
+    if resource = resource_for_identifier(identifier)
       BCOME.set( {
         :current_context => self,
-        :context => resource,
-        :spawn => true
+        :context => resource
       })
     else
       puts "#{identifier} not found"

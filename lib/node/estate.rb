@@ -7,7 +7,7 @@ module Bcome::Node
     ESTATE_DESCRIPTION = "Estate - available views"
 
     class << self
-      def init
+      def init_tree
         estate = new(
           :view_data => { 
             "identifier" => ESTATE_IDENTIFIER,

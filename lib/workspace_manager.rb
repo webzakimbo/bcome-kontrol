@@ -2,39 +2,43 @@ class ::Bcome::WorkspaceManager
 
   attr_reader :context
 
-
   ### TODO
   ##  bcome run "whatever"
   ##  bcome wbz:prod
   ##  bcome wbz:prod:run "whatever"
 
-  def deep_set(context, crumbs)
-    set( { :context => context, :spawn => false})
-    depth = crumbs.size
+  def init_workspace(context_crumbs = [])
+    starting_context = ::Bcome::Estate.init_tree
 
-    crumbs.each_with_index do |crumb, index|
-      last_context = context
-      spawn = (depth == index+1) ? true : false
-      context = context.resources.select{|r| r.identifier == crumb }.first # TODO:  resource for identifier TODO identifiers must be unique at any given level
-      if context
-        set({ :context => context, :spawn => spawn } )
-      else
-        # The last crumb is not a context. We're going to invoke a method on the last context instead
-        last_context.send(crumb)  
+    if context_crumbs.empty?
+      BCOME.set({ :context => starting_context })
+    else
+      context_crumbs.each do |crumb|
+        next_context = starting_context.resource_for_identifier(crumb)
+        unless next_context
+          # Could not find a resource for this context, so it may be a method
+          if starting_context.respond_to?(crumb)
+            starting_context.send(crumb)
+            return
+          else
+            puts "No method #{crumb} available for #{starting_context.class} at namespace #{starting_context.namespace}"
+            return
+          end
+        end
+        starting_context = next_context 
       end
-    end
+      BCOME.set({ :context => starting_context })
+    end  
   end
 
-  def set(params) # { :context => context, :current_context => current_context, :spawn => spawn }
+  def set(params)
     @context = params[:context]
     main_context = IRB.conf[:MAIN_CONTEXT]
 
     @context.irb_workspace = main_context.workspace if main_context
     @context.previous_irb_workspace = params[:current_context] if params[:current_context]
 
-    # Spawn is initiated when a user wants to shift workspace context.
-    # We don't spawn whilst setting up the hierarchy for quick contexts 
-    spawn_for_context(@context) if params[:spawn]
+    spawn_into_console_for_context(@context) 
     return
   end
 
@@ -46,7 +50,7 @@ class ::Bcome::WorkspaceManager
     @context == object
   end
 
-  def spawn_for_context(context)
+  def spawn_into_console_for_context(context)
     require 'irb/ext/multi-irb'
     IRB.parse_opts_with_ignoring_script
     IRB.irb nil, @context
