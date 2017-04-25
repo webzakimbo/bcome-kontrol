@@ -8,7 +8,7 @@ module Bcome::Node
     include Bcome::Context
     include Bcome::WorkspaceCommands
     include Bcome::Node::Attributes
-
+  
     INVENTORY_KEY = "inventory"
     COLLECTION_KEY = "collection"
 

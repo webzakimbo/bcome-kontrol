@@ -29,8 +29,20 @@ module Bcome::Node::Attributes
   ##-- end Attributes
 
   def network_data
-    get_instance_variable_for(:network)      
+    instance_var_name = "@network"
+    recurse_hash_data_for_instance_var(instance_var_name)
   end  
+
+  def recurse_hash_data_for_instance_var(instance_var_name)
+    # Look on self
+    instance_data = instance_variable_defined?(instance_var_name) ? instance_variable_get(instance_var_name) : {}
+
+    # If we have a parent, merge from what the parent has (will recurse down the tree), lower level keys having authority over higher level
+    if has_parent? && parent.instance_variable_defined?(instance_var_name) 
+      instance_data = parent.instance_variable_get(instance_var_name).merge(instance_data)
+    end
+    return instance_data
+  end
 
   def proxy_data
     get_instance_variable_for(:proxy)
