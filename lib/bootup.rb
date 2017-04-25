@@ -17,11 +17,10 @@ module Bcome
 
     def do
       if crumbs.empty?
-        bcome.set({ context: estate })
+        ::BCOME.set({ context: estate })
       else
         starting_context = estate
         crumbs.each do |crumb|    
-         ##--
           next_context = starting_context.resource_for_identifier(crumb)
           unless next_context
             # Execute the final crumb as a method call on our penultimate context e.g. foo:bar:ssh
@@ -35,14 +34,9 @@ module Bcome
             end
           end
           starting_context = next_context
-         ##--
         end
-        bcome.set(context: starting_context)
+        ::BCOME.set(context: starting_context)
       end 
-    end
-
-    def bcome
-      ::BCOME
     end
 
     def estate
