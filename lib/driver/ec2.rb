@@ -5,11 +5,7 @@ module Bcome::Driver
       @fog_client ||= get_fog_client
     end
 
-    def unfiltered_search_params
-      { 'instance-id' => [] }
-    end
-
-    def fetch_server_list
+    def fetch_server_list(filters)
       servers = fog_client.servers.all(filters)
       return servers
     end 

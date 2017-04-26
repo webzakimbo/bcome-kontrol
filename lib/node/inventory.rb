@@ -59,7 +59,7 @@ module Bcome::Node
     end  
 
     def fetch_server_list
-      network_driver.fetch_server_list
+      network_driver.fetch_server_list(filters)
     end
 
     def list_attributes

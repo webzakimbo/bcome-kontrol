@@ -3,7 +3,7 @@ module Bcome::WorkspaceCommands
   def ls
     puts "\n\n" + visual_hierarchy.orange + "\n"
     puts "\tAvailable #{list_key}s: ".cyan + "\n\n"
-    @resources.each do |resource|
+    @resources.sort_by {|resource| resource.identifier }.each do |resource|
       puts resource.pretty_description
       puts "\n"
     end

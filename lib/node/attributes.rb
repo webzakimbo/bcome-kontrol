@@ -28,15 +28,20 @@ module Bcome::Node::Attributes
 
   ##-- end Attributes
 
+  def filters
+    instance_var_name = "@ec2_filters"
+    recurse_hash_data_for_instance_var(instance_var_name, :filters)
+  end
+
   def network_data
     instance_var_name = "@network"
-    recurse_hash_data_for_instance_var(instance_var_name)
+    recurse_hash_data_for_instance_var(instance_var_name, :network)
   end  
 
-  def recurse_hash_data_for_instance_var(instance_var_name)
+  def recurse_hash_data_for_instance_var(instance_var_name, parent_key)
     instance_data = instance_variable_defined?(instance_var_name) ? instance_variable_get(instance_var_name) : {}
     instance_data = {} unless instance_data
-    instance_data = parent.network_data.merge(instance_data) if has_parent? 
+    instance_data = parent.send(parent_key).merge(instance_data) if has_parent? 
     return instance_data
   end
 
@@ -59,23 +64,6 @@ module Bcome::Node::Attributes
       return instance_var
     end
     return nil
-  end
-
-  def tag_filter_data
-    instance_var_name = "@tag_filters"
-    if instance_variable_defined?(instance_var_name)
-      filters = instance_variable_get(instance_var_name)
-    else
-      filters = {}
-    end
-    
-    if parent.instance_variable_defined?(instance_var_name)
-      parent_filters = parent.instance_variable_get(instance_var_name)
-    else
-      parent_filters = {}
-    end
-    
-    return filters.merge(parent_filters)
   end
 
 end
