@@ -4,7 +4,7 @@ module Bcome::Driver
     class << self
       def create_from_config(config)
         driver_klass = klass_for_type[config["type"]]
-        raise ::Bcome::Exception::InvalidNetworkDriverType.new unless driver_klass
+        raise ::Bcome::Exception::InvalidNetworkDriverType.new(config) unless driver_klass
         driver = driver_klass.new(config)
         return driver 
       end

@@ -6,6 +6,11 @@ module Bcome::Node
       
         identifier = fog_instance.tags["Name"]
 
+        if parent.override_server_identifier?
+          identifier =~ /#{parent.override_identifier}/
+          identifier = $1
+        end
+
         params = {
           identifier: identifier,
           internal_interface_address: fog_instance.private_ip_address,

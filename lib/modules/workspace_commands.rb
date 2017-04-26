@@ -2,7 +2,7 @@ module Bcome::WorkspaceCommands
 
   def ls
     puts "\n\n" + visual_hierarchy.orange + "\n"
-    puts "\tAvailable #{list_key}s: ".cyan.bold + "\n\n"
+    puts "\tAvailable #{list_key}s: ".cyan + "\n\n"
     @resources.each do |resource|
       puts resource.pretty_description
       puts "\n"
@@ -27,7 +27,11 @@ module Bcome::WorkspaceCommands
     list_attributes.each do |key, value|
       if (self.respond_to?(value) || self.instance_variable_defined?("@#{value}"))
         attribute_value = self.send(value)
-        desc += "\t" + "#{key}:\s".cyan + attribute_value.green + "\n" if attribute_value
+        if attribute_value
+          desc += "\t#{key}".cyan
+          desc += "\s" * (12 - key.length)    
+          desc += attribute_value.green + "\n"
+        end
       end
     end
     return desc

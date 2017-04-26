@@ -20,11 +20,26 @@ module Bcome::Node
     end
 
     def ls
-      raw_servers = fetch_server_list      
-      raw_servers.each {|raw_server| 
-       @resources << ::Bcome::Node::Server.new_from_fog_instance(raw_server, self)
-      } 
+      set_resources unless @resources.any?
       super
+    end
+
+    def reload!
+      puts "\nReloading inventory...\n".green
+      set_resources
+      puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".green
+    end
+
+    def override_server_identifier?
+      !@override_identifier.nil?
+    end
+
+    def set_resources
+      @resources = []
+      raw_servers = fetch_server_list
+      raw_servers.each {|raw_server|
+       @resources << ::Bcome::Node::Server.new_from_fog_instance(raw_server, self)
+      }
     end
 
     def fetch_server_list
