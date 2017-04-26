@@ -15,18 +15,25 @@ module Bcome::Node
       end
     end
  
+    attr_reader :dynamic_nodes_loaded
+
+    def initialize(*params)
+      @dynamic_nodes_loaded = false
+      super
+    end
+ 
     def list_key
       :server
     end
 
     def ls
-      set_resources unless @resources.any?
+      load_dynamic_nodes unless @resources.any?
       super
     end
 
     def reload!
       puts "\nReloading inventory...\n".green
-      set_resources
+      load_dynamic_nodes
       puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".green
     end
 
@@ -34,13 +41,22 @@ module Bcome::Node
       !@override_identifier.nil?
     end
 
-    def set_resources
+    def load_dynamic_nodes
       @resources = []
       raw_servers = fetch_server_list
       raw_servers.each {|raw_server|
        @resources << ::Bcome::Node::Server.new_from_fog_instance(raw_server, self)
       }
+      dynamic_nodes_loaded!
     end
+
+    def dynamic_nodes_loaded!
+      @dynamic_nodes_loaded = true
+    end
+
+    def has_dynamic_nodes?
+      true
+    end  
 
     def fetch_server_list
       network_driver.fetch_server_list

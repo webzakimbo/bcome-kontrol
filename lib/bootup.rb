@@ -18,6 +18,7 @@ module Bcome
     def traverse(starting_context)
       starting_context = estate
       crumbs.each do |crumb|
+        starting_context.load_dynamic_nodes unless starting_context.nodes_loaded?
         next_context = starting_context.resource_for_identifier(crumb)
         unless next_context
           starting_context.invoke(crumb, @command)
