@@ -12,6 +12,13 @@ module Bcome::Node
     INVENTORY_KEY = "inventory"
     COLLECTION_KEY = "collection"
 
+    def self.const_missing(constant)
+      ## Hook for direct access to node level resources by constant name where
+      ## cd ServerName should yield the same outcome as cd "ServerName"
+      set_context  = ::IRB.CurrentContext.workspace.main
+      return (resource = set_context.resource_for_identifier(constant.to_s)) ? constant.to_s : super
+    end
+
     def initialize(params)
       @raw_view_data = params[:view_data]
       @parent = params[:parent]

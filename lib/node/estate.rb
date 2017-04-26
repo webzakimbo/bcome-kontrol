@@ -19,6 +19,7 @@ module Bcome::Node
       def to_s
         "estate"
       end
+   
     end  
 
     def load_resources
