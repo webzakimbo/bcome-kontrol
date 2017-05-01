@@ -10,7 +10,6 @@ require 'yaml'
 
 START_PROMPT = "bcome"
 VERBOSE = true
-BCOME = ::Bcome::Workspace.new
 
 breadcrumbs = ARGV[0]
 command = ARGV[1]

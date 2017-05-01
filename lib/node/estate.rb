@@ -1,5 +1,5 @@
 module Bcome::Node
-  class Bcome::Estate < Bcome::Node::Base
+  class Estate < Bcome::Node::Base
 
     CONFIG_PATH = "config/bcome/estate.yml"
 

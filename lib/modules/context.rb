@@ -1,7 +1,7 @@
 module Bcome::Context
 
   def is_current_context?
-    ::BCOME.object_is_current_context?(self)
+    ::Bcome::Workspace.instance.object_is_current_context?(self)
   end
 
   def irb_workspace=(workspace)

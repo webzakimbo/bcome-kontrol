@@ -1,5 +1,4 @@
 class String
-
   # with thanks to http://simianuprising.com/wp-content/uploads/2012/08/solarized-reference-horizontal.png
   def colour_codes
     {

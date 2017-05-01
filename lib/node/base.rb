@@ -28,6 +28,7 @@ module Bcome::Node
 
       raise ::Bcome::Exception::MissingDescriptionOnView.new(@raw_view_data.inspect) unless @description
       raise ::Bcome::Exception::MissingIdentifierOnView.new(@raw_view_data.inspect) unless @identifier
+      raise ::Bcome::Exception::MissingTypeOnView.new(@raw_view_data.inspect) unless @type
       @resources = []
     end
 

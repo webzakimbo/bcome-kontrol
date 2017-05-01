@@ -6,13 +6,15 @@ module Bcome
       bootup.do    
     end
 
+    attr_reader :breadcrumbs, :command
+
     def initialize(params)
       @breadcrumbs = params[:breadcrumbs]
       @command = params[:command]
     end
 
     def do
-      crumbs.empty? ? ::BCOME.set({ context: estate }) : traverse(estate)
+      crumbs.empty? ? ::Bcome::Workspace.instance.set({ context: estate }) : traverse(estate)
     end
 
     def traverse(starting_context)
@@ -26,11 +28,11 @@ module Bcome
         end
         starting_context = next_context
       end
-      ::BCOME.set(context: starting_context)
+      ::Bcome::Workspace.instance.set(context: starting_context)
     end
 
     def estate
-      @estate ||= ::Bcome::Estate.init_tree
+      @estate ||= ::Bcome::Node::Estate.init_tree
     end
 
     def parser

@@ -13,7 +13,7 @@ module Bcome::WorkspaceCommands
 
   def cd(identifier)
     if resource = resource_for_identifier(identifier)
-      BCOME.set( {
+      ::Bcome::Workspace.instance.set( {
         :current_context => self,
         :context => resource
       })
