@@ -80,4 +80,41 @@ class BootupTest < ActiveSupport::TestCase
     bootup.do  
   end
 
+  def test_should_traverse_dummy_tree
+    # Given
+    estate = given_a_dummy_estate
+    
+    breadcrumbs = "one:two:three:four"
+    view_data = given_dummy_view_data 
+    estate.create_tree(view_data)
+
+    found_context = test_traverse_tree(estate, ["one", "two", "three", "four"])
+
+    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)
+ 
+    # We expect to have traversed to our found context, at which point we enter a console session, thus:
+    ::Bcome::Workspace.instance.expects(:set).with({ :context => found_context })
+
+    # When/then
+    ::Bcome::Bootup.do({:breadcrumbs => breadcrumbs})
+  end
+
+  def test_should_invoke_crumb_as_method_on_context
+    # Given
+    estate = given_a_dummy_estate
+    breadcrumbs = "one:two:three:four:five"
+    view_data = given_dummy_view_data 
+    estate.create_tree(view_data)
+    
+    found_context = test_traverse_tree(estate, ["one", "two", "three", "four"])
+
+    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)
+
+    # We expect to have not found a context for "five", and so we'll invoke "five" on "four"
+    # TODO - here we are
+ 
+    # When/then
+    ::Bcome::Bootup.do({:breadcrumbs => breadcrumbs })
+  end
+
 end

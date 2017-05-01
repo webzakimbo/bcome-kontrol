@@ -52,7 +52,7 @@ class ::Bcome::Workspace
   end
 
   def default_prompt
-    ::START_PROMPT
+    "bcome"
   end
 
   protected
@@ -68,7 +68,7 @@ class ::Bcome::Workspace
       :PROMPT_N => "\e[1m:\e[m ",
       :PROMPT_I => "\e[1m#{irb_prompt} >\e[m ", 
       :PROMPT_C => "\e[1m#{irb_prompt} >\e[m ",
-      :RETURN => ::VERBOSE ? "%s \n" : "\n"
+      :RETURN => "%s \n"
     }
     IRB.conf[:PROMPT_MODE] = :CUSTOM
   end

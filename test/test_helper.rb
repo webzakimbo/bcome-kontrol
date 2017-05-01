@@ -19,6 +19,25 @@ def given_estate_setup_params
   return params
 end
 
+def given_dummy_view_data
+  [
+    { "type" => "collection", "identifier" => "one", "description" => "I am top level collection hear me roar", "views" => [
+      { "type" => "collection", "identifier" => "two", "description" => "I am sub collection 1", "views" => [
+        { "type" => "collection", "identifier" => "three", "description" => "I sub collection 2", "views" => [
+          { "type" => "inventory", "identifier" => "four", "description" => "I am inventory 1"}
+        ]},
+      ]},
+    ] }
+  ]
+end
+
+def test_traverse_tree(context, crumbs)
+  crumbs.each do |crumb|
+    context = context.resources.select{|r| r.identifier == crumb }.first
+  end 
+  return context 
+end
+
 def given_a_dummy_estate
   return ::Bcome::Node::Estate.new(given_estate_setup_params)
 end

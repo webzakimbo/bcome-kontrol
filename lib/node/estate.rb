@@ -31,7 +31,7 @@ module Bcome::Node
     end
 
     def prompt_breadcrumb
-      ::START_PROMPT
+      ::Bcome::Workspace.instance.default_prompt
     end
 
   end

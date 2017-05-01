@@ -130,15 +130,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     #  Given
     estate = given_a_dummy_estate
 
-    view_data = [
-      { "type" => "collection", "identifier" => "one", "description" => "I am top level collection hear me roar", "views" => [
-        { "type" => "collection", "identifier" => "two", "description" => "I am sub collection 1", "views" => [
-          { "type" => "collection", "identifier" => "three", "description" => "I sub collection 2", "views" => [
-            { "type" => "inventory", "identifier" => "four", "description" => "I am inventory 1"}
-          ]},
-        ]},
-      ] }
-    ]
+    view_data = given_dummy_view_data
 
     # When
     estate.create_tree(view_data)

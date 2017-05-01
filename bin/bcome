@@ -8,9 +8,6 @@ require "irb/completion"
 require 'bcome'
 require 'yaml'
 
-START_PROMPT = "bcome"
-VERBOSE = true
-
 breadcrumbs = ARGV[0]
 command = ARGV[1]
 
