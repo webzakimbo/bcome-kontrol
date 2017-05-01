@@ -4,7 +4,7 @@ class WorkspaceTest < ActiveSupport::TestCase
  
   def test_should_initialize_workspace
     # Given/when
-    workspace = ::Bcome::Workspace.new
+    workspace = ::Bcome::Workspace.instance
 
     # Then
     assert workspace.is_a?(::Bcome::Workspace)

@@ -34,6 +34,22 @@ class BootupTest < ActiveSupport::TestCase
     assert bootup.crumbs == [crumb1, crumb2]
   end
 
+  def test_should_initialize_estate_tree_to_get_estate
+    # Given
+    bootup = ::Bcome::Bootup.new({
+     :breadcrumbs => nil
+    })
+
+    estate = Bcome::Node::Base.new(given_estate_setup_params) 
+    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)
+
+    # When/then
+    bootup_estate = bootup.estate
+
+    # Then
+    assert estate == bootup_estate
+  end
+
   def test_should_set_context_if_no_crumbs
     # Given
     bootup = ::Bcome::Bootup.new({
@@ -54,12 +70,14 @@ class BootupTest < ActiveSupport::TestCase
      :breadcrumbs => "foo:bar"
     })
 
-   estate = Bcome::Node::Base.new(given_estate_setup_params)
-   bootup.expects(:estate).returns(estate)
-   bootup.expects(:traverse).with(estate) 
+    assert bootup.crumbs.size == 2
 
-   # When/then
-   bootup.do  
+    estate = Bcome::Node::Base.new(given_estate_setup_params)
+    bootup.expects(:estate).returns(estate)
+    bootup.expects(:traverse).with(estate) 
+
+    # When/then
+    bootup.do  
   end
 
 end

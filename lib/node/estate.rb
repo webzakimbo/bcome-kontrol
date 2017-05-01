@@ -19,16 +19,14 @@ module Bcome::Node
       def to_s
         "estate"
       end
-   
     end  
 
     def load_resources
       config = YAML.load_file(CONFIG_PATH)
       
       views = config["views"]
-      raise ::Bcome::Exception::NoConfiguredViews.new if (!views && !views.is_a?(Array)) || views.empty?
+      raise ::Bcome::Exception::NoConfiguredViews.new if !views || !views.is_a?(Array) || views.empty?
 
-      top_level = true 
       create_tree(views)
     end
 

@@ -19,3 +19,6 @@ def given_estate_setup_params
   return params
 end
 
+def given_a_dummy_estate
+  return ::Bcome::Node::Estate.new(given_estate_setup_params)
+end

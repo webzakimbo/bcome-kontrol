@@ -74,4 +74,16 @@ class NodeTest < ActiveSupport::TestCase
     end
   end
 
+  def test_init_estate
+    # Given
+    estate = Bcome::Node::Base.new(given_estate_setup_params)
+    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)    
+
+    # When
+    init_estate = ::Bcome::Node::Estate.init_tree
+
+    # Then
+    assert init_estate == estate
+  end
+
 end
