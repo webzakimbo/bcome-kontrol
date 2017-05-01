@@ -42,7 +42,7 @@ module Bcome::Node::Attributes
     instance_data = instance_variable_defined?(instance_var_name) ? instance_variable_get(instance_var_name) : {}
     instance_data = {} unless instance_data 
     if parent.instance_variable_defined?(instance_var_name)
-      parent_intance_data = parent.send(parent_key)
+      parent_instance_data = parent.send(parent_key)
     else
       parent_instance_data = {}
     end
