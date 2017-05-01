@@ -32,6 +32,10 @@ class String
     return "\e[1m#{self}\033[0m"
   end
 
+  def underline
+    return "\e[4m#{self}\e[0m"
+  end
+
   def method_missing(method_sym, *arguments, &black)
     unless colour_code = colour_codes[method_sym]
       super

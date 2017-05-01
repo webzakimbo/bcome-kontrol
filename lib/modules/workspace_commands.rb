@@ -30,6 +30,7 @@ module Bcome::WorkspaceCommands
         if attribute_value
           desc += "\t#{key}".cyan
           desc += "\s" * (12 - key.length)    
+          attribute_value = (value == :identifier) ? attribute_value.underline : attribute_value
           desc += attribute_value.green + "\n"
         end
       end
