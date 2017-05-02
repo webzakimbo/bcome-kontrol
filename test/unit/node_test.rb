@@ -105,6 +105,22 @@ class NodeTest < ActiveSupport::TestCase
   end
 
 
+  def test_should_construct_network_with_network_data
+    # Given
+    collection = given_a_dummy_collection
+    network_data = {}
+    mocked_network_driver = mock("I'm a network driver")
+
+    collection.expects(:network_data).returns(network_data)
+    ::Bcome::Driver::Base.expects(:create_from_config).with(network_data).returns(mocked_network_driver)
+
+    # when/then ... all our expectations are met
+    network_driver_from_estate = collection.network_driver
+
+    # and also that
+    assert network_driver_from_estate == mocked_network_driver  
+  end
+
   def test_nodes_should_inherit_network_driver_data_from_parents
     [
       [:network, :network_data],

@@ -15,18 +15,11 @@ module Bcome::Node::Attributes
   end  
 
   def network_driver
-    return nil unless network_data
-    @network_driver ||= ::Bcome::Driver::Base.create_from_config(network_data)
+    data = network_data
+    return nil unless data
+    @network_driver ||= ::Bcome::Driver::Base.create_from_config(data)
     return @network_driver
   end
-
-#  def ssh_proxy
-#    return nil unless proxy_data
-#    @ssh_proxy ||= ::Bcome::Ssh::Proxy.new(proxy_data)
-#    return @ssh_proxy
-#  end
-
-  ##-- end Attributes
 
   def filters
     instance_var_name = "@ec2_filters"
