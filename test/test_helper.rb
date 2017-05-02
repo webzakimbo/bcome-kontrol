@@ -50,7 +50,7 @@ module UnitTestHelper
   end
 
   def given_a_dummy_estate
-    return ::Bcome::Node::Estate.new(given_estate_setup_params)
+    return ::Bcome::Node::Collection.new(given_estate_setup_params)
   end
 
   def given_a_dummy_collection(add_to_view_params = {})

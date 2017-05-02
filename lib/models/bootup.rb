@@ -40,7 +40,7 @@ module Bcome
     end
 
     def estate
-      @estate ||= ::Bcome::Node::Estate.init_tree
+      @estate ||= ::Bcome::Node::Base.init_tree
     end
 
     def parser

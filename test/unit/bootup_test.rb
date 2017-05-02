@@ -46,7 +46,7 @@ class BootupTest < ActiveSupport::TestCase
     })
 
     estate = Bcome::Node::Base.new(given_estate_setup_params) 
-    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)
+    ::Bcome::Node::Base.expects(:init_tree).returns(estate)
 
     # When/then
     bootup_estate = bootup.estate
@@ -91,11 +91,11 @@ class BootupTest < ActiveSupport::TestCase
     
     breadcrumbs = "one:two:three:four"
     view_data = given_dummy_view_data 
-    estate.create_tree(view_data)
+    ::Bcome::Node::Base.create_tree(estate, view_data)
 
     found_context = test_traverse_tree(estate, ["one", "two", "three", "four"])
 
-    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)
+    ::Bcome::Node::Base.expects(:init_tree).returns(estate)
  
     # We expect to have traversed to our found context, at which point we enter a console session, thus:
     ::Bcome::Workspace.instance.expects(:set).with({ :context => found_context })
@@ -109,11 +109,11 @@ class BootupTest < ActiveSupport::TestCase
     estate = given_a_dummy_estate
     breadcrumbs = "one:two:three:four:five"
     view_data = given_dummy_view_data 
-    estate.create_tree(view_data)
+    ::Bcome::Node::Base.create_tree(estate,view_data)
     
     found_context = test_traverse_tree(estate, ["one", "two", "three", "four"])
     
-    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)
+    ::Bcome::Node::Base.expects(:init_tree).returns(estate)
 
     # We expect to have not found a context for "five", and so we'll invoke "five" on "four"
     found_context.expects(:load_dynamic_nodes).returns([])
@@ -131,11 +131,11 @@ class BootupTest < ActiveSupport::TestCase
     argument = "an argument"
 
     view_data = given_dummy_view_data
-    estate.create_tree(view_data)
+    ::Bcome::Node::Base.create_tree(estate, view_data)
    
     found_context = test_traverse_tree(estate, ["one", "two", "three", "four"])
     
-    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)
+    ::Bcome::Node::Base.expects(:init_tree).returns(estate)
 
     # We expect to have not found a context for "five", and so we'll invoke "five" on "four" passing in our argument "argument"
     found_context.expects(:load_dynamic_nodes).returns([])

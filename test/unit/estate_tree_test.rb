@@ -26,7 +26,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     mock_yaml_estate_load_return(given_a_dummy_estate_config) 
 
     # When/then
-    Bcome::Node::Estate.init_tree
+    Bcome::Node::Base.init_tree
   end
 
   def test_should_create_tree_views
@@ -34,15 +34,15 @@ class EstateTreeTest < ActiveSupport::TestCase
     config = given_a_dummy_estate_config
     mock_yaml_estate_load_return(config)
 
-    estate = ::Bcome::Node::Estate.new(given_estate_setup_params)    
-    ::Bcome::Node::Estate.expects(:new).returns(estate)
+    estate = ::Bcome::Node::Collection.new(given_estate_setup_params)    
+    ::Bcome::Node::Collection.expects(:new).returns(estate)
 
     view_data = config[:views]
 
-    estate.expects(:create_tree).with(view_data)
+    ::Bcome::Node::Base.expects(:create_tree).with(estate, view_data)
 
     # When/then
-    Bcome::Node::Estate.init_tree
+    Bcome::Node::Base.init_tree
   end
 
   def test_should_validate_view_types
@@ -54,7 +54,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     # When/then
     assert_raise ::Bcome::Exception::InvalidEstateConfig do
-      estate.create_tree(view_data)
+      ::Bcome::Node::Base.create_tree(estate,view_data)
     end
   end
 
@@ -67,7 +67,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     # When/then
     assert_raise ::Bcome::Exception::InventoriesCannotHaveSubViews do
-      estate.create_tree(view_data)
+      ::Bcome::Node::Base.create_tree(estate, view_data)
     end
   end
 
@@ -80,7 +80,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     ]
 
     # When
-    estate.create_tree(view_data)
+    ::Bcome::Node::Base.create_tree(estate, view_data)
 
     # Then
     assert !estate.resources.nil?
@@ -104,7 +104,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     view_data = given_dummy_view_data
 
     # When
-    estate.create_tree(view_data)
+    ::Bcome::Node::Base.create_tree(estate,view_data)
 
     # Then
     assert estate.resources.size == 1  # 1 top-level estate resource
@@ -137,7 +137,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     description = "all my stuff"
 
     # When
-    estate = Bcome::Node::Estate.new({ :view_data => { :identifier => identifier, :description => description, :type => "inventory" }})
+    estate = Bcome::Node::Collection.new({ :view_data => { :identifier => identifier, :description => description, :type => "inventory" }})
 
     # Then
     assert estate.identifier == identifier

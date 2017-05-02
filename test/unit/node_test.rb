@@ -79,10 +79,10 @@ class NodeTest < ActiveSupport::TestCase
   def test_init_estate
     # Given
     estate = Bcome::Node::Base.new(given_estate_setup_params)
-    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)    
+    ::Bcome::Node::Base.expects(:init_tree).returns(estate)    
 
     # When
-    init_estate = ::Bcome::Node::Estate.init_tree
+    init_estate = ::Bcome::Node::Base.init_tree
 
     # Then
     assert init_estate == estate
@@ -92,7 +92,7 @@ class NodeTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
     view_data = given_dummy_view_data  # one:two:three:four
-    estate.create_tree(view_data)
+    ::Bcome::Node::Base.create_tree(estate,view_data)
 
     third_context = test_traverse_tree(estate, ["one", "two", "three"])
     fourth_context = test_traverse_tree(estate, ["one", "two", "three", "four"])
@@ -146,7 +146,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    estate.create_tree(view_data)
+    ::Bcome::Node::Base.create_tree(estate, view_data)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, ["one", "two", "three"]) 
@@ -172,7 +172,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    estate.create_tree(view_data)
+    ::Bcome::Node::Base.create_tree(estate, view_data)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, ["one", "two", "three"])             
@@ -197,7 +197,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    estate.create_tree(view_data)
+    ::Bcome::Node::Base.create_tree(estate,view_data)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, ["one", "two", "three"])
