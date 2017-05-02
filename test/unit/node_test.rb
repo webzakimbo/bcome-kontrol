@@ -2,6 +2,8 @@ load "#{File.dirname(__FILE__)}/../base.rb"
 
 class NodeTest < ActiveSupport::TestCase
 
+  include ::UnitTestHelper
+
   def test_should_initialize_node
     # Given
     description = given_a_random_string_of_length(5)

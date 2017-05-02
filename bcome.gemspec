@@ -1,10 +1,10 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'bcome/version'
+
 Gem::Specification.new do |spec|
   spec.name          = "bcome"
-  spec.version       = Bcome::VERSION
+  spec.version       = "1.0.0"
   spec.authors       = ["Guillaume Roderick (Webzakimbo)"]
   spec.email         = ["guillaume@webzakimbo.com"]
 

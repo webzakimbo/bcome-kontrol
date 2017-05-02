@@ -1,6 +1,9 @@
+
 load "#{File.dirname(__FILE__)}/../base.rb"
 
 class WorkspaceTest < ActiveSupport::TestCase
+
+  include UnitTestHelper
  
   def test_should_initialize_workspace
     # Given/when

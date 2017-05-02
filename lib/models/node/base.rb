@@ -20,6 +20,8 @@ module Bcome::Node
     end
 
     def initialize(params)
+      @identifier = nil
+      @description = nil
       @raw_view_data = params[:view_data]
       @parent = params[:parent]
       @type = params[:type]

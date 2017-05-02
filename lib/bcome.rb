@@ -8,4 +8,5 @@ require 'require_all'
 require 'pmap'
 
 require_all "#{File.dirname(__FILE__)}/../patches"
-require_all "#{File.dirname(__FILE__)}/../lib"
+
+require_all "#{File.dirname(__FILE__)}/../lib/models"

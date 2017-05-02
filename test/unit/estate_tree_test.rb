@@ -1,6 +1,9 @@
+
 load "#{File.dirname(__FILE__)}/../base.rb"
 
 class EstateTreeTest < ActiveSupport::TestCase
+
+  include UnitTestHelper
 
   def given_a_dummy_estate_config
     {

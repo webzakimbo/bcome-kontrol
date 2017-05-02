@@ -6,4 +6,4 @@ require "test/unit/active_support"
 require "active_support"
 require "mocha/test_unit"
 
-load "#{File.dirname(__FILE__)}/test_helper.rb"
+require "#{File.dirname(__FILE__)}/test_helper"
