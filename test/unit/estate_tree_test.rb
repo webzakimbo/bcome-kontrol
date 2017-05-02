@@ -144,7 +144,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     assert estate.description == description
   end
 
-  # test that an estate is always at the root of a tree
+  # TODO -
   # test that can add any attributes we want onto the estate level
   # test that estate should be able to be an inventory?
   # estate can be an inventory or a collection, but inventory can't have views as per existing implementation
