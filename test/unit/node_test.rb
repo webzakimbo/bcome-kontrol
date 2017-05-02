@@ -19,10 +19,11 @@ class NodeTest < ActiveSupport::TestCase
     }
 
     # when
-    node = Bcome::Node::Base.new(params)
+    node = Bcome::Node::Collection.new(params)
 
     # Then
     assert node.is_a?(Bcome::Node::Base)
+    assert node.is_a?(Bcome::Node::Collection)
     assert node.identifier == identifier
     assert node.description == description
     assert node.type == type
@@ -38,7 +39,7 @@ class NodeTest < ActiveSupport::TestCase
     params[:view_data][random_attribute] = random_value
 
     # When
-    node = Bcome::Node::Base.new(params)
+    node = Bcome::Node::Collection.new(params)
 
     # Then
     assert node.send(random_attribute) == random_value    
@@ -51,7 +52,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # When/then
     assert_raise Bcome::Exception::MissingDescriptionOnView do
-      Bcome::Node::Base.new(params)
+      Bcome::Node::Collection.new(params)
     end
   end
 
@@ -62,7 +63,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # When/then
     assert_raise Bcome::Exception::MissingIdentifierOnView do
-      Bcome::Node::Base.new(params)
+      Bcome::Node::Collection.new(params)
     end
   end
 
@@ -72,17 +73,17 @@ class NodeTest < ActiveSupport::TestCase
 
     # When/then
     assert_raise Bcome::Exception::MissingTypeOnView do
-      Bcome::Node::Base.new(params)
+      Bcome::Node::Collection.new(params)
     end
   end
 
   def test_init_estate
     # Given
-    estate = Bcome::Node::Base.new(given_estate_setup_params)
-    ::Bcome::Node::Base.expects(:init_tree).returns(estate)    
+    estate = Bcome::Node::Collection.new(given_estate_setup_params)
+    ::Bcome::Node::Factory.expects(:init_tree).returns(estate)    
 
     # When
-    init_estate = ::Bcome::Node::Base.init_tree
+    init_estate = ::Bcome::Node::Factory.init_tree
 
     # Then
     assert init_estate == estate
@@ -92,7 +93,7 @@ class NodeTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
     view_data = given_dummy_view_data  # one:two:three:four
-    ::Bcome::Node::Base.create_tree(estate,view_data)
+    ::Bcome::Node::Factory.create_tree(estate,view_data)
 
     third_context = test_traverse_tree(estate, ["one", "two", "three"])
     fourth_context = test_traverse_tree(estate, ["one", "two", "three", "four"])
@@ -146,7 +147,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    ::Bcome::Node::Base.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.create_tree(estate, view_data)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, ["one", "two", "three"]) 
@@ -172,7 +173,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    ::Bcome::Node::Base.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.create_tree(estate, view_data)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, ["one", "two", "three"])             
@@ -197,7 +198,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    ::Bcome::Node::Base.create_tree(estate,view_data)
+    ::Bcome::Node::Factory.create_tree(estate,view_data)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, ["one", "two", "three"])
