@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gemspec
 
-gem 'activesupport'
 gem 'require_all'
 gem 'test-unit'
 gem 'test-unit-activesupport'
