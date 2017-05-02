@@ -16,7 +16,7 @@ module Bcome::Node
       ## Hook for direct access to node level resources by constant name where
       ## cd ServerName should yield the same outcome as cd "ServerName"
       set_context  = ::IRB.CurrentContext.workspace.main
-      return (resource = set_context.resource_for_identifier(constant.to_s)) ? constant.to_s : super
+      return (set_context.resource_for_identifier(constant.to_s)) ? constant.to_s : super
     end
 
     def initialize(params)
@@ -85,16 +85,16 @@ module Bcome::Node
 
     def create_tree(views)
       views.each do |view|
-        raise ::Bcome::Exception::InvalidEstateConfig.new("Invalid view type for (#{view.inspect})") unless is_valid_view_type?(view["type"])
-        raise ::Bcome::Exception::InventoriesCannotHaveSubViews.new(view) if has_subviews?(view) && view["type"] == INVENTORY_KEY
-        klass = klass_for_view_type[view["type"]]
+        raise ::Bcome::Exception::InvalidEstateConfig.new("Invalid view type for (#{view.inspect})") unless is_valid_view_type?(view[:type])
+        raise ::Bcome::Exception::InventoriesCannotHaveSubViews.new(view) if has_subviews?(view) && view[:type] == INVENTORY_KEY
+        klass = klass_for_view_type[view[:type]]
 
         view_instance = klass.new({
           :view_data => view,
           :parent => self
         })
 
-        if sub_views = view["views"]
+        if sub_views = view[:views]
           view_instance.create_tree(sub_views)
         end
 
@@ -103,7 +103,7 @@ module Bcome::Node
     end
 
     def has_subviews?(view)
-      return view["views"] && !view["views"].empty?
+      return view[:views] && !view[:views].empty?
     end
 
     def klass_for_view_type
@@ -135,7 +135,7 @@ module Bcome::Node
     end
 
     def view_attributes_to_skip_on_setup
-      ["views"] 
+      [:views] 
     end
 
   end

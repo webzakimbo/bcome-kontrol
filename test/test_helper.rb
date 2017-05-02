@@ -23,10 +23,10 @@ module UnitTestHelper
 
   def given_dummy_view_data
     [
-      { "type" => "collection", "identifier" => "one", "description" => "I am top level collection hear me roar", "views" => [
-        { "type" => "collection", "identifier" => "two", "description" => "I am sub collection 1", "views" => [
-          { "type" => "collection", "identifier" => "three", "description" => "I sub collection 2", "views" => [
-            { "type" => "inventory", "identifier" => "four", "description" => "I am inventory 1"}
+      { :type => "collection", :identifier => "one", :description => "I am top level collection hear me roar", :views => [
+        { :type => "collection", :identifier => "two", :description => "I am sub collection 1", :views => [
+          { :type => "collection", :identifier => "three", :description => "I sub collection 2", :views => [
+            { :type => "inventory", :identifier => "four", :description => "I am inventory 1", :network => { :type => "ec2", :credentials_key => "whatever" }}
           ]},
         ]},
       ] }

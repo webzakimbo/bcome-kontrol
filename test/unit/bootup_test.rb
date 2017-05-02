@@ -1,3 +1,4 @@
+  
 
 load "#{File.dirname(__FILE__)}/../base.rb"
 
@@ -102,22 +103,23 @@ class BootupTest < ActiveSupport::TestCase
     ::Bcome::Bootup.do({:breadcrumbs => breadcrumbs})
   end
 
-#  def test_should_invoke_crumb_as_method_on_context
-#    # Given
-#    estate = given_a_dummy_estate
-#    breadcrumbs = "one:two:three:four:five"
-#    view_data = given_dummy_view_data 
-#    estate.create_tree(view_data)
-#    
-#    found_context = test_traverse_tree(estate, ["one", "two", "three", "four"])
-#
-#    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)
-#
-#    # We expect to have not found a context for "five", and so we'll invoke "five" on "four"
-#    # TODO - here we are
-# 
-#    # When/then
-#    ::Bcome::Bootup.do({:breadcrumbs => breadcrumbs })
-#  end
+  def test_should_invoke_crumb_as_method_on_context
+    # Given
+    estate = given_a_dummy_estate
+    breadcrumbs = "one:two:three:four:five"
+    view_data = given_dummy_view_data 
+    estate.create_tree(view_data)
+    
+    found_context = test_traverse_tree(estate, ["one", "two", "three", "four"])
+    
+    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)
+
+    # We expect to have not found a context for "five", and so we'll invoke "five" on "four"
+    found_context.expects(:load_dynamic_nodes).returns([])
+    found_context.expects(:invoke).with("five", nil)
+ 
+    # When/then
+    ::Bcome::Bootup.do({:breadcrumbs => breadcrumbs })
+  end
 
 end

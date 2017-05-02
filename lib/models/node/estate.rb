@@ -7,9 +7,9 @@ module Bcome::Node
       def init_tree
         estate = new(
           :view_data => { 
-            "identifier" => "bcome",
-            "description" => "Your estate",
-            "type" => "collection"
+            :identifier => "bcome",
+            :description => "Your estate",
+            :type => "collection"
           }
         )
         estate.load_resources
@@ -22,9 +22,9 @@ module Bcome::Node
     end  
 
     def load_resources
-      config = YAML.load_file(CONFIG_PATH)
-      
-      views = config["views"]
+      config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
+ 
+      views = config[:views]
       raise ::Bcome::Exception::NoConfiguredViews.new if !views || !views.is_a?(Array) || views.empty?
 
       create_tree(views)

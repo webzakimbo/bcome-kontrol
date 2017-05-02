@@ -7,6 +7,8 @@ require 'fog/aws'
 require 'require_all'
 require 'pmap'
 
-require_all "#{File.dirname(__FILE__)}/../patches"
+require 'active_support'
+require 'active_support/core_ext'
 
+require_all "#{File.dirname(__FILE__)}/../patches"
 require_all "#{File.dirname(__FILE__)}/../lib/models"

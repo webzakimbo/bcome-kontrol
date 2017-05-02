@@ -26,15 +26,11 @@ module Bcome::Driver
     end
 
     def credentials_key
-      @params["credentials_keys"]
+      @params[:credentials_keys]
     end
 
-    def credentials_key
-      @params["credentials_key"]
-    end    
-
     def provisioning_region
-      @params["provisioning_region"]
+      @params[:provisioning_region]
     end
 
   end

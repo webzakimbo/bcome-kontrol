@@ -7,11 +7,11 @@ class EstateTreeTest < ActiveSupport::TestCase
 
   def given_a_dummy_estate_config
     {
-      "views" => [
+      :views => [
         {
-          "type" => "collection",
-          "identifier" => "whatever",
-          "description" => "and ever"
+          :type => "collection",
+          :identifier => "whatever",
+          :description => "and ever"
         }
       ] 
     }
@@ -42,7 +42,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
   def test_should_raise_if_no_configured_views_with_empty_set
     # Given  
-    config = { "views" => []}
+    config = { :views => []}
     mock_yaml_estate_load_return(config)
 
     assert_raise ::Bcome::Exception::NoConfiguredViews do
@@ -52,7 +52,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
   def test_should_raise_if_no_configured_views_with_invalid_data_type
     # Given 
-    config = { "views" => nil }
+    config = { :views => nil }
     mock_yaml_estate_load_return(config)
 
     # When/then
@@ -69,7 +69,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     estate = ::Bcome::Node::Estate.new(given_estate_setup_params)    
     ::Bcome::Node::Estate.expects(:new).returns(estate)
 
-    view_data = config["views"]
+    view_data = config[:views]
 
     estate.expects(:create_tree).with(view_data)
 
@@ -81,7 +81,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
     view_data = [
-     { "type" => "i_dont_exist" }
+     { :type => "i_dont_exist" }
     ]
 
     # When/then
@@ -94,7 +94,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
     view_data = [
-     { "type" => "inventory", "views" => [ {}, {}] }
+     { :type => "inventory", :views => [ {}, {}] }
     ]
 
     # When/then
@@ -107,8 +107,8 @@ class EstateTreeTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
     view_data = [
-      { "type" => "collection", "identifier" => "collection1", "description" => "I am collection 1"},
-      { "type" => "collection", "identifier" => "collection2", "description" => "I am collection 2"},
+      { :type => "collection", :identifier => "collection1", :description => "I am collection 1"},
+      { :type => "collection", :identifier => "collection2", :description => "I am collection 2"},
     ]
 
     # When
