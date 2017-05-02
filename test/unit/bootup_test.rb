@@ -9,17 +9,17 @@ class BootupTest < ActiveSupport::TestCase
   def test_should_initialize_a_bootup
     # Given
     breadcrumbs = "foo:bar"
-    command = given_a_random_string_of_length(5)
+    argument = given_a_random_string_of_length(5)
 
     # When
     bootup = ::Bcome::Bootup.new({
       :breadcrumbs => breadcrumbs,
-      :command => command
+      :argument => argument
     })
 
     # Then
     assert bootup.breadcrumbs == breadcrumbs
-    assert bootup.command == command
+    assert bootup.argument == argument
   end
 
   def test_should_parse_breadcrmbs
@@ -121,5 +121,30 @@ class BootupTest < ActiveSupport::TestCase
     # When/then
     ::Bcome::Bootup.do({:breadcrumbs => breadcrumbs })
   end
+
+
+  def test_should_invoke_crumb_as_method_on_context_passing_in_an_argument
+    # Given
+    estate = given_a_dummy_estate
+    breadcrumbs = "one:two:three:four:five"
+    argument = "an argument"
+
+    view_data = given_dummy_view_data
+    estate.create_tree(view_data)
+   
+    found_context = test_traverse_tree(estate, ["one", "two", "three", "four"])
+    
+    ::Bcome::Node::Estate.expects(:init_tree).returns(estate)
+
+    # We expect to have not found a context for "five", and so we'll invoke "five" on "four" passing in our argument "argument"
+    found_context.expects(:load_dynamic_nodes).returns([])
+    found_context.expects(:invoke).with("five", argument)
+ 
+    # When/then
+    ::Bcome::Bootup.do({ :breadcrumbs => breadcrumbs, :argument => argument } )
+
+
+  end
+
 
 end

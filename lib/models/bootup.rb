@@ -6,11 +6,11 @@ module Bcome
       bootup.do    
     end
 
-    attr_reader :breadcrumbs, :command
+    attr_reader :breadcrumbs, :argument
 
     def initialize(params)
       @breadcrumbs = params[:breadcrumbs]
-      @command = params[:command]
+      @argument = params[:argument]
     end
 
     def do
@@ -30,7 +30,7 @@ module Bcome
         # Our current breadcrumb is not a node, and so we'll attempt to invoke a method call on the previous
         # e.g. given resource:foo, then invoke 'foo' on 'resource'
         unless next_context
-          starting_context.invoke(crumb, @command)
+          starting_context.invoke(crumb, @argument)
           return
         end
         starting_context = next_context
