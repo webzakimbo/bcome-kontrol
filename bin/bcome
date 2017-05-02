@@ -12,7 +12,7 @@ breadcrumbs = ARGV[0]
 argument = ARGV[1]
 
 begin
-  Bcome::Bootup.do(breadcrumbs: breadcrumbs, argument: argument)
+  ::Bcome::Bootup.do(breadcrumbs: breadcrumbs, argument: argument)
 rescue Bcome::Exception::Base => e
   puts "\t\n#{e.message}\n".red 
 end
