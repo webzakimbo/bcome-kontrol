@@ -88,4 +88,21 @@ class NodeTest < ActiveSupport::TestCase
     assert init_estate == estate
   end
 
+  def test_should_be_able_to_load_a_resource_by_identifier
+    # Given
+    estate = given_a_dummy_estate
+    view_data = given_dummy_view_data  # one:two:three:four
+    estate.create_tree(view_data)
+
+    third_context = test_traverse_tree(estate, ["one", "two", "three"])
+    fourth_context = test_traverse_tree(estate, ["one", "two", "three", "four"])
+
+    # When/then
+    assert fourth_context = third_context.resource_for_identifier("four")
+
+    # And also that
+    assert fourth_context.parent == third_context
+  end
+
+
 end

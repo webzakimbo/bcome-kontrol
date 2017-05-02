@@ -4,10 +4,11 @@ module Bcome::Parser
     attr_reader :crumbs
 
     def initialize(raw_crumbs)
-      @raw_crumbs = raw_crumbs
-      if @raw_crumbs.nil?
+      @raw_crumbs = raw_crumbs.to_s
+
+      if @raw_crumbs.empty?
         @crumbs = []
-      else 
+      else
         validate!
         parse!
       end
@@ -18,7 +19,7 @@ module Bcome::Parser
     end
 
     def validate!
-      raise ::Bcome::Exception::InvalidBcomeBreadcrumb.new unless @raw_crumbs =~ /^([a-z0-9A-Z]+)(:\s*[a-z0-9A-Z]+)*$/i
+      raise ::Bcome::Exception::InvalidBcomeBreadcrumb.new unless @raw_crumbs =~ /^([a-z0-9A-Z]+)(:\s*[a-z0-9A-Z]+)*:?$/i
     end
 
   end

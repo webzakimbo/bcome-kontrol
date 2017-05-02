@@ -20,6 +20,7 @@ class BootupTest < ActiveSupport::TestCase
     # Then
     assert bootup.breadcrumbs == breadcrumbs
     assert bootup.argument == argument
+    assert bootup.crumbs == ["foo", "bar"]
   end
 
   def test_should_parse_breadcrmbs
@@ -142,9 +143,6 @@ class BootupTest < ActiveSupport::TestCase
  
     # When/then
     ::Bcome::Bootup.do({ :breadcrumbs => breadcrumbs, :argument => argument } )
-
-
   end
-
 
 end
