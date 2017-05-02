@@ -20,11 +20,11 @@ module Bcome::Node::Attributes
     return @network_driver
   end
 
-  def ssh_proxy
-    return nil unless proxy_data
-    @ssh_proxy ||= ::Bcome::Ssh::Proxy.new(proxy_data)
-    return @ssh_proxy
-  end
+#  def ssh_proxy
+#    return nil unless proxy_data
+#    @ssh_proxy ||= ::Bcome::Ssh::Proxy.new(proxy_data)
+#    return @ssh_proxy
+#  end
 
   ##-- end Attributes
 
@@ -35,40 +35,14 @@ module Bcome::Node::Attributes
 
   def network_data
     instance_var_name = "@network"
-    recurse_hash_data_for_instance_var(instance_var_name, :network)
+    recurse_hash_data_for_instance_var(instance_var_name, :network_data)
   end  
 
   def recurse_hash_data_for_instance_var(instance_var_name, parent_key)
     instance_data = instance_variable_defined?(instance_var_name) ? instance_variable_get(instance_var_name) : {}
     instance_data = {} unless instance_data 
-    if parent.instance_variable_defined?(instance_var_name)
-      parent_instance_data = parent.send(parent_key)
-    else
-      parent_instance_data = {}
-    end
-    instance_data = parent_instance_data.merge(instance_data) if has_parent? 
+    instance_data = parent.send(parent_key).merge(instance_data) if has_parent? 
     return instance_data
-  end
-
-  def proxy_data
-    get_instance_variable_for(:proxy)
-  end
-
-  def get_instance_variable_for(instance_variable_name)
-    # Look on self
-    instance_var_name = "@#{instance_variable_name}"
-
-    if instance_variable_defined?(instance_var_name)
-      if instance_var = instance_variable_get(instance_var_name)
-        return instance_var
-      end
-    end
-
-    # Look on parent
-    if has_parent? && instance_var = parent.instance_variable_get(instance_var_name) 
-      return instance_var
-    end
-    return nil
   end
 
 end

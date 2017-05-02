@@ -40,8 +40,23 @@ module UnitTestHelper
     return context 
   end
 
+  def all_nodes_in_tree(context, crumbs)
+    nodes = []
+    crumbs.each do |crumb|
+      context = context.resources.select{|r| r.identifier == crumb }.first
+      nodes << context
+    end
+    return nodes
+  end
+
   def given_a_dummy_estate
     return ::Bcome::Node::Estate.new(given_estate_setup_params)
+  end
+
+  def given_a_dummy_collection(add_to_view_params = {})
+    return ::Bcome::Node::Collection.new({ :view_data => 
+      { :type => "collection", :identifier => given_a_random_string_of_length(5), :description => given_a_random_string_of_length(5) }.merge(add_to_view_params)
+    })
   end
 
 end

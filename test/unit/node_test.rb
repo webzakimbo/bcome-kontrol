@@ -105,4 +105,94 @@ class NodeTest < ActiveSupport::TestCase
   end
 
 
+  def test_nodes_should_inherit_network_driver_data_from_parents
+    [
+      [:network, :network_data],
+      [:ec2_filters, :filters]
+    ].each do |inheritable_attributes|
+       view_key = inheritable_attributes[0]
+       node_key = inheritable_attributes[1]
+       nodes_should_inherit_network_config_data_from_parents(view_key, node_key) 
+       nodes_should_inherit_from_above_only_what_they_do_not_define_and_thus_override_themselves(view_key, node_key)
+     end
+  end
+
+  def nodes_should_inherit_network_config_data_from_parents(view_key, node_key)
+    # Given view data with tested configuration at the top level only
+    col1_network_data = { :foo => "foo", :bar => "bar" }
+    view_data = [
+      { view_key => col1_network_data, :type => "collection", :identifier => "one", :description => "desc1", :views => [
+        { :type => "collection", :identifier => "two", :description => "desc1", :views => [
+          { :type => "collection", :identifier => "three", :description => "desc1" } # end col3  
+        ] } # end col2     
+      ] } # end col1
+    ]
+
+    # And given an estate with a generated tree structure
+    estate = given_a_dummy_estate
+    estate.create_tree(view_data)
+
+    # And the resultant nodes
+    nodes = all_nodes_in_tree(estate, ["one", "two", "three"]) 
+    col1 = nodes[0]
+    col2 = nodes[1]
+    col3 = nodes[2]
+
+    # When/then all nodes should have the same dataa
+    nodes.each do |node|
+      assert node.send(node_key) == col1_network_data
+    end
+  end
+
+  def nodes_should_inherit_from_above_only_what_they_do_not_define_and_thus_override_themselves(view_key, node_key)
+    # Given
+    view_data = [
+      { view_key => { :foo => :bar, :moo => :woo }, :type => "collection", :identifier => "one", :description => "desc1", :views => [
+        { :type => "collection", :identifier => "two", :description => "desc1", :views => [
+          { view_key => {:foo => :some_other_value }, :type => "collection", :identifier => "three", :description => "desc1" } # end col3  
+        ] } # end col2     
+      ] } # end col1
+    ]
+
+    # And given an estate with a generated tree structure
+    estate = given_a_dummy_estate
+    estate.create_tree(view_data)
+
+    # And the resultant nodes
+    nodes = all_nodes_in_tree(estate, ["one", "two", "three"])             
+    col1 = nodes[0]
+    col2 = nodes[1]
+    col3 = nodes[2]
+
+    # When/then
+    assert col1.send(node_key) == { :foo => :bar, :moo => :woo }
+    assert col2.send(node_key) == col1.send(node_key)
+    assert col3.send(node_key) == { :foo => :some_other_value, :moo => :woo }
+
+    ### AND then also
+    # Given
+    view_data = [
+      { view_key => { :foo => :bar, :moo => :woo }, :type => "collection", :identifier => "one", :description => "desc1", :views => [
+        { view_key => { :do => :yes, :moo => :something_else_again }, :type => "collection", :identifier => "two", :description => "desc1", :views => [
+          { view_key => {:foo => :some_other_value, :loo => "something else entirely" }, :type => "collection", :identifier => "three", :description => "desc1" } # end col3  
+        ] } # end col2     
+      ] } # end col1
+    ]
+
+    # And given an estate with a generated tree structure
+    estate = given_a_dummy_estate
+    estate.create_tree(view_data)
+
+    # And the resultant nodes
+    nodes = all_nodes_in_tree(estate, ["one", "two", "three"])
+    col1 = nodes[0]
+    col2 = nodes[1]
+    col3 = nodes[2]
+
+    # When/then
+    assert col1.send(node_key) == { :foo => :bar, :moo => :woo }
+    assert col2.send(node_key) == { :do => :yes, :foo => :bar, :moo => :something_else_again }
+    assert col3.send(node_key) == { :do => :yes, :foo => :some_other_value, :moo => :something_else_again, :loo => "something else entirely" }
+  end
+
 end
