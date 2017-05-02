@@ -17,13 +17,13 @@ class WorkspaceTest < ActiveSupport::TestCase
     assert workspace.has_context? == false
   end
 
-  def Xtest_should_set_irb_context
+  def test_should_set_irb_context
     # Given
-    workspace = ::Bcome::Workspace.new
+    workspace = ::Bcome::Workspace.instance
+    context_object = given_a_dummy_estate
+ 
+    workspace.expects(:spawn_into_console_for_context).returns(nil)
 
-    context_object = Object.new
-    context_object.expects(:irb_workspace=).with(workspace)
-  
     # When
     workspace.set({
       :context => context_object
@@ -34,9 +34,9 @@ class WorkspaceTest < ActiveSupport::TestCase
     assert workspace.object_is_current_context?(context_object) == true    
   end
 
-  def Xtest_should_correctly_set_irb_prompt
+  def test_should_correctly_set_irb_prompt
     # Given
-    workspace_with_no_context = ::Bcome::Workspace.new
+    workspace_with_no_context = ::Bcome::Workspace.instance
     default_prompt = "whatever"
     workspace_with_no_context.expects(:default_prompt).returns(default_prompt)  
 

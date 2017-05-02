@@ -5,6 +5,7 @@ class ::Bcome::Workspace
   attr_reader :context
 
   def initialize
+    @context = nil
     @console_set = false
   end
 
@@ -27,10 +28,6 @@ class ::Bcome::Workspace
 
   def console_set?
     @console_set
-  end
-
-  def invoke_on_current_context(method)
-    @context.send(method)
   end
 
   def object_is_current_context?(object)
