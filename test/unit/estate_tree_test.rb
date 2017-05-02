@@ -29,38 +29,6 @@ class EstateTreeTest < ActiveSupport::TestCase
     Bcome::Node::Estate.init_tree
   end
 
-  def test_should_raise_if_no_configured_views
-    # Given  
-    config = {}
-    mock_yaml_estate_load_return(config)  
-
-    # When/then
-    assert_raise ::Bcome::Exception::NoConfiguredViews do
-      Bcome::Node::Estate.init_tree
-    end
-  end
-
-  def test_should_raise_if_no_configured_views_with_empty_set
-    # Given  
-    config = { :views => []}
-    mock_yaml_estate_load_return(config)
-
-    assert_raise ::Bcome::Exception::NoConfiguredViews do
-      Bcome::Node::Estate.init_tree
-    end
-  end
-
-  def test_should_raise_if_no_configured_views_with_invalid_data_type
-    # Given 
-    config = { :views => nil }
-    mock_yaml_estate_load_return(config)
-
-    # When/then
-    assert_raise ::Bcome::Exception::NoConfiguredViews do
-      Bcome::Node::Estate.init_tree
-    end
-  end
-
   def test_should_create_tree_views
     # Given
     config = given_a_dummy_estate_config
@@ -162,5 +130,23 @@ class EstateTreeTest < ActiveSupport::TestCase
     assert level4.parent == level3
     assert level4.resources.size == 0
   end
+
+  def test_that_an_estate_may_have_a_default_identifier_and_description
+    # Given
+    identifier = "myestate"
+    description = "all my stuff"
+
+    # When
+    estate = Bcome::Node::Estate.new({ :view_data => { :identifier => identifier, :description => description, :type => "inventory" }})
+
+    # Then
+    assert estate.identifier == identifier
+    assert estate.description == description
+  end
+
+  # test that an estate is always at the root of a tree
+  # test that can add any attributes we want onto the estate level
+  # test that estate should be able to be an inventory?
+  # estate can be an inventory or a collection, but inventory can't have views as per existing implementation
 
 end

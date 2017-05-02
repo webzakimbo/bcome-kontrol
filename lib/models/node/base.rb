@@ -26,7 +26,7 @@ module Bcome::Node
       @parent = params[:parent]
       @type = params[:type]
 
-      set_view_attributes
+      set_view_attributes if @raw_view_data
 
       raise ::Bcome::Exception::MissingDescriptionOnView.new(@raw_view_data.inspect) unless @description
       raise ::Bcome::Exception::MissingIdentifierOnView.new(@raw_view_data.inspect) unless @identifier

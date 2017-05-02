@@ -5,14 +5,14 @@ module Bcome::Node
 
     class << self
       def init_tree
-        estate = new(
-          :view_data => { 
-            :identifier => "bcome",
-            :description => "Your estate",
-            :type => "collection"
-          }
-        )
-        estate.load_resources
+        config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
+
+        config[:identifier] = config[:identifier] ? config[:identifier] : "bcome"
+        config[:description] = config[:description] ? config[:description] : "Your estate"
+        config[:type] = config[:type] ? config[:type] : "collection"
+
+        estate = new(:view_data => config)
+        estate.create_tree(config[:views]) if config[:views] && config[:views].any?
         return estate
       end
 
@@ -21,17 +21,8 @@ module Bcome::Node
       end
     end  
 
-    def load_resources
-      config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
- 
-      views = config[:views]
-      raise ::Bcome::Exception::NoConfiguredViews.new if !views || !views.is_a?(Array) || views.empty?
-
-      create_tree(views)
-    end
-
     def prompt_breadcrumb
-      ::Bcome::Workspace.instance.default_prompt
+      @identifier
     end
 
   end
