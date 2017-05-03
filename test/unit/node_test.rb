@@ -243,4 +243,68 @@ class NodeTest < ActiveSupport::TestCase
     end
   end
 
+  def test_that_identifiers_dont_have_spaces
+    # Given
+    config = {
+      type: 'collection',
+      description: 'invalid identifier name',
+      identifier: ' foo'
+    }
+
+   YAML.expects(:load_file).returns(config)
+
+   # when/then
+   assert_raise Bcome::Exception::InvalidIdentifier do
+     ::Bcome::Node::Factory.init_tree
+   end
+  end
+
+  def test_that_identifiers_dont_have_spaces_two
+    # Given
+    config = {
+      type: 'collection',
+      description: 'invalid identifier name',
+      identifier: ' foo '
+    }
+
+   YAML.expects(:load_file).returns(config)
+
+   # when/then
+   assert_raise Bcome::Exception::InvalidIdentifier do
+     ::Bcome::Node::Factory.init_tree
+   end
+  end
+
+  def test_that_identifiers_dont_have_spaces_three
+    # Given
+    config = {
+      type: 'collection',
+      description: 'invalid identifier name',
+      identifier: 'foo '
+    }
+
+   YAML.expects(:load_file).returns(config)
+
+   # when/then
+   assert_raise Bcome::Exception::InvalidIdentifier do
+     ::Bcome::Node::Factory.init_tree
+   end
+  end
+
+  def test_that_identifiers_dont_have_spaces_four
+    # Given
+    config = {
+      type: 'collection',
+      description: 'invalid identifier name',
+      identifier: 'f o o'
+    }
+
+   YAML.expects(:load_file).returns(config)
+
+   # when/then
+   assert_raise Bcome::Exception::InvalidIdentifier do
+     ::Bcome::Node::Factory.init_tree
+   end
+  end
+
 end

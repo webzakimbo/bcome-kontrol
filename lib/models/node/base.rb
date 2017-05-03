@@ -35,6 +35,7 @@ module Bcome::Node
     def validate_identifier
       @identifier = DEFAULT_IDENTIFIER if is_top_level_node? && !@identifier
       raise ::Bcome::Exception::MissingIdentifierOnView.new(@raw_view_data.inspect) unless @identifier
+      raise ::Bcome::Exception::InvalidIdentifier.new(@identifier) if @identifier =~ /\s/
     end
 
     def has_dynamic_nodes?
