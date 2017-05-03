@@ -221,4 +221,26 @@ class NodeTest < ActiveSupport::TestCase
     assert col2.send(node_key) == { do: :yes, foo: :bar, moo: :something_else_again }
     assert col3.send(node_key) == { do: :yes, foo: :some_other_value, moo: :something_else_again, loo: 'something else entirely' }
   end
+
+  def test_identifiers_must_be_unique
+    # Given
+    config = {
+      identifier: 'toplevel',
+      description: 'the top level node',
+      type: 'collection',
+      views: [
+        { identifier: 'one', description: 'node 1', type: 'collection' },
+        { identifier: 'two', description: 'node 2', type: 'collection' },
+        { identifier: 'one', description: 'node 1 again', type: 'collection' }
+      ]
+    }
+    
+    YAML.expects(:load_file).returns(config)
+
+    # when/then
+    assert_raise Bcome::Exception::NodeIdentifiersMustBeUnique do
+      ::Bcome::Node::Factory.init_tree
+    end
+  end
+
 end

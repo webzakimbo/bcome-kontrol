@@ -15,15 +15,20 @@ module Bcome::Node::Factory
     def create_node(config, parent = nil)
       validate_view_data(config)
       klass = klass_for_view_type[config[:type]]
-      node = klass.new(view_data: config,
-                       parent: parent)
-
+      node = klass.new(view_data: config, parent: parent)
       create_tree(node, config[:views]) if config[:views] && config[:views].any?
-
-      parent.resources << node if parent
+      add_node_to_parent(node, parent) if parent
       node
     end
 
+    def add_node_to_parent(node, parent)
+      if parent.resource_for_identifier(node.identifier)
+        raise Bcome::Exception::NodeIdentifiersMustBeUnique.new(node.identifier)
+      else
+        parent.resources << node
+      end
+    end
+ 
     def load_estate_config
       config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
       return config
