@@ -8,7 +8,11 @@ module Bcome::Node::Factory
   class << self
  
     def init_tree
-      config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
+      begin
+        config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
+      rescue 
+        raise ::Bcome::Exception::MissingEstateConfig.new(CONFIG_PATH)
+      end  
 
       config[:identifier] = config[:identifier] ? config[:identifier] : "bcome"
       config[:description] = config[:description] ? config[:description] : "Your estate"
@@ -16,7 +20,7 @@ module Bcome::Node::Factory
 
       klass = klass_for_view_type[config[:type]]
 
-      raise ::Bcome::Exception::InventoriesCannotHaveSubViews.new(config) if has_subviews?(config) && config[:type] == INVENTORY_KEY
+      validate_view_data(config)
 
       estate = klass.new(:view_data => config)
       create_tree(estate, config[:views]) if config[:views] && config[:views].any?
@@ -26,8 +30,7 @@ module Bcome::Node::Factory
 
     def create_tree(context_node, views)
       views.each do |view|
-        raise ::Bcome::Exception::InvalidEstateConfig.new("Invalid view type for (#{view.inspect})") unless is_valid_view_type?(view[:type])
-        raise ::Bcome::Exception::InventoriesCannotHaveSubViews.new(view) if has_subviews?(view) && view[:type] == INVENTORY_KEY
+        validate_view_data(view)
         klass = klass_for_view_type[view[:type]]
 
         view_instance = klass.new({
@@ -40,6 +43,13 @@ module Bcome::Node::Factory
         end
         context_node.resources << view_instance
       end
+    end
+
+    def validate_view_data(config)
+      ## TODO - views should know how to construct themselves:  delegate this to the nodes themselves
+      raise ::Bcome::Exception::InvalidEstateConfig.new("Invalid view type for (#{config.inspect})") unless is_valid_view_type?(config[:type])
+      raise ::Bcome::Exception::InventoriesCannotHaveSubViews.new(config) if has_subviews?(config) && config[:type] == INVENTORY_KEY
+
     end
 
     def klass_for_view_type
