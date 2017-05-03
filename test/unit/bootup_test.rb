@@ -1,6 +1,7 @@
 
 
 load "#{File.dirname(__FILE__)}/../base.rb"
+load "#{File.dirname(__FILE__)}/bootup_helper.rb"
 
 class BootupTest < ActiveSupport::TestCase
   include UnitTestHelper
@@ -132,4 +133,131 @@ class BootupTest < ActiveSupport::TestCase
     # When/then
     ::Bcome::Bootup.do(breadcrumbs: breadcrumbs, argument: argument)
   end
+
+
+ def test_should_be_able_to_pass_an_argument_to_an_invoked_method_on_a_context
+    # Given
+    identifier = given_a_random_string_of_length(4)
+    method_name = :methodthattakesinoneargument
+    arguments = 'args'
+
+    config = {
+      identifier: 'toplevel',
+      description: 'top level node',
+      type: 'collection',
+      views: [
+        { identifier: identifier, type: 'collection', description: "the node we'll execute our method on" }
+      ]
+    }
+
+    YAML.expects(:load_file).returns(config)
+    estate = Bcome::Node::Factory.init_tree
+
+    Bcome::Node::Factory.expects(:init_tree).returns(estate)
+
+    # When/then
+    ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: arguments)
+
+    # And all our expectations are met
+ end
+
+ def test_should_be_able_to_invoke_a_method_on_a_context
+   # Given
+    identifier = given_a_random_string_of_length(4)
+    method_name = :methodthatdoesnotrequirearguments  # Method added in our bootup helper
+
+    config = {
+      identifier: 'toplevel',
+      description: 'top level node',
+      type: 'collection',
+      views: [
+        { identifier: identifier, type: 'collection', description: "the node we'll execute our method on" }
+      ]
+    }
+
+    YAML.expects(:load_file).returns(config)
+    estate = Bcome::Node::Factory.init_tree
+
+    Bcome::Node::Factory.expects(:init_tree).returns(estate)
+
+    # When/then
+    ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: nil)
+
+    # And all our expectations are met
+  end
+
+
+  def test_should_raise_when_invoking_a_method_on_a_context_without_arguments_when_one_is_required
+    # Given
+    identifier = given_a_random_string_of_length(4)
+    method_name = :methodthattakesinoneargument
+
+    config = {
+      identifier: 'toplevel',
+      description: 'top level node',
+      type: 'collection',
+      views: [
+        { identifier: identifier, type: 'collection', description: "the node we'll execute our method on" }
+      ]
+    }
+
+    YAML.expects(:load_file).returns(config)
+    estate = Bcome::Node::Factory.init_tree
+
+    Bcome::Node::Factory.expects(:init_tree).returns(estate)
+
+    # When/then
+    assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
+      ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", arguments: nil)
+    end
+    # And all our expectations are met
+  end
+
+
+  def test_should_raise_when_invoking_a_method_on_a_context_with_arguments_when_none_are_required
+   # Given
+    identifier = given_a_random_string_of_length(4)
+    method_name = :methodthattakesinoneargument  # Method added in our bootup helper
+
+    config = {
+      identifier: 'toplevel',
+      description: 'top level node',
+      type: 'collection',
+      views: [
+        { identifier: identifier, type: 'collection', description: "the node we'll execute our method on" }
+      ]
+    }
+
+    YAML.expects(:load_file).returns(config)
+    estate = Bcome::Node::Factory.init_tree
+
+    Bcome::Node::Factory.expects(:init_tree).returns(estate)
+
+    # When/then
+    assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
+      ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: nil)
+    end
+    # and also that all our expectations are met
+  end
+
+  def test_should_raise_when_penultimate_crumb_references_neither_node_nor_invokable_method
+    # Given
+    identifier = given_a_random_string_of_length(4)
+    method_name = :i_dont_exist
+
+    config = {
+      identifier: 'toplevel',
+      description: 'top level node',
+      type: 'collection',
+      views: [
+        { identifier: identifier, type: 'collection', description: "the node we'll execute our method on" }
+      ]
+    }
+
+    # When/then
+    assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do
+      ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", arguments: nil)
+    end
+  end
+
 end

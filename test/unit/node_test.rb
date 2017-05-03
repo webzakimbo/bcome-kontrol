@@ -361,5 +361,4 @@ class NodeTest < ActiveSupport::TestCase
     assert constant_as_string == constant_name
   end
 
-
 end
