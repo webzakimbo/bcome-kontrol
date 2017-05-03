@@ -9,6 +9,8 @@ module Bcome::Node
     include Bcome::WorkspaceCommands
     include Bcome::Node::Attributes
 
+    DEFAULT_IDENTIFIER = "bcome"
+
     def self.const_missing(constant)
       ## Hook for direct access to node level resources by constant name where
       ## cd ServerName should yield the same outcome as cd "ServerName"
@@ -25,10 +27,15 @@ module Bcome::Node
 
       set_view_attributes if @raw_view_data
 
+      validate_identifier
       raise ::Bcome::Exception::MissingDescriptionOnView.new(@raw_view_data.inspect) unless @description
-      raise ::Bcome::Exception::MissingIdentifierOnView.new(@raw_view_data.inspect) unless @identifier
       raise ::Bcome::Exception::MissingTypeOnView.new(@raw_view_data.inspect) unless @type
       @resources = []
+    end
+
+    def validate_identifier
+      @identifier = DEFAULT_IDENTIFIER if is_top_level_node? && !@identifier
+      raise ::Bcome::Exception::MissingIdentifierOnView.new(@raw_view_data.inspect) unless @identifier
     end
 
     def has_dynamic_nodes?
@@ -79,6 +86,10 @@ module Bcome::Node
     def has_parent?
       !@parent.nil?
     end
+
+    def is_top_level_node?
+      !has_parent?
+    end 
 
     def list_attributes
       { 

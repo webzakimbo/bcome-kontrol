@@ -31,6 +31,21 @@ class EstateTreeTest < ActiveSupport::TestCase
     Bcome::Node::Factory.init_tree
   end
 
+  def test_should_default_top_level_identifier_to_bcome_if_not_provided
+    # Given
+    config = given_a_dummy_estate_config
+    config[:identifier] = nil
+
+    mock_yaml_estate_load_return(config)
+
+    # when
+    estate = Bcome::Node::Factory.init_tree
+
+    # then
+    estate.identifier == Bcome::Node::Base::DEFAULT_IDENTIFIER
+  end
+
+
   def test_should_create_tree_views
     # Given
     config = given_a_dummy_estate_config

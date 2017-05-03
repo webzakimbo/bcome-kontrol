@@ -46,23 +46,38 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_description_is_required
     # Given
-    params = given_estate_setup_params
-    params[:view_data].delete(:description)
+    config = {
+      identifier: 'dummy',
+      type: 'collection',
+    }
+
+    YAML.expects(:load_file).returns(config)
 
     # When/then
     assert_raise Bcome::Exception::MissingDescriptionOnView do
-      Bcome::Node::Collection.new(params)
+      Bcome::Node::Factory.init_tree
     end
   end
 
-  def test_identifier_is_required
+  def test_identifier_is_required_for_all_subnodes
     # Given
-    params = given_estate_setup_params
-    params[:view_data].delete(:identifier)
+    config = {
+      identifier: 'dummy',
+      description: 'top level estate',
+      type: 'collection',
+      views: [
+        {
+         description: 'A sub view without an identifier',
+         type: 'collection'
+        }
+      ]
+    }
+
+    YAML.expects(:load_file).returns(config)
 
     # When/then
     assert_raise Bcome::Exception::MissingIdentifierOnView do
-      Bcome::Node::Collection.new(params)
+      Bcome::Node::Factory.init_tree
     end
   end
 
