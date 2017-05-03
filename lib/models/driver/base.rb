@@ -1,21 +1,20 @@
 module Bcome::Driver
   class Base
-
     class << self
       def create_from_config(config)
         config_klass_key = config[:type].to_sym
         driver_klass = klass_for_type[config_klass_key]
 
-        raise ::Bcome::Exception::InvalidNetworkDriverType.new(config) unless driver_klass
+        raise Bcome::Exception::InvalidNetworkDriverType, config unless driver_klass
 
         driver = driver_klass.new(config)
-        return driver 
+        driver
       end
 
       def klass_for_type
         {
-          :static => ::Bcome::Driver::Static,
-          :ec2 => ::Bcome::Driver::Ec2
+          static: ::Bcome::Driver::Static,
+          ec2: ::Bcome::Driver::Ec2
         }
       end
     end
@@ -23,6 +22,5 @@ module Bcome::Driver
     def initialize(params)
       @params = params
     end
-
   end
 end

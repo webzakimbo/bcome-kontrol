@@ -1,9 +1,8 @@
 module Bcome
   class Bootup
-
     def self.do(params)
       bootup = new(params)
-      bootup.do    
+      bootup.do
     end
 
     attr_reader :breadcrumbs, :argument
@@ -14,7 +13,7 @@ module Bcome
     end
 
     def do
-      crumbs.empty? ? ::Bcome::Workspace.instance.set({ context: estate }) : traverse(estate)
+      crumbs.empty? ? ::Bcome::Workspace.instance.set(context: estate) : traverse(estate)
     end
 
     def traverse(starting_context)
@@ -49,7 +48,6 @@ module Bcome
 
     def crumbs
       parser.crumbs
-    end 
-
+    end
   end
 end

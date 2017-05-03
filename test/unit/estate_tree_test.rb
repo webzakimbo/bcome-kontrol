@@ -2,21 +2,20 @@
 load "#{File.dirname(__FILE__)}/../base.rb"
 
 class EstateTreeTest < ActiveSupport::TestCase
-
   include UnitTestHelper
 
   def given_a_dummy_estate_config
     {
-      :identifier => "dummy",
-      :description => "A dummy estate",
-      :type => "collection",
-      :views => [
+      identifier: 'dummy',
+      description: 'A dummy estate',
+      type: 'collection',
+      views: [
         {
-          :type => "collection",
-          :identifier => "whatever",
-          :description => "and ever"
+          type: 'collection',
+          identifier: 'whatever',
+          description: 'and ever'
         }
-      ] 
+      ]
     }
   end
 
@@ -26,7 +25,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
   def test_we_load_an_estate_config_from_file
     # Given
-    mock_yaml_estate_load_return(given_a_dummy_estate_config) 
+    mock_yaml_estate_load_return(given_a_dummy_estate_config)
 
     # When/then
     Bcome::Node::Factory.init_tree
@@ -37,7 +36,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     config = given_a_dummy_estate_config
     mock_yaml_estate_load_return(config)
 
-    estate = ::Bcome::Node::Collection.new(given_estate_setup_params)    
+    estate = ::Bcome::Node::Collection.new(given_estate_setup_params)
     ::Bcome::Node::Collection.expects(:new).returns(estate)
 
     view_data = config[:views]
@@ -52,12 +51,12 @@ class EstateTreeTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
     view_data = [
-     { :type => "i_dont_exist" }
+      { type: 'i_dont_exist' }
     ]
 
     # When/then
     assert_raise ::Bcome::Exception::InvalidEstateConfig do
-      ::Bcome::Node::Factory.create_tree(estate,view_data)
+      ::Bcome::Node::Factory.create_tree(estate, view_data)
     end
   end
 
@@ -65,7 +64,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
     view_data = [
-     { :identifier => "aninvalidview", :description => "invalid inventory as it has subviews", :type => "inventory", :views => [ {}, {}] }
+      { identifier: 'aninvalidview', description: 'invalid inventory as it has subviews', type: 'inventory', views: [{}, {}] }
     ]
 
     # When/then
@@ -77,11 +76,11 @@ class EstateTreeTest < ActiveSupport::TestCase
   def test_inventories_cannot_have_subviews_when_they_are_the_topmost_view
     # Given
     view_data = {
-      :type => "inventory",
-      :identifier => "topmostidentifier",
-      :description => "a top level inventory with subviews",
-      :views => [
-        { :identifier => "ishouldnotbehere" }
+      type: 'inventory',
+      identifier: 'topmostidentifier',
+      description: 'a top level inventory with subviews',
+      views: [
+        { identifier: 'ishouldnotbehere' }
       ]
     }
 
@@ -96,13 +95,13 @@ class EstateTreeTest < ActiveSupport::TestCase
   def test_inventories_must_have_valid_types_even_when_they_are_the_topmost_view
     # Given
     view_data = {
-      :type => "aninvalidtype",
-      :identifier => "topmostidentifier",
-      :description => "a top level inventory with subviews"
+      type: 'aninvalidtype',
+      identifier: 'topmostidentifier',
+      description: 'a top level inventory with subviews'
     }
-    
+
     YAML.expects(:load_file).returns(view_data)
- 
+
     # when/then
     assert_raise ::Bcome::Exception::InvalidEstateConfig do
       ::Bcome::Node::Factory.init_tree
@@ -111,7 +110,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
   def test_should_raise_appropriately_when_estate_config_file_cannot_be_found
     # Given
-    YAML.expects(:load_file).throws(Errno::ENOENT) 
+    YAML.expects(:load_file).throws(Errno::ENOENT)
 
     # when/then
     assert_raise ::Bcome::Exception::MissingEstateConfig do
@@ -123,8 +122,8 @@ class EstateTreeTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
     view_data = [
-      { :type => "collection", :identifier => "collection1", :description => "I am collection 1"},
-      { :type => "collection", :identifier => "collection2", :description => "I am collection 2"},
+      { type: 'collection', identifier: 'collection1', description: 'I am collection 1' },
+      { type: 'collection', identifier: 'collection2', description: 'I am collection 2' }
     ]
 
     # When
@@ -134,7 +133,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     assert !estate.resources.nil?
     assert !estate.resources.empty?
     assert estate.resources.size == 2
-  
+
     # And also that
     estate.resources.each_with_index do |resource, index|
       assert resource.is_a?(::Bcome::Node::Collection)
@@ -152,10 +151,10 @@ class EstateTreeTest < ActiveSupport::TestCase
     view_data = given_dummy_view_data
 
     # When
-    ::Bcome::Node::Factory.create_tree(estate,view_data)
+    ::Bcome::Node::Factory.create_tree(estate, view_data)
 
     # Then
-    assert estate.resources.size == 1  # 1 top-level estate resource
+    assert estate.resources.size == 1 # 1 top-level estate resource
 
     # But also that
     level1 = estate.resources.first
@@ -168,28 +167,27 @@ class EstateTreeTest < ActiveSupport::TestCase
     assert level2.parent == level1
     assert level2.resources.size == 1
 
-    level3 = level2.resources.first 
-    assert level3.is_a?(::Bcome::Node::Collection)  
-    assert level3.parent == level2 
+    level3 = level2.resources.first
+    assert level3.is_a?(::Bcome::Node::Collection)
+    assert level3.parent == level2
     assert level3.resources.size == 1
 
     level4 = level3.resources.first
     assert level4.is_a?(::Bcome::Node::Inventory)
     assert level4.parent == level3
-    assert level4.resources.size == 0
+    assert level4.resources.empty?
   end
 
   def test_that_an_estate_may_have_a_default_identifier_and_description
     # Given
-    identifier = "myestate"
-    description = "all my stuff"
+    identifier = 'myestate'
+    description = 'all my stuff'
 
     # When
-    estate = Bcome::Node::Collection.new({ :view_data => { :identifier => identifier, :description => description, :type => "inventory" }})
+    estate = Bcome::Node::Collection.new(view_data: { identifier: identifier, description: description, type: 'inventory' })
 
     # Then
     assert estate.identifier == identifier
     assert estate.description == description
   end
-
 end

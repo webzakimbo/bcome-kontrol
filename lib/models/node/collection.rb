@@ -1,9 +1,7 @@
 module Bcome::Node
   class Collection < ::Bcome::Node::Base
-
     def self.to_s
-      "collection"
+      'collection'
     end
-
   end
 end
