@@ -71,6 +71,25 @@ class EstateTreeTest < ActiveSupport::TestCase
     end
   end
 
+  def test_inventories_cannot_have_subviews_when_they_are_the_topmost_view
+    # Given
+    view_data = {
+      :type => "inventory",
+      :identifier => "topmostidentifier",
+      :description => "a top level inventory with subviews",
+      :views => [
+        { :identifier => "ishouldnotbehere" }
+      ]
+    }
+
+    YAML.expects(:load_file).returns(view_data)
+
+    # When/then
+    assert_raise ::Bcome::Exception::InventoriesCannotHaveSubViews do
+      ::Bcome::Node::Factory.init_tree
+    end
+  end
+
   def test_estate_is_assigned_its_subviews
     # Given
     estate = given_a_dummy_estate
@@ -144,9 +163,11 @@ class EstateTreeTest < ActiveSupport::TestCase
     assert estate.description == description
   end
 
+
   # TODO -
   # test that can add any attributes we want onto the estate level
   # test that estate should be able to be an inventory?
   # estate can be an inventory or a collection, but inventory can't have views as per existing implementation
+  # Inventory cannot have subviews
 
 end

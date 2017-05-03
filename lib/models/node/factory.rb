@@ -16,6 +16,8 @@ module Bcome::Node::Factory
 
       klass = klass_for_view_type[config[:type]]
 
+      raise ::Bcome::Exception::InventoriesCannotHaveSubViews.new(config) if has_subviews?(config) && config[:type] == INVENTORY_KEY
+
       estate = klass.new(:view_data => config)
       create_tree(estate, config[:views]) if config[:views] && config[:views].any?
 
