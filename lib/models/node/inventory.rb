@@ -20,6 +20,7 @@ module Bcome::Node
     def initialize(*params)
       @dynamic_nodes_loaded = false
       super
+      raise ::Bcome::Exception::InventoriesCannotHaveSubViews.new(@raw_view_data) if @raw_view_data[:views] && !@raw_view_data[:views].empty?
     end
  
     def list_key

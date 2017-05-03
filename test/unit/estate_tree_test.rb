@@ -7,6 +7,9 @@ class EstateTreeTest < ActiveSupport::TestCase
 
   def given_a_dummy_estate_config
     {
+      :identifier => "dummy",
+      :description => "A dummy estate",
+      :type => "collection",
       :views => [
         {
           :type => "collection",
@@ -62,7 +65,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
     view_data = [
-     { :type => "inventory", :views => [ {}, {}] }
+     { :identifier => "aninvalidview", :description => "invalid inventory as it has subviews", :type => "inventory", :views => [ {}, {}] }
     ]
 
     # When/then
@@ -188,12 +191,5 @@ class EstateTreeTest < ActiveSupport::TestCase
     assert estate.identifier == identifier
     assert estate.description == description
   end
-
-
-  # TODO -
-  # test that can add any attributes we want onto the estate level
-  # test that estate should be able to be an inventory?
-  # estate can be an inventory or a collection, but inventory can't have views as per existing implementation
-  # Inventory cannot have subviews
 
 end
