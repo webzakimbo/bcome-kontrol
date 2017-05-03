@@ -307,4 +307,59 @@ class NodeTest < ActiveSupport::TestCase
    end
   end
 
+
+  def test_should_return_string_matching_method_missing_if_matches_a_node_identifier
+    # Given
+    method_symbol = given_a_random_string_of_length(4)
+
+    config = {
+      type: 'collection',
+      description: 'a top level view',
+      identifier: 'toplevel',
+      views: [
+        { type: 'collection', description: 'a collection', identifier: "#{method_symbol}"}
+      ]
+    } 
+
+    YAML.expects(:load_file).returns(config)
+    estate = ::Bcome::Node::Factory.init_tree
+
+    # When
+    method_as_a_string = estate.send(method_symbol)
+
+    # Then
+    assert method_as_a_string == method_symbol.to_s
+  end
+
+  def test_should_return_string_matching_constant_name_if_matches_a_node_identifier
+    # Given
+    constant_name = "FooBar"
+
+    config = {
+      type: 'collection',
+      description: 'a top level view',
+      identifier: 'toplevel',
+      views: [
+        { type: 'collection', description: 'a collection', identifier: "#{constant_name}" }
+      ]
+
+    }
+
+    YAML.expects(:load_file).returns(config)
+    estate = ::Bcome::Node::Factory.init_tree
+
+    irb_context = mock("Irb context")
+    workspace = mock("Mock irb workspace")
+    workspace.expects(:main).returns(estate)
+    irb_context.expects(:workspace).returns(workspace)
+    IRB.expects(:CurrentContext).returns(irb_context)    
+
+    # When
+    constant_as_string = estate.class.const_get(constant_name)
+
+    # Then
+    assert constant_as_string == constant_name
+  end
+
+
 end
