@@ -12,6 +12,7 @@ module Bcome::Node
     end
 
     def <<(node)
+      raise Bcome::Exception::NodeIdentifiersMustBeUnique.new(node.namespace) if for_identifier(node.identifier)
       @nodes << node
     end
 

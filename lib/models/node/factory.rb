@@ -17,22 +17,16 @@ module Bcome::Node::Factory
       klass = klass_for_view_type[config[:type]]
       node = klass.new(view_data: config, parent: parent)
       create_tree(node, config[:views]) if config[:views] && config[:views].any?
-      add_node_to_parent(node, parent) if parent
+      parent.resources << node if parent
       node
     end
 
-    def add_node_to_parent(node, parent)
-      if parent.resource_for_identifier(node.identifier)
-        raise Bcome::Exception::NodeIdentifiersMustBeUnique.new(node.namespace)
-      else
-        parent.resources << node
-      end
-    end
- 
     def load_estate_config
       config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
       return config
-    rescue
+    rescue ArgumentError
+      raise Bcome::Exception::InvalidEstateConfig, "Invalid yaml in config"
+    rescue Errno::ENOENT
       raise Bcome::Exception::MissingEstateConfig, CONFIG_PATH
     end
 

@@ -125,12 +125,22 @@ class EstateTreeTest < ActiveSupport::TestCase
 
   def test_should_raise_appropriately_when_estate_config_file_cannot_be_found
     # Given
-    YAML.expects(:load_file).throws(Errno::ENOENT)
+    YAML.expects(:load_file).raises(Errno::ENOENT)
 
     # when/then
     assert_raise ::Bcome::Exception::MissingEstateConfig do
       ::Bcome::Node::Factory.init_tree
     end
+  end
+
+  def test_should_raise_appropriately_when_yaml_in_invalid_in_estate_config
+    # Given
+    YAML.expects(:load_file).raises(ArgumentError)
+    
+    # When/then
+    assert_raise ::Bcome::Exception::InvalidEstateConfig do
+      ::Bcome::Node::Factory.init_tree
+    end  
   end
 
   def test_estate_is_assigned_its_subviews
