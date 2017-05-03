@@ -23,7 +23,7 @@ module Bcome::Node::Factory
 
     def add_node_to_parent(node, parent)
       if parent.resource_for_identifier(node.identifier)
-        raise Bcome::Exception::NodeIdentifiersMustBeUnique.new(node.identifier)
+        raise Bcome::Exception::NodeIdentifiersMustBeUnique.new(node.namespace)
       else
         parent.resources << node
       end
