@@ -40,7 +40,7 @@ module Bcome::WorkspaceCommands
   ## Helpers --
 
   def resource_identifiers
-    @resources.collect(&:identifier)
+    resources.collect(&:identifier)
   end
 
   def method_missing(method_sym, *arguments, &block)

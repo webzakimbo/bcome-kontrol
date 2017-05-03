@@ -34,7 +34,7 @@ module UnitTestHelper
 
   def test_traverse_tree(context, crumbs)
     crumbs.each do |crumb|
-      context = context.resources.select { |r| r.identifier == crumb }.first
+      context = context.resources.for_identifier(crumb)
     end
     context
   end
@@ -42,7 +42,7 @@ module UnitTestHelper
   def all_nodes_in_tree(context, crumbs)
     nodes = []
     crumbs.each do |crumb|
-      context = context.resources.select { |r| r.identifier == crumb }.first
+      context = context.resources.for_identifier(crumb)
       nodes << context
     end
     nodes

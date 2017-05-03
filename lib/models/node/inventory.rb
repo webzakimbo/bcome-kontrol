@@ -28,7 +28,7 @@ module Bcome::Node
     end
 
     def ls
-      load_dynamic_nodes unless @resources.any?
+      load_dynamic_nodes unless resources.any?
       super
     end
 
@@ -43,10 +43,9 @@ module Bcome::Node
     end
 
     def load_dynamic_nodes
-      @resources = []
       raw_servers = fetch_server_list
       raw_servers.each {|raw_server|
-       @resources << ::Bcome::Node::Server.new_from_fog_instance(raw_server, self)
+        resources << ::Bcome::Node::Server.new_from_fog_instance(raw_server, self)
       }
       dynamic_nodes_loaded!
     end

@@ -30,7 +30,6 @@ module Bcome::Node
       validate_identifier
       raise ::Bcome::Exception::MissingDescriptionOnView.new(@raw_view_data.inspect) unless @description
       raise ::Bcome::Exception::MissingTypeOnView.new(@raw_view_data.inspect) unless @type
-      @resources = []
     end
 
     def validate_identifier
@@ -47,7 +46,7 @@ module Bcome::Node
     end
    
     def resources
-      @resources
+      @resources ||= ::Bcome::Node::Resources.new
     end
 
     def list_key
@@ -72,7 +71,7 @@ module Bcome::Node
     end
 
     def resource_for_identifier(identifier)
-      @resources.select{|r| r.identifier == identifier}.first
+      resources.for_identifier(identifier)
     end
 
     def prompt_breadcrumb
