@@ -11,9 +11,8 @@ module Bcome::WorkspaceCommands
   end
 
   def cd(identifier)
-    if resource = resource_for_identifier(identifier)
-      ::Bcome::Workspace.instance.set(current_context: self,
-                                      context: resource)
+    if resource = resources.for_identifier(identifier)
+      ::Bcome::Workspace.instance.set(current_context: self, context: resource)
     else
       puts "#{identifier} not found"
     end
