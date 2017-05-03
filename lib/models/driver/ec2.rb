@@ -9,8 +9,12 @@ module Bcome::Driver
       servers
     end
 
-    def filters
-      unfiltered_search_params
+    def credentials_key
+      @params[:credentials_key]
+    end
+
+    def provisioning_region
+      @params[:provisioning_region]
     end
 
     protected
@@ -24,12 +28,5 @@ module Bcome::Driver
       client
     end
 
-    def credentials_key
-      @params[:credentials_key]
-    end
-
-    def provisioning_region
-      @params[:provisioning_region]
-    end
   end
 end
