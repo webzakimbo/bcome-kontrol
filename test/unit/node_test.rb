@@ -135,19 +135,20 @@ class NodeTest < ActiveSupport::TestCase
     assert network_driver_from_estate == mocked_network_driver
   end
 
-  def test_nodes_should_inherit_network_driver_data_from_parents
+  def test_nodes_should_data_from_parents
     [
       [:network, :network_data],
-      [:ec2_filters, :filters]
+      [:ec2_filters, :filters],
+      [:ssh_settings, :ssh_data]
     ].each do |inheritable_attributes|
       view_key = inheritable_attributes[0]
       node_key = inheritable_attributes[1]
-      nodes_should_inherit_network_config_data_from_parents(view_key, node_key)
+      nodes_should_inherit_config_data_from_parents(view_key, node_key)
       nodes_should_inherit_from_above_only_what_they_do_not_define_and_thus_override_themselves(view_key, node_key)
     end
   end
 
-  def nodes_should_inherit_network_config_data_from_parents(view_key, node_key)
+  def nodes_should_inherit_config_data_from_parents(view_key, node_key)
     # Given view data with tested configuration at the top level only
     col1_network_data = { foo: 'foo', bar: 'bar' }
     view_data = [

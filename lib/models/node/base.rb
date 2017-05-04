@@ -76,7 +76,7 @@ module Bcome::Node
     end
 
     def prompt_breadcrumb
-      "#{has_parent? ? "#{parent.prompt_breadcrumb}> " : "" }#{ is_current_context? ? identifier.cyan : identifier}"
+      "#{has_parent? ? "#{parent.prompt_breadcrumb}> " : "" }#{ is_current_context? ? (has_parent? ? identifier.cyan : identifier) : identifier}" # TODO - rewrite
     end
 
     def namespace
