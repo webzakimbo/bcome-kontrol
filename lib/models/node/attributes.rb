@@ -13,6 +13,11 @@ module Bcome::Node::Attributes
     @type
   end
 
+  def ssh_settings
+    instance_var_name = '@ssh_settings'
+    recurse_hash_data_for_instance_var(instance_var_name, :ssh_settings)
+  end
+
   def network_driver
     data = network_data
     return nil unless data

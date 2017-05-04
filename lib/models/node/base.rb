@@ -8,7 +8,7 @@ module Bcome::Node
     include Bcome::Context
     include Bcome::WorkspaceCommands
     include Bcome::Node::Attributes
-
+ 
     DEFAULT_IDENTIFIER = "bcome"
 
     def self.const_missing(constant)
@@ -97,6 +97,26 @@ module Bcome::Node
         "Description": :description,
         "Type": :type
       }
+    end
+
+    def local_user
+      Bcome::System::Local.instance.local_user
+    end
+
+    def ssh_user
+      # TODO:   SSH Settings in configs => .bcomerc => localuser
+      # Proxy can be defined in .bcomerc settings local
+      # add ssh settings to config:
+      #
+      #  ssh_settings::
+      #    user: ubuntu   # OR behaviour is to fallback to (in order): 1. .bcomerc for this breadcrumb 
+      #        where .bcomerc in same structure  
+      #2. local user
+      ssh_settings[:user] ? ssh_settings[:user] : local_user
+    end
+
+    def execute_local(command)
+      system(command)
     end
 
     private

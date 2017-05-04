@@ -30,6 +30,12 @@ module Bcome::Node
       puts "\s\s\nHit 'menu' to see your options\n\n".green
     end
 
+    def ssh
+      command = "ssh #{ssh_user}@#{public_ip_address}"
+      puts command
+      execute_local(command)
+    end 
+
     def list_attributes
       ::Bcome::Node::Inventory.list_attributes
     end

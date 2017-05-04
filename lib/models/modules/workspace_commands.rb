@@ -1,4 +1,5 @@
 module Bcome::WorkspaceCommands
+
   def ls
     puts "\n\n" + visual_hierarchy.orange + "\n"
     puts "\tAvailable #{list_key}s: ".cyan + "\n\n"
