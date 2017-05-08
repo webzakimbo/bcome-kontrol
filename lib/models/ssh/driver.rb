@@ -4,7 +4,6 @@ module Bcome::Ssh
     # TODO - we're going to fallback to .bcomerc data if present
     # we'll handle this in our data loader and merge it in lower down
     # TODO - refactor proxy factory 
-    # TODO - inheritance of proxy methods? e.g. define a node id at the top level?
 
     def initialize(config, context_node)
       @config = config
