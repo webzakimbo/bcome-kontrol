@@ -31,9 +31,7 @@ module Bcome::Node
     end
 
     def ssh
-      command = "ssh #{ssh_user}@#{public_ip_address}"
-      puts command
-      execute_local(command)
+      ssh_driver.do_ssh
     end 
 
     def list_attributes

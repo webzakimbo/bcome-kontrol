@@ -75,6 +75,13 @@ module Bcome::Node
       resources.for_identifier(identifier)
     end
 
+    # TODO - test this
+    # And then test in context of the ssh driver
+    def recurse_resource_for_identifier(identifier)
+      resource = resource_for_identifier(identifier)
+      return resource ? resource : (has_parent? ? parent.recurse_resource_for_identifier(identifier) : nil)
+    end
+
     def prompt_breadcrumb
       "#{has_parent? ? "#{parent.prompt_breadcrumb}> " : "" }#{ is_current_context? ? (has_parent? ? identifier.cyan : identifier) : identifier}" # TODO - rewrite
     end
@@ -104,18 +111,11 @@ module Bcome::Node
     end
 
     def ssh_user
-      # TODO:   SSH Settings in configs => .bcomerc => localuser
-      # Proxy can be defined in .bcomerc settings local
-      # add ssh settings to config:
-      #
-      #  ssh_settings::
-      #    user: ubuntu   # OR behaviour is to fallback to (in order): 1. .bcomerc for this breadcrumb 
-      #        where .bcomerc in same structure  
-      #2. local user
-      ssh_settings[:user] ? ssh_settings[:user] : local_user
+      ssh_driver.user
     end
 
     def execute_local(command)
+      puts "(local) > #{command}"
       system(command)
     end
 

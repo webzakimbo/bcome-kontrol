@@ -13,6 +13,10 @@ module Bcome::Node::Attributes
     @type
   end
 
+  def ssh_driver
+    @ssh_driver ||= ::Bcome::Ssh::Driver.new(ssh_data, self)
+  end
+
   def ssh_data
     instance_var_name = '@ssh_settings'
     recurse_hash_data_for_instance_var(instance_var_name, :ssh_data)
