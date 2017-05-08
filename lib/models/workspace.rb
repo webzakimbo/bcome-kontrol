@@ -12,6 +12,9 @@ class ::Bcome::Workspace
     init_irb unless console_set?
 
     @context = params[:context]
+
+    @context.load_dynamic_nodes if @context.has_dynamic_nodes? && @context.no_nodes?
+
     main_context = IRB.conf[:MAIN_CONTEXT]
 
     @context.irb_workspace = main_context.workspace if main_context

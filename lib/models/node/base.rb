@@ -42,6 +42,10 @@ module Bcome::Node
       false
     end  
 
+    def no_nodes?
+      !resources || resources.empty?
+    end
+
     def nodes_loaded?
       !has_dynamic_nodes? || @dynamic_nodes_loaded
     end

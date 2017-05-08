@@ -1,4 +1,4 @@
-module Bcome::Node
+ module Bcome::Node
   class Inventory < ::Bcome::Node::Base
 
     class << self
@@ -28,7 +28,7 @@ module Bcome::Node
     end
 
     def ls
-      load_dynamic_nodes unless resources.any?
+      load_dynamic_nodes if no_nodes?
       super
     end
 
