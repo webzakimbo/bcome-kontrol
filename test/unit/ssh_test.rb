@@ -46,7 +46,6 @@ class NetworkDriverTest < ActiveSupport::TestCase
     }
 
     node = mock("server node")
-    node.expects(:user).returns(node_user)
     node.expects(:internal_interface_address).returns(node_hostname)
 
     mocked_proxy_data = mock("proxy data")
@@ -61,6 +60,7 @@ class NetworkDriverTest < ActiveSupport::TestCase
        
     # when
     driver = Bcome::Ssh::Driver.new(config, node)
+    driver.expects(:fallback_local_user).returns(node_user)
 
     returned_proxy = driver.proxy
 
