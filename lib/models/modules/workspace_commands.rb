@@ -16,6 +16,7 @@ module Bcome::WorkspaceCommands
     if resource = resources.for_identifier(identifier)
       ::Bcome::Workspace.instance.set(current_context: self, context: resource)
     else
+      raise ::Bcome::Exception::InvalidBreadcrumb.new("Cannot find a node named '#{identifier}'")
       puts "#{identifier} not found"
     end
   end

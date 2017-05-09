@@ -12,8 +12,17 @@ module Bcome::Node
     end
 
     def <<(node)
-      raise Bcome::Exception::NodeIdentifiersMustBeUnique.new(node.namespace) if for_identifier(node.identifier)
-      @nodes << node
+      if for_identifier(node.identifier)
+        clear!
+        exception_message = "#{node.identifier} is not unique within namespace #{node.parent.namespace}"
+        raise Bcome::Exception::NodeIdentifiersMustBeUnique.new(exception_message)
+      else
+        @nodes << node
+      end
+    end
+
+    def clear!
+      @nodes = []
     end
 
     def for_identifier(identifier)

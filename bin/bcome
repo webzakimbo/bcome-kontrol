@@ -14,5 +14,5 @@ argument = ARGV[1]
 begin
   ::Bcome::Bootup.do(breadcrumbs: breadcrumbs, argument: argument)
 rescue Bcome::Exception::Base => e
-  puts "\t\n#{e.message}\n".red
+  puts e.pretty_display
 end
