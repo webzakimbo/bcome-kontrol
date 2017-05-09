@@ -22,6 +22,7 @@ module ::Bcome::Ssh
         ssh_exec!(ssh, command)
         output_append("\n(#{node.identifier})$".cyan + ">\s#{command.raw} (#{command.pretty_result})\n")
         output_append("#{command.output}")
+        print_output
       }
     end
 

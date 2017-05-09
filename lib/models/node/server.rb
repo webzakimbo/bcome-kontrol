@@ -52,7 +52,6 @@ module Bcome::Node
       commands = raw_commands.collect{|raw_command| ::Bcome::Ssh::Command.new({ :node => self, :raw => raw_command }) }
       command_exec = ::Bcome::Ssh::CommandExec.new(commands)
       command_exec.execute!
-      print command_exec.print_output
       return commands
     end
 

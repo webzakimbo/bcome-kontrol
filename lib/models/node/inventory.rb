@@ -28,7 +28,6 @@
       @resources.pmap {|node|
         node.run(raw_commands)
       }
-      puts "complete".green
     end
 
     def reload!

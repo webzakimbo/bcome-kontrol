@@ -18,6 +18,11 @@ module Bcome::Node
     end
 
     def run(raw_commands)
+      # TODO - what should be the loading strategy where nodes are cached & not yet loaded, and we're working on a whole selection?
+      inventories.pmap{|inventory|
+        inventory.load_dynamic_nodes unless inventory.nodes_loaded?
+      }
+
       inventories.pmap{|inventory|
         inventory.run(raw_commands)
       }
