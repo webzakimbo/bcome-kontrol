@@ -46,5 +46,20 @@ module Bcome::Node
         "public ip": :public_ip_address,
       }
     end
+
+    def do_run(raw_commands)
+      raw_commands = raw_commands.is_a?(String) ? [raw_commands] : raw_commands
+      commands = raw_commands.collect{|raw_command| ::Bcome::Ssh::Command.new({ :node => self, :raw => raw_command }) }
+      command_exec = ::Bcome::Ssh::CommandExec.new(commands)
+      command_exec.execute!
+      print command_exec.print_output
+      return commands
+    end
+
+    def run(raw_commands)
+      do_run(raw_commands)
+      return
+    end
+
   end
 end
