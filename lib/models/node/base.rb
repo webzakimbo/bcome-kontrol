@@ -110,14 +110,6 @@ module Bcome::Node
       }
     end
 
-    def local_user
-      Bcome::System::Local.instance.local_user
-    end
-
-    def ssh_user
-      ssh_driver.user
-    end
-
     def execute_local(command)
       puts "(local) > #{command}"
       system(command)

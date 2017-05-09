@@ -22,6 +22,8 @@ module Bcome::Node::Factory
     end
 
     def load_estate_config
+      # TODO - we're going to fallback to .bcomerc data if present
+      # we'll handle this in our data loader and merge it in lower down
       config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
       return config
     rescue ArgumentError

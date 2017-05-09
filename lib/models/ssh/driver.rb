@@ -1,10 +1,8 @@
 module Bcome::Ssh
   class Driver
 
-    # TODO - we're going to fallback to .bcomerc data if present
-    # we'll handle this in our data loader and merge it in lower down
-
-    # TODO - test this class
+    PROXY_CONNECT_PREFIX="ssh -o StrictHostKeyChecking=no -W %h:%p"
+    PROXY_SSH_PREFIX="ssh -o UserKnownHostsFile=/dev/null -o \"ProxyCommand ssh -W %h:%p"
 
     def initialize(config, context_node)
       @config = config
@@ -14,32 +12,32 @@ module Bcome::Ssh
 
     def proxy
       return nil unless has_proxy?
-      return ::Net::SSH::Proxy::Command.new("ssh -o StrictHostKeyChecking=no -W %h:%p #{bastion_host_user}@#{@proxy_data.host}")  
+      return ::Net::SSH::Proxy::Command.new(proxy_connection_string)
     end
 
     def bastion_host_user
-      @proxy_data.bastion_host_user ? @proxy_data.bastion_host_user : @context_node.ssh_user
+      @proxy_data.bastion_host_user ? @proxy_data.bastion_host_user : user
     end  
 
     def has_proxy?
-      @config[:proxy]
+      !@config[:proxy].nil?
     end
-    
+   
+    def proxy_connection_string
+      "#{PROXY_CONNECT_PREFIX} #{bastion_host_user}@#{@proxy_data.host}"
+    end
+  
     def do_ssh
       if has_proxy?
-        command = "ssh -o UserKnownHostsFile=/dev/null -o \"ProxyCommand ssh -W %h:%p #{bastion_host_user}@#{@proxy_data.host}\" #{@context_node.ssh_user}@#{@context_node.internal_interface_address}"
+        command = "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{@context_node.user}@#{@context_node.internal_interface_address}"
       else
-        command = "ssh #{@context_node.ssh_user}@#{@context_node.public_ip_address}"
+        command = "ssh #{user}@#{@context_node.public_ip_address}"
       end     
       @context_node.execute_local(command)
     end
 
     def user
-      config_user ? config_user : fallback_local_user
-    end
-
-    def config_user
-      @config[:user]
+      @config[:user] ? @config[:user] : fallback_local_user
     end
 
     def fallback_local_user
