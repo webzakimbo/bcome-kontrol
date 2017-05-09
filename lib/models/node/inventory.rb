@@ -5,14 +5,6 @@
       def to_s
         "inventory"
       end
-
-      #def list_attributes
-       # {
-       #  "identifier": :identifier,
-       #  "internal ip": :internal_interface_address,
-       #  "public ip": :public_ip_address,
-       # }
-      #end
     end
  
     attr_reader :dynamic_nodes_loaded
@@ -30,6 +22,13 @@
     def ls
       load_dynamic_nodes if no_nodes?
       super
+    end
+
+    def run(raw_commands)
+      @resources.pmap {|node|
+        node.run(raw_commands)
+      }
+      puts "complete".green
     end
 
     def reload!
