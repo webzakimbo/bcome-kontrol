@@ -29,7 +29,7 @@ module Bcome::Ssh
   
     def do_ssh
       if has_proxy?
-        command = "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{@context_node.user}@#{@context_node.internal_interface_address}"
+        command = "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_interface_address}"
       else
         command = "ssh #{user}@#{@context_node.public_ip_address}"
       end     
