@@ -27,7 +27,12 @@ module Bcome::Node
     def ls
       puts "\n" + visual_hierarchy.orange + "\n"
       puts pretty_description
-      puts "\s\s\nHit 'menu' to see your options\n\n".green
+
+      if ::Bcome::System::Local.instance.in_console_session?
+        puts "\s\s\n\tType '?' to see your options\n\n".green
+      else
+        puts "\n\n"
+      end
     end
 
     def ssh
@@ -35,7 +40,11 @@ module Bcome::Node
     end 
 
     def list_attributes
-      ::Bcome::Node::Inventory.list_attributes
+      {
+        "identifier": :identifier,
+        "internal ip": :internal_interface_address,
+        "public ip": :public_ip_address,
+      }
     end
   end
 end

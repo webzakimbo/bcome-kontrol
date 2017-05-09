@@ -1,5 +1,8 @@
 module Bcome::Ssh
-  class ProxyFactory
+  class ProxyData
+
+    # TODO
+    # Test this class
 
     def initialize(config, context_node)
       @config = config
@@ -10,8 +13,8 @@ module Bcome::Ssh
       @host ||= get_host
     end
 
-    def user
-      @user ||= get_user
+    def bastion_host_user
+      @bastion_host_user ||= get_bastion_host_user
     end
 
     def valid_host_lookups
@@ -21,8 +24,8 @@ module Bcome::Ssh
       }
     end
  
-    def get_user
-      @config[:user]
+    def get_bastion_host_user
+      @config[:bastion_host_user]
     end
 
     def get_host

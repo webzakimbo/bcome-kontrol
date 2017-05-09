@@ -13,7 +13,7 @@ module Bcome::System
       end
 
       def in_console_session?
-        !::Bcome::Workspace.instance.console_set?
+        ::Bcome::Workspace.instance.console_set?
       end
 
       def local_user

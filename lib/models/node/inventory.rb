@@ -6,13 +6,13 @@
         "inventory"
       end
 
-      def list_attributes
-        {
-         "identifier": :identifier,
-         "internal ip": :internal_interface_address,
-         "public ip": :public_ip_address,
-        }
-      end
+      #def list_attributes
+       # {
+       #  "identifier": :identifier,
+       #  "internal ip": :internal_interface_address,
+       #  "public ip": :public_ip_address,
+       # }
+      #end
     end
  
     attr_reader :dynamic_nodes_loaded
@@ -62,9 +62,9 @@
       network_driver.fetch_server_list(filters)
     end
 
-    def list_attributes
-      ::Bcome::Node::Inventory.list_attributes
-    end
+    #def list_attributes
+    #  #::Bcome::Node::Inventory.list_attributes
+    #end
 
   end
 end
