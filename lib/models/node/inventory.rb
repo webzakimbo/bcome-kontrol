@@ -25,7 +25,7 @@
     end
 
     def run(raw_commands)
-      @resources.pmap {|node|
+      @resources.active.pmap {|node|
         node.run(raw_commands)
       }
     end
@@ -59,10 +59,6 @@
     def fetch_server_list
       network_driver.fetch_server_list(filters)
     end
-
-    #def list_attributes
-    #  #::Bcome::Node::Inventory.list_attributes
-    #end
 
   end
 end

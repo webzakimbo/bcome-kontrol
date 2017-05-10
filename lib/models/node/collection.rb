@@ -7,7 +7,7 @@ module Bcome::Node
 
     def inventories
       inv = []
-      @resources.each do |r|
+      @resources.active.each do |r|
         if r.is_a?(Bcome::Node::Inventory)
           inv << r
         else

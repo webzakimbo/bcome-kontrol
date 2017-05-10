@@ -5,7 +5,8 @@ module Bcome::WorkspaceCommands
     puts "\tAvailable #{list_key}s: ".cyan + "\n\n"
 
     @resources.sort_by(&:identifier).each do |resource|
-      puts resource.pretty_description
+      is_active = @resources.is_active_resource?(resource)
+      puts resource.pretty_description(is_active)
       puts "\n"
     end
     new_line
@@ -21,16 +22,21 @@ module Bcome::WorkspaceCommands
     end
   end
 
-  def pretty_description
+  def pretty_description(is_active)
     desc = ''
     list_attributes.each do |key, value|
       next unless respond_to?(value) || instance_variable_defined?("@#{value}")
       attribute_value = send(value)
       next unless attribute_value
-      desc += "\t#{key}".cyan
+
+      desc += "\t"
+      desc += is_active ? "#{key}".cyan : "#{key}"
       desc += "\s" * (12 - key.length)
       attribute_value = value == :identifier ? attribute_value.underline : attribute_value
-      desc += attribute_value.green + "\n"
+      desc += is_active ? attribute_value.green : attribute_value
+      desc += "\n"
+      desc = desc unless is_active
+
     end
     desc
   end
