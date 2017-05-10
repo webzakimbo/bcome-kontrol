@@ -22,6 +22,10 @@ module Bcome::WorkspaceCommands
     end
   end
 
+  def interactive
+    ::Bcome::Interactive::Session.run(self)
+  end
+
   def pretty_description(is_active = true)
     desc = ''
     list_attributes.each do |key, value|
