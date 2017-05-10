@@ -115,18 +115,6 @@ module Bcome::Node
       system(command)
     end
 
-    def disable(identifier)
-      resources.do_disable(identifier)
-    end
-
-    def enable(identifier)
-      resources.do_enable(identifier)
-    end
-
-    def clear!
-      resources.clear!
-    end
-
     private
 
     def set_view_attributes

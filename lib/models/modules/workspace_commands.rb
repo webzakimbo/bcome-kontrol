@@ -22,7 +22,7 @@ module Bcome::WorkspaceCommands
     end
   end
 
-  def pretty_description(is_active)
+  def pretty_description(is_active = true)
     desc = ''
     list_attributes.each do |key, value|
       next unless respond_to?(value) || instance_variable_defined?("@#{value}")
@@ -43,6 +43,23 @@ module Bcome::WorkspaceCommands
 
   def back
     exit
+  end
+
+  def disable(identifier)
+    resources.do_disable(identifier)
+  end
+
+  def enable(identifier)
+    resources.do_enable(identifier)
+  end
+
+  def clear!
+    resources.clear!
+  end
+
+  def disable!
+    resources.disable!
+    return
   end
 
   ## Helpers --

@@ -44,6 +44,10 @@ module Bcome::Node
       return
     end
 
+    def disable!
+      @disabled_resources = @nodes
+    end
+
     def disable(identifier)
       resource = for_identifier(identifier)
       raise Bcome::Exception::NoNodeNamedByIdentifier.new(identifier) unless resource
