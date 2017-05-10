@@ -7,6 +7,10 @@ module Bcome::Interactive::SessionItem
     
     DANGER_CMD = "rm\s+-r|rm\s+-f|rm\s+-fr|rm\s+-rf|rm"
 
+    def resources
+      node.resources.active 
+    end
+
     def do
       show_menu
       puts ""
@@ -36,7 +40,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def handle_the_unwise(input)
-      if prompt_for_confirmation("Command may be dangerous to run on all machines. Are you sure you want to proceed? [Y|N] > ".danger)
+      if prompt_for_confirmation("Command may be dangerous to run on all machines. Are you sure you want to proceed? [Y|N] > ".red)
         execute_on_machines(input)
       end
     end
@@ -54,14 +58,14 @@ module Bcome::Interactive::SessionItem
     end
 
     def start_message
-      warning = "\nCommands entered here will be executed on EVERY machine in your selection.".danger
-      second_warning = "\n\nUse with CAUTION.".danger
-      info = "\n\n\\l list machines\n\\q to quit\n\\? this message".informational                                                             
+      warning = "\n\sCommands entered here will be executed on ".green + "EVERY".underline.red + " machine in your selection.".green
+      second_warning = "\n\n\s" + "Use with CAUTION.".red.underline
+      info = "\n\n\s\\l list machines\n\s\\q to quit\n\s\\? this message".yellow                                                             
       return "#{warning}#{second_warning}#{info}\n"
     end
 
     def terminal_prompt
-      "#{bcome_identifier}>\s" + "interactive\s>\s".command   # high voltage
+      "enter command:".bold.cyan + "\s_".blinking.cyan # danger, danger, high-voltage
     end
 
     def valid_response(response)
@@ -82,20 +86,18 @@ module Bcome::Interactive::SessionItem
     end
 
     def open_ssh_connections!
-      ProgressBar.instance.reset!
-      machines.pmap {|machine|
-        ProgressBar.instance.indicate_and_increment!("init ssh: ","~~~", "connections")
-        machine.ssh_connect!
+      Bcome::ProgressBar.instance.reset!
+      resources.pmap {|machine|
+        Bcome::ProgressBar.instance.indicate_and_increment!("\sinit ssh: ","~~", "connections")
+        machine.ssh_driver.ssh_connect!
       }
-      ProgressBar.instance.reset!
+      Bcome::ProgressBar.instance.reset!
     end
 
     def list_machines
       puts "\n"
-      machines.each do |machine|
-        env = machine.environment
-        platform = env.platform
-        puts "#{platform.identifier.cyan}:#{env.identifier.orange}:#{machine.identifier.yellow}"
+      resources.each do |machine|
+        puts "\s* #{machine.namespace}".green
       end
     end
  
@@ -104,29 +106,9 @@ module Bcome::Interactive::SessionItem
     end
 
     def execute_on_machines(user_input)
-      machines.pmap {|machine|
+      resources.pmap {|machine|
         machine.run(user_input)
       }
-    end
-
-    def machines
-      @machines ||= has_selected_machines? ? selected_machines.collect(&:node) : flat_list_of_machines
-    end
-
-    def flat_list_of_machines
-      resources.collect{|resource| resource.node.machines }.flatten
-    end
-
-    def resources
-      @irb_session.resources  
-    end
-
-    def has_selected_machines?
-      selected_machines.is_a?(Array) && selected_machines.any?
-    end
-
-    def selected_machines
-      @selections ||= @irb_session.instance_variable_get(:@objects)
     end
 
   end

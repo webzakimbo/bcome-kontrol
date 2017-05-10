@@ -3,15 +3,14 @@ module Bcome::Interactive::SessionItem
 
     def initialize(session)
       @session = session
-      @irb_session = @session.irb_session
     end
 
     def bcome_identifier  
-      @irb_session.become_identifier
+      node.namespace
     end
 
-    def irb_session
-      @session.irb_session
+    def node
+      @session.node
     end
 
     def options

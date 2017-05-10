@@ -35,6 +35,10 @@ class String
     "\e[4m#{self}\e[0m"
   end
 
+  def blinking
+    "\033[5m#{self}\033[0m"
+  end
+
   def method_missing(method_sym, *arguments, &black)
     if colour_code = colour_codes[method_sym]
       if (arguments[0] == :highlight) && highlight_colour = highlight_colour_codes[method_sym]

@@ -1,4 +1,4 @@
-module Bcome::Exception::Interactive
-  class SessionHalt < RuntimeError
+module Bcome::Exception
+  class InteractiveSessionHalt < RuntimeError
   end
 end

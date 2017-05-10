@@ -2,25 +2,22 @@ module Bcome::Interactive
   class Session
 
     class << self
-      def run(irb_session)
-        irb_pre_session_return_format = irb_session.conf.return_format
-        session_end_message = "\ninteractive session ended".success
+      def run(node)
+        session_end_message = "\ninteractive session ended".green
         begin
-          session = ::Bcome::Interactive::Session.new(irb_session)
-          irb_session.conf.return_format = ""
+          session = ::Bcome::Interactive::Session.new(node)
           system("clear")
           session.prompt
-        rescue ::Bcome::Interactive::SessionHalt => e
-          irb_session.conf.return_format = irb_pre_session_return_format
+        rescue ::Bcome::Exception::InteractiveSessionHalt => e
           puts session_end_message
         end
       end
     end
 
-    attr_reader :responses, :irb_session
+    attr_reader :responses, :node
 
-    def initialize(irb_session)
-      @irb_session = irb_session
+    def initialize(node)
+      @node = node
       @responses = {}
     end
 
