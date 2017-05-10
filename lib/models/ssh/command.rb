@@ -8,7 +8,7 @@ module ::Bcome::Ssh
       @node = params[:node]
       @exit_code = nil
       @exit_signal = nil
-      @stdin = "" ; @stdout = ""
+      @stdin = "" ; @stdout = ""; @stderr = ""
     end
 
     def pretty_result

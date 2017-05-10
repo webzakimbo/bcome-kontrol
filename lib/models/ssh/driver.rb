@@ -1,6 +1,8 @@
 module Bcome::Ssh
   class Driver
 
+    attr_reader :config
+
     PROXY_CONNECT_PREFIX="ssh -o StrictHostKeyChecking=no -W %h:%p"
     PROXY_SSH_PREFIX="ssh -o UserKnownHostsFile=/dev/null -o \"ProxyCommand ssh -W %h:%p"
 
@@ -50,18 +52,15 @@ module Bcome::Ssh
       has_proxy? ? @context_node.internal_interface_address : @context_node.public_ip_address
     end
 
-    def ssh_keys
-      ["~/.ssh/id_rsa"]  # TODO - this to come from our config file (within ssh settings), OR defaults to this
-    end  
-
     def ssh_connect!
+      ssh_keys = @config[:ssh_keys]
+      raise ::Bcome::Exception::InvalidSshConfig.new("Missing ssh keys for #{@context_node.namespace}") unless ssh_keys
       net_ssh_params = { :keys => ssh_keys, :paranoid => false }
       net_ssh_params[:proxy] = proxy if has_proxy?
-
       begin
         @ssh_con = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
       rescue Net::SSH::ConnectionTimeout
-        raise "Could not initiate connection to #{self.namespace}"
+        raise "Could not initiate connection to #{@context_node.namespace}"
       end
       return @ssh_con
     end

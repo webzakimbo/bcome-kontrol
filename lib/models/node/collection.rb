@@ -19,6 +19,7 @@ module Bcome::Node
 
     def run(raw_commands)
       # TODO - what should be the loading strategy where nodes are cached & not yet loaded, and we're working on a whole selection?
+      # TODO - print server names in context when executing commands down a deep tree
       inventories.pmap{|inventory|
         inventory.load_dynamic_nodes unless inventory.nodes_loaded?
       }
