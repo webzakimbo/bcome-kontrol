@@ -17,7 +17,6 @@ module IRB
   end
 
   class Context
-
     def overriden_evaluate(line, line_no)
       begin
         @line_no = line_no
@@ -26,9 +25,9 @@ module IRB
         puts e.pretty_display
       end
     end
- 
+
     alias evaluate_without_overriden evaluate
     alias evaluate overriden_evaluate
+  end  # end class Context
 
-  end
-end
+end  # end module IRB --

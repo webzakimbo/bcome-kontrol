@@ -1,6 +1,5 @@
 require 'singleton'
 require 'rainbow'
-require 'aws-sdk'
 require 'net/scp'
 require 'net/ssh/proxy/command'
 require 'fog/aws'
