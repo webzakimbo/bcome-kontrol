@@ -62,6 +62,11 @@ module Bcome::WorkspaceCommands
     return
   end
 
+  def enable!
+    resources.enable!
+    return
+  end
+
   ## Helpers --
 
   def resource_identifiers

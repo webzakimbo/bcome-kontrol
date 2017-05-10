@@ -25,6 +25,7 @@ module Bcome::Node
     def clear!
       @nodes = []
     end
+    alias enable! clear!
 
     def do_disable(identifier)
       if identifier.is_a?(Array)
