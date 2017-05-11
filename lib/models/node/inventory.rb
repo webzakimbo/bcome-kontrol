@@ -29,9 +29,9 @@
     end
 
     def reload!
-      puts "\nReloading inventory...\n".green
+      puts "\nReloading inventory...\n".bc_green
       load_dynamic_nodes
-      puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".green
+      puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".bc_green
     end
 
     def override_server_identifier?

@@ -3,7 +3,7 @@ module Bcome::Interactive
 
     class << self
       def run(node)
-        session_end_message = "\ninteractive session ended".green
+        session_end_message = "\ninteractive session ended".bc_green
         begin
           session = ::Bcome::Interactive::Session.new(node)
           system("clear")

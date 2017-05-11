@@ -1,8 +1,8 @@
 module Bcome::WorkspaceCommands
 
   def ls
-    puts "\n\n" + visual_hierarchy.orange + "\n"
-    puts "\tAvailable #{list_key}s: ".cyan + "\n\n"
+    puts "\n\n" + visual_hierarchy.bc_orange + "\n"
+    puts "\tAvailable #{list_key}s: ".bc_cyan + "\n\n"
 
     @resources.sort_by(&:identifier).each do |resource|
       is_active = @resources.is_active_resource?(resource)
@@ -47,10 +47,10 @@ module Bcome::WorkspaceCommands
       next unless attribute_value
 
       desc += "\t"
-      desc += is_active ? "#{key}".cyan : "#{key}"
+      desc += is_active ? "#{key}".bc_cyan : "#{key}"
       desc += "\s" * (12 - key.length)
       attribute_value = value == :identifier ? attribute_value.underline : attribute_value
-      desc += is_active ? attribute_value.green : attribute_value
+      desc += is_active ? attribute_value.bc_green : attribute_value
       desc += "\n"
       desc = desc unless is_active
 

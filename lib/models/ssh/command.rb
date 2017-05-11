@@ -12,7 +12,7 @@ module ::Bcome::Ssh
     end
 
     def pretty_result
-     return is_success? ? "success".green : "failure".red
+     return is_success? ? "success".bc_green : "failure".bc_red
     end
 
     def bootstrap=(bootstrap_value)
