@@ -24,5 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'pmap', '1.1.1'
   spec.add_dependency 'activesupport', '5.1'
-#  spec.add_dependency 'awesome_print', '1.7.0'
+  spec.add_dependency 'awesome_print', '1.7.0'
 end
