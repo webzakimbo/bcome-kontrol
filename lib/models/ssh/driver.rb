@@ -12,6 +12,27 @@ module Bcome::Ssh
       @proxy_data = @config[:proxy] ? ::Bcome::Ssh::ProxyData.new(@config[:proxy], @context_node) : nil
     end
 
+    def pretty_config_details
+      config = {
+        user: user,
+        ssh_keys: @config[:ssh_keys]
+      }
+      if has_proxy?
+        config.merge!({
+          host_or_ip: @context_node.internal_interface_address,
+          proxy: {
+            bastion_host:  @proxy_data.host,
+            bastion_host_user: bastion_host_user
+          }
+        })
+      else
+        config.merge!({
+          host_or_ip: @context_node.public_ip_address 
+        })
+      end
+      config
+    end
+
     def proxy
       return nil unless has_proxy?
       return ::Net::SSH::Proxy::Command.new(proxy_connection_string)
@@ -65,6 +86,16 @@ module Bcome::Ssh
       return @ssh_con
     end
 
+    def ping
+      success = false
+      begin
+        ssh_connect!
+        success = true
+      rescue
+      end
+      return success
+    end
+
     def ssh_connection(bootstrap = false)
       return has_open_ssh_con? ? @ssh_con : ssh_connect!
     end
@@ -72,7 +103,6 @@ module Bcome::Ssh
     def has_open_ssh_con?
       @ssh_con && !@ssh_con.closed?
     end
-
 
   end
 end

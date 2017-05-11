@@ -33,6 +33,12 @@ module Bcome::WorkspaceCommands
     return 
   end
 
+  def ping
+    machines.pmap {|machine|
+      machine.ping
+    }
+  end
+
   def pretty_description(is_active = true)
     desc = ''
     list_attributes.each do |key, value|

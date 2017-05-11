@@ -3,6 +3,7 @@ PATH
   specs:
     bcome (1.0.0)
       activesupport (= 5.1)
+      awesome_print (= 1.7.0)
       fog-aws (~> 0.12.0)
       net-scp (~> 1.2, >= 1.2.1)
       pmap (= 1.1.1)
@@ -19,6 +20,7 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     ast (2.3.0)
+    awesome_print (1.7.0)
     builder (3.2.3)
     concurrent-ruby (1.0.5)
     excon (0.55.0)

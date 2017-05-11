@@ -43,6 +43,30 @@ module Bcome::Node
       ssh_driver.do_ssh
     end 
 
+    def ping
+      ping_result = ssh_driver.ping
+      result = {
+        namespace => {
+          "connection" => ping_result ? "success" : "failed",
+          "ssh_config" => ssh_driver.pretty_config_details
+        }
+      }
+
+      colour = ping_result ? :green : :red
+
+      ap result, options = {
+        :color => {
+           hash:  colour,
+           symbol: colour,
+           string: colour,
+           keyword: colour,
+           variable: colour,
+           array: colour
+
+        }
+      }
+    end
+
     def list_attributes
       {
         "identifier": :identifier,
