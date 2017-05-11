@@ -30,6 +30,7 @@ module Bcome::WorkspaceCommands
     machines.pmap {|machine|
       machine.do_run(raw_commands)
     }
+    return 
   end
 
   def pretty_description(is_active = true)

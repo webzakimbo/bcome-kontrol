@@ -94,7 +94,7 @@ module Bcome::Interactive::SessionItem
         Bcome::ProgressBar.instance.indicate_and_increment!(progress_bar_config, in_progress)
       }
       in_progress = false
-      Bcome::ProgressBar.instance.indicate_and_increment!(progress_bar_config, in_progress)
+      Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
       Bcome::ProgressBar.instance.reset!
     end
 
