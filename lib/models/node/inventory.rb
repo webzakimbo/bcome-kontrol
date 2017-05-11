@@ -24,10 +24,8 @@
       super
     end
 
-    def run(raw_commands)
-      @resources.active.pmap {|node|
-        node.run(raw_commands)
-      }
+    def machines
+      @resources.active
     end
 
     def reload!

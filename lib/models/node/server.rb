@@ -35,6 +35,10 @@ module Bcome::Node
       end
     end
 
+    def machines
+      [self]
+    end
+ 
     def ssh
       ssh_driver.do_ssh
     end 
@@ -53,11 +57,6 @@ module Bcome::Node
       command_exec = ::Bcome::Ssh::CommandExec.new(commands)
       command_exec.execute!
       return commands
-    end
-
-    def run(raw_commands)
-      do_run(raw_commands)
-      return
     end
 
   end

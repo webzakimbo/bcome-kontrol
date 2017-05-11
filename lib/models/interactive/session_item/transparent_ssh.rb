@@ -8,7 +8,7 @@ module Bcome::Interactive::SessionItem
     DANGER_CMD = "rm\s+-r|rm\s+-f|rm\s+-fr|rm\s+-rf|rm"
 
     def resources
-      node.resources.active 
+      node.machines
     end
 
     def do

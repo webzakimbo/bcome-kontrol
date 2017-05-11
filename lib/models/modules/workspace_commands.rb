@@ -26,6 +26,12 @@ module Bcome::WorkspaceCommands
     ::Bcome::Interactive::Session.run(self)
   end
 
+  def run(raw_commands)
+    machines.pmap {|machine|
+      machine.do_run(raw_commands)
+    }
+  end
+
   def pretty_description(is_active = true)
     desc = ''
     list_attributes.each do |key, value|

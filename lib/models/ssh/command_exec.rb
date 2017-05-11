@@ -20,7 +20,7 @@ module ::Bcome::Ssh
         node = command.node
         ssh = node.ssh_driver.ssh_connection
         ssh_exec!(ssh, command)
-        output_append("\n(#{node.identifier})$".cyan + ">\s#{command.raw} (#{command.pretty_result})\n")
+        output_append("\n(#{node.namespace})$".cyan + ">\s#{command.raw} (#{command.pretty_result})\n")
         output_append("#{command.output}")
         print_output
       }
