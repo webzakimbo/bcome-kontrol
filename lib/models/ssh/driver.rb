@@ -5,6 +5,7 @@ module Bcome::Ssh
 
     PROXY_CONNECT_PREFIX="ssh -o StrictHostKeyChecking=no -W %h:%p"
     PROXY_SSH_PREFIX="ssh -o UserKnownHostsFile=/dev/null -o \"ProxyCommand ssh -W %h:%p"
+    DEFAULT_TIMEOUT_IN_MILLISECONDS = 4000
 
     def initialize(config, context_node)
       @config = config
@@ -15,7 +16,8 @@ module Bcome::Ssh
     def pretty_config_details
       config = {
         user: user,
-        ssh_keys: @config[:ssh_keys]
+        ssh_keys: @config[:ssh_keys],
+        timeout: timeout_in_milliseconds
       }
       if has_proxy?
         config.merge!({
@@ -31,6 +33,10 @@ module Bcome::Ssh
         })
       end
       config
+    end
+
+    def timeout_in_milliseconds
+      @config[:timeout_milliseconds] ||= Bcome::Ssh::Driver::DEFAULT_TIMEOUT_IN_MILLISECONDS
     end
 
     def proxy
@@ -67,7 +73,6 @@ module Bcome::Ssh
       ::Bcome::System::Local.instance.local_user
     end
 
-    ###### TODO - refactor out? BRANCH commands
 
     def node_host_or_ip
       has_proxy? ? @context_node.internal_interface_address : @context_node.public_ip_address
@@ -78,6 +83,8 @@ module Bcome::Ssh
       raise ::Bcome::Exception::InvalidSshConfig.new("Missing ssh keys for #{@context_node.namespace}") unless ssh_keys
       net_ssh_params = { :keys => ssh_keys, :paranoid => false }
       net_ssh_params[:proxy] = proxy if has_proxy?
+      net_ssh_params[:timeout] = timeout_in_milliseconds
+
       begin
         @ssh_con = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
       rescue Net::SSH::ConnectionTimeout
