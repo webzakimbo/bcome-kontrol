@@ -109,7 +109,7 @@ module Bcome::Interactive::SessionItem
     def list_machines
       puts "\n"
       resources.each do |machine|
-        puts "\s* #{machine.namespace}".green
+        puts "\s* #{machine.namespace}".orange
       end
     end
  
