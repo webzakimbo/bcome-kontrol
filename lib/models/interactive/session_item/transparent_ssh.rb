@@ -86,14 +86,26 @@ module Bcome::Interactive::SessionItem
     end
 
     def open_ssh_connections!
+      in_progress = true
+      Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
       Bcome::ProgressBar.instance.reset!
       resources.pmap {|machine|
-        Bcome::ProgressBar.instance.indicate_and_increment!("\sinit ssh: ","~~", "connections")
         machine.ssh_driver.ssh_connect!
+        Bcome::ProgressBar.instance.indicate_and_increment!(progress_bar_config, in_progress)
       }
+      in_progress = false
+      Bcome::ProgressBar.instance.indicate_and_increment!(progress_bar_config, in_progress)
       Bcome::ProgressBar.instance.reset!
     end
 
+    def progress_bar_config
+      {
+        :prefix => "\sopening connections\s",
+        :indice => "---",
+        :indice_descriptor => "connections"
+      }
+    end
+   
     def list_machines
       puts "\n"
       resources.each do |machine|

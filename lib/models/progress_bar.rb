@@ -17,14 +17,16 @@ module Bcome
       @count = 0
     end
 
-    def indicate(bar_prefix, bar_indice, indice_descriptor)
-      bar = "#{bar_prefix}" + "#{bar_indice * @count}>".cyan + " (#{@count} #{indice_descriptor})" + "\r"
+    def indicate(config, in_progress)
+      prefix = in_progress ? config[:prefix].blinking : config[:prefix]
+
+      bar = prefix + "#{config[:indice] * @count}>".cyan + " (#{@count} #{config[:indice_descriptor]})" + "\r"
       print bar
     end
 
-    def indicate_and_increment!(bar_prefix, bar_indice, indice_descriptor)
+    def indicate_and_increment!(config, in_progress)
       increment!
-      indicate(bar_prefix, bar_indice, indice_descriptor)
+      indicate(config, in_progress)
     end
 
   end
