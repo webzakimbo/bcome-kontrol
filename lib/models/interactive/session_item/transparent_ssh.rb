@@ -101,7 +101,7 @@ module Bcome::Interactive::SessionItem
     def progress_bar_config
       {
         :prefix => "\sopening connections\s",
-        :indice => "---",
+        :indice => "...",
         :indice_descriptor => "connections"
       }
     end
