@@ -78,13 +78,13 @@ module Bcome::Ssh
       has_proxy? ? @context_node.internal_interface_address : @context_node.public_ip_address
     end
 
-    def ssh_connect!
+    def ssh_connect!(verbose = false)
       ssh_keys = @config[:ssh_keys]
       raise ::Bcome::Exception::InvalidSshConfig.new("Missing ssh keys for #{@context_node.namespace}") unless ssh_keys
       net_ssh_params = { :keys => ssh_keys, :paranoid => false }
       net_ssh_params[:proxy] = proxy if has_proxy?
       net_ssh_params[:timeout] = timeout_in_milliseconds
-
+      net_ssh_params[:verbose] = :debug if verbose
       begin
         @ssh_con = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
       rescue Net::SSH::ConnectionTimeout
