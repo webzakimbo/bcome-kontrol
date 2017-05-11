@@ -10,6 +10,8 @@ module Bcome::Interactive
           session.prompt
         rescue ::Bcome::Exception::InteractiveSessionHalt => e
           puts session_end_message
+        rescue  ::Bcome::Exception::CouldNotInitiateSshConnection => e
+          puts e.message.bc_red
         end
       end
     end
@@ -28,13 +30,7 @@ module Bcome::Interactive
     end
 
     def process_item(item)
-      begin
-        item.do
-      rescue Exception => e
-        puts "Exception: #{e.message}"
-        puts e.backtrace.join("\n")
-        raise ::Bcome::Interactive::SessionHalt.new
-      end
+      item.do
     end
 
   end

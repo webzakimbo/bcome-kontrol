@@ -18,8 +18,6 @@ module Bcome::Node
     end
 
     def machines
-      # TODO - what should be the loading strategy where nodes are cached & not yet loaded, and we're working on a whole selection?
-      # TODO - print server names in context when executing commands down a deep tree
       m = []
       @resources.active.each {|resource|
         if resource.is_a?(::Bcome::Node::Inventory)

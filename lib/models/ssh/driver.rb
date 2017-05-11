@@ -88,7 +88,7 @@ module Bcome::Ssh
       begin
         @ssh_con = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
       rescue Net::SSH::ConnectionTimeout
-        raise "Could not initiate connection to #{@context_node.namespace}"
+        raise ::Bcome::Exception::CouldNotInitiateSshConnection.new("#{@context_node.namespace}.  Fix the issue and use bcome #{@context_node.namespace}:ping command to verify it's worked")
       end
       return @ssh_con
     end

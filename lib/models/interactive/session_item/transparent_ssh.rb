@@ -65,7 +65,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def terminal_prompt
-      "enter command:".bold.bc_cyan + "\s_".blinking.bc_cyan # danger, danger, high-voltage
+      "\s\s>\s".bold.bc_cyan.blinking # + "\s_".blinking.bc_cyan # danger, danger, high-voltage
     end
 
     def valid_response(response)
@@ -90,7 +90,13 @@ module Bcome::Interactive::SessionItem
       Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
       Bcome::ProgressBar.instance.reset!
       resources.pmap {|machine|
-        machine.ssh_driver.ssh_connect!
+        begin
+          machine.ssh_driver.ssh_connect!
+        rescue 
+          puts "Failed to connect to instance - please verify your connection settings and check that our instance is running."
+          machine.print_ping_result(false)
+          raise ::Bcome::Exception::CouldNotInitiateSshConnection.new(machine.namespace)
+        end
         Bcome::ProgressBar.instance.indicate_and_increment!(progress_bar_config, in_progress)
       }
       in_progress = false
@@ -100,9 +106,9 @@ module Bcome::Interactive::SessionItem
 
     def progress_bar_config
       {
-        :prefix => "\sopening connections\s",
+        :prefix => "\sOpening SSH connections\s",
         :indice => "...",
-        :indice_descriptor => "connections"
+        :indice_descriptor => "of #{resources.size}"
       }
     end
    
@@ -114,7 +120,7 @@ module Bcome::Interactive::SessionItem
     end
  
     def get_input(message = terminal_prompt)
-      return ::Readline.readline("\n#{message}", true).squeeze(" " ).to_s
+      return ::Readline.readline("\n#{message}", true).squeeze("").to_s
     end
 
     def execute_on_machines(user_input)

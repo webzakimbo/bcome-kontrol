@@ -45,6 +45,10 @@ module Bcome::Node
 
     def ping
       ping_result = ssh_driver.ping
+      print_ping_result(ping_result)
+    end
+
+    def print_ping_result(ping_result = true)
       result = {
         namespace => {
           "connection" => ping_result ? "success" : "failed",
@@ -66,6 +70,7 @@ module Bcome::Node
         }
       }
     end
+
 
     def list_attributes
       {
