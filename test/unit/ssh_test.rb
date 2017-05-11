@@ -42,11 +42,11 @@ class NetworkDriverTest < ActiveSupport::TestCase
     node_hostname = given_a_random_string_of_length(5)
 
     config = {
+      :user => node_user,
       :proxy => {}
     }
 
     node = mock("server node")
-    node.expects(:user).returns(node_user)
     node.expects(:internal_interface_address).returns(node_hostname)
 
     mocked_proxy_data = mock("proxy data")
