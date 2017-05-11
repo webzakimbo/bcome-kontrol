@@ -23,7 +23,7 @@ module Bcome::Node
     end
 
     def clear!
-      @nodes = []
+      @disabled_resources = []
     end
     alias enable! clear!
 
