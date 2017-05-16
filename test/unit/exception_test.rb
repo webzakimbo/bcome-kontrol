@@ -16,7 +16,7 @@ class ExceptionTest < ActiveSupport::TestCase
     # And also that
     begin
       raise exception
-    rescue ::Bcome::Exception::Base => e
+    rescue ::Bcome::Exception::Base
       # That we are able to catch the exception
     end
   end

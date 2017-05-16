@@ -161,11 +161,11 @@ class BootupTest < ActiveSupport::TestCase
     # And all our expectations are met
  end
 
- def test_should_be_able_to_invoke_a_method_on_a_context
-   # Given
+  def test_should_be_able_to_invoke_a_method_on_a_context
+    # Given
     identifier = given_a_random_string_of_length(4)
     method_name = :methodthatdoesnotrequirearguments  # Method added in our bootup helper
-
+ 
     config = {
       identifier: 'toplevel',
       description: 'top level node',
@@ -179,10 +179,10 @@ class BootupTest < ActiveSupport::TestCase
     estate = Bcome::Node::Factory.init_tree
 
     Bcome::Node::Factory.expects(:init_tree).returns(estate)
-
+ 
     # When/then
     ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: nil)
-
+ 
     # And all our expectations are met
   end
 
@@ -244,15 +244,6 @@ class BootupTest < ActiveSupport::TestCase
     # Given
     identifier = given_a_random_string_of_length(4)
     method_name = :i_dont_exist
-
-    config = {
-      identifier: 'toplevel',
-      description: 'top level node',
-      type: 'collection',
-      views: [
-        { identifier: identifier, type: 'collection', description: "the node we'll execute our method on" }
-      ]
-    }
 
     # When/then
     assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do

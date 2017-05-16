@@ -1,4 +1,4 @@
- module Bcome::Node
+module Bcome::Node
   class Inventory < ::Bcome::Node::Base
 
     class << self

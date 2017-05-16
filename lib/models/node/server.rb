@@ -62,7 +62,7 @@ module Bcome::Node
 
       colour = ping_result[:success] ? :green : :red
 
-      ap result, options = {
+      ap result, {
         :color => {
            hash:  colour,
            symbol: colour,

@@ -26,6 +26,5 @@ module Bcome::System
         ::Bcome::Command::Local.run(raw_command)
       end
 
-
-    end
+  end
 end

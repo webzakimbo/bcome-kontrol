@@ -97,7 +97,6 @@ module Bcome::Ssh
     end
 
     def ping
-      success = false
       begin
         ssh_connect!
         return { success: true }

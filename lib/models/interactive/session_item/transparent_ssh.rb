@@ -68,11 +68,6 @@ module Bcome::Interactive::SessionItem
       ">\s".bold.bc_cyan.blinking 
     end
 
-    def valid_response(response)
-      a = response.gsub("\s", "").downcase
-      valid_responses.include?(response)
-    end
-
     def exit?(input)
       input == END_SESSION_KEY
     end
