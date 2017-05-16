@@ -4,6 +4,7 @@ module Bcome::Ssh
     attr_reader :config
 
     DEFAULT_TIMEOUT_IN_SECONDS = 5
+    PROXY_SSH_PREFIX = "ssh -o StrictHostKeyChecking=no -W %h:%p"
 
     def initialize(config, context_node)
       @config = config
@@ -51,7 +52,7 @@ module Bcome::Ssh
     end
    
     def proxy_connection_string
-      "ssh -o StrictHostKeyChecking=no -W %h:%p #{bastion_host_user}@#{@proxy_data.host}"
+      "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}"
     end
   
     def do_ssh

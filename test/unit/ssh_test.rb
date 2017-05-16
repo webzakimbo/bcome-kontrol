@@ -56,7 +56,7 @@ class NetworkDriverTest < ActiveSupport::TestCase
     ::Bcome::Ssh::ProxyData.expects(:new).with(config[:proxy], node).returns(mocked_proxy_data)
     
     mocked_proxy = mock("proxy")
-    proxy_connection_string = "#{Bcome::Ssh::Driver::PROXY_CONNECT_PREFIX} #{bastion_host_user}@#{bastion_host}"
+    proxy_connection_string = "#{Bcome::Ssh::Driver::PROXY_SSH_PREFIX} #{bastion_host_user}@#{bastion_host}"
     ::Net::SSH::Proxy::Command.expects(:new).with(proxy_connection_string).returns(mocked_proxy)
        
     # when
