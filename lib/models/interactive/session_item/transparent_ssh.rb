@@ -65,7 +65,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def terminal_prompt
-      "\s\s>\s".bold.bc_cyan.blinking # + "\s_".blinking.bc_cyan # danger, danger, high-voltage
+      ">\s".bold.bc_cyan.blinking # + "\s_".blinking.bc_cyan # danger, danger, high-voltage
     end
 
     def valid_response(response)
