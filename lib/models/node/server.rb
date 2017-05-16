@@ -48,15 +48,19 @@ module Bcome::Node
       print_ping_result(ping_result)
     end
 
-    def print_ping_result(ping_result = true)
+    def print_ping_result(ping_result = { success: true })
       result = {
         namespace => {
-          "connection" => ping_result ? "success" : "failed",
+          "connection" => ping_result[:success] ? "success" : "failed",
           "ssh_config" => ssh_driver.pretty_config_details
         }
       }
 
-      colour = ping_result ? :green : :red
+      unless ping_result[:success]
+        result[namespace]["error"] = ping_result[:error].message
+      end
+
+      colour = ping_result[:success] ? :green : :red
 
       ap result, options = {
         :color => {
