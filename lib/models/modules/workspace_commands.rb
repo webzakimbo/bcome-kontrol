@@ -13,6 +13,39 @@ module Bcome::WorkspaceCommands
     nil
   end
 
+  def tree
+    puts "\nTree view\n".green
+    tab = ""
+    parents.reverse.each do |p|
+      print_tree_view_for_resource(tab, p)
+      tab = "#{tab}\t"
+    end 
+    print_tree_view_for_resource(tab, self)
+    list_in_tree("#{tab}\t", resources)
+    print "\n"
+  end
+
+  def parents
+   ps = []
+   if self.has_parent?
+     ps << [parent, parent.parents]
+   end
+    return ps.flatten
+  end
+
+  def list_in_tree(tab, resources)
+    resources.each do |resource|
+      print_tree_view_for_resource(tab, resource)
+      silent = true
+      resource.load_dynamic_nodes(silent) unless resource.nodes_loaded?
+      list_in_tree("#{tab}\t", resource.resources)
+    end
+  end
+
+  def print_tree_view_for_resource(tab, resource)
+    puts "#{tab}" + "-".cyan + " #{resource.type.cyan.underline} \s#{resource.identifier.yellow}"
+  end
+
   def cd(identifier)
     if resource = resources.for_identifier(identifier)
       ::Bcome::Workspace.instance.set(current_context: self, context: resource)
