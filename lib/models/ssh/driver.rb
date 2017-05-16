@@ -4,7 +4,8 @@ module Bcome::Ssh
     attr_reader :config
 
     DEFAULT_TIMEOUT_IN_SECONDS = 5
-    PROXY_SSH_PREFIX = "ssh -o StrictHostKeyChecking=no -W %h:%p"
+    PROXY_CONNECT_PREFIX="ssh -o StrictHostKeyChecking=no -W %h:%p"
+    PROXY_SSH_PREFIX="ssh -o UserKnownHostsFile=/dev/null -o \"ProxyCommand ssh -W %h:%p"
 
     def initialize(config, context_node)
       @config = config
@@ -52,15 +53,14 @@ module Bcome::Ssh
     end
    
     def proxy_connection_string
-      "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}"
+      "#{PROXY_CONNECT_PREFIX} #{bastion_host_user}@#{@proxy_data.host}"
     end
   
     def do_ssh
       if has_proxy?
-        proxy_prefix = "ssh -o -o UserKnownHostsFile=/dev/null -o \"ProxyCommand ssh -W %h:%p" 
-        command = "#{proxy_prefix} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_interface_address}"
+        command = "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_interface_address}"
       else
-        command = "ssh -o #{user}@#{@context_node.public_ip_address}"
+        command = "ssh #{user}@#{@context_node.public_ip_address}"
       end     
       @context_node.execute_local(command)
     end
