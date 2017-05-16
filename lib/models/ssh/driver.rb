@@ -5,7 +5,7 @@ module Bcome::Ssh
 
     PROXY_CONNECT_PREFIX="ssh -o StrictHostKeyChecking=no -W %h:%p"
     PROXY_SSH_PREFIX="ssh -o UserKnownHostsFile=/dev/null -o \"ProxyCommand ssh -W %h:%p"
-    DEFAULT_TIMEOUT_IN_MILLISECONDS = 4000
+    DEFAULT_TIMEOUT_IN_SECONDS = 4000
 
     def initialize(config, context_node)
       @config = config
@@ -17,7 +17,7 @@ module Bcome::Ssh
       config = {
         user: user,
         ssh_keys: @config[:ssh_keys],
-        timeout: timeout_in_milliseconds
+        timeout: timeout_in_seconds
       }
       if has_proxy?
         config.merge!({
@@ -35,8 +35,8 @@ module Bcome::Ssh
       config
     end
 
-    def timeout_in_milliseconds
-      @config[:timeout_milliseconds] ||= Bcome::Ssh::Driver::DEFAULT_TIMEOUT_IN_MILLISECONDS
+    def timeout_in_seconds
+      @config[:timeout_in_seconds] ||= Bcome::Ssh::Driver::DEFAULT_TIMEOUT_IN_SECONDS
     end
 
     def proxy
@@ -83,12 +83,16 @@ module Bcome::Ssh
       raise ::Bcome::Exception::InvalidSshConfig.new("Missing ssh keys for #{@context_node.namespace}") unless ssh_keys
       net_ssh_params = { :keys => ssh_keys, :paranoid => false }
       net_ssh_params[:proxy] = proxy if has_proxy?
-      net_ssh_params[:timeout] = timeout_in_milliseconds
+      net_ssh_params[:timeout] = timeout_in_seconds
       net_ssh_params[:verbose] = :debug if verbose
       begin
-        @ssh_con = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
+        Timeout.timeout timeout_in_seconds do  
+          @ssh_con = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
+        end
       rescue Net::SSH::ConnectionTimeout
-        raise ::Bcome::Exception::CouldNotInitiateSshConnection.new("#{@context_node.namespace}.  Fix the issue and use bcome #{@context_node.namespace}:ping command to verify it's worked")
+        raise ::Bcome::Exception::CouldNotInitiateSshConnection.new(connection_error_message)
+      rescue Timeout::Error
+        ::Bcome::Exception::CouldNotInitiateSshConnectionThroughBackendProxy.new(connection_error_message)
       end
       return @ssh_con
     end
@@ -101,6 +105,10 @@ module Bcome::Ssh
       rescue
       end
       return success
+    end
+
+    def connection_error_message
+      "#{@context_node.namespace}.  Fix the issue and use bcome #{@context_node.namespace}:ping command to verify it's worked"
     end
 
     def ssh_connection(bootstrap = false)
