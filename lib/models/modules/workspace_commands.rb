@@ -12,14 +12,14 @@ module Bcome::WorkspaceCommands
     new_line
     nil
   end
-
+ 
   def tree
     puts "\nTree view\n".green
     tab = ""
     parents.reverse.each do |p|
       print_tree_view_for_resource(tab, p)
       tab = "#{tab}\t"
-    end 
+    end
     print_tree_view_for_resource(tab, self)
     list_in_tree("#{tab}\t", resources)
     print "\n"
