@@ -31,7 +31,7 @@ module Bcome::WorkspaceCommands
   end
 
   def list_in_tree(tab, resources)
-    resources.each do |resource|
+    resources.sort_by(&:identifier).each do |resource|
       print_tree_view_for_resource(tab, resource)
       silent = true
       resource.load_dynamic_nodes(silent) unless resource.nodes_loaded?
