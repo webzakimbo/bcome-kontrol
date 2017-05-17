@@ -3,6 +3,7 @@ module Bcome::Driver
 
     class << self
       def create_from_config(config)
+        raise Bcome::Exception::InvalidNetworkDriverType, "Missing config parameter 'type'" unless config[:type]
         config_klass_key = config[:type].to_sym
         driver_klass = klass_for_type[config_klass_key]
         raise Bcome::Exception::InvalidNetworkDriverType, config unless driver_klass

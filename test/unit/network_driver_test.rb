@@ -23,6 +23,22 @@ class NetworkDriverTest < ActiveSupport::TestCase
     assert driver.provisioning_region == provisioning_region
   end
 
+  def test_should_raise_if_ec2_driver_data_missing_provisioning_region
+    # Given
+    credentials_key = 'webzakimbo'
+    provisioning_region = nil
+    config = {
+      type: 'ec2',
+      credentials_key: credentials_key,
+      provisioning_region: provisioning_region
+    }
+
+    # When/then
+    assert_raise Bcome::Exception::Ec2DriverMissingProvisioningRegion do
+      ::Bcome::Driver::Base.create_from_config(config)
+    end
+  end
+ 
   def test_should_raise_if_invalid_driver_type
     # Given
     Bcome::Driver::Base.expects(:klass_for_type).returns(foo: :bar)
@@ -77,9 +93,7 @@ class NetworkDriverTest < ActiveSupport::TestCase
     filters = { foo: :bar }
 
     mocked_all_servers = mock('All ec2 servers')
-    unfiltered_server_result = mock("full server result")
     mocked_all_servers.expects(:all).returns(mocked_all_servers)
-
 
     mocked_filtered_servers = mock('Filtered servers')
     mocked_all_servers.expects(:all).with(filters).returns(mocked_filtered_servers)
