@@ -1,9 +1,8 @@
 module Bcome::Node
   class Inventory < ::Bcome::Node::Base
-    class << self
-      def to_s
-        'inventory'
-      end
+
+    def self.to_s
+      'inventory'
     end
 
     attr_reader :dynamic_nodes_loaded
