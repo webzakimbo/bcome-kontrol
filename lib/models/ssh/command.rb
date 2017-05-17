@@ -1,7 +1,7 @@
 module ::Bcome::Ssh
   class Command
 
-    attr_reader :raw, :stdout, :stderr, :exit_code, :exit_signal, :node, :bootstrap, :success_codes
+    attr_reader :raw, :stdout, :stderr, :exit_code, :node, :bootstrap
 
     def initialize(params)
       @raw = params[:raw]
@@ -29,7 +29,7 @@ module ::Bcome::Ssh
     end
 
     def success_codes
-      return @success_codes ? @success_codes : ["0"]
+      ["0"]
     end
 
     def stdout=(data)

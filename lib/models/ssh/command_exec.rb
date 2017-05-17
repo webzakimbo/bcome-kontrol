@@ -28,22 +28,27 @@ module ::Bcome::Ssh
 
     def ssh_exec!(ssh, command)
       ssh.open_channel do |channel|
-        channel.exec(command.raw) do |ch, success|
+        channel.exec(command.raw) do |cha, success|
           unless success
             abort "FAILED: couldn't execute command (ssh.channel.exec)"
           end
+
           channel.on_data do |ch,data|
             command.stdout += data
           end
+
           channel.on_extended_data do |ch,type,data|
             command.stderr += data
           end
+
           channel.on_request("exit-status") do |ch,data|
             command.exit_code = data.read_long
           end
+
           channel.on_request("exit-signal") do |ch, data|
             command.exit_signal = data.read_long
           end
+
         end
        end
       ssh.loop
