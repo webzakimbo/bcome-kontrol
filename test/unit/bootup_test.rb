@@ -18,7 +18,7 @@ class BootupTest < ActiveSupport::TestCase
     # Then
     assert bootup.breadcrumbs == breadcrumbs
     assert bootup.argument == argument
-    assert bootup.crumbs == %w(foo bar)
+    assert bootup.crumbs == %w[foo bar]
   end
 
   def test_should_parse_breadcrmbs
@@ -83,7 +83,7 @@ class BootupTest < ActiveSupport::TestCase
     view_data = given_dummy_view_data
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 
-    found_context = test_traverse_tree(estate, %w(one two three four))
+    found_context = test_traverse_tree(estate, %w[one two three four])
 
     ::Bcome::Node::Factory.expects(:init_tree).returns(estate)
 
@@ -101,7 +101,7 @@ class BootupTest < ActiveSupport::TestCase
     view_data = given_dummy_view_data
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 
-    found_context = test_traverse_tree(estate, %w(one two three four))
+    found_context = test_traverse_tree(estate, %w[one two three four])
 
     ::Bcome::Node::Factory.expects(:init_tree).returns(estate)
 
@@ -122,7 +122,7 @@ class BootupTest < ActiveSupport::TestCase
     view_data = given_dummy_view_data
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 
-    found_context = test_traverse_tree(estate, %w(one two three four))
+    found_context = test_traverse_tree(estate, %w[one two three four])
 
     ::Bcome::Node::Factory.expects(:init_tree).returns(estate)
 
@@ -134,8 +134,7 @@ class BootupTest < ActiveSupport::TestCase
     ::Bcome::Bootup.do(breadcrumbs: breadcrumbs, argument: argument)
   end
 
-
- def test_should_be_able_to_pass_an_argument_to_an_invoked_method_on_a_context
+  def test_should_be_able_to_pass_an_argument_to_an_invoked_method_on_a_context
     # Given
     identifier = given_a_random_string_of_length(4)
     method_name = :methodthattakesinoneargument
@@ -159,13 +158,13 @@ class BootupTest < ActiveSupport::TestCase
     ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: arguments)
 
     # And all our expectations are met
- end
+  end
 
   def test_should_be_able_to_invoke_a_method_on_a_context
     # Given
     identifier = given_a_random_string_of_length(4)
-    method_name = :methodthatdoesnotrequirearguments  # Method added in our bootup helper
- 
+    method_name = :methodthatdoesnotrequirearguments # Method added in our bootup helper
+
     config = {
       identifier: 'toplevel',
       description: 'top level node',
@@ -179,13 +178,12 @@ class BootupTest < ActiveSupport::TestCase
     estate = Bcome::Node::Factory.init_tree
 
     Bcome::Node::Factory.expects(:init_tree).returns(estate)
- 
+
     # When/then
     ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: nil)
- 
+
     # And all our expectations are met
   end
-
 
   def test_should_raise_when_invoking_a_method_on_a_context_without_arguments_when_one_is_required
     # Given
@@ -213,11 +211,10 @@ class BootupTest < ActiveSupport::TestCase
     # And all our expectations are met
   end
 
-
   def test_should_raise_when_invoking_a_method_on_a_context_with_arguments_when_none_are_required
-   # Given
+    # Given
     identifier = given_a_random_string_of_length(4)
-    method_name = :methodthattakesinoneargument  # Method added in our bootup helper
+    method_name = :methodthattakesinoneargument # Method added in our bootup helper
 
     config = {
       identifier: 'toplevel',
@@ -250,5 +247,4 @@ class BootupTest < ActiveSupport::TestCase
       ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", arguments: nil)
     end
   end
-
 end

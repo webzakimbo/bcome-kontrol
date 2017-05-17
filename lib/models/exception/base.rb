@@ -11,6 +11,5 @@ module Bcome::Exception
     def pretty_display
       puts "\n#{message}\n".bc_red
     end
-
   end
 end

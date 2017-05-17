@@ -1,5 +1,4 @@
 module Bcome::WorkspaceCommands
-
   def ls
     puts "\n\n" + visual_hierarchy.bc_orange + "\n"
     puts "\tAvailable #{list_key}s: ".bc_cyan + "\n\n"
@@ -12,10 +11,10 @@ module Bcome::WorkspaceCommands
     new_line
     nil
   end
- 
+
   def tree
     puts "\nTree view\n".green
-    tab = ""
+    tab = ''
     parents.reverse.each do |p|
       print_tree_view_for_resource(tab, p)
       tab = "#{tab}\t"
@@ -26,11 +25,9 @@ module Bcome::WorkspaceCommands
   end
 
   def parents
-   ps = []
-   if self.has_parent?
-     ps << [parent, parent.parents]
-   end
-    return ps.flatten
+    ps = []
+    ps << [parent, parent.parents] if has_parent?
+    ps.flatten
   end
 
   def list_in_tree(tab, resources)
@@ -43,14 +40,14 @@ module Bcome::WorkspaceCommands
   end
 
   def print_tree_view_for_resource(tab, resource)
-    puts "#{tab}" + "-".cyan + " #{resource.type.cyan.underline} \s#{resource.identifier.yellow}"
+    puts tab.to_s + '-'.cyan + " #{resource.type.cyan.underline} \s#{resource.identifier.yellow}"
   end
 
   def cd(identifier)
     if resource = resources.for_identifier(identifier)
       ::Bcome::Workspace.instance.set(current_context: self, context: resource)
     else
-      raise ::Bcome::Exception::InvalidBreadcrumb.new("Cannot find a node named '#{identifier}'")
+      raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
       puts "#{identifier} not found"
     end
   end
@@ -60,16 +57,14 @@ module Bcome::WorkspaceCommands
   end
 
   def run(raw_commands)
-    machines.pmap {|machine|
+    machines.pmap do |machine|
       machine.do_run(raw_commands)
-    }
-    return 
+    end
+    nil
   end
 
   def ping
-    machines.pmap {|machine|
-      machine.ping
-    }
+    machines.pmap(&:ping)
   end
 
   def pretty_description(is_active = true)
@@ -80,13 +75,12 @@ module Bcome::WorkspaceCommands
       next unless attribute_value
 
       desc += "\t"
-      desc += is_active ? "#{key}".bc_cyan : "#{key}"
+      desc += is_active ? key.to_s.bc_cyan : key.to_s
       desc += "\s" * (12 - key.length)
       attribute_value = value == :identifier ? attribute_value.underline : attribute_value
       desc += is_active ? attribute_value.bc_green : attribute_value
       desc += "\n"
       desc = desc unless is_active
-
     end
     desc
   end
@@ -109,12 +103,12 @@ module Bcome::WorkspaceCommands
 
   def disable!
     resources.disable!
-    return
+    nil
   end
 
   def enable!
     resources.enable!
-    return
+    nil
   end
 
   ## Helpers --

@@ -1,6 +1,5 @@
 module ::Bcome::Ssh
   class CommandExec
-
     attr_reader :commands
 
     def initialize(commands)
@@ -16,44 +15,41 @@ module ::Bcome::Ssh
     end
 
     def execute!
-      @commands.each { |command|
+      @commands.each do |command|
         node = command.node
         ssh = node.ssh_driver.ssh_connection
         ssh_exec!(ssh, command)
         output_append("\n(#{node.namespace})$".bc_cyan + ">\s#{command.raw} (#{command.pretty_result})\n")
-        output_append("#{command.output}")
+        output_append(command.output.to_s)
         print_output
-      }
+      end
     end
 
     def ssh_exec!(ssh, command)
       ssh.open_channel do |channel|
-        channel.exec(command.raw) do |cha, success|
+        channel.exec(command.raw) do |_cha, success|
           unless success
             abort "FAILED: couldn't execute command (ssh.channel.exec)"
           end
 
-          channel.on_data do |ch,data|
+          channel.on_data do |_ch, data|
             command.stdout += data
           end
 
-          channel.on_extended_data do |ch,type,data|
+          channel.on_extended_data do |_ch, _type, data|
             command.stderr += data
           end
 
-          channel.on_request("exit-status") do |ch,data|
+          channel.on_request('exit-status') do |_ch, data|
             command.exit_code = data.read_long
           end
 
-          channel.on_request("exit-signal") do |ch, data|
+          channel.on_request('exit-signal') do |_ch, data|
             command.exit_signal = data.read_long
           end
-
         end
-       end
+      end
       ssh.loop
     end
-
   end
 end
-

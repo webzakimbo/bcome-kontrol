@@ -27,6 +27,5 @@ module Bcome::Driver
       )
       client
     end
-
   end
 end

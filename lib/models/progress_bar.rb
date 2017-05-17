@@ -1,6 +1,5 @@
 module Bcome
   class ProgressBar
-
     include Singleton
 
     attr_reader :count
@@ -27,6 +26,5 @@ module Bcome
       increment!
       indicate(config, in_progress)
     end
-
   end
 end

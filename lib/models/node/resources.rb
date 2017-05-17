@@ -1,6 +1,5 @@
 module Bcome::Node
   class Resources
-
     include Enumerable
 
     def initialize
@@ -8,15 +7,15 @@ module Bcome::Node
       @disabled_resources = []
     end
 
-    def each(&block)
-      @nodes.each {|node| block.call(node) }
+    def each
+      @nodes.each { |node| yield(node) }
     end
 
     def <<(node)
       if for_identifier(node.identifier)
         clear!
         exception_message = "#{node.identifier} is not unique within namespace #{node.parent.namespace}"
-        raise Bcome::Exception::NodeIdentifiersMustBeUnique.new(exception_message)
+        raise Bcome::Exception::NodeIdentifiersMustBeUnique, exception_message
       else
         @nodes << node
       end
@@ -29,20 +28,20 @@ module Bcome::Node
 
     def do_disable(identifier)
       if identifier.is_a?(Array)
-        identifier.each {|id| disable(id) }
+        identifier.each { |id| disable(id) }
       else
         disable(identifier)
       end
-      return
+      nil
     end
 
     def do_enable(identifier)
       if identifier.is_a?(Array)
-        identifier.each {|id| enable(id) }
+        identifier.each { |id| enable(id) }
       else
         enable(identifier)
       end
-      return
+      nil
     end
 
     def disable!
@@ -51,19 +50,19 @@ module Bcome::Node
 
     def disable(identifier)
       resource = for_identifier(identifier)
-      raise Bcome::Exception::NoNodeNamedByIdentifier.new(identifier) unless resource
+      raise Bcome::Exception::NoNodeNamedByIdentifier, identifier unless resource
       @disabled_resources << resource unless @disabled_resources.include?(resource)
     end
 
     def enable(identifier)
       resource = for_identifier(identifier)
-      raise Bcome::Exception::NoNodeNamedByIdentifier.new(identifier) unless resource
+      raise Bcome::Exception::NoNodeNamedByIdentifier, identifier unless resource
       @disabled_resources -= [resource]
     end
 
     def clear!
       @disabled_resources = []
-      return
+      nil
     end
 
     def active
@@ -75,13 +74,13 @@ module Bcome::Node
     end
 
     def for_identifier(identifier)
-      resource = @nodes.select{|node| node.identifier == identifier }.first
-      return resource 
+      resource = @nodes.select { |node| node.identifier == identifier }.first
+      resource
     end
 
     def empty?
       @nodes.empty?
-    end  
+    end
 
     def size
       @nodes.size
@@ -90,6 +89,5 @@ module Bcome::Node
     def first
       @nodes.first
     end
-
   end
 end

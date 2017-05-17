@@ -45,7 +45,6 @@ class EstateTreeTest < ActiveSupport::TestCase
     estate.identifier == Bcome::Node::Base::DEFAULT_IDENTIFIER
   end
 
-
   def test_should_create_tree_views
     # Given
     config = given_a_dummy_estate_config
@@ -136,11 +135,11 @@ class EstateTreeTest < ActiveSupport::TestCase
   def test_should_raise_appropriately_when_yaml_in_invalid_in_estate_config
     # Given
     YAML.expects(:load_file).raises(ArgumentError)
-    
+
     # When/then
     assert_raise ::Bcome::Exception::InvalidEstateConfig do
       ::Bcome::Node::Factory.init_tree
-    end  
+    end
   end
 
   def test_estate_is_assigned_its_subviews

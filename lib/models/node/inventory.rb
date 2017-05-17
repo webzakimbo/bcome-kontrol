@@ -1,20 +1,19 @@
 module Bcome::Node
   class Inventory < ::Bcome::Node::Base
-
     class << self
       def to_s
-        "inventory"
+        'inventory'
       end
     end
- 
+
     attr_reader :dynamic_nodes_loaded
 
     def initialize(*params)
       @dynamic_nodes_loaded = false
       super
-      raise ::Bcome::Exception::InventoriesCannotHaveSubViews.new(@raw_view_data) if @raw_view_data[:views] && !@raw_view_data[:views].empty?
+      raise Bcome::Exception::InventoriesCannotHaveSubViews, @raw_view_data if @raw_view_data[:views] && !@raw_view_data[:views].empty?
     end
- 
+
     def list_key
       :server
     end
@@ -41,9 +40,9 @@ module Bcome::Node
     def load_dynamic_nodes(silent = false)
       puts "Loading nodes for #{namespace}".bc_green unless silent
       raw_servers = fetch_server_list
-      raw_servers.each {|raw_server|
+      raw_servers.each do |raw_server|
         resources << ::Bcome::Node::Server.new_from_fog_instance(raw_server, self)
-      }
+      end
       dynamic_nodes_loaded!
     end
 
@@ -53,11 +52,10 @@ module Bcome::Node
 
     def has_dynamic_nodes?
       true
-    end  
+    end
 
     def fetch_server_list
       network_driver.fetch_server_list(filters)
     end
-
   end
 end

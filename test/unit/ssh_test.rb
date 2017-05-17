@@ -1,13 +1,12 @@
 load "#{File.dirname(__FILE__)}/../base.rb"
 
 class NetworkDriverTest < ActiveSupport::TestCase
-
   include UnitTestHelper
 
   def test_should_be_able_to_instantiate_a_proxyless_ssh_driver
     # Given
-    ssh_user = "ubuntu"
-    node = mock("server Node")
+    ssh_user = 'ubuntu'
+    node = mock('server Node')
     config = {
       user: ssh_user
     }
@@ -24,7 +23,7 @@ class NetworkDriverTest < ActiveSupport::TestCase
   def test_proxyless_ssh_driver_should_default_to_local_user_when_non_provided
     # Given
     config = {}
-    node = mock("server node")
+    node = mock('server node')
     driver = Bcome::Ssh::Driver.new(config, node)
 
     system_user = given_a_random_string_of_length(5)
@@ -42,23 +41,23 @@ class NetworkDriverTest < ActiveSupport::TestCase
     node_hostname = given_a_random_string_of_length(5)
 
     config = {
-      :user => node_user,
-      :proxy => {}
+      user: node_user,
+      proxy: {}
     }
 
-    node = mock("server node")
+    node = mock('server node')
     node.expects(:internal_interface_address).returns(node_hostname)
 
-    mocked_proxy_data = mock("proxy data")
+    mocked_proxy_data = mock('proxy data')
     mocked_proxy_data.expects(:bastion_host_user).returns(bastion_host_user).times(4)
     mocked_proxy_data.expects(:host).returns(bastion_host).times(2)
 
     ::Bcome::Ssh::ProxyData.expects(:new).with(config[:proxy], node).returns(mocked_proxy_data)
-    
-    mocked_proxy = mock("proxy")
+
+    mocked_proxy = mock('proxy')
     proxy_connection_string = "#{Bcome::Ssh::Driver::PROXY_CONNECT_PREFIX} #{bastion_host_user}@#{bastion_host}"
     ::Net::SSH::Proxy::Command.expects(:new).with(proxy_connection_string).returns(mocked_proxy)
-       
+
     # when
     driver = Bcome::Ssh::Driver.new(config, node)
 
@@ -69,11 +68,10 @@ class NetworkDriverTest < ActiveSupport::TestCase
 
     ssh_connection_string = "#{Bcome::Ssh::Driver::PROXY_SSH_PREFIX} #{bastion_host_user}@#{bastion_host}\" #{node_user}@#{node_hostname}"
     node.expects(:execute_local).with(ssh_connection_string).returns(true)
- 
+
     # When/then
     driver.do_ssh
 
     # and that all our assertions are met
   end
-
 end

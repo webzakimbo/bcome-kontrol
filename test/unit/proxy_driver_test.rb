@@ -1,15 +1,14 @@
 load "#{File.dirname(__FILE__)}/../base.rb"
 
 class ProxyDriverTest < ActiveSupport::TestCase
-
   include UnitTestHelper
 
   def test_should_be_able_to_instantiate_one
     # Given
-    node = mock("server node")
-    bastion_host_user = given_a_random_string_of_length(10)   
- 
-    config = { :bastion_host_user => bastion_host_user }
+    node = mock('server node')
+    bastion_host_user = given_a_random_string_of_length(10)
+
+    config = { bastion_host_user: bastion_host_user }
 
     # When
     proxy_data = ::Bcome::Ssh::ProxyData.new(config, node)
@@ -21,14 +20,14 @@ class ProxyDriverTest < ActiveSupport::TestCase
 
   def test_should_raise_with_missing_host_id_if_none_provided
     # Given
-    node = mock("server node")
+    node = mock('server node')
 
     config = {
-      :host_lookup => "by_inventory_node",
+      host_lookup: 'by_inventory_node'
     }
- 
+
     proxy_data = ::Bcome::Ssh::ProxyData.new(config, node)
- 
+
     # When/then
     assert_raise ::Bcome::Exception::InvalidProxyConfig do
       proxy_data.host
@@ -37,15 +36,15 @@ class ProxyDriverTest < ActiveSupport::TestCase
 
   def test_should_raise_with_missing_host_lookup_if_none_provided
     # Given
-    node = mock("server node")
+    node = mock('server node')
     bastion_host_identifier = given_a_random_string_of_length(10)
 
     config = {
-      :host_id => bastion_host_identifier
+      host_id: bastion_host_identifier
     }
-  
+
     proxy_data = ::Bcome::Ssh::ProxyData.new(config, node)
- 
+
     # When/then
     assert_raise ::Bcome::Exception::InvalidProxyConfig do
       proxy_data.host
@@ -54,35 +53,34 @@ class ProxyDriverTest < ActiveSupport::TestCase
 
   def test_should_catch_invalid_host_lookup_method_where_incorrect_lookup_method_provided
     # Given
-    node = mock("server node")
+    node = mock('server node')
     bastion_host_identifier = given_a_random_string_of_length(10)
 
     config = {
-      :host_id => bastion_host_identifier,
-      :host_lookup => :i_dont_exist
+      host_id: bastion_host_identifier,
+      host_lookup: :i_dont_exist
     }
-  
+
     proxy_data = ::Bcome::Ssh::ProxyData.new(config, node)
- 
+
     # When/then
     assert_raise ::Bcome::Exception::InvalidProxyConfig do
       proxy_data.host
     end
   end
 
-
   def test_should_get_host_by_inventory_node
     # Given
-    node = mock("server node")
+    node = mock('server node')
     bastion_host_identifier = given_a_random_string_of_length(10)
 
-    mocked_bastion_node = mock("bastion node")
+    mocked_bastion_node = mock('bastion node')
     bastion_node_hostname = given_a_random_string_of_length(10)
-    mocked_bastion_node.expects(:public_ip_address).returns(bastion_node_hostname).twice  
+    mocked_bastion_node.expects(:public_ip_address).returns(bastion_node_hostname).twice
 
     config = {
-      :host_id => bastion_host_identifier,
-      :host_lookup => :by_inventory_node
+      host_id: bastion_host_identifier,
+      host_lookup: :by_inventory_node
     }
 
     node.expects(:recurse_resource_for_identifier).with(bastion_host_identifier).returns(mocked_bastion_node)
@@ -101,12 +99,12 @@ class ProxyDriverTest < ActiveSupport::TestCase
 
   def test_should_raise_when_failing_to_find_indicated_host_by_inventory_node
     # Given
-    node = mock("server node")
+    node = mock('server node')
     bastion_host_identifier = given_a_random_string_of_length(10)
 
     config = {
-      :host_id => bastion_host_identifier,
-      :host_lookup => :by_inventory_node
+      host_id: bastion_host_identifier,
+      host_lookup: :by_inventory_node
     }
 
     node.expects(:recurse_resource_for_identifier).with(bastion_host_identifier).returns(nil)
@@ -123,15 +121,15 @@ class ProxyDriverTest < ActiveSupport::TestCase
 
   def test_should_raise_when_bastion_host_found_by_inventory_node_does_not_contain_a_public_ip_address
     # Given
-    node = mock("server node")
+    node = mock('server node')
     bastion_host_identifier = given_a_random_string_of_length(10)
 
-    mocked_bastion_node = mock("bastion node")
+    mocked_bastion_node = mock('bastion node')
     mocked_bastion_node.expects(:public_ip_address).returns(nil)
 
     config = {
-      :host_id => bastion_host_identifier,
-      :host_lookup => :by_inventory_node
+      host_id: bastion_host_identifier,
+      host_lookup: :by_inventory_node
     }
 
     node.expects(:recurse_resource_for_identifier).with(bastion_host_identifier).returns(mocked_bastion_node)
@@ -141,18 +139,18 @@ class ProxyDriverTest < ActiveSupport::TestCase
     # When
     assert_raise ::Bcome::Exception::ProxyHostNodeDoesNotHavePublicIp do
       proxy_data.host
-    end  
+    end
     # and all our expectations are met
   end
 
   def test_should_return_config_defined_proxy_hostname
     # Given
-    node = mock("server node")
-    predefined_hostname = "foo.bar.com"
+    node = mock('server node')
+    predefined_hostname = 'foo.bar.com'
 
     config = {
-      :host_lookup => :by_host_or_ip,
-      :host_id => predefined_hostname
+      host_lookup: :by_host_or_ip,
+      host_id: predefined_hostname
     }
 
     proxy_data = ::Bcome::Ssh::ProxyData.new(config, node)
@@ -163,5 +161,4 @@ class ProxyDriverTest < ActiveSupport::TestCase
     # Then
     assert hostname == predefined_hostname
   end
-
 end

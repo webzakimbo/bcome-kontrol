@@ -1,11 +1,10 @@
 module Bcome::Interactive::SessionItem
   class Base
-
     def initialize(session)
       @session = session
     end
 
-    def bcome_identifier  
+    def bcome_identifier
       node.namespace
     end
 
@@ -21,9 +20,8 @@ module Bcome::Interactive::SessionItem
       @session.responses[@key] = @response
     end
 
-    def do(*params)
-      raise "Should be overidden"
+    def do(*_params)
+      raise 'Should be overidden'
     end
-
   end
 end

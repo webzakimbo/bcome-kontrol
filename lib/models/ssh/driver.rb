@@ -1,11 +1,10 @@
 module Bcome::Ssh
   class Driver
-
     attr_reader :config
 
     DEFAULT_TIMEOUT_IN_SECONDS = 5
-    PROXY_CONNECT_PREFIX="ssh -o StrictHostKeyChecking=no -W %h:%p"
-    PROXY_SSH_PREFIX="ssh -o UserKnownHostsFile=/dev/null -o \"ProxyCommand ssh -W %h:%p"
+    PROXY_CONNECT_PREFIX = 'ssh -o StrictHostKeyChecking=no -W %h:%p'.freeze
+    PROXY_SSH_PREFIX = 'ssh -o UserKnownHostsFile=/dev/null -o "ProxyCommand ssh -W %h:%p'.freeze
 
     def initialize(config, context_node)
       @config = config
@@ -20,17 +19,13 @@ module Bcome::Ssh
         timeout: timeout_in_seconds
       }
       if has_proxy?
-        config.merge!({
-          host_or_ip: @context_node.internal_interface_address,
-          proxy: {
-            bastion_host:  @proxy_data.host,
-            bastion_host_user: bastion_host_user
-          }
-        })
+        config[:host_or_ip] = @context_node.internal_interface_address
+        config[:proxy] = {
+          bastion_host:  @proxy_data.host,
+          bastion_host_user: bastion_host_user
+        }
       else
-        config.merge!({
-          host_or_ip: @context_node.public_ip_address 
-        })
+        config[:host_or_ip] = @context_node.public_ip_address
       end
       config
     end
@@ -41,27 +36,27 @@ module Bcome::Ssh
 
     def proxy
       return nil unless has_proxy?
-      return ::Net::SSH::Proxy::Command.new(proxy_connection_string)
+      ::Net::SSH::Proxy::Command.new(proxy_connection_string)
     end
 
     def bastion_host_user
       @proxy_data.bastion_host_user ? @proxy_data.bastion_host_user : user
-    end  
+    end
 
     def has_proxy?
       !@config[:proxy].nil?
     end
-   
+
     def proxy_connection_string
       "#{PROXY_CONNECT_PREFIX} #{bastion_host_user}@#{@proxy_data.host}"
     end
-  
+
     def do_ssh
       if has_proxy?
         command = "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_interface_address}"
       else
         command = "ssh #{user}@#{@context_node.public_ip_address}"
-      end     
+      end
       @context_node.execute_local(command)
     end
 
@@ -73,45 +68,41 @@ module Bcome::Ssh
       ::Bcome::System::Local.instance.local_user
     end
 
-
     def node_host_or_ip
       has_proxy? ? @context_node.internal_interface_address : @context_node.public_ip_address
     end
 
     def ssh_connect!(verbose = false)
       ssh_keys = @config[:ssh_keys]
-      raise ::Bcome::Exception::InvalidSshConfig.new("Missing ssh keys for #{@context_node.namespace}") unless ssh_keys
-      net_ssh_params = { :keys => ssh_keys, :paranoid => false }
+      raise Bcome::Exception::InvalidSshConfig, "Missing ssh keys for #{@context_node.namespace}" unless ssh_keys
+      net_ssh_params = { keys: ssh_keys, paranoid: false }
       net_ssh_params[:proxy] = proxy if has_proxy?
       net_ssh_params[:timeout] = timeout_in_seconds
       net_ssh_params[:verbose] = :debug if verbose
       begin
         # We handle timeouts in code rather than on the connection itself: rationale - bcome doesn't care at which hop in a connection a timeout occurs, just that it has.
-        Timeout.timeout timeout_in_seconds do  
+        Timeout.timeout timeout_in_seconds do
           @ssh_con = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
         end
       rescue Timeout::Error
-        raise ::Bcome::Exception::CouldNotInitiateSshConnection.new(@context_node.namespace)
+        raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace
       end
-      return @ssh_con
+      @ssh_con
     end
 
     def ping
-      begin
-        ssh_connect!
-        return { success: true }
-      rescue Exception => e
-        return { success: false, error: e }
-      end
+      ssh_connect!
+      return { success: true }
+    rescue Exception => e
+      return { success: false, error: e }
     end
 
-    def ssh_connection(bootstrap = false)
-      return has_open_ssh_con? ? @ssh_con : ssh_connect!
+    def ssh_connection(_bootstrap = false)
+      has_open_ssh_con? ? @ssh_con : ssh_connect!
     end
 
     def has_open_ssh_con?
       @ssh_con && !@ssh_con.closed?
     end
-
   end
 end

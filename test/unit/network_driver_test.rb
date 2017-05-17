@@ -1,15 +1,14 @@
 load "#{File.dirname(__FILE__)}/../base.rb"
 
 class NetworkDriverTest < ActiveSupport::TestCase
-
   include UnitTestHelper
 
   def test_should_be_able_to_instantiate_an_ec2_driver
     # Given
-    credentials_key = "webzakimbo"   
-    provisioning_region = "whatever"
+    credentials_key = 'webzakimbo'
+    provisioning_region = 'whatever'
     config = {
-      type: "ec2",
+      type: 'ec2',
       credentials_key: credentials_key,
       provisioning_region: provisioning_region
     }
@@ -26,7 +25,7 @@ class NetworkDriverTest < ActiveSupport::TestCase
 
   def test_should_raise_if_invalid_driver_type
     # Given
-    Bcome::Driver::Base.expects(:klass_for_type).returns({ foo: :bar})
+    Bcome::Driver::Base.expects(:klass_for_type).returns(foo: :bar)
     non_existent_driver = :i_dont_exist
 
     # when/then
@@ -37,12 +36,12 @@ class NetworkDriverTest < ActiveSupport::TestCase
 
   def test_ec2_driver_get_fog_client_wiring
     # Given
-    mocked_ec2_provider = mock("Ec2 provider")
+    mocked_ec2_provider = mock('Ec2 provider')
 
-    credentials_key = "webzakimbo"   
-    provisioning_region = "whatever"
+    credentials_key = 'webzakimbo'
+    provisioning_region = 'whatever'
     config = {
-      type: "ec2",
+      type: 'ec2',
       credentials_key: credentials_key,
       provisioning_region: provisioning_region
     }
@@ -60,12 +59,12 @@ class NetworkDriverTest < ActiveSupport::TestCase
 
   def test_ec2_driver_filters_wiring
     # Given
-    mocked_ec2_provider = mock("Ec2 provider")
-    
-    credentials_key = "webzakimbo"   
-    provisioning_region = "whatever"
+    mocked_ec2_provider = mock('Ec2 provider')
+
+    credentials_key = 'webzakimbo'
+    provisioning_region = 'whatever'
     config = {
-      type: "ec2",
+      type: 'ec2',
       credentials_key: credentials_key,
       provisioning_region: provisioning_region
     }
@@ -74,11 +73,11 @@ class NetworkDriverTest < ActiveSupport::TestCase
 
     ::Fog.expects(:credential=).with(credentials_key)
     ::Fog::Compute.expects(:new).with(provider: 'AWS', region: provisioning_region).returns(mocked_ec2_provider)
- 
+
     filters = { foo: :bar }
 
-    mocked_all_servers = mock("All ec2 servers")
-    mocked_filtered_servers = mock("Filtered servers")
+    mocked_all_servers = mock('All ec2 servers')
+    mocked_filtered_servers = mock('Filtered servers')
     mocked_all_servers.expects(:all).with(filters).returns(mocked_filtered_servers)
     mocked_ec2_provider.expects(:servers).returns(mocked_all_servers)
 
@@ -94,7 +93,7 @@ class NetworkDriverTest < ActiveSupport::TestCase
   def test_should_be_able_to_instantiate_a_static_driver
     # Given
     config = {
-      type: "static",
+      type: 'static'
     }
 
     # When
@@ -104,5 +103,4 @@ class NetworkDriverTest < ActiveSupport::TestCase
     assert driver.is_a?(Bcome::Driver::Base)
     assert driver.is_a?(Bcome::Driver::Static)
   end
-
 end
