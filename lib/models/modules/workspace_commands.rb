@@ -100,16 +100,21 @@ module Bcome::WorkspaceCommands
   end
 
   def clear!
+    # Clear any disabled selection at this level and at all levels below
     resources.clear!
+    resources.each {|r| r.clear! }
+    nil
   end
 
   def disable!
     resources.disable!
+    resources.each {|r| r.disable! }
     nil
   end
 
   def enable!
     resources.enable!
+    resources.each {|r| r.enable! }
     nil
   end
 
