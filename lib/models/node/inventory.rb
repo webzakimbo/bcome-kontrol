@@ -1,28 +1,18 @@
- module Bcome::Node
+module Bcome::Node
   class Inventory < ::Bcome::Node::Base
 
-    class << self
-      def to_s
-        "inventory"
-      end
-
-      #def list_attributes
-       # {
-       #  "identifier": :identifier,
-       #  "internal ip": :internal_interface_address,
-       #  "public ip": :public_ip_address,
-       # }
-      #end
+    def self.to_s
+      'inventory'
     end
- 
+
     attr_reader :dynamic_nodes_loaded
 
     def initialize(*params)
       @dynamic_nodes_loaded = false
       super
-      raise ::Bcome::Exception::InventoriesCannotHaveSubViews.new(@raw_view_data) if @raw_view_data[:views] && !@raw_view_data[:views].empty?
+      raise Bcome::Exception::InventoriesCannotHaveSubViews, @raw_view_data if @raw_view_data[:views] && !@raw_view_data[:views].empty?
     end
- 
+
     def list_key
       :server
     end
@@ -32,21 +22,26 @@
       super
     end
 
+    def machines
+      @resources.active
+    end
+
     def reload!
-      puts "\nReloading inventory...\n".green
+      puts "\nReloading inventory...\n".bc_green
       load_dynamic_nodes
-      puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".green
+      puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".bc_green
     end
 
     def override_server_identifier?
       !@override_identifier.nil?
     end
 
-    def load_dynamic_nodes
+    def load_dynamic_nodes(silent = false)
+      puts "Loading nodes for #{namespace}".bc_green unless silent
       raw_servers = fetch_server_list
-      raw_servers.each {|raw_server|
+      raw_servers.each do |raw_server|
         resources << ::Bcome::Node::Server.new_from_fog_instance(raw_server, self)
-      }
+      end
       dynamic_nodes_loaded!
     end
 
@@ -56,15 +51,10 @@
 
     def has_dynamic_nodes?
       true
-    end  
+    end
 
     def fetch_server_list
       network_driver.fetch_server_list(filters)
     end
-
-    #def list_attributes
-    #  #::Bcome::Node::Inventory.list_attributes
-    #end
-
   end
 end

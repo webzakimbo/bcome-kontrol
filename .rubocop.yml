@@ -1,0 +1,7 @@
+AllCops:
+  Excludes:
+    - 'test/**/*'
+Metrics/LineLength:
+  Enabled: false
+Documentation:
+  Enabled: false

@@ -48,7 +48,7 @@ class NodeTest < ActiveSupport::TestCase
     # Given
     config = {
       identifier: 'dummy',
-      type: 'collection',
+      type: 'collection'
     }
 
     YAML.expects(:load_file).returns(config)
@@ -67,8 +67,8 @@ class NodeTest < ActiveSupport::TestCase
       type: 'collection',
       views: [
         {
-         description: 'A sub view without an identifier',
-         type: 'collection'
+          description: 'A sub view without an identifier',
+          type: 'collection'
         }
       ]
     }
@@ -109,8 +109,8 @@ class NodeTest < ActiveSupport::TestCase
     view_data = given_dummy_view_data # one:two:three:four
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 
-    third_context = test_traverse_tree(estate, %w(one two three))
-    fourth_context = test_traverse_tree(estate, %w(one two three four))
+    third_context = test_traverse_tree(estate, %w[one two three])
+    fourth_context = test_traverse_tree(estate, %w[one two three four])
 
     # When/then
     assert fourth_context == third_context.resource_for_identifier('four')
@@ -137,9 +137,9 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_nodes_should_data_from_parents
     [
-      [:network, :network_data],
-      [:ec2_filters, :filters],
-      [:ssh_settings, :ssh_data]
+      %i[network network_data],
+      %i[ec2_filters filters],
+      %i[ssh_settings ssh_data]
     ].each do |inheritable_attributes|
       view_key = inheritable_attributes[0]
       node_key = inheritable_attributes[1]
@@ -164,7 +164,7 @@ class NodeTest < ActiveSupport::TestCase
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 
     # And the resultant nodes
-    nodes = all_nodes_in_tree(estate, %w(one two three))
+    nodes = all_nodes_in_tree(estate, %w[one two three])
 
     # When/then all nodes should have the same dataa
     nodes.each do |node|
@@ -187,7 +187,7 @@ class NodeTest < ActiveSupport::TestCase
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 
     # And the resultant nodes
-    nodes = all_nodes_in_tree(estate, %w(one two three))
+    nodes = all_nodes_in_tree(estate, %w[one two three])
     col1 = nodes[0]
     col2 = nodes[1]
     col3 = nodes[2]
@@ -212,7 +212,7 @@ class NodeTest < ActiveSupport::TestCase
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 
     # And the resultant nodes
-    nodes = all_nodes_in_tree(estate, %w(one two three))
+    nodes = all_nodes_in_tree(estate, %w[one two three])
     col1 = nodes[0]
     col2 = nodes[1]
     col3 = nodes[2]
@@ -235,7 +235,7 @@ class NodeTest < ActiveSupport::TestCase
         { identifier: 'one', description: 'node 1 again', type: 'collection' }
       ]
     }
-    
+
     YAML.expects(:load_file).returns(config)
 
     # when/then
@@ -252,12 +252,12 @@ class NodeTest < ActiveSupport::TestCase
       identifier: ' foo'
     }
 
-   YAML.expects(:load_file).returns(config)
+    YAML.expects(:load_file).returns(config)
 
-   # when/then
-   assert_raise Bcome::Exception::InvalidIdentifier do
-     ::Bcome::Node::Factory.init_tree
-   end
+    # when/then
+    assert_raise Bcome::Exception::InvalidIdentifier do
+      ::Bcome::Node::Factory.init_tree
+    end
   end
 
   def test_that_identifiers_dont_have_spaces_two
@@ -268,12 +268,12 @@ class NodeTest < ActiveSupport::TestCase
       identifier: ' foo '
     }
 
-   YAML.expects(:load_file).returns(config)
+    YAML.expects(:load_file).returns(config)
 
-   # when/then
-   assert_raise Bcome::Exception::InvalidIdentifier do
-     ::Bcome::Node::Factory.init_tree
-   end
+    # when/then
+    assert_raise Bcome::Exception::InvalidIdentifier do
+      ::Bcome::Node::Factory.init_tree
+    end
   end
 
   def test_that_identifiers_dont_have_spaces_three
@@ -284,12 +284,12 @@ class NodeTest < ActiveSupport::TestCase
       identifier: 'foo '
     }
 
-   YAML.expects(:load_file).returns(config)
+    YAML.expects(:load_file).returns(config)
 
-   # when/then
-   assert_raise Bcome::Exception::InvalidIdentifier do
-     ::Bcome::Node::Factory.init_tree
-   end
+    # when/then
+    assert_raise Bcome::Exception::InvalidIdentifier do
+      ::Bcome::Node::Factory.init_tree
+    end
   end
 
   def test_that_identifiers_dont_have_spaces_four
@@ -300,14 +300,13 @@ class NodeTest < ActiveSupport::TestCase
       identifier: 'f o o'
     }
 
-   YAML.expects(:load_file).returns(config)
+    YAML.expects(:load_file).returns(config)
 
-   # when/then
-   assert_raise Bcome::Exception::InvalidIdentifier do
-     ::Bcome::Node::Factory.init_tree
-   end
+    # when/then
+    assert_raise Bcome::Exception::InvalidIdentifier do
+      ::Bcome::Node::Factory.init_tree
+    end
   end
-
 
   def test_should_return_string_matching_method_missing_if_matches_a_node_identifier
     # Given
@@ -318,9 +317,9 @@ class NodeTest < ActiveSupport::TestCase
       description: 'a top level view',
       identifier: 'toplevel',
       views: [
-        { type: 'collection', description: 'a collection', identifier: "#{method_symbol}"}
+        { type: 'collection', description: 'a collection', identifier: method_symbol.to_s }
       ]
-    } 
+    }
 
     YAML.expects(:load_file).returns(config)
     estate = ::Bcome::Node::Factory.init_tree
@@ -334,14 +333,14 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_should_return_string_matching_constant_name_if_matches_a_node_identifier
     # Given
-    constant_name = "FooBar"
+    constant_name = 'FooBar'
 
     config = {
       type: 'collection',
       description: 'a top level view',
       identifier: 'toplevel',
       views: [
-        { type: 'collection', description: 'a collection', identifier: "#{constant_name}" }
+        { type: 'collection', description: 'a collection', identifier: constant_name.to_s }
       ]
 
     }
@@ -349,11 +348,11 @@ class NodeTest < ActiveSupport::TestCase
     YAML.expects(:load_file).returns(config)
     estate = ::Bcome::Node::Factory.init_tree
 
-    irb_context = mock("Irb context")
-    workspace = mock("Mock irb workspace")
+    irb_context = mock('Irb context')
+    workspace = mock('Mock irb workspace')
     workspace.expects(:main).returns(estate)
     irb_context.expects(:workspace).returns(workspace)
-    IRB.expects(:CurrentContext).returns(irb_context)    
+    IRB.expects(:CurrentContext).returns(irb_context)
 
     # When
     constant_as_string = estate.class.const_get(constant_name)
@@ -361,5 +360,4 @@ class NodeTest < ActiveSupport::TestCase
     # Then
     assert constant_as_string == constant_name
   end
-
 end

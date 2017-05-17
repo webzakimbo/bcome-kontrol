@@ -1,42 +1,114 @@
 module Bcome::WorkspaceCommands
-
   def ls
-    puts "\n\n" + visual_hierarchy.orange + "\n"
-    puts "\tAvailable #{list_key}s: ".cyan + "\n\n"
+    puts "\n\n" + visual_hierarchy.bc_orange + "\n"
+    puts "\tAvailable #{list_key}s: ".bc_cyan + "\n\n"
 
     @resources.sort_by(&:identifier).each do |resource|
-      puts resource.pretty_description
+      is_active = @resources.is_active_resource?(resource)
+      puts resource.pretty_description(is_active)
       puts "\n"
     end
     new_line
     nil
   end
 
+  def tree
+    puts "\nTree view\n".green
+    tab = ''
+    parents.reverse.each do |p|
+      print_tree_view_for_resource(tab, p)
+      tab = "#{tab}\t"
+    end
+    print_tree_view_for_resource(tab, self)
+    list_in_tree("#{tab}\t", resources)
+    print "\n"
+  end
+
+  def parents
+    ps = []
+    ps << [parent, parent.parents] if has_parent?
+    ps.flatten
+  end
+
+  def list_in_tree(tab, resources)
+    resources.each do |resource|
+      print_tree_view_for_resource(tab, resource)
+      silent = true
+      resource.load_dynamic_nodes(silent) unless resource.nodes_loaded?
+      list_in_tree("#{tab}\t", resource.resources)
+    end
+  end
+
+  def print_tree_view_for_resource(tab, resource)
+    puts tab.to_s + '-'.cyan + " #{resource.type.cyan.underline} \s#{resource.identifier.yellow}"
+  end
+
   def cd(identifier)
     if resource = resources.for_identifier(identifier)
       ::Bcome::Workspace.instance.set(current_context: self, context: resource)
     else
-      raise ::Bcome::Exception::InvalidBreadcrumb.new("Cannot find a node named '#{identifier}'")
+      raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
       puts "#{identifier} not found"
     end
   end
 
-  def pretty_description
+  def interactive
+    ::Bcome::Interactive::Session.run(self)
+  end
+
+  def run(raw_commands)
+    machines.pmap do |machine|
+      machine.do_run(raw_commands)
+    end
+    nil
+  end
+
+  def ping
+    machines.pmap(&:ping)
+  end
+
+  def pretty_description(is_active = true)
     desc = ''
     list_attributes.each do |key, value|
       next unless respond_to?(value) || instance_variable_defined?("@#{value}")
       attribute_value = send(value)
       next unless attribute_value
-      desc += "\t#{key}".cyan
+
+      desc += "\t"
+      desc += is_active ? key.to_s.bc_cyan : key.to_s
       desc += "\s" * (12 - key.length)
       attribute_value = value == :identifier ? attribute_value.underline : attribute_value
-      desc += attribute_value.green + "\n"
+      desc += is_active ? attribute_value.bc_green : attribute_value
+      desc += "\n"
+      desc = desc unless is_active
     end
     desc
   end
 
   def back
     exit
+  end
+
+  def disable(identifier)
+    resources.do_disable(identifier)
+  end
+
+  def enable(identifier)
+    resources.do_enable(identifier)
+  end
+
+  def clear!
+    resources.clear!
+  end
+
+  def disable!
+    resources.disable!
+    nil
+  end
+
+  def enable!
+    resources.enable!
+    nil
   end
 
   ## Helpers --

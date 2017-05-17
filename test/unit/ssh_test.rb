@@ -1,13 +1,12 @@
 load "#{File.dirname(__FILE__)}/../base.rb"
 
 class NetworkDriverTest < ActiveSupport::TestCase
-
   include UnitTestHelper
 
   def test_should_be_able_to_instantiate_a_proxyless_ssh_driver
     # Given
-    ssh_user = "ubuntu"
-    node = mock("server Node")
+    ssh_user = 'ubuntu'
+    node = mock('server Node')
     config = {
       user: ssh_user
     }
@@ -24,7 +23,7 @@ class NetworkDriverTest < ActiveSupport::TestCase
   def test_proxyless_ssh_driver_should_default_to_local_user_when_non_provided
     # Given
     config = {}
-    node = mock("server node")
+    node = mock('server node')
     driver = Bcome::Ssh::Driver.new(config, node)
 
     system_user = given_a_random_string_of_length(5)

@@ -1,4 +1,5 @@
 # coding: utf-8
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
@@ -17,7 +18,6 @@ Gem::Specification.new do |spec|
   spec.bindir = 'bin'
   spec.executables = ['bcome']
   spec.require_paths = ['lib', 'lib/stack']
-  spec.add_dependency 'aws-sdk', '~> 2'
   spec.add_dependency 'rainbow', '2.0.0'
   spec.add_dependency 'net-scp', '~> 1.2', '>= 1.2.1'
   spec.add_dependency 'rsync', '~> 1.0'
@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'pmap', '1.1.1'
   spec.add_dependency 'activesupport', '5.1'
+  spec.add_dependency 'awesome_print', '1.7.0'
 end
