@@ -23,9 +23,8 @@ module Bcome::Node::Attributes
   end
 
   def network_driver
-    data = network_data
-    return nil unless data
-    @network_driver ||= ::Bcome::Driver::Base.create_from_config(data)
+    return nil unless network_data
+    @network_driver ||= ::Bcome::Driver::Bucket.instance.driver_for_network_data(network_data)
     @network_driver
   end
 

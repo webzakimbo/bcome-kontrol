@@ -1,12 +1,22 @@
 module Bcome::Driver
   class Ec2 < Bcome::Driver::Base
+
+    def initialize(*params)
+      super
+      raise "Missing provisioning region" unless provisioning_region
+    end 
+
     def fog_client
       @fog_client ||= get_fog_client
     end
 
     def fetch_server_list(filters)
-      servers = fog_client.servers.all(filters)
+      servers = unfiltered_server_list.all(filters)
       servers
+    end
+
+    def unfiltered_server_list
+      @unfiltered_server_list ||= fog_client.servers.all({})
     end
 
     def credentials_key
