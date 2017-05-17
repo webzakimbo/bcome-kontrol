@@ -125,7 +125,7 @@ class NodeTest < ActiveSupport::TestCase
     network_data = {}
     mocked_network_driver = mock("I'm a network driver")
 
-    collection.expects(:network_data).returns(network_data)
+    collection.expects(:network_data).returns(network_data).at_least_once
     ::Bcome::Driver::Base.expects(:create_from_config).with(network_data).returns(mocked_network_driver)
 
     # when/then ... all our expectations are met

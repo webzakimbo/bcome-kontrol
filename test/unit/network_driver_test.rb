@@ -77,6 +77,10 @@ class NetworkDriverTest < ActiveSupport::TestCase
     filters = { foo: :bar }
 
     mocked_all_servers = mock('All ec2 servers')
+    unfiltered_server_result = mock("full server result")
+    mocked_all_servers.expects(:all).returns(mocked_all_servers)
+
+
     mocked_filtered_servers = mock('Filtered servers')
     mocked_all_servers.expects(:all).with(filters).returns(mocked_filtered_servers)
     mocked_ec2_provider.expects(:servers).returns(mocked_all_servers)
