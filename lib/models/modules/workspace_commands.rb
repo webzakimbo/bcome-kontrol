@@ -48,7 +48,11 @@ module Bcome::WorkspaceCommands
 
   def cd(identifier)
     if resource = resources.for_identifier(identifier)
-      ::Bcome::Workspace.instance.set(current_context: self, context: resource)
+      if resource.parent.resources.is_active_resource?(resource) 
+        ::Bcome::Workspace.instance.set(current_context: self, context: resource)
+      else
+        puts "\nCannot enter context - #{identifier} is disabled\n".green
+      end
     else
       raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
       puts "#{identifier} not found"
