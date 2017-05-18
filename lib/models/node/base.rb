@@ -42,6 +42,10 @@ module Bcome::Node
       false
     end  
 
+    def server?
+      false
+    end  
+
     def no_nodes?
       !resources || resources.empty?
     end

@@ -38,6 +38,10 @@ module Bcome::Node
     def machines
       [self]
     end
+
+    def server?
+      true
+    end
  
     def ssh
       ssh_driver.do_ssh

@@ -42,7 +42,8 @@ module Bcome::WorkspaceCommands
   end
 
   def print_tree_view_for_resource(tab, resource)
-    puts tab.to_s + '-'.cyan + " #{resource.type.cyan.underline} \s#{resource.identifier.yellow}"
+    separator = resource.server? ? "*" : "-"
+    puts tab.to_s + separator.cyan + " #{resource.type.cyan.underline} \s#{resource.identifier.yellow}"
   end
 
   def cd(identifier)
