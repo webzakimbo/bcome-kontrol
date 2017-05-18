@@ -44,6 +44,8 @@ D. Orchestration
 Aims
 - Write scripts that can interact with all machines within a view
 - Ability to orchestrate across networks & web hosts, on static or dynamic instances
+- Include a generator to generate an orchestration file: this would be an initialization file (so can code around it as part of a bigger framework if we want). Init file to include as minimum
+  some comments on top as to how to run it, its namespace etc
 
 * B_PIN represents the tree structure of a view
 
