@@ -15,4 +15,6 @@ begin
   ::Bcome::Bootup.do(breadcrumbs: breadcrumbs, argument: argument)
 rescue Bcome::Exception::Base => e
   puts e.pretty_display
+rescue => Excon::Error::Socket
+  puts "\nNo network access - please check you connection and try again\n".red
 end
