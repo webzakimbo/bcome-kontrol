@@ -19,6 +19,10 @@ module Bcome::Driver
       @unfiltered_server_list ||= fog_client.servers.all({})
     end
 
+    def loading
+      fog_client.servers.all({})
+    end
+
     def credentials_key
       @params[:credentials_key]
     end

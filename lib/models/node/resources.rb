@@ -82,6 +82,10 @@ module Bcome::Node
       @nodes.empty?
     end
 
+    def has_active_nodes?
+      active.any?
+    end
+
     def size
       @nodes.size
     end

@@ -33,9 +33,9 @@ module Bcome::WorkspaceCommands
   def list_in_tree(tab, resources)
     resources.sort_by(&:identifier).each do |resource|
       unless resource.parent && !(resource.parent.resources.is_active_resource?(resource))
-        print_tree_view_for_resource(tab, resource)
         silent = true
         resource.load_dynamic_nodes(silent) unless resource.nodes_loaded?
+        print_tree_view_for_resource(tab, resource)
         list_in_tree("#{tab}\t", resource.resources) 
       end
     end
@@ -43,7 +43,9 @@ module Bcome::WorkspaceCommands
 
   def print_tree_view_for_resource(tab, resource)
     separator = resource.server? ? "*" : "-"
-    puts tab.to_s + separator.cyan + " #{resource.type.cyan.underline} \s#{resource.identifier.yellow}"
+    tree_item = tab.to_s + separator.cyan + " #{resource.type.cyan.underline} \s#{resource.identifier.yellow}"
+    tree_item += " (empty set)" if !resource.server? && !resource.resources.has_active_nodes?
+    puts tree_item
   end
 
   def cd(identifier)
