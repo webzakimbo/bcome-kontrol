@@ -1,8 +1,8 @@
-module Bcome::Node
-  class Inventory < ::Bcome::Node::Base
+module Bcome::Node::Inventory
+  class Dynamic < ::Bcome::Node::Inventory::Base
 
     def self.to_s
-      'inventory'
+      'dynamic inventory'
     end
 
     attr_reader :dynamic_nodes_loaded
@@ -13,17 +13,9 @@ module Bcome::Node
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @raw_view_data if @raw_view_data[:views] && !@raw_view_data[:views].empty?
     end
 
-    def list_key
-      :server
-    end
-
     def ls
       load_dynamic_nodes if no_nodes?
       super
-    end
-
-    def machines
-      @resources.active
     end
 
     def reload!
