@@ -31,7 +31,7 @@ class StaticServerTest < ActiveSupport::TestCase
 
     config = { view_data: {
       identifier: identifier,
-      public_ip_address: "X.X.X.X",
+      public_ip_address: public_ip_address,
       internal_ip_address: internal_ip_address
       }
     }
@@ -57,6 +57,34 @@ class StaticServerTest < ActiveSupport::TestCase
     end 
   end
 
+  def test_should_ensure_that_only_valid_ipv4_address_are_allowed
+    # Given
+    invalid_addresses = [  
+      nil,
+      "obviously not an ipv4 address",
+      "a.255.255.255",
+      "255.a.255.255",
+      "255.255.a.255",
+      "255.255.255.a",
+      "256.255.255.a"
+    ]
+
+    # TODO: raise a bcome exception 
+
+    # When/then - public address
+    invalid_addresses.each do |invalid_address|
+      assert_raise IPAddr::InvalidAddressError do
+        ::Bcome::Node::Server::Static.new( { view_data: { identifier: "foo", public_ip_address: invalid_address }})
+      end
+    end
+
+    # When/then - internal address
+    invalid_addresses.each do |invalid_address|
+      assert_raise IPAddr::InvalidAddressError do
+        ::Bcome::Node::Server::Static.new( { view_data: { identifier: "foo", internal_ip_address: invalid_address }})
+      end
+    end
+  end
 
   # Test that IP address conforms
   # SSH to IPV6 address? : https://superuser.com/questions/236993/how-to-ssh-to-a-ipv6-ubuntu-in-a-lan
