@@ -29,7 +29,6 @@ module Bcome::Node::Inventory
     end
 
     def load_dynamic_nodes(silent = false)
-      #puts "Loading nodes for #{namespace}".bc_green unless silent
       raw_servers = fetch_server_list
       raw_servers.each do |raw_server|
         resources << ::Bcome::Node::Server.new_from_fog_instance(raw_server, self)
