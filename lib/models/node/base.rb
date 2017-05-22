@@ -28,12 +28,12 @@ module Bcome::Node
       set_view_attributes if @raw_view_data
 
       validate_identifier
-      raise ::Bcome::Exception::MissingDescriptionOnView.new(@raw_view_data.inspect) unless @description
-      raise ::Bcome::Exception::MissingTypeOnView.new(@raw_view_data.inspect) unless @type
+      raise ::Bcome::Exception::MissingDescriptionOnView.new(@raw_view_data.inspect) if requires_description? && !@description
+      raise ::Bcome::Exception::MissingTypeOnView.new(@raw_view_data.inspect) if requires_type? && !@type
     end
 
     def validate_identifier
-      @identifier = DEFAULT_IDENTIFIER if is_top_level_node? && !@identifier
+      @identifier = DEFAULT_IDENTIFIER if is_top_level_node? && !@identifier && !is_a?(::Bcome::Node::Server::Base)
       raise ::Bcome::Exception::MissingIdentifierOnView.new(@raw_view_data.inspect) unless @identifier
       raise ::Bcome::Exception::InvalidIdentifier.new("'#{@identifier}' contains whitespace") if @identifier =~ /\s/
     end
@@ -45,6 +45,14 @@ module Bcome::Node
     def server?
       false
     end  
+
+    def requires_description?
+      true
+    end
+
+    def requires_type?
+      true
+    end
 
     def no_nodes?
       !resources || resources.empty?

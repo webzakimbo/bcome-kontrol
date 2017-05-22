@@ -1,27 +1,24 @@
-module Bcome::Node
-  class Server < Bcome::Node::Base
-    class << self
-      def new_from_fog_instance(fog_instance, parent)
-        identifier = fog_instance.tags['Name']
+module Bcome::Node::Server
+  class Base < Bcome::Node::Base
 
-        if parent.override_server_identifier?
-          identifier =~ /#{parent.override_identifier}/
-          identifier = Regexp.last_match(1) if Regexp.last_match(1)
-        end
+    def machines
+      [self]
+    end
 
-        params = {
-          identifier: identifier,
-          internal_interface_address: fog_instance.private_ip_address,
-          public_ip_address: fog_instance.public_ip_address,
-          role: fog_instance.tags['function'],
-          description: "EC2 server - #{identifier}",
-          type: 'server',
-          ec2_server: fog_instance
-        }
+    def server?
+      true
+    end
 
-        new(parent: parent,
-            view_data: params)
-      end
+    def requires_description?
+      false
+    end
+
+    def requires_type?
+      false
+    end
+
+    def ssh
+      ssh_driver.do_ssh
     end
 
     def ls
@@ -34,18 +31,6 @@ module Bcome::Node
         puts "\n\n"
       end
     end
-
-    def machines
-      [self]
-    end
-
-    def server?
-      true
-    end
- 
-    def ssh
-      ssh_driver.do_ssh
-    end 
 
     def ping
       ping_result = ssh_driver.ping
@@ -79,7 +64,6 @@ module Bcome::Node
       }
     end
 
-
     def list_attributes
       {
         "identifier": :identifier,
@@ -96,5 +80,5 @@ module Bcome::Node
       return commands
     end
 
-  end
+  end  
 end
