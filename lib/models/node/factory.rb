@@ -1,6 +1,7 @@
 module Bcome::Node::Factory
   CONFIG_PATH = 'config/bcome/estate.yml'.freeze
   DYNAMIC_INVENTORY_KEY = 'dynamic_inventory'.freeze
+  STATIC_INVENTORY_KEY = 'static_inventory'.freeze
   COLLECTION_KEY = 'collection'.freeze
   BCOME_RC_FILENAME = '.bcomerc'.freeze
 
@@ -51,7 +52,8 @@ module Bcome::Node::Factory
     def klass_for_view_type
       {
         COLLECTION_KEY => ::Bcome::Node::Collection,
-        DYNAMIC_INVENTORY_KEY => ::Bcome::Node::Inventory::Dynamic
+        DYNAMIC_INVENTORY_KEY => ::Bcome::Node::Inventory::Dynamic,
+        STATIC_INVENTORY_KEY => ::Bcome::Node::Inventory::Static
       }
     end
 
