@@ -26,8 +26,11 @@ module Bcome::Node
       @type = params[:type]
 
       set_view_attributes if @raw_view_data
+      validate_attributes
+    end
 
-      validate_identifier
+    def validate_attributes
+      validate_identifier 
       raise ::Bcome::Exception::MissingDescriptionOnView.new(@raw_view_data.inspect) if requires_description? && !@description
       raise ::Bcome::Exception::MissingTypeOnView.new(@raw_view_data.inspect) if requires_type? && !@type
     end

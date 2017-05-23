@@ -1,6 +1,10 @@
 module Bcome::Node::Server
   class Base < Bcome::Node::Base
 
+    def type
+      "server"
+    end
+
     def machines
       [self]
     end

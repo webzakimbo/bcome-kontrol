@@ -16,7 +16,6 @@ module Bcome::Node::Server
           public_ip_address: fog_instance.public_ip_address,
           role: fog_instance.tags['function'],
           description: "EC2 server - #{identifier}",
-          type: 'server',
           ec2_server: fog_instance
         }
 

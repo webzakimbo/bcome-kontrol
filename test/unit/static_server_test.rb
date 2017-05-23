@@ -48,7 +48,6 @@ class StaticServerTest < ActiveSupport::TestCase
     # Given/When/Then
     assert_raise ::Bcome::Exception::MissingIdentifierOnView do
       c = ::Bcome::Node::Server::Static.new({ view_data: { public_ip_address: "XX.XX.XX.XX.XX" } })
-      puts c.inspect
     end
 
     # Given/When/Then
