@@ -78,7 +78,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
     view_data = [
-      { identifier: 'aninvalidview', description: 'invalid inventory as it has subviews', type: 'dynamic_inventory', views: [{}, {}] }
+      { identifier: 'aninvalidview', description: 'invalid inventory as it has subviews', type: 'inventory', views: [{}, {}] }
     ]
 
     # When/then
@@ -90,7 +90,7 @@ class EstateTreeTest < ActiveSupport::TestCase
   def test_inventories_cannot_have_subviews_when_they_are_the_topmost_view
     # Given
     view_data = {
-      type: 'dynamic_inventory',
+      type: 'inventory',
       identifier: 'topmostidentifier',
       description: 'a top level inventory with subviews',
       views: [
@@ -197,7 +197,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     assert level3.resources.size == 1
 
     level4 = level3.resources.first
-    assert level4.is_a?(::Bcome::Node::Inventory::Dynamic)
+    assert level4.is_a?(::Bcome::Node::Inventory)
     assert level4.parent == level3
     assert level4.resources.empty?
   end
@@ -208,7 +208,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     description = 'all my stuff'
 
     # When
-    estate = Bcome::Node::Collection.new(view_data: { identifier: identifier, description: description, type: 'dynamic_inventory' })
+    estate = Bcome::Node::Collection.new(view_data: { identifier: identifier, description: description, type: 'inventory' })
 
     # Then
     assert estate.identifier == identifier

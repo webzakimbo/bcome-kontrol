@@ -1,4 +1,4 @@
-module Bcome::Node::Inventory
+module Bcome::Node
   class Inventory < ::Bcome::Node::Base
 
     def self.to_s
@@ -9,13 +9,13 @@ module Bcome::Node::Inventory
 
     def initialize(*params)
       @dynamic_nodes_loaded = false
-      set_static_servers
       super
+      set_static_servers
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @raw_view_data if @raw_view_data[:views] && !@raw_view_data[:views].empty?
     end
 
-    def static_servers
-      if server_configs = @raw_view_data[:servers]
+    def set_static_servers
+      if server_configs = @raw_view_data[:static_servers]
         server_configs.each {|server_config|
           resources << ::Bcome::Node::Server::Static.new(view_data: server_config, parent: self)
         }

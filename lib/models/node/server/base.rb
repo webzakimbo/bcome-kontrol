@@ -21,6 +21,10 @@ module Bcome::Node::Server
       false
     end
 
+    def static?
+      false
+    end
+
     def ssh
       ssh_driver.do_ssh
     end

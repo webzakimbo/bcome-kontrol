@@ -18,5 +18,9 @@ module Bcome::Node::Server
       @public_ip_address || @internal_ip_address
     end
 
+    def static?
+      true
+    end 
+
   end
 end

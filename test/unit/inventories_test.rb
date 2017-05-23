@@ -1,9 +1,9 @@
 load "#{File.dirname(__FILE__)}/../base.rb"
 
-class StaticInventoriesTest < ActiveSupport::TestCase
+class InventoriesTest < ActiveSupport::TestCase
   include UnitTestHelper
 
-  def test_should_be_able_to_create_a_static_inventory
+  def test_should_be_able_to_create_a_inventory
     # Given
     estate = given_a_dummy_estate
 
@@ -11,7 +11,7 @@ class StaticInventoriesTest < ActiveSupport::TestCase
       {
         identifier: "foo", 
         description: "bar",
-        type: "static_inventory"
+        type: "inventory"
       }
     ]
 
@@ -20,8 +20,8 @@ class StaticInventoriesTest < ActiveSupport::TestCase
     inventory = estate.resources.first
   
     # Then
-    assert inventory.is_a?(::Bcome::Node::Inventory::Static)
-    assert inventory.class.to_s == "static inventory"
+    assert inventory.is_a?(::Bcome::Node::Inventory)
+    assert inventory.class.to_s == "inventory"
   end
 
   def test_that_static_inventories_can_have_servers
@@ -39,8 +39,8 @@ class StaticInventoriesTest < ActiveSupport::TestCase
     view_data = [
       identifier: "foo",
       description: "bar",
-      type: "static_inventory",
-      servers: server_data
+      type: "inventory",
+      static_servers: server_data
     ]
 
     # When
@@ -49,7 +49,7 @@ class StaticInventoriesTest < ActiveSupport::TestCase
  
     # Sanity
     assert inventory.parent == estate
-    assert inventory.is_a?(::Bcome::Node::Inventory::Static)
+    assert inventory.is_a?(::Bcome::Node::Inventory)
     assert inventory.resources.size == 2
     
     # And also that

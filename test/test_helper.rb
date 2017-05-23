@@ -25,7 +25,7 @@ module UnitTestHelper
       { type: 'collection', identifier: 'one', description: 'I am top level collection hear me roar', views: [
         { type: 'collection', identifier: 'two', description: 'I am sub collection 1', views: [
           { type: 'collection', identifier: 'three', description: 'I sub collection 2', views: [
-            { type: 'dynamic_inventory', identifier: 'four', description: 'I am inventory 1', network: { type: 'ec2', credentials_key: 'whatever' } }
+            { type: 'inventory', identifier: 'four', description: 'I am inventory 1', network: { type: 'ec2', credentials_key: 'whatever' } }
           ] }
         ] }
       ] }
