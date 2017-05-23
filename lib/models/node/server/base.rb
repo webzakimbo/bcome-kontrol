@@ -42,6 +42,8 @@ module Bcome::Node::Server
     end
 
     def print_ping_result(ping_result = { success: true })
+      puts ping_result.inspect
+
       result = {
         namespace => {
           "connection" => ping_result[:success] ? "success" : "failed",

@@ -85,8 +85,7 @@ module Bcome::Interactive::SessionItem
         begin
           machine.ssh_driver.ssh_connect!
         rescue
-          puts 'Failed to connect to instance - please verify your connection settings and check that your instance is running.'
-          machine.print_ping_result(false)
+          Bcome::ProgressBar.instance.reset!
           raise Bcome::Exception::CouldNotInitiateSshConnection, machine.namespace
           break
         end
