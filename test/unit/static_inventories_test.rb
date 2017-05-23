@@ -30,4 +30,6 @@ class StaticInventoriesTest < ActiveSupport::TestCase
   end
 
 
+  # test that static_inventory set as parent for server
+
 end

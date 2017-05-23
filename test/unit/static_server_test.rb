@@ -6,11 +6,11 @@ class StaticServerTest < ActiveSupport::TestCase
   def test_should_be_able_to_create_a_static_server
     # Given
     identifier = "app1"
-    public_ip_address = "X.X.X.X"
+    public_ip_address = "217.199.177.83" 
 
     config = { view_data: {
       identifier: identifier,
-      public_ip_address: "X.X.X.X"
+      public_ip_address: public_ip_address
       }
     }
 
@@ -21,13 +21,14 @@ class StaticServerTest < ActiveSupport::TestCase
     assert static_server.is_a?(::Bcome::Node::Server::Static)
     assert static_server.identifier == identifier
     assert static_server.public_ip_address == public_ip_address
+    assert !static_server.has_description?
   end
 
   def test_should_set_internal_ip_address_if_provided
     # Given
     identifier = "app1"
-    public_ip_address = "X.X.X.X"
-    internal_ip_address = "Y.Y.Y.Y"
+    public_ip_address = "217.199.177.83"
+    internal_ip_address = "10.0.0.4"
 
     config = { view_data: {
       identifier: identifier,
@@ -57,37 +58,27 @@ class StaticServerTest < ActiveSupport::TestCase
     end 
   end
 
-  def test_should_ensure_that_only_valid_ipv4_address_are_allowed
+  def test_should_be_able_to_set_description_on_server
     # Given
-    invalid_addresses = [  
-      nil,
-      "obviously not an ipv4 address",
-      "a.255.255.255",
-      "255.a.255.255",
-      "255.255.a.255",
-      "255.255.255.a",
-      "256.255.255.a"
-    ]
+    description = given_a_random_string_of_length(10)
+    identifier = "foo"
+    public_ip_address = "217.199.177.83"
 
-    # TODO: raise a bcome exception 
+    config = {
+      view_data: {
+        identifier: identifier,
+        public_ip_address: public_ip_address,
+        description: description
+      }
+    }
 
-    # When/then - public address
-    invalid_addresses.each do |invalid_address|
-      assert_raise IPAddr::InvalidAddressError do
-        ::Bcome::Node::Server::Static.new( { view_data: { identifier: "foo", public_ip_address: invalid_address }})
-      end
-    end
+    # When 
+    server = ::Bcome::Node::Server::Static.new(config)
 
-    # When/then - internal address
-    invalid_addresses.each do |invalid_address|
-      assert_raise IPAddr::InvalidAddressError do
-        ::Bcome::Node::Server::Static.new( { view_data: { identifier: "foo", internal_ip_address: invalid_address }})
-      end
-    end
+    # Then
+    assert server.description == description
+    assert server.has_description?
+    assert server.list_attributes.keys.include?(:description)
   end
-
-  # Test that IP address conforms
-  # SSH to IPV6 address? : https://superuser.com/questions/236993/how-to-ssh-to-a-ipv6-ubuntu-in-a-lan
-  # test parent is set
 
 end

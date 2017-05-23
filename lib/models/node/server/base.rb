@@ -65,11 +65,14 @@ module Bcome::Node::Server
     end
 
     def list_attributes
-      {
+      attribs = {
         "identifier": :identifier,
         "internal ip": :internal_interface_address,
         "public ip": :public_ip_address,
       }
+
+      attribs.merge!("description": :description ) if has_description?
+      attribs
     end
 
     def do_run(raw_commands)
@@ -78,6 +81,10 @@ module Bcome::Node::Server
       command_exec = ::Bcome::Ssh::CommandExec.new(commands)
       command_exec.execute!
       return commands
+    end
+
+    def has_description?
+      !@description.nil?
     end
 
   end  

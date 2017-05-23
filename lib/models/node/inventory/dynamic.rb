@@ -31,7 +31,7 @@ module Bcome::Node::Inventory
     def load_dynamic_nodes(silent = false)
       raw_servers = fetch_server_list
       raw_servers.each do |raw_server|
-        resources << ::Bcome::Node::Server.new_from_fog_instance(raw_server, self)
+        resources << ::Bcome::Node::Server::Dynamic.new_from_fog_instance(raw_server, self)
       end
       dynamic_nodes_loaded!
     end
