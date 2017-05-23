@@ -80,7 +80,7 @@ class BootupTest < ActiveSupport::TestCase
     estate = given_a_dummy_estate
 
     breadcrumbs = 'one:two:three:four'
-    view_data = given_dummy_view_data
+    view_data = given_basic_dummy_view_data
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 
     found_context = test_traverse_tree(estate, %w[one two three four])
@@ -98,7 +98,7 @@ class BootupTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
     breadcrumbs = 'one:two:three:four:five'
-    view_data = given_dummy_view_data
+    view_data = given_basic_dummy_view_data
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 
     found_context = test_traverse_tree(estate, %w[one two three four])
@@ -106,7 +106,6 @@ class BootupTest < ActiveSupport::TestCase
     ::Bcome::Node::Factory.expects(:init_tree).returns(estate)
 
     # We expect to have not found a context for "five", and so we'll invoke "five" on "four"
-    found_context.expects(:load_dynamic_nodes).returns([])
     found_context.expects(:invoke).with('five', nil)
 
     # When/then
@@ -119,7 +118,7 @@ class BootupTest < ActiveSupport::TestCase
     breadcrumbs = 'one:two:three:four:five'
     argument = 'an argument'
 
-    view_data = given_dummy_view_data
+    view_data = given_basic_dummy_view_data
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 
     found_context = test_traverse_tree(estate, %w[one two three four])
@@ -127,7 +126,6 @@ class BootupTest < ActiveSupport::TestCase
     ::Bcome::Node::Factory.expects(:init_tree).returns(estate)
 
     # We expect to have not found a context for "five", and so we'll invoke "five" on "four" passing in our argument "argument"
-    found_context.expects(:load_dynamic_nodes).returns([])
     found_context.expects(:invoke).with('five', argument)
 
     # When/then

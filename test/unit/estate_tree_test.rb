@@ -172,8 +172,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     #  Given
     estate = given_a_dummy_estate
 
-    view_data = given_dummy_view_data
-
+    view_data = given_basic_dummy_view_data
     # When
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 

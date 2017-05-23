@@ -61,4 +61,46 @@ class InventoriesTest < ActiveSupport::TestCase
     end
   end
 
+  def test_should_replace_static_node_if_identifier_defined_both_statically_and_is_returned_dynamically
+    # Rationale: Dynamic nodes are always authoritative
+
+    # Given
+    estate = given_a_dummy_estate
+    duplicate_identifier = given_a_random_string_of_length(5) 
+
+    static_node_ip_address = "static.node.host.name"      
+
+    remote_node = mock("remote node")
+    remote_node.expects(:identifier).returns(duplicate_identifier).at_least_once
+    remote_node.expects(:dynamic_server?).returns(true)
+ 
+    static_server_data = [
+      {
+        identifier: duplicate_identifier,
+        public_ip_address: static_node_ip_address
+      }
+    ]
+
+    view_data = [
+      identifier: "foo",
+      description: "bar",
+      type: "inventory",
+      static_servers: static_server_data
+    ]
+
+    ::Bcome::Node::Factory.create_tree(estate, view_data)
+    inventory = estate.resources.first
+
+    # Sanity
+    assert inventory.resources.size == 1
+    static_server = inventory.resources.first
+    assert static_server.is_a?(Bcome::Node::Server::Static)
+
+    # When
+    inventory.resources << remote_node
+
+
+  end
+
+
 end

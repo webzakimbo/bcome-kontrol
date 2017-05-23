@@ -66,7 +66,7 @@ module Bcome::Node
     end
    
     def resources
-      @resources ||= ::Bcome::Node::Resources.new
+      @resources ||= ::Bcome::Node::Resources::Base.new
     end
 
     def list_key

@@ -23,7 +23,7 @@ module Bcome::Node::Attributes
   end
 
   def network_driver
-    return nil unless network_data
+    return nil if !network_data || (network_data.is_a?(Hash) && network_data.empty?)
     @network_driver ||= ::Bcome::Driver::Bucket.instance.driver_for_network_data(network_data)
     @network_driver
   end

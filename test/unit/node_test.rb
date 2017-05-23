@@ -106,7 +106,8 @@ class NodeTest < ActiveSupport::TestCase
   def test_should_be_able_to_load_a_resource_by_identifier
     # Given
     estate = given_a_dummy_estate
-    view_data = given_dummy_view_data # one:two:three:four
+    view_data = given_basic_dummy_view_data # one:two:three:four
+
     ::Bcome::Node::Factory.create_tree(estate, view_data)
 
     third_context = test_traverse_tree(estate, %w[one two three])
@@ -122,7 +123,7 @@ class NodeTest < ActiveSupport::TestCase
   def test_should_construct_network_with_network_data
     # Given
     collection = given_a_dummy_collection
-    network_data = {}
+    network_data = { :foo => :bar }
     mocked_network_driver = mock("I'm a network driver")
 
     collection.expects(:network_data).returns(network_data).at_least_once

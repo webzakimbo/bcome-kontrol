@@ -1,5 +1,14 @@
-
 module UnitTestHelper
+
+  def given_a_mocked_network_driver_returning_an_empty_set
+    network_driver = mock("Network Driver")
+    Bcome::Driver::Ec2.expects(:new).returns(network_driver)
+    filters = {}
+    result_set = []
+    network_driver.expects(:fetch_server_list).with(filters).returns(result_set)
+    return network_driver
+  end
+
   def given_a_random_string_of_length(string_length = 50)
     o = [('a'..'z'), ('A'..'Z')].map(&:to_a).flatten
     (0...string_length).map { o[rand(o.length)] }.join
@@ -31,6 +40,19 @@ module UnitTestHelper
       ] }
     ]
   end
+
+  def given_basic_dummy_view_data
+    [
+      { type: 'collection', identifier: 'one', description: 'I am top level collection hear me roar', views: [
+        { type: 'collection', identifier: 'two', description: 'I am sub collection 1', views: [
+          { type: 'collection', identifier: 'three', description: 'I sub collection 2', views: [
+            { type: 'inventory', identifier: 'four', description: 'I am inventory 1' }
+          ] }
+        ] }
+      ] }
+    ]
+  end
+
 
   def test_traverse_tree(context, crumbs)
     crumbs.each do |crumb|

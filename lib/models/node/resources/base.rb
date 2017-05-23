@@ -1,5 +1,5 @@
-module Bcome::Node
-  class Resources
+module Bcome::Node::Resources
+  class Base
     include Enumerable
 
     def initialize
@@ -12,19 +12,11 @@ module Bcome::Node
     end
 
     def <<(node)
-      if duplicate_node = for_identifier(node.identifier)
-        clear!
-
-        if duplicate_node.is_a?(Bcome::Node::Server) && duplicate_node.static?
-          exception_message = "Found remote resource named '#{node.identifier}' which conflicts with one of your statically defined resources within namespace #{node.parent.namespace}"
-        else
-          exception_message = "#{node.identifier} is not unique within namespace #{node.parent.namespace}"
-        end
-
+      if existing_node = for_identifier(node.identifier)
+        exception_message = "#{node.identifier} is not unique within namespace #{node.parent.namespace}"
         raise Bcome::Exception::NodeIdentifiersMustBeUnique, exception_message
-      else
-        @nodes << node
       end
+      @nodes << node
     end
 
     def clear!

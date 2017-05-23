@@ -11,6 +11,7 @@ module Bcome::Node
       @dynamic_nodes_loaded = false
       super
       set_static_servers
+      load_dynamic_nodes
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @raw_view_data if @raw_view_data[:views] && !@raw_view_data[:views].empty?
     end
 
@@ -22,17 +23,16 @@ module Bcome::Node
       end
     end
 
+    def resources
+      @resources ||= ::Bcome::Node::Resources::Inventory.new
+    end
+
     def list_key
       :server
     end
 
     def machines
       @resources.active
-    end
-
-    def ls
-      load_dynamic_nodes if no_nodes?
-      super
     end
 
     def reload!
@@ -62,6 +62,7 @@ module Bcome::Node
     end
 
     def fetch_server_list
+      return [] unless network_driver
       network_driver.fetch_server_list(filters)
     end
   end

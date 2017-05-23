@@ -21,10 +21,6 @@ module Bcome::Node::Server
       false
     end
 
-    def static?
-      false
-    end
-
     def ssh
       ssh_driver.do_ssh
     end
@@ -93,6 +89,14 @@ module Bcome::Node::Server
 
     def has_description?
       !@description.nil?
+    end
+
+    def static_server?
+      false
+    end
+
+    def dynamic_server?
+      !static_server?
     end
 
   end  
