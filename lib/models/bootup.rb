@@ -21,7 +21,7 @@ module Bcome
       crumbs.each do |crumb|
         # Some contexts' resources are loaded dynamically and do not come from the estate config. As we're traversing, we'll need to load
         # them if necessary
-        starting_context.load_dynamic_nodes unless starting_context.nodes_loaded?
+        starting_context.load_nodes unless starting_context.nodes_loaded?
 
         # Attempt to load our next context resource
         next_context = starting_context.resource_for_identifier(crumb)

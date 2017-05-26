@@ -20,7 +20,7 @@ module Bcome::Node
       m = []
       @resources.active.each do |resource|
         if resource.is_a?(::Bcome::Node::Inventory)
-          resource.load_dynamic_nodes unless resource.nodes_loaded?
+          resource.load_nodes unless resource.nodes_loaded?
           m << resource.resources.active
         else
           m << resource.machines
