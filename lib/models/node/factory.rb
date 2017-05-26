@@ -9,7 +9,7 @@ module Bcome::Node
     BCOME_RC_FILENAME = '.bcomerc'.freeze
 
     def init_tree
-      create_node(load_estate_config)
+      create_node(estate_config)
     end
 
     def create_tree(context_node, views)
@@ -25,7 +25,7 @@ module Bcome::Node
       node
     end
 
-    def load_estate_config
+    def estate_config
       config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
       return config
       rescue ArgumentError
