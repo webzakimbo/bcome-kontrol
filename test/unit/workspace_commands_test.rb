@@ -18,7 +18,7 @@ class NodeTest < ActiveSupport::TestCase
     }
 
     YAML.expects(:load_file).returns(config)
-    estate = ::Bcome::Node::Factory.init_tree
+    estate = ::Bcome::Node::Factory.instance.init_tree
     node = estate.resources.first
 
     ::Bcome::Workspace.instance.expects(:set).with(current_context: estate, context: node)

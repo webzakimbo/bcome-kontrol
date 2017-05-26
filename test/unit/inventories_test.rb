@@ -16,7 +16,7 @@ class InventoriesTest < ActiveSupport::TestCase
     ]
 
     # When
-    ::Bcome::Node::Factory.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
     inventory = estate.resources.first
   
     # Then
@@ -44,7 +44,7 @@ class InventoriesTest < ActiveSupport::TestCase
     ]
 
     # When
-    ::Bcome::Node::Factory.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
     inventory = estate.resources.first
     inventory.load_nodes
  
@@ -89,7 +89,7 @@ class InventoriesTest < ActiveSupport::TestCase
       static_servers: static_server_data
     ]
 
-    ::Bcome::Node::Factory.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
     inventory = estate.resources.first
     inventory.load_nodes
 
