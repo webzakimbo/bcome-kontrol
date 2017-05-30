@@ -10,8 +10,6 @@ module Bcome::Node
     def initialize(*params)
       @dynamic_nodes_loaded = false
       super
-      set_static_servers
-      load_dynamic_nodes
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @raw_view_data if @raw_view_data[:views] && !@raw_view_data[:views].empty?
     end
 
@@ -36,7 +34,7 @@ module Bcome::Node
     end
 
     def reload!
-      load_dynamic_nodes
+      load_nodes
       puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".bc_green
     end
 
@@ -44,8 +42,12 @@ module Bcome::Node
       !@override_identifier.nil?
     end
 
-    def load_dynamic_nodes(silent = false)
-      puts "Loading dynamic inventory for #{self.namespace}"
+    def load_nodes
+      set_static_servers
+      load_dynamic_nodes
+    end
+
+    def load_dynamic_nodes
       raw_servers = fetch_server_list
       raw_servers.each do |raw_server|
         resources << ::Bcome::Node::Server::Dynamic.new_from_fog_instance(raw_server, self)

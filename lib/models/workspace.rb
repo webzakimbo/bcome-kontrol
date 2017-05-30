@@ -13,7 +13,7 @@ class ::Bcome::Workspace
 
     @context = params[:context]
 
-    @context.load_dynamic_nodes if @context.has_dynamic_nodes? && @context.no_nodes?
+    @context.load_nodes if @context.has_dynamic_nodes? && @context.no_nodes?
 
     main_context = IRB.conf[:MAIN_CONTEXT]
 

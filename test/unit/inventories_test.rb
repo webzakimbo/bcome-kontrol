@@ -16,7 +16,7 @@ class InventoriesTest < ActiveSupport::TestCase
     ]
 
     # When
-    ::Bcome::Node::Factory.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
     inventory = estate.resources.first
   
     # Then
@@ -44,8 +44,9 @@ class InventoriesTest < ActiveSupport::TestCase
     ]
 
     # When
-    ::Bcome::Node::Factory.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
     inventory = estate.resources.first
+    inventory.load_nodes
  
     # Sanity
     assert inventory.parent == estate
@@ -88,19 +89,17 @@ class InventoriesTest < ActiveSupport::TestCase
       static_servers: static_server_data
     ]
 
-    ::Bcome::Node::Factory.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
     inventory = estate.resources.first
+    inventory.load_nodes
 
     # Sanity
     assert inventory.resources.size == 1
+
     static_server = inventory.resources.first
     assert static_server.is_a?(Bcome::Node::Server::Static)
 
     # When
     inventory.resources << remote_node
-
-
   end
-
-
 end

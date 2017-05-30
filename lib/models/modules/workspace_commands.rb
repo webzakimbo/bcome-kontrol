@@ -34,7 +34,7 @@ module Bcome::WorkspaceCommands
     resources.sort_by(&:identifier).each do |resource|
       unless resource.parent && !(resource.parent.resources.is_active_resource?(resource))
         silent = true
-        resource.load_dynamic_nodes(silent) unless resource.nodes_loaded?
+        resource.load_nodes unless resource.nodes_loaded?
         print_tree_view_for_resource(tab, resource)
         list_in_tree("#{tab}\t", resource.resources) 
       end

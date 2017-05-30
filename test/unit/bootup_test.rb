@@ -40,7 +40,7 @@ class BootupTest < ActiveSupport::TestCase
     bootup = ::Bcome::Bootup.new(breadcrumbs: nil)
 
     estate = Bcome::Node::Collection.new(given_estate_setup_params)
-    ::Bcome::Node::Factory.expects(:init_tree).returns(estate)
+    ::Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
 
     # When/then
     bootup_estate = bootup.estate
@@ -81,11 +81,11 @@ class BootupTest < ActiveSupport::TestCase
 
     breadcrumbs = 'one:two:three:four'
     view_data = given_basic_dummy_view_data
-    ::Bcome::Node::Factory.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
 
     found_context = test_traverse_tree(estate, %w[one two three four])
 
-    ::Bcome::Node::Factory.expects(:init_tree).returns(estate)
+    ::Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
 
     # We expect to have traversed to our found context, at which point we enter a console session, thus:
     ::Bcome::Workspace.instance.expects(:set).with(context: found_context)
@@ -99,11 +99,11 @@ class BootupTest < ActiveSupport::TestCase
     estate = given_a_dummy_estate
     breadcrumbs = 'one:two:three:four:five'
     view_data = given_basic_dummy_view_data
-    ::Bcome::Node::Factory.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
 
     found_context = test_traverse_tree(estate, %w[one two three four])
 
-    ::Bcome::Node::Factory.expects(:init_tree).returns(estate)
+    ::Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
 
     # We expect to have not found a context for "five", and so we'll invoke "five" on "four"
     found_context.expects(:invoke).with('five', nil)
@@ -119,11 +119,11 @@ class BootupTest < ActiveSupport::TestCase
     argument = 'an argument'
 
     view_data = given_basic_dummy_view_data
-    ::Bcome::Node::Factory.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
 
     found_context = test_traverse_tree(estate, %w[one two three four])
 
-    ::Bcome::Node::Factory.expects(:init_tree).returns(estate)
+    ::Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
 
     # We expect to have not found a context for "five", and so we'll invoke "five" on "four" passing in our argument "argument"
     found_context.expects(:invoke).with('five', argument)
@@ -148,9 +148,9 @@ class BootupTest < ActiveSupport::TestCase
     }
 
     YAML.expects(:load_file).returns(config)
-    estate = Bcome::Node::Factory.init_tree
+    estate = Bcome::Node::Factory.instance.init_tree
 
-    Bcome::Node::Factory.expects(:init_tree).returns(estate)
+    Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
 
     # When/then
     ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: arguments)
@@ -173,9 +173,9 @@ class BootupTest < ActiveSupport::TestCase
     }
 
     YAML.expects(:load_file).returns(config)
-    estate = Bcome::Node::Factory.init_tree
+    estate = Bcome::Node::Factory.instance.init_tree
 
-    Bcome::Node::Factory.expects(:init_tree).returns(estate)
+    Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
 
     # When/then
     ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: nil)
@@ -198,9 +198,9 @@ class BootupTest < ActiveSupport::TestCase
     }
 
     YAML.expects(:load_file).returns(config)
-    estate = Bcome::Node::Factory.init_tree
+    estate = Bcome::Node::Factory.instance.init_tree
 
-    Bcome::Node::Factory.expects(:init_tree).returns(estate)
+    Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
 
     # When/then
     assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
@@ -224,9 +224,9 @@ class BootupTest < ActiveSupport::TestCase
     }
 
     YAML.expects(:load_file).returns(config)
-    estate = Bcome::Node::Factory.init_tree
+    estate = Bcome::Node::Factory.instance.init_tree
 
-    Bcome::Node::Factory.expects(:init_tree).returns(estate)
+    Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
 
     # When/then
     assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
