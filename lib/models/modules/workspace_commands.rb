@@ -13,7 +13,7 @@ module Bcome::WorkspaceCommands
   end
 
   def tree
-    puts "\nTree view\n".green
+    puts "\nTree view\n".bc_green
     tab = ''
     parents.reverse.each do |p|
       print_tree_view_for_resource(tab, p)
@@ -53,7 +53,7 @@ module Bcome::WorkspaceCommands
       if resource.parent.resources.is_active_resource?(resource) 
         ::Bcome::Workspace.instance.set(current_context: self, context: resource)
       else
-        puts "\nCannot enter context - #{identifier} is disabled. To enable enter 'enable #{identifier}'\n".green
+        puts "\nCannot enter context - #{identifier} is disabled. To enable enter 'enable #{identifier}'\n".bc_green
       end
     else
       raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
