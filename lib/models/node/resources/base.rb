@@ -12,7 +12,8 @@ module Bcome::Node::Resources
     end
 
     def <<(node)
-      if existing_node = for_identifier(node.identifier)
+      existing_node = for_identifier(node.identifier)
+      if existing_node
         exception_message = "#{node.identifier} is not unique within namespace #{node.parent.namespace}"
         raise Bcome::Exception::NodeIdentifiersMustBeUnique, exception_message
       end

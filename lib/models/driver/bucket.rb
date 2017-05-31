@@ -7,11 +7,8 @@ module Bcome::Driver
     end
 
     def driver_for_network_data(network_data)
-      if driver = @drivers.select{|driver| driver.config == network_data }.first
-        driver
-      else
-        create_network_driver(network_data)
-      end
+      found_driver = @drivers.select{|driver| driver.config == network_data }.first
+      found_driver ? found_driver : create_network_driver(network_data)
     end
 
     def create_network_driver(network_data)

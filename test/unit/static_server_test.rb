@@ -47,7 +47,7 @@ class StaticServerTest < ActiveSupport::TestCase
   def test_should_ensure_that_required_fields_are_required
     # Given/When/Then
     assert_raise ::Bcome::Exception::MissingIdentifierOnView do
-      c = ::Bcome::Node::Server::Static.new({ view_data: { public_ip_address: "XX.XX.XX.XX.XX" } })
+      ::Bcome::Node::Server::Static.new({ view_data: { public_ip_address: "XX.XX.XX.XX.XX" } })
     end
 
     # Given/When/Then
