@@ -26,13 +26,19 @@ module Bcome::Node
     end
 
     def estate_config
-      config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
-      return config
+      @estate_config ||= load_estate_config
+    end
+
+    def load_estate_config
+      begin
+        config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
+        return config
       rescue ArgumentError
         raise Bcome::Exception::InvalidEstateConfig, 'Invalid yaml in config'
       rescue Errno::ENOENT
         raise Bcome::Exception::MissingEstateConfig, CONFIG_PATH
       end
+    end
 
     def validate_view_data(config)
       raise Bcome::Exception::InvalidEstateConfig, "Invalid view type for (#{config.inspect})" unless is_valid_view_type?(config[:type])

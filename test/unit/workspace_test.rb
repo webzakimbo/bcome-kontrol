@@ -6,7 +6,7 @@ class WorkspaceTest < ActiveSupport::TestCase
 
   def test_should_initialize_workspace
     # Given/when
-    workspace = ::Bcome::Workspace.instance
+    workspace = ::Bcome::Workspace.send(:new)
 
     # Then
     assert workspace.is_a?(::Bcome::Workspace)
@@ -18,7 +18,7 @@ class WorkspaceTest < ActiveSupport::TestCase
 
   def test_should_set_irb_context
     # Given
-    workspace = ::Bcome::Workspace.instance
+    workspace = ::Bcome::Workspace.send(:new)
     context_object = given_a_dummy_estate
 
     workspace.expects(:spawn_into_console_for_context).returns(nil)
@@ -33,7 +33,7 @@ class WorkspaceTest < ActiveSupport::TestCase
 
   def test_should_correctly_set_irb_prompt
     # Given
-    workspace_with_no_context = ::Bcome::Workspace.instance
+    workspace_with_no_context = ::Bcome::Workspace.send(:new)
     default_prompt = 'whatever'
     workspace_with_no_context.expects(:default_prompt).returns(default_prompt)
 

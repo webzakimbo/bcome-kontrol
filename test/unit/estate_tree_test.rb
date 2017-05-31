@@ -28,7 +28,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     mock_yaml_estate_load_return(given_a_dummy_estate_config)
 
     # When/then
-    Bcome::Node::Factory.instance.init_tree
+    Bcome::Node::Factory.send(:new).init_tree
   end
 
   def test_should_default_top_level_identifier_to_bcome_if_not_provided
@@ -39,7 +39,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     mock_yaml_estate_load_return(config)
 
     # when
-    estate = Bcome::Node::Factory.instance.init_tree
+    estate = Bcome::Node::Factory.send(:new).init_tree
 
     # then
     estate.identifier == Bcome::Node::Base::DEFAULT_IDENTIFIER
@@ -55,10 +55,11 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     view_data = config[:views]
 
-    ::Bcome::Node::Factory.instance.expects(:create_tree).with(estate, view_data)
+    factory = ::Bcome::Node::Factory.send(:new)
+    factory.expects(:create_tree).with(estate, view_data)
 
     # When/then
-    Bcome::Node::Factory.instance.init_tree
+    factory.init_tree
   end
 
   def test_should_validate_view_types
@@ -70,7 +71,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     # When/then
     assert_raise ::Bcome::Exception::InvalidEstateConfig do
-      ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
+      ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
     end
   end
 
@@ -83,7 +84,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     # When/then
     assert_raise ::Bcome::Exception::InventoriesCannotHaveSubViews do
-      ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
+      ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
     end
   end
 
@@ -102,7 +103,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     # When/then
     assert_raise ::Bcome::Exception::InventoriesCannotHaveSubViews do
-      ::Bcome::Node::Factory.instance.init_tree
+      ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
 
@@ -118,7 +119,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     # when/then
     assert_raise ::Bcome::Exception::InvalidEstateConfig do
-      ::Bcome::Node::Factory.instance.init_tree
+      ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
 
@@ -128,7 +129,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     # when/then
     assert_raise ::Bcome::Exception::MissingEstateConfig do
-      ::Bcome::Node::Factory.instance.init_tree
+      ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
 
@@ -138,7 +139,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     # When/then
     assert_raise ::Bcome::Exception::InvalidEstateConfig do
-      ::Bcome::Node::Factory.instance.init_tree
+      ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
 
@@ -151,7 +152,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     ]
 
     # When
-    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
 
     # Then
     assert !estate.resources.nil?
@@ -174,7 +175,7 @@ class EstateTreeTest < ActiveSupport::TestCase
 
     view_data = given_basic_dummy_view_data
     # When
-    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
 
     # Then
     assert estate.resources.size == 1 # 1 top-level estate resource

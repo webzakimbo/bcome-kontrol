@@ -40,7 +40,10 @@ class BootupTest < ActiveSupport::TestCase
     bootup = ::Bcome::Bootup.new(breadcrumbs: nil)
 
     estate = Bcome::Node::Collection.new(given_estate_setup_params)
-    ::Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
+    factory = ::Bcome::Node::Factory.send(:new)
+    factory.expects(:init_tree).returns(estate)
+
+    Bcome::Node::Factory.expects(:instance).returns(factory)
 
     # When/then
     bootup_estate = bootup.estate
@@ -55,7 +58,10 @@ class BootupTest < ActiveSupport::TestCase
 
     estate = Bcome::Node::Collection.new(given_estate_setup_params)
     bootup.expects(:estate).returns(estate)
-    ::Bcome::Workspace.instance.expects(:set).with(context: estate).returns(nil)
+    workspace_instance = ::Bcome::Workspace.send(:new) 
+    workspace_instance.expects(:set).with(context: estate).returns(nil)
+
+    Bcome::Workspace.expects(:instance).returns(workspace_instance)
 
     # When/then
     bootup.do
@@ -81,11 +87,13 @@ class BootupTest < ActiveSupport::TestCase
 
     breadcrumbs = 'one:two:three:four'
     view_data = given_basic_dummy_view_data
-    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
+    factory = ::Bcome::Node::Factory.send(:new)
+    factory.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.expects(:instance).returns(factory) 
 
     found_context = test_traverse_tree(estate, %w[one two three four])
 
-    ::Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
+    factory.expects(:init_tree).returns(estate)
 
     # We expect to have traversed to our found context, at which point we enter a console session, thus:
     ::Bcome::Workspace.instance.expects(:set).with(context: found_context)
@@ -99,14 +107,17 @@ class BootupTest < ActiveSupport::TestCase
     estate = given_a_dummy_estate
     breadcrumbs = 'one:two:three:four:five'
     view_data = given_basic_dummy_view_data
-    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
 
     found_context = test_traverse_tree(estate, %w[one two three four])
 
-    ::Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
+    factory = ::Bcome::Node::Factory.send(:new)
+    factory.expects(:init_tree).returns(estate)
 
     # We expect to have not found a context for "five", and so we'll invoke "five" on "four"
     found_context.expects(:invoke).with('five', nil)
+
+    ::Bcome::Node::Factory.expects(:instance).returns(factory)
 
     # When/then
     ::Bcome::Bootup.do(breadcrumbs: breadcrumbs)
@@ -119,11 +130,13 @@ class BootupTest < ActiveSupport::TestCase
     argument = 'an argument'
 
     view_data = given_basic_dummy_view_data
-    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
+
+    fac = ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+    ::Bcome::Node::Factory.expects(:instance).returns(fac)
 
     found_context = test_traverse_tree(estate, %w[one two three four])
 
-    ::Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
+    fac.expects(:init_tree).returns(estate)
 
     # We expect to have not found a context for "five", and so we'll invoke "five" on "four" passing in our argument "argument"
     found_context.expects(:invoke).with('five', argument)
@@ -147,10 +160,11 @@ class BootupTest < ActiveSupport::TestCase
       ]
     }
 
-    YAML.expects(:load_file).returns(config)
-    estate = Bcome::Node::Factory.instance.init_tree
+    YAML.expects(:load_file).returns(config).at_least_once
+    factory = Bcome::Node::Factory.send(:new)
+    factory.init_tree
 
-    Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
+    Bcome::Node::Factory.expects(:instance).returns(factory)
 
     # When/then
     ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: arguments)
@@ -172,10 +186,11 @@ class BootupTest < ActiveSupport::TestCase
       ]
     }
 
-    YAML.expects(:load_file).returns(config)
-    estate = Bcome::Node::Factory.instance.init_tree
+    YAML.expects(:load_file).returns(config).at_least_once
+    factory = Bcome::Node::Factory.send(:new)
+    factory.init_tree
 
-    Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
+    Bcome::Node::Factory.expects(:instance).returns(factory)
 
     # When/then
     ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: nil)
@@ -197,10 +212,11 @@ class BootupTest < ActiveSupport::TestCase
       ]
     }
 
-    YAML.expects(:load_file).returns(config)
-    estate = Bcome::Node::Factory.instance.init_tree
+    # we create an estate first
+    YAML.expects(:load_file).returns(config).at_least_once
+    estate_instance = Bcome::Node::Factory.send(:new)
 
-    Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
+    Bcome::Node::Factory.expects(:instance).returns(estate_instance)
 
     # When/then
     assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
@@ -223,10 +239,10 @@ class BootupTest < ActiveSupport::TestCase
       ]
     }
 
-    YAML.expects(:load_file).returns(config)
-    estate = Bcome::Node::Factory.instance.init_tree
+    YAML.expects(:load_file).returns(config).at_least_once
+    estate_instance = Bcome::Node::Factory.send(:new)
 
-    Bcome::Node::Factory.instance.expects(:init_tree).returns(estate)
+    Bcome::Node::Factory.expects(:instance).returns(estate_instance)
 
     # When/then
     assert_raise Bcome::Exception::MethodInvocationRequiresParameter do

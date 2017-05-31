@@ -55,7 +55,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # When/then
     assert_raise Bcome::Exception::MissingDescriptionOnView do
-      Bcome::Node::Factory.instance.init_tree
+      Bcome::Node::Factory.send(:new).init_tree
     end
   end
 
@@ -77,7 +77,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # When/then
     assert_raise Bcome::Exception::MissingIdentifierOnView do
-      Bcome::Node::Factory.instance.init_tree
+      Bcome::Node::Factory.send(:new).init_tree
     end
   end
 
@@ -96,7 +96,7 @@ class NodeTest < ActiveSupport::TestCase
     estate = given_a_dummy_estate
     view_data = given_basic_dummy_view_data # one:two:three:four
 
-    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
 
     third_context = test_traverse_tree(estate, %w[one two three])
     fourth_context = test_traverse_tree(estate, %w[one two three four])
@@ -150,7 +150,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, %w[one two three])
@@ -173,7 +173,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, %w[one two three])
@@ -198,7 +198,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    ::Bcome::Node::Factory.instance.create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, %w[one two three])
@@ -229,7 +229,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # when/then
     assert_raise Bcome::Exception::NodeIdentifiersMustBeUnique do
-      ::Bcome::Node::Factory.instance.init_tree
+      ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
 
@@ -245,7 +245,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # when/then
     assert_raise Bcome::Exception::InvalidIdentifier do
-      ::Bcome::Node::Factory.instance.init_tree
+      ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
 
@@ -261,7 +261,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # when/then
     assert_raise Bcome::Exception::InvalidIdentifier do
-      ::Bcome::Node::Factory.instance.init_tree
+      ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
 
@@ -277,7 +277,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # when/then
     assert_raise Bcome::Exception::InvalidIdentifier do
-      ::Bcome::Node::Factory.instance.init_tree
+      ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
 
@@ -293,7 +293,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # when/then
     assert_raise Bcome::Exception::InvalidIdentifier do
-      ::Bcome::Node::Factory.instance.init_tree
+      ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
 
@@ -311,7 +311,7 @@ class NodeTest < ActiveSupport::TestCase
     }
 
     YAML.expects(:load_file).returns(config)
-    estate = ::Bcome::Node::Factory.instance.init_tree
+    estate = ::Bcome::Node::Factory.send(:new).init_tree
 
     # When
     method_as_a_string = estate.send(method_symbol)
@@ -335,7 +335,7 @@ class NodeTest < ActiveSupport::TestCase
     }
 
     YAML.expects(:load_file).returns(config)
-    estate = ::Bcome::Node::Factory.instance.init_tree
+    estate = ::Bcome::Node::Factory.send(:new).init_tree
 
     irb_context = mock('Irb context')
     workspace = mock('Mock irb workspace')
