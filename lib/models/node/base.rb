@@ -19,6 +19,7 @@ module Bcome::Node
     end
 
     def initialize(params)
+      @params = params
       @identifier = nil
       @description = nil
       @views = params[:views]
@@ -28,6 +29,12 @@ module Bcome::Node
       set_view_attributes if @views
       validate_attributes
     end
+
+    ###################
+    def view_data
+      @views[:views]
+    end 
+    ##################
 
     def validate_attributes
       validate_identifier 
