@@ -20,7 +20,7 @@ module Bcome::Node::Server
         }
 
         new(parent: parent,
-            view_data: params)
+            views: params)
       end
     end
 

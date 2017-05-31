@@ -2,7 +2,7 @@ module Bcome::Node::Server
   class Static < Bcome::Node::Server::Base
 
     def initialize(params)
-      config = params[:view_data]
+      config = params[:views]
       @identifier = config[:identifier]
       @public_ip_address = config[:public_ip_address]
       @internal_ip_address = config[:internal_ip_address]

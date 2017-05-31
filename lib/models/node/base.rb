@@ -21,23 +21,23 @@ module Bcome::Node
     def initialize(params)
       @identifier = nil
       @description = nil
-      @raw_view_data = params[:view_data]
+      @views = params[:views]
       @parent = params[:parent]
       @type = params[:type]
 
-      set_view_attributes if @raw_view_data
+      set_view_attributes if @views
       validate_attributes
     end
 
     def validate_attributes
       validate_identifier 
-      raise ::Bcome::Exception::MissingDescriptionOnView.new(@raw_view_data.inspect) if requires_description? && !@description
-      raise ::Bcome::Exception::MissingTypeOnView.new(@raw_view_data.inspect) if requires_type? && !@type
+      raise ::Bcome::Exception::MissingDescriptionOnView.new(@views.inspect) if requires_description? && !@description
+      raise ::Bcome::Exception::MissingTypeOnView.new(@views.inspect) if requires_type? && !@type
     end
 
     def validate_identifier
       @identifier = DEFAULT_IDENTIFIER if is_top_level_node? && !@identifier && !is_a?(::Bcome::Node::Server::Base)
-      raise ::Bcome::Exception::MissingIdentifierOnView.new(@raw_view_data.inspect) unless @identifier
+      raise ::Bcome::Exception::MissingIdentifierOnView.new(@views.inspect) unless @identifier
       raise ::Bcome::Exception::InvalidIdentifier.new("'#{@identifier}' contains whitespace") if @identifier =~ /\s/
     end
 
@@ -133,9 +133,9 @@ module Bcome::Node
     private
 
     def set_view_attributes
-      @raw_view_data.keys.each do |view_attribute_key|
+      @views.keys.each do |view_attribute_key|
         next if view_attributes_to_skip_on_setup.include?(view_attribute_key)
-        instance_variable_set("@#{view_attribute_key}", @raw_view_data[view_attribute_key])
+        instance_variable_set("@#{view_attribute_key}", @views[view_attribute_key])
       end
     end
 

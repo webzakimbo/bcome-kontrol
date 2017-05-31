@@ -10,7 +10,7 @@ class NodeTest < ActiveSupport::TestCase
     type = given_a_random_string_of_length(5)
 
     params = {
-      view_data: {
+      views: {
         description: description,
         identifier: identifier,
         type: type
@@ -35,7 +35,7 @@ class NodeTest < ActiveSupport::TestCase
     #  Given a random attribute set to a random value
     random_attribute = given_a_random_string_of_length(10)
     random_value = given_a_random_string_of_length(10)
-    params[:view_data][random_attribute] = random_value
+    params[:views][random_attribute] = random_value
 
     # When
     node = Bcome::Node::Collection.new(params)
@@ -83,7 +83,7 @@ class NodeTest < ActiveSupport::TestCase
 
   def test_type_is_required
     params = given_estate_setup_params
-    params[:view_data].delete(:type)
+    params[:views].delete(:type)
 
     # When/then
     assert_raise Bcome::Exception::MissingTypeOnView do
@@ -94,9 +94,9 @@ class NodeTest < ActiveSupport::TestCase
   def test_should_be_able_to_load_a_resource_by_identifier
     # Given
     estate = given_a_dummy_estate
-    view_data = given_basic_dummy_view_data # one:two:three:four
+    views = given_basic_dummy_views # one:two:three:four
 
-    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
 
     third_context = test_traverse_tree(estate, %w[one two three])
     fourth_context = test_traverse_tree(estate, %w[one two three four])
@@ -140,7 +140,7 @@ class NodeTest < ActiveSupport::TestCase
   def nodes_should_inherit_config_data_from_parents(view_key, node_key)
     # Given view data with tested configuration at the top level only
     col1_network_data = { foo: 'foo', bar: 'bar' }
-    view_data = [
+    views = [
       { view_key => col1_network_data, :type => 'collection', :identifier => 'one', :description => 'desc1', :views => [
         { type: 'collection', identifier: 'two', description: 'desc1', views: [
           { type: 'collection', identifier: 'three', description: 'desc1' } # end col3
@@ -150,7 +150,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, %w[one two three])
@@ -163,7 +163,7 @@ class NodeTest < ActiveSupport::TestCase
 
   def nodes_should_inherit_from_above_only_what_they_do_not_define_and_thus_override_themselves(view_key, node_key)
     # Given
-    view_data = [
+    views = [
       { view_key => { foo: :bar, moo: :woo }, :type => 'collection', :identifier => 'one', :description => 'desc1', :views => [
         { type: 'collection', identifier: 'two', description: 'desc1', views: [
           { view_key => { foo: :some_other_value }, :type => 'collection', :identifier => 'three', :description => 'desc1' } # end col3
@@ -173,7 +173,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, %w[one two three])
@@ -188,7 +188,7 @@ class NodeTest < ActiveSupport::TestCase
 
     ### AND then also
     # Given
-    view_data = [
+    views = [
       { view_key => { foo: :bar, moo: :woo }, :type => 'collection', :identifier => 'one', :description => 'desc1', :views => [
         { view_key => { do: :yes, moo: :something_else_again }, :type => 'collection', :identifier => 'two', :description => 'desc1', :views => [
           { view_key => { foo: :some_other_value, loo: 'something else entirely' }, :type => 'collection', :identifier => 'three', :description => 'desc1' } # end col3
@@ -198,7 +198,7 @@ class NodeTest < ActiveSupport::TestCase
 
     # And given an estate with a generated tree structure
     estate = given_a_dummy_estate
-    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
 
     # And the resultant nodes
     nodes = all_nodes_in_tree(estate, %w[one two three])

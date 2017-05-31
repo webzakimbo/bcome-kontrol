@@ -8,7 +8,7 @@ class StaticServerTest < ActiveSupport::TestCase
     identifier = "app1"
     public_ip_address = "217.199.177.83" 
 
-    config = { view_data: {
+    config = { views: {
       identifier: identifier,
       public_ip_address: public_ip_address
       }
@@ -30,7 +30,7 @@ class StaticServerTest < ActiveSupport::TestCase
     public_ip_address = "217.199.177.83"
     internal_ip_address = "10.0.0.4"
 
-    config = { view_data: {
+    config = { views: {
       identifier: identifier,
       public_ip_address: public_ip_address,
       internal_ip_address: internal_ip_address
@@ -47,13 +47,13 @@ class StaticServerTest < ActiveSupport::TestCase
   def test_should_ensure_that_required_fields_are_required
     # Given/When/Then
     assert_raise ::Bcome::Exception::MissingIdentifierOnView do
-      ::Bcome::Node::Server::Static.new({ view_data: { public_ip_address: "XX.XX.XX.XX.XX" } })
+      ::Bcome::Node::Server::Static.new({ views: { public_ip_address: "XX.XX.XX.XX.XX" } })
     end
 
     # Given/When/Then
     # We require either an internal or a public ip address
     assert_raise ::Bcome::Exception::MissingIpaddressOnServer do
-      ::Bcome::Node::Server::Static.new({ view_data: { identifier: "foo" }})
+      ::Bcome::Node::Server::Static.new({ views: { identifier: "foo" }})
     end 
   end
 
@@ -64,7 +64,7 @@ class StaticServerTest < ActiveSupport::TestCase
     public_ip_address = "217.199.177.83"
 
     config = {
-      view_data: {
+      views: {
         identifier: identifier,
         public_ip_address: public_ip_address,
         description: description

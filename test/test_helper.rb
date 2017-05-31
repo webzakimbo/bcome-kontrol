@@ -20,7 +20,7 @@ module UnitTestHelper
     type = given_a_random_string_of_length(5)
 
     params = {
-      view_data: {
+      views: {
         description: description,
         identifier: identifier,
         type: type
@@ -29,7 +29,7 @@ module UnitTestHelper
     params
   end
 
-  def given_dummy_view_data
+  def given_dummy_views
     [
       { type: 'collection', identifier: 'one', description: 'I am top level collection hear me roar', views: [
         { type: 'collection', identifier: 'two', description: 'I am sub collection 1', views: [
@@ -41,7 +41,7 @@ module UnitTestHelper
     ]
   end
 
-  def given_basic_dummy_view_data
+  def given_basic_dummy_views
     [
       { type: 'collection', identifier: 'one', description: 'I am top level collection hear me roar', views: [
         { type: 'collection', identifier: 'two', description: 'I am sub collection 1', views: [
@@ -75,6 +75,6 @@ module UnitTestHelper
   end
 
   def given_a_dummy_collection(add_to_view_params = {})
-    ::Bcome::Node::Collection.new(view_data: { type: 'collection', identifier: given_a_random_string_of_length(5), description: given_a_random_string_of_length(5) }.merge(add_to_view_params))
+    ::Bcome::Node::Collection.new(views: { type: 'collection', identifier: given_a_random_string_of_length(5), description: given_a_random_string_of_length(5) }.merge(add_to_view_params))
   end
 end

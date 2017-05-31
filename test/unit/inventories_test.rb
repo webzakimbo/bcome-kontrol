@@ -7,7 +7,7 @@ class InventoriesTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
 
-    view_data = [
+    views = [
       {
         identifier: "foo", 
         description: "bar",
@@ -16,7 +16,7 @@ class InventoriesTest < ActiveSupport::TestCase
     ]
 
     # When
-    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
     inventory = estate.resources.first
   
     # Then
@@ -36,7 +36,7 @@ class InventoriesTest < ActiveSupport::TestCase
       { identifier: given_a_random_string_of_length(4), public_ip_address: public_ip_address_server_2 }
     ]
 
-    view_data = [
+    views = [
       identifier: "foo",
       description: "bar",
       type: "inventory",
@@ -44,7 +44,7 @@ class InventoriesTest < ActiveSupport::TestCase
     ]
 
     # When
-    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
     inventory = estate.resources.first
     inventory.load_nodes
  
@@ -82,14 +82,14 @@ class InventoriesTest < ActiveSupport::TestCase
       }
     ]
 
-    view_data = [
+    views = [
       identifier: "foo",
       description: "bar",
       type: "inventory",
       static_servers: static_server_data
     ]
 
-    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
     inventory = estate.resources.first
     inventory.load_nodes
 

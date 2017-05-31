@@ -17,9 +17,9 @@ module Bcome::Node
     end
 
     def create_node(config, parent = nil)
-      validate_view_data(config)
+      validate_views(config)
       klass = klass_for_view_type[config[:type]]
-      node = klass.new(view_data: config, parent: parent)
+      node = klass.new(views: config, parent: parent)
       create_tree(node, config[:views]) if config[:views] && config[:views].any?
       parent.resources << node if parent
       node
@@ -40,7 +40,7 @@ module Bcome::Node
       end
     end
 
-    def validate_view_data(config)
+    def validate_views(config)
       raise Bcome::Exception::InvalidEstateConfig, "Invalid view type for (#{config.inspect})" unless is_valid_view_type?(config[:type])
     end
 

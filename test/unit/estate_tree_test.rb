@@ -53,10 +53,10 @@ class EstateTreeTest < ActiveSupport::TestCase
     estate = ::Bcome::Node::Collection.new(given_estate_setup_params)
     ::Bcome::Node::Collection.expects(:new).returns(estate)
 
-    view_data = config[:views]
+    views = config[:views]
 
     factory = ::Bcome::Node::Factory.send(:new)
-    factory.expects(:create_tree).with(estate, view_data)
+    factory.expects(:create_tree).with(estate, views)
 
     # When/then
     factory.init_tree
@@ -65,32 +65,32 @@ class EstateTreeTest < ActiveSupport::TestCase
   def test_should_validate_view_types
     # Given
     estate = given_a_dummy_estate
-    view_data = [
+    views = [
       { type: 'i_dont_exist' }
     ]
 
     # When/then
     assert_raise ::Bcome::Exception::InvalidEstateConfig do
-      ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+      ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
     end
   end
 
   def test_inventories_cant_have_subviews
     # Given
     estate = given_a_dummy_estate
-    view_data = [
+    views = [
       { identifier: 'aninvalidview', description: 'invalid inventory as it has subviews', type: 'inventory', views: [{}, {}] }
     ]
 
     # When/then
     assert_raise ::Bcome::Exception::InventoriesCannotHaveSubViews do
-      ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+      ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
     end
   end
 
   def test_inventories_cannot_have_subviews_when_they_are_the_topmost_view
     # Given
-    view_data = {
+    views = {
       type: 'inventory',
       identifier: 'topmostidentifier',
       description: 'a top level inventory with subviews',
@@ -99,7 +99,7 @@ class EstateTreeTest < ActiveSupport::TestCase
       ]
     }
 
-    YAML.expects(:load_file).returns(view_data)
+    YAML.expects(:load_file).returns(views)
 
     # When/then
     assert_raise ::Bcome::Exception::InventoriesCannotHaveSubViews do
@@ -109,13 +109,13 @@ class EstateTreeTest < ActiveSupport::TestCase
 
   def test_inventories_must_have_valid_types_even_when_they_are_the_topmost_view
     # Given
-    view_data = {
+    views = {
       type: 'aninvalidtype',
       identifier: 'topmostidentifier',
       description: 'a top level inventory with subviews'
     }
 
-    YAML.expects(:load_file).returns(view_data)
+    YAML.expects(:load_file).returns(views)
 
     # when/then
     assert_raise ::Bcome::Exception::InvalidEstateConfig do
@@ -146,13 +146,13 @@ class EstateTreeTest < ActiveSupport::TestCase
   def test_estate_is_assigned_its_subviews
     # Given
     estate = given_a_dummy_estate
-    view_data = [
+    views = [
       { type: 'collection', identifier: 'collection1', description: 'I am collection 1' },
       { type: 'collection', identifier: 'collection2', description: 'I am collection 2' }
     ]
 
     # When
-    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
 
     # Then
     assert !estate.resources.nil?
@@ -163,7 +163,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     estate.resources.each_with_index do |resource, index|
       assert resource.is_a?(::Bcome::Node::Collection)
       assert resource.parent == estate
-      view_data[index].each do |key, value|
+      views[index].each do |key, value|
         assert resource.send(key) == value
       end
     end
@@ -173,9 +173,9 @@ class EstateTreeTest < ActiveSupport::TestCase
     #  Given
     estate = given_a_dummy_estate
 
-    view_data = given_basic_dummy_view_data
+    views = given_basic_dummy_views
     # When
-    ::Bcome::Node::Factory.send(:new).create_tree(estate, view_data)
+    ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
 
     # Then
     assert estate.resources.size == 1 # 1 top-level estate resource
@@ -208,7 +208,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     description = 'all my stuff'
 
     # When
-    estate = Bcome::Node::Collection.new(view_data: { identifier: identifier, description: description, type: 'inventory' })
+    estate = Bcome::Node::Collection.new(views: { identifier: identifier, description: description, type: 'inventory' })
 
     # Then
     assert estate.identifier == identifier
