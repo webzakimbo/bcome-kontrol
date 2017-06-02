@@ -15,5 +15,9 @@ module Bcome::Node::Resources
       @nodes << node
     end
 
+    def dynamic_nodes
+      @nodes.select{|node| node.dynamic_server? }
+    end
+
   end
 end

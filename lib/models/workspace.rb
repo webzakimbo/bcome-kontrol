@@ -2,17 +2,18 @@ class ::Bcome::Workspace
   include ::Singleton
 
   attr_reader :context
+  attr_reader :estate
 
   def initialize
     @context = nil
     @console_set = false
+    @estate = nil
   end
 
   def set(params)
     init_irb unless console_set?
 
     @context = params[:context]
-
     @context.load_nodes if @context.has_dynamic_nodes? && @context.no_nodes?
 
     main_context = IRB.conf[:MAIN_CONTEXT]

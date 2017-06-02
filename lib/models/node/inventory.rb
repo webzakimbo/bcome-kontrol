@@ -9,6 +9,7 @@ module Bcome::Node
 
     def initialize(*params)
       @dynamic_nodes_loaded = false
+      @cache_handler = ::Bcome::Node::CacheHandler.new(self)
       super
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @views if @views[:views] && !@views[:views].empty?
     end
@@ -23,6 +24,11 @@ module Bcome::Node
 
     def resources
       @resources ||= ::Bcome::Node::Resources::Inventory.new
+    end
+
+    def cache!
+      @cache_handler.do_cache_nodes!
+      ::Bcome::Node::Factory.instance.estate.rewrite_estate_config
     end
 
     def list_key

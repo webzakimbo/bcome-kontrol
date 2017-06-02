@@ -24,5 +24,15 @@ module Bcome::Node::Server
       end
     end
 
+    def cache_data
+      data = {}
+      {
+        identifier: identifier,
+        description: description,
+        internal_ip_address: @internal_ip_address,
+        public_ip_address: public_ip_address
+      }
+    end
+
   end
 end

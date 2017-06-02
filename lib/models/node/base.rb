@@ -18,6 +18,8 @@ module Bcome::Node
       return (set_context.resource_for_identifier(constant.to_s)) ? constant.to_s : super
     end
 
+    attr_reader :params
+
     def initialize(params)
       @params = params
       @identifier = nil
@@ -30,11 +32,9 @@ module Bcome::Node
       validate_attributes
     end
 
-    ###################
-    def view_data
-      @views[:views]
-    end 
-    ##################
+    def rewrite_estate_config   ### re-construct
+      raise "Got to here"
+    end
 
     def validate_attributes
       validate_identifier 

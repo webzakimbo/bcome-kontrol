@@ -3,13 +3,16 @@ module Bcome::Node
 
     include Singleton
 
+    attr_reader :estate
+
     CONFIG_PATH = 'config/bcome/estate.yml'.freeze
     INVENTORY_KEY = 'inventory'.freeze
     COLLECTION_KEY = 'collection'.freeze
     BCOME_RC_FILENAME = '.bcomerc'.freeze
 
     def init_tree
-      create_node(estate_config)
+      @estate = create_node(estate_config)
+      return @estate
     end
 
     def create_tree(context_node, views)

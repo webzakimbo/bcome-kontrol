@@ -18,7 +18,7 @@ module Bcome
 
     def traverse(starting_context)
       starting_context = estate
-      crumbs.each do |crumb|
+      crumbs.each_with_index do |crumb, index|
         # Some contexts' resources are loaded dynamically and do not come from the estate config. As we're traversing, we'll need to load
         # them if necessary
         starting_context.load_nodes unless starting_context.nodes_loaded?
@@ -34,6 +34,7 @@ module Bcome
         end
         starting_context = next_context
       end
+
       # Set our workspace to our last context - we're not invoking a method call and so we're entering a console session
       ::Bcome::Workspace.instance.set(context: starting_context)
     end
