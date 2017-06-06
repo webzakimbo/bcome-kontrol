@@ -25,7 +25,6 @@ module Bcome::Node::Server
     end
 
     def cache_data
-      data = {}
       {
         identifier: identifier,
         description: description,

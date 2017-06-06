@@ -32,8 +32,24 @@ module Bcome::Node
       validate_attributes
     end
 
-    def rewrite_estate_config   ### re-construct
-      raise "Got to here"
+    def save_cache!
+      unless self == ::Bcome::Node::Factory.instance.estate
+        ::Bcome::Node::Factory.instance.estate.save_cache!
+      else
+        config = rewrite_estate_config
+
+        File.open("FOO.yml","w") do |file|
+          file.write config.to_yaml
+        end 
+      end
+    end
+
+    def rewrite_estate_config   
+      config = views
+      resources.active.each do |resource|
+        config[:views] = [resource.rewrite_estate_config] if config[:views]
+      end
+     config
     end
 
     def validate_attributes

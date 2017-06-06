@@ -28,7 +28,7 @@ module Bcome::Node
 
     def cache!
       @cache_handler.do_cache_nodes!
-      ::Bcome::Node::Factory.instance.estate.rewrite_estate_config
+      ::Bcome::Node::Factory.instance.estate.save_cache!
     end
 
     def list_key
