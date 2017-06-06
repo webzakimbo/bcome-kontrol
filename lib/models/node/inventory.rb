@@ -26,9 +26,18 @@ module Bcome::Node
       @resources ||= ::Bcome::Node::Resources::Inventory.new
     end
 
+    def rewrite_estate_config
+      views
+    end
+
     def cache!
+      cache_nodes_in_memory
+      ::Bcome::Node::Factory.instance.save_cache!
+    end
+
+    def cache_nodes_in_memory
       @cache_handler.do_cache_nodes!
-      ::Bcome::Node::Factory.instance.estate.save_cache!
+      puts "processing #{self.namespace}".bc_orange
     end
 
     def list_key
@@ -50,7 +59,7 @@ module Bcome::Node
 
     def load_nodes
       set_static_servers
-      load_dynamic_nodes
+      load_dynamic_nodes unless @read_from_cache_only
     end
 
     def load_dynamic_nodes

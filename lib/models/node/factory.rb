@@ -15,6 +15,10 @@ module Bcome::Node
       return @estate
     end
 
+    def config_path
+      CONFIG_PATH
+    end
+
     def create_tree(context_node, views)
       views.each { |config| create_node(config, context_node) }
     end
@@ -28,18 +32,26 @@ module Bcome::Node
       node
     end
 
+    def save_cache!
+      config = estate.rewrite_estate_config      
+      File.open(config_path,"w") do |file|
+        file.write config.to_yaml
+      end
+      puts "\nNetwork configuration saved to #{config_path}".bc_yellow
+    end
+
     def estate_config
       @estate_config ||= load_estate_config
     end
 
     def load_estate_config
       begin
-        config = YAML.load_file(CONFIG_PATH).deep_symbolize_keys
+        config = YAML.load_file(config_path).deep_symbolize_keys
         return config
       rescue ArgumentError
         raise Bcome::Exception::InvalidEstateConfig, 'Invalid yaml in config'
       rescue Errno::ENOENT
-        raise Bcome::Exception::MissingEstateConfig, CONFIG_PATH
+        raise Bcome::Exception::MissingEstateConfig, config_path
       end
     end
 

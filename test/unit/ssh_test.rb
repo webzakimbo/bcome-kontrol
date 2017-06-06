@@ -45,7 +45,7 @@ class NetworkDriverTest < ActiveSupport::TestCase
     }
 
     node = mock("server node")
-    node.expects(:internal_interface_address).returns(node_hostname)
+    node.expects(:internal_ip_address).returns(node_hostname)
 
     mocked_proxy_data = mock("proxy data")
     mocked_proxy_data.expects(:bastion_host_user).returns(bastion_host_user).times(4)

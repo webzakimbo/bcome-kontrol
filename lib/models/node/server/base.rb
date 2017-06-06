@@ -42,8 +42,6 @@ module Bcome::Node::Server
     end
 
     def print_ping_result(ping_result = { success: true })
-      puts ping_result.inspect
-
       result = {
         namespace => {
           "connection" => ping_result[:success] ? "success" : "failed",
@@ -73,7 +71,7 @@ module Bcome::Node::Server
     def list_attributes
       attribs = {
         "identifier": :identifier,
-        "internal ip": :internal_interface_address,
+        "internal ip": :internal_ip_address,
         "public ip": :public_ip_address,
       }
 

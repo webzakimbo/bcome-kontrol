@@ -32,24 +32,36 @@ module Bcome::Node
       validate_attributes
     end
 
-    def save_cache!
-      unless self == ::Bcome::Node::Factory.instance.estate
-        ::Bcome::Node::Factory.instance.estate.save_cache!
-      else
-        config = rewrite_estate_config
-
-        File.open("FOO.yml","w") do |file|
-          file.write config.to_yaml
-        end 
-      end
-    end
-
     def rewrite_estate_config   
       config = views
       resources.active.each do |resource|
-        config[:views] = [resource.rewrite_estate_config] if config[:views]
+        if config[:views]
+          config[:views] << resource.rewrite_estate_config
+        else
+          config[:views] = [resource.rewrite_estate_config]
+        end
+      end 
+
+      if config[:views]
+        config[:views].flatten! 
+        config[:views].uniq!
       end
-     config
+      config
+    end
+
+    def cache!
+       do_cache_inventories_in_memory
+      ::Bcome::Node::Factory.instance.save_cache!
+    end
+
+    def do_cache_inventories_in_memory
+      resources.each do |resource|        
+        if resource.is_a?(Bcome::Node::Inventory)
+          resource.cache_nodes_in_memory
+        else
+          resource.do_cache_inventories_in_memory 
+        end
+      end
     end
 
     def validate_attributes

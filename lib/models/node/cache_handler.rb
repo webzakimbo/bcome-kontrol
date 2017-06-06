@@ -7,10 +7,11 @@ module Bcome::Node
 
     def do_cache_nodes!
       dynamic_nodes = @inventory_node.resources.dynamic_nodes
-      write_to_cache!(dynamic_nodes) if dynamic_nodes.any?
+      write_to_in_memory_cache!(dynamic_nodes) if dynamic_nodes.any?
     end
 
-    def write_to_cache!(nodes)
+    def write_to_in_memory_cache!(nodes)
+      @inventory_node.views[:read_from_cache_only] = true
       static_server_data = dynamic_nodes_to_cache_hash(nodes)
       @inventory_node.views.has_key?(:static_servers) ? (@inventory_node.views[:static_servers] << static_server_data) : (@inventory_node.views[:static_servers] = static_server_data)
       return

@@ -12,7 +12,7 @@ module Bcome::Node::Server
 
         params = {
           identifier: identifier,
-          internal_interface_address: fog_instance.private_ip_address,
+          internal_ip_address: fog_instance.private_ip_address,
           public_ip_address: fog_instance.public_ip_address,
           role: fog_instance.tags['function'],
           description: "EC2 server - #{identifier}",
@@ -25,12 +25,10 @@ module Bcome::Node::Server
     end
 
     def cache_data
-      {
-        identifier: identifier,
-        description: description,
-        internal_ip_address: @internal_ip_address,
-        public_ip_address: public_ip_address
-      }
+      d = { identifier: identifier }
+      d[:internal_ip_address] = internal_ip_address if internal_ip_address
+      d[:public_ip_address] = public_ip_address if public_ip_address
+      d
     end
 
   end

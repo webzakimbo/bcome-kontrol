@@ -19,7 +19,7 @@ module Bcome::Ssh
         timeout: timeout_in_seconds
       }
       if has_proxy?
-        config[:host_or_ip] = @context_node.internal_interface_address
+        config[:host_or_ip] = @context_node.internal_ip_address
         config[:proxy] = {
           bastion_host:  @proxy_data.host,
           bastion_host_user: bastion_host_user
@@ -53,7 +53,7 @@ module Bcome::Ssh
 
     def do_ssh
       if has_proxy?
-        command = "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_interface_address}"
+        command = "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_ip_address}"
       else
         command = "ssh #{user}@#{@context_node.public_ip_address}"
       end
@@ -69,7 +69,7 @@ module Bcome::Ssh
     end
 
     def node_host_or_ip
-      has_proxy? ? @context_node.internal_interface_address : @context_node.public_ip_address
+      has_proxy? ? @context_node.internal_ip_address : @context_node.public_ip_address
     end
 
     def ssh_connect!(verbose = false)
