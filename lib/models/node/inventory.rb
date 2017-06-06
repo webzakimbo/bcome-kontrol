@@ -49,7 +49,8 @@ module Bcome::Node
     end
 
     def reload!
-      load_nodes
+      resources.unset!
+      load_dynamic_nodes
       puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".bc_green
     end
 

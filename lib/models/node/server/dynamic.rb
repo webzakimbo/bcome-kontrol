@@ -28,6 +28,7 @@ module Bcome::Node::Server
       d = { identifier: identifier }
       d[:internal_ip_address] = internal_ip_address if internal_ip_address
       d[:public_ip_address] = public_ip_address if public_ip_address
+      d[:description] = description if description
       d
     end
 

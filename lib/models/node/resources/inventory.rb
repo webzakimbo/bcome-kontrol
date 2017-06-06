@@ -16,8 +16,12 @@ module Bcome::Node::Resources
     end
 
     def dynamic_nodes
-      @nodes.select{|node| node.dynamic_server? }
+      active.select{|node| node.dynamic_server? }
     end
+
+    def unset!
+      @nodes = []
+    end  
 
   end
 end
