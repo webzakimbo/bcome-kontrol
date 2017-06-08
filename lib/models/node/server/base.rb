@@ -53,7 +53,7 @@ module Bcome::Node::Server
         result[namespace]["error"] = ping_result[:error].message
       end
 
-      colour = ping_result[:success] ? :bc_green : :bc_red
+      colour = ping_result[:success] ? :green : :red
 
       ap result, {
         :color => {
@@ -63,7 +63,6 @@ module Bcome::Node::Server
            keyword: colour,
            variable: colour,
            array: colour
-
         }
       }
     end
