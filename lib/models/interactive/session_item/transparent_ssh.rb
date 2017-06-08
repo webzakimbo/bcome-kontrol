@@ -62,7 +62,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def terminal_prompt
-      ">\s".bold.bc_cyan.blinking
+      ">\s".bold.bc_cyan  
     end
 
     def exit?(input)
