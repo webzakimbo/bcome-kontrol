@@ -1,5 +1,4 @@
- module Bcome::Node
-
+module Bcome::Node
   class Inventory < ::Bcome::Node::Base
 
     def self.to_s

@@ -3,7 +3,7 @@ module Bcome::Node::Server
 
     def initialize(params)
       config = params[:views]
-      identifier = config[:identifier]
+      @identifier = config[:identifier]
       @public_ip_address = config[:public_ip_address]
       @internal_ip_address = config[:internal_ip_address]
       verify_we_have_at_least_one_interface(config)
