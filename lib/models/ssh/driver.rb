@@ -86,7 +86,9 @@ module Bcome::Ssh
         end
       rescue Timeout::Error
         raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace
-      end
+      rescue Errno::EPIPE
+        raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace
+      end 
       @ssh_con
     end
 
