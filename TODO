@@ -22,19 +22,6 @@ foo:bar:clear_cache  (reverts all inventories to static-inventories)
 
 The config file (or view) is updated and manipulated depending on user action.
 
-3.  In console mode, we can selectively remove nodes
-
-‘save tree state’
-
-All this does is add on 
-:exclusions:
-  - node1
-  - node2
-
-Representing the disabled node. This node is then skipped.  When we do so, we add the exclusion at the highest level, and remove the exclusions below
-
-Should not be able to CD into an excluded node. Should not appear in an ls
-
 B. Implement get & put
 
 C. Menu

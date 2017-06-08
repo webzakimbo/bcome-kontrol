@@ -30,7 +30,7 @@ module Bcome::Node
       views
     end
 
-    def cache!
+    def cache
       cache_nodes_in_memory
       ::Bcome::Node::Factory.instance.save_cache!
     end
