@@ -76,10 +76,6 @@ module Bcome::Node
       raise ::Bcome::Exception::InvalidIdentifier.new("'#{@identifier}' contains whitespace") if @identifier =~ /\s/
     end
 
-    def has_dynamic_nodes?
-      false
-    end  
-
     def server?
       false
     end  
@@ -97,7 +93,7 @@ module Bcome::Node
     end
 
     def nodes_loaded?
-      !has_dynamic_nodes? || @dynamic_nodes_loaded
+      resources.any?
     end
    
     def resources

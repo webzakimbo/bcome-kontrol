@@ -77,6 +77,12 @@ module Bcome::Interactive::SessionItem
       input == LIST_KEY
     end
 
+    def soft_reset
+      system('clear')
+      show_menu
+      puts "\n\n"
+    end
+
     def open_ssh_connections!
       in_progress = true
       Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
@@ -85,7 +91,8 @@ module Bcome::Interactive::SessionItem
         begin
           machine.ssh_driver.ssh_connect!
         rescue
-          Bcome::ProgressBar.instance.reset!
+          #Bcome::ProgressBar.instance.reset! 
+          soft_reset
           raise Bcome::Exception::CouldNotInitiateSshConnection, machine.namespace
           break
         end

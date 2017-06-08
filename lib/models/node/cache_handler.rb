@@ -6,6 +6,7 @@ module Bcome::Node
     end
 
     def do_cache_nodes!
+      @inventory_node.load_nodes unless @inventory_node.nodes_loaded?
       dynamic_nodes = @inventory_node.resources.dynamic_nodes
       write_to_in_memory_cache!(dynamic_nodes) if dynamic_nodes.any?
     end
