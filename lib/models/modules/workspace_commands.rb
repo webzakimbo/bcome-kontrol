@@ -61,7 +61,7 @@ module Bcome::WorkspaceCommands
   end
 
   def interactive
-    ::Bcome::Interactive::Session.run(self)
+    ::Bcome::Interactive::Session.run(self, :interactive_ssh)
   end
 
   def run(raw_commands)

@@ -1,35 +1,47 @@
 module Bcome::Interactive
   class Session
     class << self
-      def run(node)
+
+      def run(node, session_type, init_data = {})
         session_end_message = "\ninteractive session ended".bc_green
         begin
-          session = ::Bcome::Interactive::Session.new(node)
-          system('clear')
-          session.prompt
+          session = ::Bcome::Interactive::Session.new(node, session_type_to_klass[session_type], init_data)
+          session.start
         rescue ::Bcome::Exception::InteractiveSessionHalt => e
           puts session_end_message
         rescue  ::Bcome::Exception::CouldNotInitiateSshConnection => e
           puts e.message.bc_red
+        rescue ::IRB::Abort
+          puts session_end_message
         end
       end
+
+      def session_type_to_klass
+        {
+          :interactive_ssh => ::Bcome::Interactive::SessionItem::TransparentSsh,
+          :capture_input => ::Bcome::Interactive::SessionItem::CaptureInput
+        }
+      end
+
     end
 
     attr_reader :responses, :node
 
-    def initialize(node)
+    def initialize(node, item_klass, init_data) 
+      @item_klass = item_klass
       @node = node
       @responses = {}
+      @init_data = init_data
     end
 
-    def prompt
-      item = ::Bcome::Interactive::SessionItem::TransparentSsh.new(self)
-      print item.start_message
-      process_item(item)
+    def start
+      print start_item.start_message
+      start_item.do
     end
 
-    def process_item(item)
-      item.do
+    def start_item
+      @start_item ||= @item_klass.new(self, @init_data)
     end
+
   end
 end

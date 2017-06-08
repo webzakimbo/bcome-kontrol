@@ -5,7 +5,8 @@ module Bcome::Node
 
     attr_reader :estate
 
-    CONFIG_PATH = 'config/bcome/estate.yml'.freeze
+    CONFIG_PATH = 'config/bcome'.freeze
+    DEFAULT_CONFIG_NAME = 'estate.yml'.freeze
     INVENTORY_KEY = 'inventory'.freeze
     COLLECTION_KEY = 'collection'.freeze
     BCOME_RC_FILENAME = '.bcomerc'.freeze
@@ -16,7 +17,11 @@ module Bcome::Node
     end
 
     def config_path
-      CONFIG_PATH
+      "#{CONFIG_PATH}/#{config_file_name}"
+    end
+
+    def config_file_name
+      @config_file_name ||= ENV["CONF"] ? ENV["CONF"] : DEFAULT_CONFIG_NAME
     end
 
     def create_tree(context_node, views)
@@ -34,10 +39,17 @@ module Bcome::Node
 
     def save_cache!
       config = estate.rewrite_estate_config      
-      File.open(config_path,"w") do |file|
-        file.write config.to_yaml
+
+      @config_file_name = ::Bcome::Interactive::Session.run(self,
+        :capture_input, { current_filename: config_file_name, start_message: "Select to which file you'd like to save your new network cache" }
+      )
+
+      if @config_file_name
+        File.open(config_path,"w") do |file|
+          file.write config.to_yaml
+        end
+        puts "\nNetwork configuration saved to #{config_path}".bc_yellow
       end
-      puts "\nNetwork configuration saved to #{config_path}".bc_yellow
     end
 
     def estate_config

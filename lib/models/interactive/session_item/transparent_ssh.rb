@@ -11,6 +11,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def do
+      system('clear')
       show_menu
       puts ''
       open_ssh_connections!
@@ -116,10 +117,6 @@ module Bcome::Interactive::SessionItem
       resources.each do |machine|
         puts "\s- #{machine.namespace}".bc_cyan
       end
-    end
-
-    def get_input(message = terminal_prompt)
-      ::Readline.readline("\n#{message}", true).squeeze('').to_s
     end
 
     def execute_on_machines(user_input)
