@@ -49,7 +49,7 @@ module Bcome::Node
       config
     end
 
-    def cache
+    def save
        do_cache_inventories_in_memory
       ::Bcome::Node::Factory.instance.save_cache!
     end
