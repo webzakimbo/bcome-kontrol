@@ -33,7 +33,7 @@ module Bcome::WorkspaceCommands
   def list_in_tree(tab, resources)
     resources.sort_by(&:identifier).each do |resource|
       unless resource.parent && !(resource.parent.resources.is_active_resource?(resource))
-        resource.load_nodes unless resource.nodes_loaded?
+        resource.load_nodes if resource.is_a?(Bcome::Node::Inventory) && !resource.nodes_loaded?   
         print_tree_view_for_resource(tab, resource)
         list_in_tree("#{tab}\t", resource.resources) 
       end
