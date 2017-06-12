@@ -1,31 +1,13 @@
 
-
-DISABLE
-  when saving, do not include sub nodes where parent is disabled.\
-  then, need a way of collapsing nodes from different networks into one view
-
-Backlog
-
-A. bcome cacheing strategy
-
-1. some views need to be cached, others not (e.g. auto-scaling groups, or anything containing
+# 1
+some views need to be cached, others not (e.g. auto-scaling groups, or anything containing
 non long-lived nodes, or just not generally a static list)
 
-2. We should be able to do the following:
+SAVE should not cache EVERYTHING - should always go NODE->down so that auto-scaling groups (if in their own view) can be not cached.
 
-foo:bar:cache     (takes a cache snapshot)
-foo:cache
-cache
+# 2
+Collapse views or selections from views into 1?
 
-saves to the same view
-
-i.e it’s a process of updating the config file to
-  - mars inventories as static-inventories
-  - to add in the server nodes
-
-foo:bar:clear_cache  (reverts all inventories to static-inventories)
-
-The config file (or view) is updated and manipulated depending on user action.
 
 B. Implement get & put
 
