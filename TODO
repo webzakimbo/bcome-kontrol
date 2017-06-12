@@ -1,4 +1,9 @@
 
+
+DISABLE
+  when saving, do not include sub nodes where parent is disabled.\
+  then, need a way of collapsing nodes from different networks into one view
+
 Backlog
 
 A. bcome cacheing strategy

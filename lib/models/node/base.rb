@@ -34,18 +34,14 @@ module Bcome::Node
 
     def rewrite_estate_config   
       config = views
+      config[:views] = []
+
       resources.active.each do |resource|
-        if config[:views]
-          config[:views] << resource.rewrite_estate_config
-        else
-          config[:views] = [resource.rewrite_estate_config]
-        end
+        config[:views] << resource.rewrite_estate_config
       end 
 
-      if config[:views]
-        config[:views].flatten! 
-        config[:views].uniq!
-      end
+      config[:views].flatten! 
+      config[:views].uniq!
       config
     end
 
@@ -55,7 +51,7 @@ module Bcome::Node
     end
 
     def do_cache_inventories_in_memory
-      resources.each do |resource|        
+      resources.active.each do |resource|        
         if resource.is_a?(Bcome::Node::Inventory)
           resource.cache_nodes_in_memory
         else
