@@ -1,4 +1,13 @@
 
+
+save
+
+ * Cache:  Cache in memory the current state
+ * Save:   Saves current state.  Writes cached contents to file as static resources if cached, everything else remains dynamic
+           Skips disabled nodes...  (what of non-static disabled nodes?)
+
+
+
 # 1
 some views need to be cached, others not (e.g. auto-scaling groups, or anything containing
 non long-lived nodes, or just not generally a static list)
