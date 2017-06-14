@@ -45,21 +45,6 @@ module Bcome::Node
       config
     end
 
-    def save
-       do_cache_inventories_in_memory
-      ::Bcome::Node::Factory.instance.save_cache!
-    end
-
-    def do_cache_inventories_in_memory
-      resources.active.each do |resource|        
-        if resource.is_a?(Bcome::Node::Inventory)
-          resource.cache_nodes_in_memory
-        else
-          resource.do_cache_inventories_in_memory 
-        end
-      end
-    end
-
     def validate_attributes
       validate_identifier 
       raise ::Bcome::Exception::MissingDescriptionOnView.new(@views.inspect) if requires_description? && !@description

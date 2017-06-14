@@ -136,7 +136,7 @@ module Bcome::WorkspaceCommands
     elsif instance_variable_defined?("@#{method_sym}")
       instance_variable_get("@#{method_sym}")
     else
-      super
+      raise ::Bcome::Exception::UnknownMethodForNamespace.new("'#{method_sym}' for namespace #{self.namespace}")
     end
   end
 
