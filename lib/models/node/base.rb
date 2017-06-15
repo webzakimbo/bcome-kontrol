@@ -8,6 +8,7 @@ module Bcome::Node
     include Bcome::Context
     include Bcome::WorkspaceCommands
     include Bcome::Node::Attributes
+    include Bcome::WorkspaceMenu
  
     DEFAULT_IDENTIFIER = "bcome"
 
@@ -30,6 +31,10 @@ module Bcome::Node
 
       set_view_attributes if @views
       validate_attributes
+    end
+
+    def enabled_menu_items
+      [:ls, :disable, :enable, :enable!, :disable!, :run, :interactive, :tree, :ping, :put, :cd, :reload!] 
     end
 
     def rewrite_estate_config   

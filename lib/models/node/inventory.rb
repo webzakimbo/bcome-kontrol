@@ -14,6 +14,10 @@ module Bcome::Node
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @views if @views[:views] && !@views[:views].empty?
     end
 
+    def enabled_menu_items
+      super + [:save]
+    end
+
     def set_static_servers
       if server_configs = @views[:static_servers]
         server_configs.each {|server_config|

@@ -21,6 +21,10 @@ module Bcome::Node::Server
       false
     end
 
+    def enabled_menu_items
+      super + [:ssh]
+    end
+
     def ssh
       ssh_driver.do_ssh
     end
