@@ -22,7 +22,7 @@ module Bcome::Node::Server
     end
 
     def enabled_menu_items
-      super + [:ssh]
+      (super + [:ssh]) - [:enable, :disable, :enable!, :disable!]
     end
 
     def ssh
