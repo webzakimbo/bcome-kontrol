@@ -99,6 +99,24 @@ module Bcome::Ssh
       return { success: false, error: e }
     end
 
+    def scp
+      ssh_connection.scp
+    end
+
+    def put(local_path, remote_path)
+      puts "\nUploading #{local_path} to #{remote_path}\n".bc_magenta
+      scp.upload!(local_path, remote_path) do |ch, name, sent, total|
+        puts "#{name}: #{sent}/#{total}".bc_yellow
+      end
+    end
+
+    def get(remote_path, local_path)
+      puts "\nDownloading #{remote_path} to #{local_path}\n".bc_magenta
+      scp.download!(remote_path, local_path) do |ch, name, sent, total|
+        puts "#{name}: #{sent}/#{total}".bc_yellow
+      end
+    end
+
     def ssh_connection(_bootstrap = false)
       has_open_ssh_con? ? @ssh_con : ssh_connect!
     end

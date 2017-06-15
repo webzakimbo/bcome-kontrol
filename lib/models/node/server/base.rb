@@ -25,6 +25,14 @@ module Bcome::Node::Server
       ssh_driver.do_ssh
     end
 
+    def put(local_path, remote_path)
+      ssh_driver.put(local_path, remote_path)
+    end
+
+    def get(remote_path, local_path)
+      ssh_driver.get(remote_path, local_path)
+    end
+
     def ls
       puts "\n" + visual_hierarchy.bc_orange + "\n"
       puts pretty_description
