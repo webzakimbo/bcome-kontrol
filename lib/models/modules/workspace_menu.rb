@@ -1,7 +1,7 @@
 module Bcome::WorkspaceMenu
 
   def menu
-    puts "\n\s\sMenu: \n".bc_green.bold
+    print "\n\n"
     enabled_menu_items.each_with_index do |menu_item, index|
       puts tab_spacing + "#{menu_item}".bc_cyan + item_spacing(menu_item) + "#{menu_items[menu_item][:description]}".bc_yellow
       if usage = menu_items[menu_item][:usage]
