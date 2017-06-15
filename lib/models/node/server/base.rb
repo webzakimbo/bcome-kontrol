@@ -40,12 +40,6 @@ module Bcome::Node::Server
     def ls
       puts "\n" + visual_hierarchy.bc_orange + "\n"
       puts pretty_description
-
-      if ::Bcome::System::Local.instance.in_console_session?
-        puts "\s\s\n\tType '?' to see your options\n\n".bc_green
-      else
-        puts "\n\n"
-      end
     end
 
     def ping
