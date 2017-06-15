@@ -104,17 +104,30 @@ module Bcome::Ssh
     end
 
     def put(local_path, remote_path)
-      puts "\nUploading #{local_path} to #{remote_path}\n".bc_magenta
-      scp.upload!(local_path, remote_path) do |ch, name, sent, total|
-        puts "#{name}: #{sent}/#{total}".bc_yellow
+      raise Bcome::Exception::MissingParamsForScp.new("'put' requires a local_path and a remote_path") if local_path.to_s.empty? || remote_path.to_s.empty?
+      puts "\n(#{@context_node.namespace})\s".bc_cyan + "Uploading #{local_path} to #{remote_path}\n".bc_magenta
+  
+      begin
+        scp.upload!(local_path, remote_path) do |ch, name, sent, total|
+          puts "#{name}: #{sent}/#{total}".bc_yellow
+        end
+      rescue Exception => e  # scp just throws generic exceptions :-/
+        puts e.message.bc_red
       end
+      return
     end
 
     def get(remote_path, local_path)
-      puts "\nDownloading #{remote_path} to #{local_path}\n".bc_magenta
+      raise Bcome::Exception::MissingParamsForScp.new("'get' requires a local_path and a remote_path") if local_path.to_s.empty? || remote_path.to_s.empty?
+      puts "\n(#{@context_node.namespace})\s".bc_cyan + "Downloading #{remote_path} to #{local_path}\n".bc_magenta
+
+      begin
       scp.download!(remote_path, local_path) do |ch, name, sent, total|
         puts "#{name}: #{sent}/#{total}".bc_yellow
       end
+      rescue Exception => e # scp just throws generic exceptions :-/
+        puts e.message.bc_red
+      end  
     end
 
     def ssh_connection(_bootstrap = false)
