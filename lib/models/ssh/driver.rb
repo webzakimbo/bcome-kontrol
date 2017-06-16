@@ -84,10 +84,10 @@ module Bcome::Ssh
         Timeout.timeout timeout_in_seconds do
           @ssh_con = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
         end
-      rescue Timeout::Error
-        raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace
-      rescue Errno::EPIPE
-        raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace
+      rescue Timeout::Error => e
+        raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
+      rescue Errno::EPIPE => e
+        raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
       end 
       @ssh_con
     end
