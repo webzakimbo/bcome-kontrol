@@ -41,7 +41,7 @@ module Bcome::Node
       config = estate.rewrite_estate_config      
 
       @config_file_name = ::Bcome::Interactive::Session.run(self,
-        :capture_input, { current_filename: config_file_name, start_message: "Select to which file you'd like to save your new network cache" }
+        :capture_input, { current_filename: config_file_name, start_message: "Select to which file you'd like to save your new network manifest" }
       )
 
       if @config_file_name

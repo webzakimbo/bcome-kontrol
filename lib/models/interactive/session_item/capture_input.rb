@@ -6,7 +6,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def terminal_prompt
-      "enter save file name or hit enter to save as existing (#{@init_data[:current_filename]}): ".bc_yellow
+      "enter manifest file name or hit enter to save as existing (#{@init_data[:current_filename]}): ".bc_yellow
     end
 
     def action
