@@ -108,7 +108,7 @@ module Bcome::Ssh
       puts "\n(#{@context_node.namespace})\s".bc_cyan + "Uploading #{local_path} to #{remote_path}\n".bc_magenta
   
       begin
-        scp.upload!(local_path, remote_path) do |ch, name, sent, total|
+        scp.upload!(local_path, remote_path, :recursive => true) do |ch, name, sent, total|
           puts "#{name}: #{sent}/#{total}".bc_yellow
         end
       rescue Exception => e  # scp just throws generic exceptions :-/
@@ -122,7 +122,7 @@ module Bcome::Ssh
       puts "\n(#{@context_node.namespace})\s".bc_cyan + "Downloading #{remote_path} to #{local_path}\n".bc_magenta
 
       begin
-      scp.download!(remote_path, local_path) do |ch, name, sent, total|
+      scp.download!(remote_path, local_path, :recursive => true) do |ch, name, sent, total|
         puts "#{name}: #{sent}/#{total}".bc_yellow
       end
       rescue Exception => e # scp just throws generic exceptions :-/
