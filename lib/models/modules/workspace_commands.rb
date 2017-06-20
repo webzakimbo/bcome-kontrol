@@ -1,15 +1,21 @@
 module Bcome::WorkspaceCommands
-  def ls
+
+  def ls(active_only = false)
     puts "\n\n" + visual_hierarchy.bc_orange + "\n"
     puts "\tAvailable #{list_key}s: ".bc_cyan + "\n\n"
-
-    @resources.sort_by(&:identifier).each do |resource|
+    iterate_over = active_only ? @resources.active : @resources
+    iterate_over.sort_by(&:identifier).each do |resource|
       is_active = @resources.is_active_resource?(resource)
       puts resource.pretty_description(is_active)
       puts "\n"
     end
     new_line
     nil
+  end
+ 
+  def lsa
+    show_active_only = true
+    ls(show_active_only)
   end
 
   def tree
@@ -97,12 +103,12 @@ module Bcome::WorkspaceCommands
     exit
   end
 
-  def disable(identifier)
-    resources.do_disable(identifier)
+  def disable(*ids)
+    ids.each {|id| resources.do_disable(id) }
   end
 
-  def enable(identifier)
-    resources.do_enable(identifier)
+  def enable(*ids)
+    ids.each {|id| resources.do_enable(id) }
   end
 
   def clear!
@@ -110,6 +116,12 @@ module Bcome::WorkspaceCommands
     resources.clear!
     resources.each {|r| r.clear! }
     nil
+  end
+
+  def workon(*ids)
+    resources.disable!
+    ids.each {|id| resources.do_enable(id) }
+    puts "You are now working on #{ids.join(", ")}".bc_green
   end
 
   def disable!

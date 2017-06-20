@@ -29,13 +29,20 @@ module Bcome::WorkspaceMenu
       ls: {
         description: "list all available resources"
       },
+      lsa: {
+        description: "list all active resources"
+      },
+      workon: {
+        description: "work on specific resources only, inactivating all others from this selection",
+        usage: "workon identifier1, identifier2 ..."
+      },
       disable: {
         description: "remove a resource from this selection",
-        usage: "disable identifier | disable [identifier, identifier]"
+        usage: "disable identifier1, identifier2 ..."
       },
       enable: {
         description: "re-enable a resource within this selection",
-        usage: "enable identifier | enable [identifier, identifier]"
+        usage: "enable identifier1, identifier2 ..."
       },
       enable!: {
         description: "enable all resources within this selection"

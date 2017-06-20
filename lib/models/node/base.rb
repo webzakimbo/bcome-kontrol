@@ -34,7 +34,7 @@ module Bcome::Node
     end
 
     def enabled_menu_items
-      [:ls, :enable, :disable, :enable!, :disable!, :run, :interactive, :tree, :ping, :put, :cd, :reload!] 
+      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :interactive, :tree, :ping, :put, :cd, :reload!] 
     end
 
     def rewrite_estate_config   
