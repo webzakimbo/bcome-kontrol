@@ -41,6 +41,7 @@ module Bcome::Node::Server
       puts "\n" + visual_hierarchy.bc_orange + "\n"
       puts pretty_description
     end
+    alias :lsa :ls
 
     def ping
       ping_result = ssh_driver.ping
