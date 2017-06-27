@@ -119,8 +119,6 @@ module Bcome::Node
       resources.for_identifier(identifier)
     end
 
-    # TODO - test this
-    # And then test in context of the ssh driver
     def recurse_resource_for_identifier(identifier)
       resource = resource_for_identifier(identifier)
       return resource ? resource : (has_parent? ? parent.recurse_resource_for_identifier(identifier) : nil)
