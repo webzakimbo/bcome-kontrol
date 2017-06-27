@@ -1,9 +1,14 @@
 
 A. Collapse views or selections from views into 1?
 
-B. Menu
-
 C. Orchestration
+
+Need to be able to
+1. Script with full estate (default config)
+2. Script with partial estate (default config & a traversal)
+3. Pass CONF= to the script we want to run
+
+.bcomerc ?
 
 Aims
 - Write scripts that can interact with all machines within a view

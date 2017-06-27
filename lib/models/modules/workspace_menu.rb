@@ -75,9 +75,6 @@ module Bcome::WorkspaceMenu
         description: "enter the namespace for a resource from this selection",
         usage: "cd identifier"
       },
-      ssh: {
-        description: "initiate an ssh connection to this server"
-      },
       save: {
         description: "Save the current tree state"
       },

@@ -25,6 +25,14 @@ module Bcome::Node::Server
       (super + [:ssh]) - [:enable, :disable, :enable!, :disable!]
     end
 
+    def menu_items
+      base_items = super.dup
+      base_items[:ssh] = {
+        description: "initiate an ssh connection to this server",
+      }
+      base_items
+    end
+
     def ssh
       ssh_driver.do_ssh
     end

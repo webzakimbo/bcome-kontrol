@@ -1,22 +1,7 @@
 #!/usr/bin/env ruby
 
-# (C) Guillaume Roderick (webzakimbo)
-# MIT licence.
+# Boot into a bcome console session
 
-require 'irb'
-require 'irb/completion'
 require 'bcome'
-require 'yaml'
-require 'net/scp'
-
-breadcrumbs = ARGV[0]
-argument = ARGV[1]
-
-begin
-  ::Bcome::Bootup.do(breadcrumbs: breadcrumbs, argument: argument)
-rescue Bcome::Exception::Base => e
-  puts e.pretty_display
-rescue Excon::Error::Socket => e
-  puts "\nNo network access - please check you connection and try again\n".red
-  puts e.inspect
-end
+spawn_into_console = true
+::Bcome::Bootup.do( { breadcrumbs: ARGV[0], arguments: ARGV[1]}, spawn_into_console)

@@ -15,7 +15,16 @@ module Bcome::Node
     end
 
     def enabled_menu_items
-      super + [:save]
+      super + [:save, :ssh]
+    end
+
+    def menu_items
+      base_items = super.dup
+      base_items[:ssh] = {
+        description: "ssh directly into a resource",
+        usage: "ssh identifier"
+      }
+      base_items
     end
 
     def set_static_servers
@@ -37,6 +46,14 @@ module Bcome::Node
     def save
       cache_nodes_in_memory
       ::Bcome::Node::Factory.instance.save_cache!
+    end
+
+    def ssh(identifier)
+      if resource = resources.for_identifier(identifier)
+        resource.send(:ssh)
+      else
+        raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
+      end
     end
 
     def cache_nodes_in_memory

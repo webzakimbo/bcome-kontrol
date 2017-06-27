@@ -1,20 +1,45 @@
 module Bcome
   class Bootup
-    def self.do(params)
-      bootup = new(params)
-      bootup.do
+
+    class << self
+      def do(params, spawn_into_console = true)
+        begin
+          bootup = new(params, spawn_into_console)
+          context = bootup.do
+          return context
+        rescue Bcome::Exception::Base => e
+          puts e.pretty_display
+        rescue Excon::Error::Socket => e
+          puts "\nNo network access - please check your connection and try again\n".red
+        end
+      end
+
+      def orchestrate(breadcrumbs = nil, spawn_into_console = false)
+        spawn_into_console = false
+        context = ::Bcome::Bootup.do( { breadcrumbs: breadcrumbs }, spawn_into_console)
+        return context
+      end
     end
 
     attr_reader :breadcrumbs, :argument
 
-    def initialize(params)
+    def initialize(params, spawn_into_console = false)
       @breadcrumbs = params[:breadcrumbs]
       @argument = params[:argument]
+      @spawn_into_console = spawn_into_console
     end
 
     def do
-      crumbs.empty? ? ::Bcome::Workspace.instance.set(context: estate) : traverse(estate)
+      crumbs.empty? ? init_context(estate) : traverse(estate)
     end
+
+   def init_context(context)
+     if @spawn_into_console
+       ::Bcome::Workspace.instance.set( context: context )
+     else
+       context
+     end 
+   end
 
     def traverse(starting_context)
       starting_context = estate
@@ -36,7 +61,7 @@ module Bcome
       end
 
       # Set our workspace to our last context - we're not invoking a method call and so we're entering a console session
-      ::Bcome::Workspace.instance.set(context: starting_context)
+      init_context(starting_context) 
     end
 
     def estate

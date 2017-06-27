@@ -1,3 +1,5 @@
+require 'irb'
+require 'irb/completion'
 require 'rainbow'
 require 'net/scp'
 require 'net/ssh/proxy/command'
