@@ -37,7 +37,7 @@ module Bcome
      if @spawn_into_console
        ::Bcome::Workspace.instance.set( context: context )
      else
-       context
+       ::Bcome::Orchestrator.instance.set( context: context )
      end 
    end
 
