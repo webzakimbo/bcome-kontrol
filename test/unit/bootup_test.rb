@@ -54,7 +54,8 @@ class BootupTest < ActiveSupport::TestCase
 
   def test_should_set_context_if_no_crumbs
     # Given
-    bootup = ::Bcome::Bootup.new(breadcrumbs: nil)
+    spawn_into_context = true
+    bootup = ::Bcome::Bootup.new({ breadcrumbs: nil }, spawn_into_context)
 
     estate = Bcome::Node::Collection.new(given_estate_setup_params)
     bootup.expects(:estate).returns(estate)
@@ -218,9 +219,12 @@ class BootupTest < ActiveSupport::TestCase
 
     Bcome::Node::Factory.expects(:instance).returns(estate_instance)
 
+    spawn_into_context = true
+    bootup = ::Bcome::Bootup.new( {breadcrumbs: "#{identifier}:#{method_name}", arguments: nil}, spawn_into_context)
+
     # When/then
     assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
-      ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", arguments: nil)
+      bootup.do
     end
     # And all our expectations are met
   end
@@ -243,10 +247,13 @@ class BootupTest < ActiveSupport::TestCase
     estate_instance = Bcome::Node::Factory.send(:new)
 
     Bcome::Node::Factory.expects(:instance).returns(estate_instance)
+ 
+    spawn_into_context = true
+    bootup = ::Bcome::Bootup.new({ breadcrumbs: "#{identifier}:#{method_name}", argument: nil }, spawn_into_context)
 
     # When/then
     assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
-      ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: nil)
+      bootup.do
     end
     # and also that all our expectations are met
   end
@@ -255,10 +262,13 @@ class BootupTest < ActiveSupport::TestCase
     # Given
     identifier = given_a_random_string_of_length(4)
     method_name = :i_dont_exist
+    spawn_into_context = true
+
+    bootup = ::Bcome::Bootup.new({ breadcrumbs: "#{identifier}:#{method_name}", arguments: nil}, spawn_into_context)
 
     # When/then
     assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do
-      ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", arguments: nil)
+      bootup.do
     end
   end
 end
