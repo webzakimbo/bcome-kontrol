@@ -11,7 +11,7 @@ module ::Bcome::Ssh
     end
 
     def pretty_result
-      is_success? ? 'success'.bc_green : 'failure'.bc_red
+      is_success? ? 'success'.success : 'failure'.error
     end
 
     attr_writer :bootstrap

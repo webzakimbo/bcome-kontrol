@@ -125,7 +125,7 @@ module Bcome::Node
     end
 
     def prompt_breadcrumb
-      "#{has_parent? ? "#{parent.prompt_breadcrumb}> " : "" }#{ is_current_context? ? (has_parent? ? identifier.bc_cyan : identifier) : identifier}" 
+      "#{has_parent? ? "#{parent.prompt_breadcrumb}> " : "" }#{ is_current_context? ? (has_parent? ? identifier.terminal_prompt : identifier) : identifier}" 
     end
 
     def namespace

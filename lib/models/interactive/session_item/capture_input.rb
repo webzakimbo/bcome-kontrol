@@ -6,7 +6,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def terminal_prompt
-      "enter manifest file name or hit enter to save as existing (#{display_file_name}): ".bc_magenta
+      "\nEnter manifest file name or hit enter to save as existing (#{display_file_name}): ".instructional
     end
 
     def display_file_name
@@ -20,7 +20,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def start_message
-      "\n" + @init_data[:start_message].bc_yellow.bold
+      "\n" + @init_data[:start_message].informational
     end
 
   end

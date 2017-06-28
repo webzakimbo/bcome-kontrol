@@ -9,7 +9,7 @@ module Bcome::Exception
     end
 
     def pretty_display
-      puts "\n#{message}\n".bc_red
+      puts "\n#{message}\n".error
     end
   end
 end

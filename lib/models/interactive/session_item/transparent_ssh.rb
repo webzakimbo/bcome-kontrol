@@ -40,7 +40,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def handle_the_unwise(input)
-      if prompt_for_confirmation('Command may be dangerous to run on all machines. Are you sure you want to proceed? [Y|N] > '.bc_red)
+      if prompt_for_confirmation('Command may be dangerous to run on all machines. Are you sure you want to proceed? [Y|N] > '.error)
         execute_on_machines(input)
       end
     end
@@ -56,14 +56,14 @@ module Bcome::Interactive::SessionItem
     end
 
     def start_message
-      warning = "\n\sCommands entered here will be executed on ".bc_red + 'EVERY'.underline.bc_red + ' machine in your selection.'.bc_red
-      second_warning = "\n\n\s" + 'Use with CAUTION.'.bc_red.underline
-      info = "\n\n\s\\l list machines\n\s\\q to quit\n\s\\? this message".bc_yellow
+      warning = "\n\sCommands entered here will be executed on " + 'EVERY'.underline + ' machine in your selection.'
+      second_warning = "\n\n\s" + 'Use with CAUTION.'.warning
+      info = "\n\n\s\\l list machines\n\s\\q to quit\n\s\\? this message".informational
       "#{warning}#{second_warning}#{info}\n"
     end
 
     def terminal_prompt
-      ">\s".bold.bc_cyan  
+      ">\s".bold.terminal_prompt  
     end
 
     def exit?(input)
@@ -115,7 +115,7 @@ module Bcome::Interactive::SessionItem
     def list_machines
       puts "\n"
       resources.each do |machine|
-        puts "\s- #{machine.namespace}".bc_cyan
+        puts "\s- #{machine.namespace}"
       end
     end
 

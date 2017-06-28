@@ -1,4 +1,7 @@
 class String
+
+  include StringColourStylesheet
+
   # with thanks to http://simianuprising.com/wp-content/uploads/2012/08/solarized-reference-horizontal.png
   def colour_codes
     {
@@ -10,7 +13,8 @@ class String
       bc_blue: '#268bd2',
       bc_cyan: '#2aa198',
       bc_green: '#859900',
-      bc_white: '#ffffff'
+      bc_white: '#ffffff',
+      bc_grey: '#1c1c1c'
     }
   end
 
@@ -56,5 +60,6 @@ class String
     colour_codes.keys.each do |colour_code|
       puts "#{colour_code}:  #{send(colour_code)} #{send(colour_code, :bold)} | #{send(colour_code, :highlight)}, #{send(colour_code, :highlight).bold}"
     end
+    return 
   end
 end

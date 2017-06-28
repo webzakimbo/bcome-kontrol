@@ -1,8 +1,8 @@
 module Bcome::WorkspaceCommands
 
   def ls(active_only = false)
-    puts "\n\n" + visual_hierarchy.bc_orange + "\n"
-    puts "\tAvailable #{list_key}s: ".bc_cyan + "\n\n"
+    puts "\n\n" + visual_hierarchy.hierarchy + "\n"
+    puts "\t" + "Available #{list_key}s:".title + "\n\n"
     iterate_over = active_only ? @resources.active : @resources
     iterate_over.sort_by(&:identifier).each do |resource|
       is_active = @resources.is_active_resource?(resource)
@@ -19,7 +19,7 @@ module Bcome::WorkspaceCommands
   end
 
   def tree
-    puts "\nTree view\n".bc_green
+    puts "\nTree view\n".title
     tab = ''
     parents.reverse.each do |p|
       print_tree_view_for_resource(tab, p)
@@ -47,8 +47,8 @@ module Bcome::WorkspaceCommands
   end
 
   def print_tree_view_for_resource(tab, resource)
-    separator = resource.server? ? "*" : "-"
-    tree_item = tab.to_s + separator.cyan + " #{resource.type.cyan.underline} \s#{resource.identifier.yellow}"
+    separator = "-"
+    tree_item = tab.to_s + separator.resource_key + " #{resource.type.resource_key} \s#{resource.identifier.resource_value}"
     tree_item += " (empty set)" if !resource.server? && !resource.resources.has_active_nodes?
     puts tree_item
   end
@@ -58,7 +58,7 @@ module Bcome::WorkspaceCommands
       if resource.parent.resources.is_active_resource?(resource) 
         ::Bcome::Workspace.instance.set(current_context: self, context: resource)
       else
-        puts "\nCannot enter context - #{identifier} is disabled. To enable enter 'enable #{identifier}'\n".bc_green
+        puts "\nCannot enter context - #{identifier} is disabled. To enable enter 'enable #{identifier}'\n".error
       end
     else
       raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
@@ -89,10 +89,10 @@ module Bcome::WorkspaceCommands
       next unless attribute_value
 
       desc += "\t"
-      desc += is_active ? key.to_s.bc_cyan : key.to_s
+      desc += is_active ? "#{key}".resource_key : "#{key}".resource_key_inactive
       desc += "\s" * (12 - key.length)
       attribute_value = value == :identifier ? attribute_value.underline : attribute_value
-      desc += is_active ? attribute_value.bc_green : attribute_value
+      desc += is_active ? attribute_value.resource_value : attribute_value.resource_value_inactive
       desc += "\n"
       desc = desc unless is_active
     end
@@ -121,7 +121,7 @@ module Bcome::WorkspaceCommands
   def workon(*ids)
     resources.disable!
     ids.each {|id| resources.do_enable(id) }
-    puts "You are now working on #{ids.join(", ")}".bc_green
+    puts "\nYou are now working on '#{ids.join(", ")}\n".informational
   end
 
   def disable!

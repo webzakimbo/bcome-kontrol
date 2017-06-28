@@ -58,7 +58,7 @@ module Bcome::Node
 
     def cache_nodes_in_memory
       @cache_handler.do_cache_nodes!
-      puts "processing #{self.namespace}".bc_orange
+      puts "processing #{self.namespace}".informational
     end
 
     def list_key
@@ -72,7 +72,7 @@ module Bcome::Node
     def reload!
       resources.unset!
       load_dynamic_nodes
-      puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".bc_green
+      puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".informational
     end
 
     def override_server_identifier?

@@ -3,9 +3,9 @@ module Bcome::WorkspaceMenu
   def menu
     print "\n\n"
     enabled_menu_items.each_with_index do |menu_item, index|
-      puts tab_spacing + "#{menu_item}".bc_cyan + item_spacing(menu_item) + "#{menu_items[menu_item][:description]}".bc_yellow
+      puts tab_spacing + "#{menu_item}".resource_key + item_spacing(menu_item) + "#{menu_items[menu_item][:description]}".resource_value
       if usage = menu_items[menu_item][:usage]
-        puts tab_spacing + ("\s" * menu_item_spacing_length) + "usage: ".bc_magenta + usage
+        puts tab_spacing + ("\s" * menu_item_spacing_length) + "usage: ".instructional + usage
       end
       puts "\n"
     end

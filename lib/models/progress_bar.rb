@@ -17,8 +17,8 @@ module Bcome
     end
 
     def indicate(config, in_progress)
-      prefix = in_progress ? config[:prefix].bc_green.blinking : config[:prefix].bc_green
-      bar = prefix + "#{config[:indice] * @count}>".bc_cyan + " (#{@count} #{config[:indice_descriptor]})".bc_green + "\r"
+      prefix = in_progress ? config[:prefix].progress.blinking : config[:prefix].progress
+      bar = prefix + "#{config[:indice] * @count}>" + " (#{@count} #{config[:indice_descriptor]})".progress + "\r"
       print bar
     end
 

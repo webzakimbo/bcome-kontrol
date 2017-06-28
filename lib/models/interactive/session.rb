@@ -3,14 +3,14 @@ module Bcome::Interactive
     class << self
 
       def run(node, session_type, init_data = {})
-        session_end_message = "\ninteractive session ended".bc_green
+        session_end_message = "\ninteractive session ended\n".informational
         begin
           session = ::Bcome::Interactive::Session.new(node, session_type_to_klass[session_type], init_data)
           session.start
         rescue ::Bcome::Exception::InteractiveSessionHalt => e
           puts session_end_message
         rescue  ::Bcome::Exception::CouldNotInitiateSshConnection => e
-          puts e.message.bc_red
+          puts e.message.error
         rescue ::IRB::Abort
           puts session_end_message
         end

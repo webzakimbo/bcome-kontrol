@@ -6,7 +6,7 @@ module Bcome::System
       local_command = command(raw_command)
       if local_command.failed? && !in_console_session?
         # we fail fast if we're not in a console session
-        raise Bcome::Exception::FailedToRunLocalCommand, "#{raw_command}. Error: " + local_command.output.bc_red
+        raise Bcome::Exception::FailedToRunLocalCommand, "#{raw_command}. Error: " + local_command.output.error
       end
       local_command
     end

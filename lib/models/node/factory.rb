@@ -48,7 +48,7 @@ module Bcome::Node
         File.open(config_path,"w") do |file|
           file.write config.to_yaml
         end
-        puts "\nNetwork configuration saved to #{config_path}".bc_yellow
+        puts "\nNetwork configuration saved to #{config_path}".informational
       end
     end
 
