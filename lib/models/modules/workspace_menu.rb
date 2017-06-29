@@ -52,7 +52,7 @@ module Bcome::WorkspaceMenu
       },
       run: {
         description: "execute a command to be run over ssh against all active resources",
-        usage: "run 'command'"
+        usage: "run 'command1', 'command2', ..."
       },
       interactive: {
         description: "enter an interactive command session for all active resources"
@@ -61,7 +61,7 @@ module Bcome::WorkspaceMenu
         description: "print a recursive tree view for all resources and their sub-resources"
       },
       ping: {
-        description: "recursively ping all resources to test connectivity"
+        description: "ping all resources to test connectivity"
       },
       put: {
         description: "upload a file",

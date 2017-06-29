@@ -10,6 +10,10 @@ module ::Bcome::Ssh
       @stdin = ''; @stdout = ''; @stderr = ''
     end
 
+    def unset_node
+      @node = nil
+    end
+
     def pretty_result
       is_success? ? 'success'.success : 'failure'.error
     end

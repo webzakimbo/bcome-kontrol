@@ -106,7 +106,13 @@ module Bcome::Node::Server
       commands = raw_commands.collect{|raw_command| ::Bcome::Ssh::Command.new({ :node => self, :raw => raw_command }) }
       command_exec = ::Bcome::Ssh::CommandExec.new(commands)
       command_exec.execute!
+      commands.each {|c| c.unset_node }
       return commands
+    end
+
+    def run(*raw_commands)
+      commands = do_run(raw_commands)
+      commands
     end
 
     def has_description?

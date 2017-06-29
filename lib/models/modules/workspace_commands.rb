@@ -70,11 +70,13 @@ module Bcome::WorkspaceCommands
     ::Bcome::Interactive::Session.run(self, :interactive_ssh)
   end
 
-  def run(raw_commands)
+  def run(*raw_commands)
+    results = {} 
     machines.pmap do |machine|
-      machine.do_run(raw_commands)
+      commands = machine.do_run(raw_commands)
+      results[machine.namespace] = commands
     end
-    nil
+    results
   end
 
   def ping
