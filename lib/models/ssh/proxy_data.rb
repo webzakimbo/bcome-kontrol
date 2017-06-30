@@ -18,7 +18,8 @@ module Bcome::Ssh
     def valid_host_lookups
       {
         by_inventory_node: :get_host_by_inventory_node,
-        by_host_or_ip: :get_host_or_ip_from_config
+        by_host_or_ip: :get_host_or_ip_from_config,
+        by_bcome_namespace: :get_host_by_namespace
       }
     end
 
@@ -27,7 +28,7 @@ module Bcome::Ssh
     end
 
     def get_host
-      raise Bcome::Exception::InvalidProxyConfig, 'Missing host id' unless @config[:host_id]
+      raise Bcome::Exception::InvalidProxyConfig, 'Missing host id or namespace' unless (@config[:host_id] || @config[:namespace])
       raise Bcome::Exception::InvalidProxyConfig, 'Missing host lookup method' unless @config[:host_lookup]
       host_lookup_method = valid_host_lookups[@config[:host_lookup].to_sym]
       raise Bcome::Exception::InvalidProxyConfig, "#{@config[:host_lookup]} is not a valid host lookup method" unless host_lookup_method
@@ -45,5 +46,13 @@ module Bcome::Ssh
       raise Bcome::Exception::ProxyHostNodeDoesNotHavePublicIp, identifier unless resource.public_ip_address
       resource.public_ip_address
     end
+
+    def get_host_by_namespace
+      puts "TODO - revisit this (as it does a file load each time), and lock it down".error
+      node = ::Bcome::Orchestrator.instance.get(@config[:namespace])
+      return node.public_ip_address
+    end
+ 
+
   end
 end
