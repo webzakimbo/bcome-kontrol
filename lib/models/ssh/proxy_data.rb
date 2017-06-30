@@ -48,11 +48,10 @@ module Bcome::Ssh
     end
 
     def get_host_by_namespace
-      puts "TODO - revisit this (as it does a file load each time), and lock it down".error
       node = ::Bcome::Orchestrator.instance.get(@config[:namespace])
+      raise Bcome::Exception::CantFindProxyHostByNamespace, @config[:namespace] unless node
       return node.public_ip_address
     end
- 
 
   end
 end
