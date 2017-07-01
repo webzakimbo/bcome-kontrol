@@ -16,14 +16,9 @@ class ::Bcome::Orchestrator
   end
 
   def get(breadcrumb = nil)
-    ::Bcome::Bootup.orchestrate(breadcrumb)
-    return @context
-  end
-
-  def set(params)
-    @context = params[:context]
-    @context.load_nodes if context.is_a?(::Bcome::Node::Inventory) && !context.nodes_loaded?
-    return
+    context = ::Bcome::Bootup.orchestrate(breadcrumb)
+    context.load_nodes if context.is_a?(::Bcome::Node::Inventory) && !context.nodes_loaded?
+    return context
   end
  
 end

@@ -33,14 +33,6 @@ module Bcome::Node::Server
       base_items
     end
 
-    def has_proxy?
-      ssh_driver.has_proxy?
-    end
-
-    def proxy
-      ssh_driver.proxy
-    end
-
     def ssh
       ssh_driver.do_ssh
     end

@@ -50,6 +50,13 @@ module Bcome::Node
       config
     end
 
+    def has_proxy?
+      ssh_driver.has_proxy?
+    end
+
+    def proxy
+      ssh_driver.proxy
+    end
 
     def put(local_path, remote_path)
       resources.active.each do |resource|
