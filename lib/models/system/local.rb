@@ -6,7 +6,7 @@ module Bcome::System
       local_command = command(raw_command)
       if local_command.failed? && !in_console_session?
         # we fail fast if we're not in a console session
-        raise Bcome::Exception::FailedToRunLocalCommand, "#{raw_command}. Error: " + local_command.output.error
+        raise Bcome::Exception::FailedToRunLocalCommand, "#{raw_command}. Error: " + local_command.stderr
       end
       local_command
     end
@@ -17,7 +17,7 @@ module Bcome::System
 
     def local_user
       result = command('whoami')
-      result.output =~ /(.+)\n/
+      result.stdout =~ /(.+)\n/
       Regexp.last_match(1)
     end
 

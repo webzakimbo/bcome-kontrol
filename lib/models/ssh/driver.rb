@@ -6,6 +6,8 @@ module Bcome::Ssh
     PROXY_CONNECT_PREFIX = 'ssh -o StrictHostKeyChecking=no -W %h:%p'.freeze
     PROXY_SSH_PREFIX = 'ssh -o UserKnownHostsFile=/dev/null -o "ProxyCommand ssh -W %h:%p'.freeze
 
+    SCRIPTS_PATH = 'config/bcome/scripts'
+ 
     def initialize(config, context_node)
       @config = config
       @context_node = context_node
@@ -52,13 +54,26 @@ module Bcome::Ssh
     end
 
     def do_ssh
+      @context_node.execute_local(ssh_command)
+    end
+
+    def do_execute_script(script_name)
+      # TODO - work out how to execute our script using the existing SSH connection so that this process is faster
+      path_to_script = "#{SCRIPTS_PATH}/#{script_name}.sh"
+      raise ::Bcome::Exception::OrchestrationScriptDoesNotExist.new path_to_script unless File.exist?(path_to_script)
+      execute_script_command = "#{ssh_command} \"bash -s\" < #{path_to_script}"
+      command = ::Bcome::Command::Local.run(execute_script_command)
+      return command
+    end
+   
+    def ssh_command
       if has_proxy?
         command = "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_ip_address}"
       else
         command = "ssh #{user}@#{@context_node.public_ip_address}"
       end
-      @context_node.execute_local(command)
     end
+
 
     def user
       @config[:user] ? @config[:user] : fallback_local_user

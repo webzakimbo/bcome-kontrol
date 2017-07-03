@@ -8,20 +8,17 @@ module Bcome::Command
       command
     end
 
-    attr_reader :output, :exit_code
+    attr_reader :stdout, :stderr, :exit_code
 
-    def initialize(raw_command)
-      @raw_command = raw_command
+    def initialize(command)
+      @command = command
     end
 
     def syscall
-      Open3.popen2e("#{@raw_command};") do |_stdin, stdout_err, wait_thr|
-        @output = stdout_err.read
-        @exit_code = wait_thr.value.exitstatus
-      end
+      @stdout, @stderr, @exit_code = Open3.capture3(@command)
     rescue Exception => e
       @exit_code = 1
-      @output = e.message
+      @stderr = e.message
     end
 
     def success?
@@ -30,10 +27,6 @@ module Bcome::Command
 
     def failed?
       !success?
-    end
-
-    def print_output
-      puts "\n" + @output
     end
   end
 end

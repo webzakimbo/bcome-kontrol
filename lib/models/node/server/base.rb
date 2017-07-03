@@ -37,6 +37,10 @@ module Bcome::Node::Server
       ssh_driver.do_ssh
     end
 
+    def execute_script(script_path)
+      ssh_driver.do_execute_script(script_path)
+    end
+
     def put(local_path, remote_path)
       ssh_driver.put(local_path, remote_path)
     end

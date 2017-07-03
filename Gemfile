@@ -1,7 +1,6 @@
 source 'https://rubygems.org'
 
 gemspec
-
 gem 'mocha'
 gem 'rake'
 gem 'require_all'
