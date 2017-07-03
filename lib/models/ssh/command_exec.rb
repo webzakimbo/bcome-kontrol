@@ -25,7 +25,7 @@ module ::Bcome::Ssh
       end
     end
 
-    def ssh_exec!(ssh, command)
+    def ssh_exec!(ssh, command)  # NON PTY (i.e no pseudo-terminal)
       ssh.open_channel do |channel|
         channel.exec(command.raw) do |_cha, success|
           unless success
@@ -51,5 +51,6 @@ module ::Bcome::Ssh
       end
       ssh.loop
     end
+
   end
 end
