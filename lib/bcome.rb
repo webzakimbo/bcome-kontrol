@@ -13,4 +13,4 @@ require 'pp'
 require 'awesome_print'
 
 require_all "#{File.dirname(__FILE__)}/../patches"
-require_all "#{File.dirname(__FILE__)}/../lib/models"
+require_all "#{File.dirname(__FILE__)}/../lib/"
