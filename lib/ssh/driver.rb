@@ -59,9 +59,18 @@ module Bcome::Ssh
 
     def do_execute_script(script_name)
       # TODO - work out how to execute our script using the existing SSH connection so that this process is faster
-      path_to_script = "#{SCRIPTS_PATH}/#{script_name}.sh"
-      raise ::Bcome::Exception::OrchestrationScriptDoesNotExist.new path_to_script unless File.exist?(path_to_script)
-      execute_script_command = "#{ssh_command} \"bash -s\" < #{path_to_script}"
+      local_path_to_script = "#{SCRIPTS_PATH}/#{script_name}.sh"
+      raise ::Bcome::Exception::OrchestrationScriptDoesNotExist.new local_path_to_script unless File.exist?(local_path_to_script)
+
+      # upload & then execute the file remotely... is not actually quicker, even though it re-uses existing ssh connection
+      #tmp_file_name = "#{script_name}-#{Time.now.to_i}.sh"
+      #remote_path = "/tmp/#{tmp_file_name}"
+      #@context_node.put local_path_to_script, remote_path  
+      #command = @context_node.run "bash #{remote_path}"
+      #@context_node.run "rm #{remote_path}"
+      #return command.first
+
+      execute_script_command = "#{ssh_command} \"bash -s\" < #{local_path_to_script}"
       command = ::Bcome::Command::Local.run(execute_script_command)
       return command
     end
