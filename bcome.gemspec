@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
   spec.executables = ['bcome']
-  spec.require_paths = ['lib', 'lib/stack']
+  spec.require_paths = ['lib']
   spec.add_dependency 'rainbow', '2.0.0'
   spec.add_dependency 'net-ssh', '4.1.0'
   spec.add_dependency 'net-scp', '~> 1.2', '>= 1.2.1'
