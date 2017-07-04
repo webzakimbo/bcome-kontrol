@@ -2,6 +2,7 @@ module Bcome::Node
   module Extensions
     ## Direct command line invokation takes in exactly 1 parameter
     def method_is_appropriate_for_command_line_invocation(method_name)
+      return true if arity_exclusions.include?(method_name.to_sym)
       method_takes_exactly_one_parameter(method_name)
     end
 
@@ -16,5 +17,10 @@ module Bcome::Node
     def method_takes_exactly_one_parameter(method_name)
       method_signature_arity(method_name) == 1
     end
+
+    def arity_exclusions
+      [:run]
+    end
+
   end
 end
