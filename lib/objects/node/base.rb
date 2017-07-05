@@ -9,7 +9,7 @@ module Bcome::Node
     include Bcome::WorkspaceCommands
     include Bcome::Node::Attributes
     include Bcome::WorkspaceMenu
-    include Bcome::Node::MetaData
+    include Bcome::Node::MetaDataFactory
  
     DEFAULT_IDENTIFIER = "bcome"
 

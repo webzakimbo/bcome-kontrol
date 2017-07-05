@@ -1,4 +1,4 @@
-module Bcome::Node::MetaData
+module Bcome::Node::MetaDataFactory
 
   META_DATA_FILE_PATH_PREFIX = "config/bcome/metadata".freeze
 
@@ -7,7 +7,15 @@ module Bcome::Node::MetaData
   end
 
   def metadata
-    has_parent? ? parent.metadata.merge(@metadata)  : @metadata
+    @node_metadata ||= do_create_metadata
+  end
+
+  def do_create_metadata
+    return ::Bcome::Node::Metadata.new(raw_metadata)
+  end
+
+  def raw_metadata
+    has_parent? ? parent.raw_metadata.merge(@metadata)  : @metadata
   end
 
   def meta_data_file_path
