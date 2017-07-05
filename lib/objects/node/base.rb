@@ -9,6 +9,7 @@ module Bcome::Node
     include Bcome::WorkspaceCommands
     include Bcome::Node::Attributes
     include Bcome::WorkspaceMenu
+    include Bcome::Node::MetaData
  
     DEFAULT_IDENTIFIER = "bcome"
 
@@ -28,9 +29,12 @@ module Bcome::Node
       @views = params[:views]
       @parent = params[:parent]
       @type = params[:type]
+      @metadata = {}
 
       set_view_attributes if @views
       validate_attributes
+
+      load_metadata
     end
 
     def enabled_menu_items
