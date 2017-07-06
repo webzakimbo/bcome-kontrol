@@ -1,4 +1,9 @@
 
+MENU
+
+  ** smaller menu item when not in console to exclude things that you can't do from external (if any) ... stuff like  'workon', 'enable', 'disable' makes no sense
+
+
 A. Collapse views or selections from views into 1?
 
 C. Orchestration

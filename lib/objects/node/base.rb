@@ -109,13 +109,15 @@ module Bcome::Node
       :view
     end
 
-    def invoke(method_name, command = nil)
+    def invoke(method_name, arguments = [])
       if respond_to?(method_name)
-        if self.class.method_is_appropriate_for_command_line_invocation(method_name)
-          unless command
+        number_of_arguments = arguments ? arguments.size : 0
+    
+        if self.class.method_is_appropriate_for_command_line_invocation(method_name, number_of_arguments)
+          unless arguments
             raise ::Bcome::Exception::MethodInvocationRequiresParameter.new("Calling '#{method_name}' at namespace #{namespace} requires a parameter")
           else
-            send(method_name, command)
+            send(method_name, *arguments)
           end
         else
           send(method_name)

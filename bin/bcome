@@ -2,4 +2,6 @@
 # Boot into a bcome console session
 require 'bcome'
 spawn_into_console = true
-::Bcome::Bootup.do( { breadcrumbs: ARGV[0], argument: ARGV[1]}, spawn_into_console)
+
+arguments = ARGV - [ARGV[0]]
+::Bcome::Bootup.do( { breadcrumbs: ARGV[0], arguments: arguments }, spawn_into_console)

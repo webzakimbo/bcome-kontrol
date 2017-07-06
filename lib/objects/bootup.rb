@@ -25,7 +25,7 @@ module Bcome
 
     def initialize(params, spawn_into_console = false)
       @breadcrumbs = params[:breadcrumbs]
-      @argument = params[:argument]
+      @arguments = params[:arguments]
       @spawn_into_console = spawn_into_console
     end
 
@@ -54,7 +54,7 @@ module Bcome
         # Our current breadcrumb is not a node, and so we'll attempt to invoke a method call on the previous
         # e.g. given resource:foo, then invoke 'foo' on 'resource'
         unless next_context
-          starting_context.invoke(crumb, @argument)
+          starting_context.invoke(crumb, @arguments)
           return
         end
         starting_context = next_context

@@ -87,6 +87,7 @@ module Bcome::Node
     end
 
     def load_dynamic_nodes
+      puts "Loading dynamic nodes for #{self.namespace}"
       raw_servers = fetch_server_list
       raw_servers.each do |raw_server|
         resources << ::Bcome::Node::Server::Dynamic.new_from_fog_instance(raw_server, self)
