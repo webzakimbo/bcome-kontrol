@@ -109,6 +109,7 @@ module Bcome::Node
       if respond_to?(method_name)
 
         arity = self.class.instance_method(method_name).arity
+
         if arity == 0
           send(method_name)
         else
