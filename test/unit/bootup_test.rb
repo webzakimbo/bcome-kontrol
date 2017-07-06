@@ -5,7 +5,7 @@ load "#{File.dirname(__FILE__)}/bootup_helper.rb"
 
 class BootupTest < ActiveSupport::TestCase
   include UnitTestHelper
-
+ 
   def test_should_initialize_a_bootup
     # Given
     breadcrumbs = 'foo:bar'
@@ -13,11 +13,11 @@ class BootupTest < ActiveSupport::TestCase
 
     # When
     bootup = ::Bcome::Bootup.new(breadcrumbs: breadcrumbs,
-                                 argument: argument)
+                                 arguments: argument)
 
     # Then
     assert bootup.breadcrumbs == breadcrumbs
-    assert bootup.argument == argument
+    assert bootup.arguments == argument
     assert bootup.crumbs == %w[foo bar]
   end
 
@@ -143,14 +143,14 @@ class BootupTest < ActiveSupport::TestCase
     found_context.expects(:invoke).with('five', argument)
 
     # When/then
-    ::Bcome::Bootup.do(breadcrumbs: breadcrumbs, argument: argument)
+    ::Bcome::Bootup.do(breadcrumbs: breadcrumbs, arguments: argument)
   end
 
   def test_should_be_able_to_pass_an_argument_to_an_invoked_method_on_a_context
     # Given
     identifier = given_a_random_string_of_length(4)
     method_name = :methodthattakesinoneargument
-    arguments = 'args'
+    arguments = ['args']
 
     config = {
       identifier: 'toplevel',
@@ -168,7 +168,7 @@ class BootupTest < ActiveSupport::TestCase
     Bcome::Node::Factory.expects(:instance).returns(factory)
 
     # When/then
-    ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: arguments)
+    ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", arguments: arguments)
 
     # And all our expectations are met
   end
@@ -194,7 +194,7 @@ class BootupTest < ActiveSupport::TestCase
     Bcome::Node::Factory.expects(:instance).returns(factory)
 
     # When/then
-    ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", argument: nil)
+    ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", arguments: nil)
 
     # And all our expectations are met
   end
@@ -220,12 +220,12 @@ class BootupTest < ActiveSupport::TestCase
     Bcome::Node::Factory.expects(:instance).returns(estate_instance)
 
     spawn_into_context = true
-    bootup = ::Bcome::Bootup.new( {breadcrumbs: "#{identifier}:#{method_name}", arguments: []}, spawn_into_context)
+    bootup = ::Bcome::Bootup.new( {breadcrumbs: "#{identifier}:#{method_name}", arguments: nil}, spawn_into_context)
 
     # When/then
-  #  assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
+    assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
       bootup.do
-  #  end
+    end
     # And all our expectations are met
   end
 
@@ -249,7 +249,7 @@ class BootupTest < ActiveSupport::TestCase
     Bcome::Node::Factory.expects(:instance).returns(estate_instance)
  
     spawn_into_context = true
-    bootup = ::Bcome::Bootup.new({ breadcrumbs: "#{identifier}:#{method_name}", argument: nil }, spawn_into_context)
+    bootup = ::Bcome::Bootup.new({ breadcrumbs: "#{identifier}:#{method_name}", arguments: nil }, spawn_into_context)
 
     # When/then
     assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
@@ -271,4 +271,5 @@ class BootupTest < ActiveSupport::TestCase
       bootup.do
     end
   end
+
 end

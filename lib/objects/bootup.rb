@@ -21,7 +21,7 @@ module Bcome
       end
     end
 
-    attr_reader :breadcrumbs, :argument
+    attr_reader :breadcrumbs, :arguments
 
     def initialize(params, spawn_into_console = false)
       @breadcrumbs = params[:breadcrumbs]
