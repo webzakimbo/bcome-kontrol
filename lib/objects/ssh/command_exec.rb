@@ -21,8 +21,8 @@ module ::Bcome::Ssh
         ssh_exec!(ssh, command)
         output_append("\n(#{node.namespace})$".terminal_prompt + ">\s#{command.raw} (#{command.pretty_result})\n")
         output_append(command.output.to_s)
-        print_output unless ::Bcome::Orchestrator.instance.command_output_silenced?
       end
+      print_output unless ::Bcome::Orchestrator.instance.command_output_silenced?
     end
 
     def ssh_exec!(ssh, command)  # NON PTY (i.e no pseudo-terminal)

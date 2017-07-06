@@ -89,7 +89,7 @@ module Bcome::Ssh
     end
 
     def fallback_local_user
-      ::Bcome::System::Local.instance.local_user
+      @fallback_local_user ||= ::Bcome::System::Local.instance.local_user
     end
 
     def node_host_or_ip
