@@ -113,7 +113,7 @@ module Bcome::Node
           else
             send(method_name)
           end
-        rescue ArgumentError => e
+        rescue ArgumentError
           raise ::Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine.new method_name
         end
       else
