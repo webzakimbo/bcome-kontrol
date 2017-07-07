@@ -2,6 +2,10 @@ module Bcome::Node::Server
   class Dynamic < Bcome::Node::Server::Base
     class << self
 
+      def to_s
+        "dynamic server"
+      end
+
       def new_from_fog_instance(fog_instance, parent)
         identifier = fog_instance.tags['Name']
 

@@ -22,7 +22,8 @@ module Bcome::Node
       base_items = super.dup
       base_items[:ssh] = {
         description: "ssh directly into a resource",
-        usage: "ssh identifier"
+        usage: "ssh identifier",
+        console_only: true
       }
       base_items
     end

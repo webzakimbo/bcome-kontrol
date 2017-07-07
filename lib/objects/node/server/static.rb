@@ -1,6 +1,10 @@
 module Bcome::Node::Server
   class Static < Bcome::Node::Server::Base
 
+    def self.to_s
+      "static server"
+    end 
+
     def initialize(params)
       config = params[:views]
       @identifier = config[:identifier]
