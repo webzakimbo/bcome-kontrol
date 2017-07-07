@@ -223,7 +223,7 @@ class BootupTest < ActiveSupport::TestCase
     bootup = ::Bcome::Bootup.new( {breadcrumbs: "#{identifier}:#{method_name}", arguments: nil}, spawn_into_context)
 
     # When/then
-    assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
+    assert_raise Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine do
       bootup.do
     end
     # And all our expectations are met
@@ -252,7 +252,7 @@ class BootupTest < ActiveSupport::TestCase
     bootup = ::Bcome::Bootup.new({ breadcrumbs: "#{identifier}:#{method_name}", arguments: nil }, spawn_into_context)
 
     # When/then
-    assert_raise Bcome::Exception::MethodInvocationRequiresParameter do
+    assert_raise Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine do
       bootup.do
     end
     # and also that all our expectations are met

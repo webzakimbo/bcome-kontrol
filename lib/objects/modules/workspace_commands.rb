@@ -71,6 +71,7 @@ module Bcome::WorkspaceCommands
   end
 
   def run(*raw_commands)
+    raise ::Bcome::Exception::MethodInvocationRequiresParameter.new "Please specify commands when invoking 'run'" if raw_commands.empty?    
     results = {} 
     machines.pmap do |machine|
       commands = machine.do_run(raw_commands)

@@ -115,6 +115,7 @@ module Bcome::Node::Server
     end
 
     def run(*raw_commands)
+      raise ::Bcome::Exception::MethodInvocationRequiresParameter.new "Please specify commands when invoking 'run'" if raw_commands.empty?
       commands = do_run(raw_commands)
       commands
     end

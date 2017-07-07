@@ -107,17 +107,15 @@ module Bcome::Node
 
     def invoke(method_name, arguments = [])
       if respond_to?(method_name)
-        arity = self.class.instance_method(method_name).arity
-    
-        puts "#{self.class} / M: #{method_name} / A: #{arity}"
-
-        if arity == 0
-          send(method_name)
-        else
-          number_of_arguments = arguments ? arguments.size : 0
-          raise ::Bcome::Exception::MethodInvocationRequiresParameter.new "" if number_of_arguments == 0
-          send(method_name, *arguments)
-        end 
+        begin
+          if arguments && arguments.any?
+            send(method_name, *arguments)
+          else
+            send(method_name)
+          end
+        rescue ArgumentError => e
+          raise ::Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine.new method_name
+        end
       else
         # Final crumb is neither a node level context nor an executable method on the penultimate node level context
         raise ::Bcome::Exception::InvalidBreadcrumb.new("Method '#{method_name}' is not available on bcome node of type #{self.class}, at namespace #{namespace}")
