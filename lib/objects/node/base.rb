@@ -108,6 +108,9 @@ module Bcome::Node
     def invoke(method_name, arguments = [])
       if respond_to?(method_name)
         arity = self.class.instance_method(method_name).arity
+    
+        puts "#{self.class} / M: #{method_name} / A: #{arity}"
+
         if arity == 0
           send(method_name)
         else
