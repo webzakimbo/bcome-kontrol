@@ -34,7 +34,7 @@ module Bcome::Node
     end
 
     def enabled_menu_items
-      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :interactive, :tree, :ping, :put, :cd, :reload!] 
+      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :interactive, :tree, :ping, :put, :cd, :reload!, :meta] 
     end
 
     def rewrite_estate_config   
@@ -158,6 +158,19 @@ module Bcome::Node
     def execute_local(command)
       puts "(local) > #{command}"
       system(command)
+    end
+
+    def data_print_from_hash(data, heading)
+      puts "\n#{heading.title}"
+      puts ""
+      if data.keys.any?
+        data.sort.to_h.each do |key, value|
+          puts "#{key.to_s.resource_key}: #{value.to_s.informational}"
+        end
+      else
+        puts "No values found".warning
+      end
+      puts ""
     end
 
     private

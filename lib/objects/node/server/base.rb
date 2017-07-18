@@ -1,6 +1,14 @@
 module Bcome::Node::Server
   class Base < Bcome::Node::Base
 
+    def tags
+      data_print_from_hash(cloud_tags, "Tags")
+    end
+  
+    def cloud_tags
+      raise "Should be overidden"
+    end
+
     def type
       "server"
     end
@@ -22,11 +30,14 @@ module Bcome::Node::Server
     end
 
     def enabled_menu_items
-      (super + [:ssh]) - [:enable, :disable, :enable!, :disable!]
+      (super + [:ssh, :tags]) - [:enable, :disable, :enable!, :disable!]
     end
 
     def menu_items
       base_items = super.dup
+      base_items[:tags] = {
+        description: "print out remote EC2 tags"
+      }
       base_items[:ssh] = {
         description: "initiate an ssh connection to this server",
       }
@@ -102,6 +113,7 @@ module Bcome::Node::Server
       d[:internal_ip_address] = internal_ip_address if internal_ip_address
       d[:public_ip_address] = public_ip_address if public_ip_address
       d[:description] = description if description
+      d[:cloud_tags] = cloud_tags 
       d
     end
 

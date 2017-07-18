@@ -108,6 +108,9 @@ module Bcome::WorkspaceMenu
       reload!: {
         description: "Restock this inventory from remote (hit 'save' after to persist)",
         console_only: true
+      },
+      meta: {
+        description: "Print out all metadata related to this node"
       }
     }
   end

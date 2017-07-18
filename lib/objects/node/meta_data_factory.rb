@@ -2,16 +2,12 @@ module Bcome::Node::MetaDataFactory
 
   META_DATA_FILE_PATH_PREFIX = "config/bcome/metadata".freeze
 
+  def meta
+    data_print_from_hash(raw_metadata, "Metadata")
+  end
+
   def load_metadata
     @metadata = load_metadata_from_file if metadata_exists?
-  end
-
-  def metadata
-    @node_metadata ||= do_create_metadata
-  end
-
-  def do_create_metadata
-    return ::Bcome::Node::Metadata.new(raw_metadata)
   end
 
   def raw_metadata

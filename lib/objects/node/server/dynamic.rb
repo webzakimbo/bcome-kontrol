@@ -28,5 +28,13 @@ module Bcome::Node::Server
       end
     end
 
+    def cloud_tags
+      ec2_server ? ec2_server.tags : {}
+    end
+
+    def ec2_server
+      self.views[:ec2_server]
+    end  
+
   end
 end
