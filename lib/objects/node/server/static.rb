@@ -16,7 +16,7 @@ module Bcome::Node::Server
     end
 
     def cloud_tags
-      @cloud_tags ? @cloud_tags : {}
+      @cloud_tags ? @cloud_tags.deep_symbolize_keys : {}
     end
    
     def verify_we_have_at_least_one_interface(config)

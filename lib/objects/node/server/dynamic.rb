@@ -29,7 +29,7 @@ module Bcome::Node::Server
     end
 
     def cloud_tags
-      ec2_server ? ec2_server.tags : {}
+      ec2_server ? ec2_server.tags.deep_symbolize_keys : {}
     end
 
     def ec2_server
