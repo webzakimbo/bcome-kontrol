@@ -28,8 +28,9 @@ module Bcome::Node::Server
       end
     end
 
-    def cloud_tags
-      ec2_server ? ec2_server.tags.deep_symbolize_keys : {}
+    def do_generate_cloud_tags
+      raw_tags = ec2_server ? ec2_server.tags.deep_symbolize_keys : {}
+      return ::Bcome::Node::Meta::Cloud.new(raw_tags)
     end
 
     def ec2_server

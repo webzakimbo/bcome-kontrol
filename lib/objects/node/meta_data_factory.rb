@@ -1,4 +1,4 @@
-module Bcome::Node::MetaDataFactory
+module Bcome::Node::LocalMetaDataFactory
 
   META_DATA_FILE_PATH_PREFIX = "config/bcome/metadata".freeze
 
@@ -7,7 +7,7 @@ module Bcome::Node::MetaDataFactory
   end
 
   def do_create_metadata
-    ::Bcome::Node::Metadata.new(raw_metadata)
+    ::Bcome::Node::Meta::Local.new(raw_metadata)
   end
 
   def meta

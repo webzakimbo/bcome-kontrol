@@ -14,6 +14,22 @@ module Bcome::Node
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @views if @views[:views] && !@views[:views].empty?
     end
 
+    def meta_matches(matchers)
+      data_wrapper = :metadata
+      return matches_for(data_wrapper, matchers)
+    end
+
+    def cloud_matches(matchers)
+      data_wrapper = :cloud_tags
+      matches_for(data_wrapper, matchers)
+    end
+
+    def matches_for(data_wrapper, matchers)
+      resources.active.select{|machine|
+        machine.send(data_wrapper).has_key_and_value?(matchers)
+      }
+    end
+
     def enabled_menu_items
       super + [:save, :ssh]
     end

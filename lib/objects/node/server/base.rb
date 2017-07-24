@@ -2,10 +2,14 @@ module Bcome::Node::Server
   class Base < Bcome::Node::Base
 
     def tags
-      data_print_from_hash(cloud_tags, "Tags")
+      data_print_from_hash(cloud_tags.data, "Tags")
     end
   
     def cloud_tags
+      @generated_tags ||= do_generate_cloud_tags
+    end
+
+    def do_generate_cloud_tags
       raise "Should be overidden"
     end
 

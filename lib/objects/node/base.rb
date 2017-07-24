@@ -5,7 +5,7 @@ module Bcome::Node
     include Bcome::WorkspaceCommands
     include Bcome::Node::Attributes
     include Bcome::WorkspaceMenu
-    include Bcome::Node::MetaDataFactory
+    include Bcome::Node::LocalMetaDataFactory
  
     DEFAULT_IDENTIFIER = "bcome"
 
