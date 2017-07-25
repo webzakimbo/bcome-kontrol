@@ -5,6 +5,11 @@ module Bcome::Node::Meta
   
     def initialize(data)
       @data = data.deep_symbolize_keys
+      begin
+        raise
+      rescue Exception => e
+        puts e.backtrace.join("\n")
+      end
     end
 
     def has_key_and_value?(matchers)

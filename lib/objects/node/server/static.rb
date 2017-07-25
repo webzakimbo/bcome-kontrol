@@ -15,11 +15,10 @@ module Bcome::Node::Server
       super
     end
 
-    def do_generate_cloud_tags
-      raw_tags = @cloud_tags ? @cloud_tags.deep_symbolize_keys : {}
-      return ::Bcome::Node::Meta::Cloud.new(raw_tags)
+    def cloud_tags
+      @cloud_tags
     end
-   
+
     def verify_we_have_at_least_one_interface(config)
       raise ::Bcome::Exception::MissingIpaddressOnServer.new(config) unless has_at_least_one_interface?
     end
