@@ -5,7 +5,7 @@ module Bcome::Node
 
     attr_reader :estate
 
-    CONFIG_PATH = 'config/bcome'.freeze
+    CONFIG_PATH = 'bcome/networks'.freeze
     DEFAULT_CONFIG_NAME = 'estate.yml'.freeze
     INVENTORY_KEY = 'inventory'.freeze
     COLLECTION_KEY = 'collection'.freeze

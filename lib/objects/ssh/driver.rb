@@ -6,7 +6,7 @@ module Bcome::Ssh
     PROXY_CONNECT_PREFIX = 'ssh -o StrictHostKeyChecking=no -W %h:%p'.freeze
     PROXY_SSH_PREFIX = 'ssh -o UserKnownHostsFile=/dev/null -o "ProxyCommand ssh -W %h:%p'.freeze
 
-    SCRIPTS_PATH = 'config/bcome/scripts'
+    SCRIPTS_PATH = 'bcome/scripts'
  
     def initialize(config, context_node)
       @config = config
