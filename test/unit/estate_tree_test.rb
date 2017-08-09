@@ -70,7 +70,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     ]
 
     # When/then
-    assert_raise ::Bcome::Exception::InvalidEstateConfig do
+    assert_raise ::Bcome::Exception::InvalidNetworkConfig do
       ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
     end
   end
@@ -118,7 +118,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     YAML.expects(:load_file).returns(views)
 
     # when/then
-    assert_raise ::Bcome::Exception::InvalidEstateConfig do
+    assert_raise ::Bcome::Exception::InvalidNetworkConfig do
       ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
@@ -128,7 +128,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     YAML.expects(:load_file).raises(Errno::ENOENT)
 
     # when/then
-    assert_raise ::Bcome::Exception::MissingEstateConfig do
+    assert_raise ::Bcome::Exception::MissingNetworkConfig do
       ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
@@ -138,7 +138,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     YAML.expects(:load_file).raises(ArgumentError)
 
     # When/then
-    assert_raise ::Bcome::Exception::InvalidEstateConfig do
+    assert_raise ::Bcome::Exception::InvalidNetworkConfig do
       ::Bcome::Node::Factory.send(:new).init_tree
     end
   end

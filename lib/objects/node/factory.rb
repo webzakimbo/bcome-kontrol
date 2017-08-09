@@ -5,13 +5,14 @@ module Bcome::Node
 
     attr_reader :estate
 
-    CONFIG_PATH = 'bcome/networks'.freeze
-    DEFAULT_CONFIG_NAME = 'estate.yml'.freeze
+    CONFIG_PATH = 'bcome'.freeze
+    DEFAULT_CONFIG_NAME = 'networks.yml'.freeze
     INVENTORY_KEY = 'inventory'.freeze
     COLLECTION_KEY = 'collection'.freeze
     BCOME_RC_FILENAME = '.bcomerc'.freeze
 
     def init_tree
+      puts "Init tree"
       @estate = create_node(estate_config)
       return @estate
     end
@@ -29,12 +30,31 @@ module Bcome::Node
     end
 
     def create_node(config, parent = nil)
-      validate_views(config)
-      klass = klass_for_view_type[config[:type]]
-      node = klass.new(views: config, parent: parent)
-      create_tree(node, config[:views]) if config[:views] && config[:views].any?
-      parent.resources << node if parent
-      node
+      puts "in create node"
+
+      # Re-order data according to crumb
+
+      config.each do |crumb_key, crumb_data|
+        puts "CK: #{crumb_key}"
+        validate_views(crumb_data) 
+        klass = klass_for_view_type[config[:type]]
+   
+        ## - Parent: 
+        node = klass.new(views: config, parent: parent)
+
+
+      end
+
+
+      
+      raise "\n\nYma"
+
+#      validate_views(config)
+#      klass = klass_for_view_type[config[:type]]
+#      node = klass.new(views: config, parent: parent)
+#      create_tree(node, config[:views]) if config[:views] && config[:views].any?
+#      parent.resources << node if parent
+#      node
     end
 
     def save_cache!
@@ -60,15 +80,15 @@ module Bcome::Node
       begin
         config = YAML.load_file(config_path).deep_symbolize_keys
         return config
-      rescue ArgumentError
-        raise Bcome::Exception::InvalidEstateConfig, 'Invalid yaml in config'
+      rescue ArgumentError, Psych::SyntaxError
+        raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in config'
       rescue Errno::ENOENT
-        raise Bcome::Exception::MissingEstateConfig, config_path
+        raise Bcome::Exception::MissingNetworkConfig, config_path
       end
     end
 
     def validate_views(config)
-      raise Bcome::Exception::InvalidEstateConfig, "Invalid view type for (#{config.inspect})" unless is_valid_view_type?(config[:type])
+      raise Bcome::Exception::InvalidNetworkConfig, "Invalid view type for (#{config.inspect})" unless is_valid_view_type?(config[:type])
     end
 
     def klass_for_view_type
