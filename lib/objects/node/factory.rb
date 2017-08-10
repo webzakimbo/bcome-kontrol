@@ -12,7 +12,6 @@ module Bcome::Node
     BCOME_RC_FILENAME = '.bcomerc'.freeze
 
     def init_tree
-      puts "Init tree"
       @estate = create_node(estate_config)
       return @estate
     end
@@ -30,31 +29,12 @@ module Bcome::Node
     end
 
     def create_node(config, parent = nil)
-      puts "in create node"
-
-      # Re-order data according to crumb
-
-      config.each do |crumb_key, crumb_data|
-        puts "CK: #{crumb_key}"
-        validate_views(crumb_data) 
-        klass = klass_for_view_type[config[:type]]
-   
-        ## - Parent: 
-        node = klass.new(views: config, parent: parent)
-
-
-      end
-
-
-      
-      raise "\n\nYma"
-
-#      validate_views(config)
-#      klass = klass_for_view_type[config[:type]]
-#      node = klass.new(views: config, parent: parent)
-#      create_tree(node, config[:views]) if config[:views] && config[:views].any?
-#      parent.resources << node if parent
-#      node
+      validate_views(config)
+      klass = klass_for_view_type[config[:type]]
+      node = klass.new(views: config, parent: parent)
+      create_tree(node, config[:views]) if config[:views] && config[:views].any?
+      parent.resources << node if parent
+      node
     end
 
     def save_cache!

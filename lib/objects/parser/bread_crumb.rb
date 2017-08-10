@@ -2,6 +2,13 @@ module Bcome::Parser
   class BreadCrumb
     attr_reader :crumbs
 
+    class << self
+      def parse(raw_crumbs)
+        parser = new(raw_crumbs)
+        return parser.parse!
+      end
+    end
+
     def initialize(raw_crumbs)
       @raw_crumbs = raw_crumbs.to_s
 
