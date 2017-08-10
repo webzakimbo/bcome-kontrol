@@ -8,7 +8,7 @@ module Bcome::Node
     attr_reader :dynamic_nodes_loaded
 
     def initialize(*params)
-      @read_from_cache_only = false
+      @load_from_cache = false
       @cache_handler = ::Bcome::Node::CacheHandler.new(self)
       super
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @views if @views[:views] && !@views[:views].empty?
@@ -98,7 +98,7 @@ module Bcome::Node
 
     def load_nodes
       set_static_servers
-      unless @read_from_cache_only
+      unless @load_from_cache
         load_dynamic_nodes 
       end
     end
