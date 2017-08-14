@@ -28,7 +28,25 @@ module Bcome::Node
       views.each { |config| create_node(config, context_node) }
     end
 
+
+    def reformat_config(config)
+
+      conf = ::Bcome::Config.new
+ 
+      config.each do |crumb, data|
+        crumbs = Bcome::Parser::BreadCrumb.parse(crumb)
+        conf.add_crumbs(crumbs)
+      end
+      conf.deep_merge_tree!
+      puts conf.tree.inspect
+
+      raise "in reformat config"
+    end
+
     def create_node(config, parent = nil)
+
+      config = reformat_config(config)
+
       validate_views(config)
       klass = klass_for_view_type[config[:type]]
       node = klass.new(views: config, parent: parent)
