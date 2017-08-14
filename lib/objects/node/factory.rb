@@ -46,21 +46,6 @@ module Bcome::Node
       node
     end
 
-    def save_cache!
-      config = estate.rewrite_estate_config      
-
-      @config_file_name = ::Bcome::Interactive::Session.run(self,
-        :capture_input, { current_filename: config_file_name, start_message: "Select to which file you'd like to save your new network manifest" }
-      )
-
-      if @config_file_name
-        File.open(config_path,"w") do |file|
-          file.write config.to_yaml
-        end
-        puts "\nNetwork configuration saved to #{config_path}".informational
-      end
-    end
-
     def validate_view(breadcrumb, data)
       unless data[:type]
         raise Bcome::Exception::InvalidNetworkConfig, "Missing view type for for namespace '#{breadcrumb}'"
@@ -84,14 +69,19 @@ module Bcome::Node
     end
 
     def estate_config
-      @estate_config ||= load_estate_config
+      @estate_config ||= reformat_config(load_estate_config)
+    end
+
+    def rewrite_estate_config(data)
+      File.open(config_path, "w") do |file|
+        file.write data.to_yaml
+      end
     end
 
     def load_estate_config
       begin
         config = YAML.load_file(config_path).deep_symbolize_keys
-        reformatted_config = reformat_config(config)
-        return reformatted_config
+        return config
       rescue ArgumentError, Psych::SyntaxError
         raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in config'
       rescue Errno::ENOENT

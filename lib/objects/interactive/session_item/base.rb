@@ -26,6 +26,10 @@ module Bcome::Interactive::SessionItem
       raise 'Should be overidden'
     end
 
+    def has_start_message?
+      true
+    end
+
     def get_input(message = terminal_prompt)
       ::Readline.readline("\n#{message}", true).squeeze('').to_s
     end

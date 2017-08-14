@@ -37,19 +37,6 @@ module Bcome::Node
       [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :interactive, :tree, :ping, :put, :cd, :reload!, :meta] 
     end
 
-    def rewrite_estate_config   
-      config = views
-      config[:views] = []
-
-      resources.active.each do |resource|
-        config[:views] << resource.rewrite_estate_config
-      end 
-
-      config[:views].flatten! 
-      config[:views].uniq!
-      config
-    end
-
     def has_proxy?
       ssh_driver.has_proxy?
     end

@@ -6,21 +6,16 @@ module Bcome::Interactive::SessionItem
     end
 
     def terminal_prompt
-      "\nEnter manifest file name or hit enter to save as existing (#{display_file_name}): ".instructional
-    end
-
-    def display_file_name
-      @init_data[:current_filename] =~ /(.+)\.yml/
-      return $1
+      "\n" + @init_data[:terminal_prompt].informational
     end
 
     def action
       input = get_input
-      return input.empty? ? @init_data[:current_filename] : "#{input}.yml" 
+      return input.empty? ? get_input : input
     end
 
-    def start_message
-      "\n" + @init_data[:start_message].informational
+    def has_start_message?
+      false
     end
 
   end

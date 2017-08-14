@@ -35,7 +35,7 @@ module Bcome::Interactive
     end
 
     def start
-      print start_item.start_message
+      print start_item.start_message if start_item.has_start_message?
       start_item.do
     end
 

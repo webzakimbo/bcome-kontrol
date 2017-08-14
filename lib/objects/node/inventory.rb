@@ -1,6 +1,8 @@
 module Bcome::Node
   class Inventory < ::Bcome::Node::Base
 
+    MACHINES_CACHE_PATH = 'machines-cache.yml'.freeze
+
     def self.to_s
       'inventory'
     end
@@ -8,7 +10,7 @@ module Bcome::Node
     attr_reader :dynamic_nodes_loaded
 
     def initialize(*params)
-      @load_from_cache = false
+      @load_machines_from_cache = false
       @cache_handler = ::Bcome::Node::CacheHandler.new(self)
       super
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @views if @views[:views] && !@views[:views].empty?
@@ -45,24 +47,60 @@ module Bcome::Node
     end
 
     def set_static_servers
-      if server_configs = @views[:static_servers]
-        server_configs.each {|server_config|
+      if raw_static_machines_from_cache
+        raw_static_machines_from_cache.each {|server_config|
           resources << ::Bcome::Node::Server::Static.new(views: server_config, parent: self)
         }
       end
+    end
+
+    def raw_static_machines_from_cache
+      return load_machines_config[namespace.to_sym]
     end
 
     def resources
       @resources ||= ::Bcome::Node::Resources::Inventory.new
     end
 
-    def rewrite_estate_config
-      views
+    def machines_cache_path
+      "#{::Bcome::Node::Factory::CONFIG_PATH}/#{MACHINES_CACHE_PATH}"
     end
 
+    def mark_as_cached!
+      data = ::Bcome::Node::Factory.instance.load_estate_config
+      data[namespace.to_sym][:load_machines_from_cache] = true
+      ::Bcome::Node::Factory.instance.rewrite_estate_config(data)
+    end 
+
     def save
-      cache_nodes_in_memory
-      ::Bcome::Node::Factory.instance.save_cache!
+      @answer = ::Bcome::Interactive::Session.run(self,
+        :capture_input, { terminal_prompt: "Are you sure you want to cache these machines (saving will overwrite any previous selections) [Y|N] ? " }
+      )
+
+      if @answer && @answer == "Y"
+        cache_nodes_in_memory
+        data = load_machines_config
+        data[namespace] = views[:static_servers]
+
+        File.open(machines_cache_path,"w") do |file|
+          file.write data.to_yaml
+        end
+        mark_as_cached!
+        puts "Machines have been cached for node #{namespace}".informational
+      else
+        puts "Nothing saved".warning
+      end
+    end
+
+    def load_machines_config
+      begin
+        config = YAML.load_file(machines_cache_path).deep_symbolize_keys
+        return config
+      rescue ArgumentError, Psych::SyntaxError
+        raise Bcome::Exception::InvalidMachinesCacheConfig, 'Invalid yaml in config'
+      rescue Errno::ENOENT  
+        return {}
+      end
     end
 
     def ssh(identifier)
@@ -75,7 +113,6 @@ module Bcome::Node
 
     def cache_nodes_in_memory
       @cache_handler.do_cache_nodes!
-      puts "processing #{self.namespace}".informational
     end
 
     def list_key
@@ -98,7 +135,7 @@ module Bcome::Node
 
     def load_nodes
       set_static_servers
-      unless @load_from_cache
+      unless @load_machines_from_cache
         load_dynamic_nodes 
       end
     end
