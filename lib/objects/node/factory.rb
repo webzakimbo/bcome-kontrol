@@ -28,26 +28,17 @@ module Bcome::Node
       views.each { |config| create_node(config, context_node) }
     end
 
-
     def reformat_config(config)
-
-      conf = ::Bcome::Config.new
- 
+      conf = ::Bcome::ConfigFactory.new
       config.each do |crumb, data|
+        validate_view(crumb, data)
         crumbs = Bcome::Parser::BreadCrumb.parse(crumb)
-        conf.add_crumbs(crumbs)
+        conf.add_crumbs(crumbs, data)
       end
-      conf.deep_merge_tree!
-      puts conf.tree.inspect
-
-      raise "in reformat config"
+      return conf.flattened
     end
 
     def create_node(config, parent = nil)
-
-      config = reformat_config(config)
-
-      validate_views(config)
       klass = klass_for_view_type[config[:type]]
       node = klass.new(views: config, parent: parent)
       create_tree(node, config[:views]) if config[:views] && config[:views].any?
@@ -70,23 +61,15 @@ module Bcome::Node
       end
     end
 
-    def estate_config
-      @estate_config ||= load_estate_config
-    end
-
-    def load_estate_config
-      begin
-        config = YAML.load_file(config_path).deep_symbolize_keys
-        return config
-      rescue ArgumentError, Psych::SyntaxError
-        raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in config'
-      rescue Errno::ENOENT
-        raise Bcome::Exception::MissingNetworkConfig, config_path
+    def validate_view(breadcrumb, data)
+      unless data[:type]
+        raise Bcome::Exception::InvalidNetworkConfig, "Missing view type for for namespace '#{breadcrumb}'"
       end
-    end
 
-    def validate_views(config)
-      raise Bcome::Exception::InvalidNetworkConfig, "Invalid view type for (#{config.inspect})" unless is_valid_view_type?(config[:type])
+      unless is_valid_view_type?(data[:type])
+        raise Bcome::Exception::InvalidNetworkConfig, "Invalid View Type '#{data[:type]}' for namespace '#{breadcrumb}'. Expecting View Type to be one of: #{klass_for_view_type.keys.join(", ")}" 
+      end
+
     end
 
     def klass_for_view_type
@@ -99,6 +82,22 @@ module Bcome::Node
     def is_valid_view_type?(view_type)
       klass_for_view_type.keys.include?(view_type)
     end
-   
+
+    def estate_config
+      @estate_config ||= load_estate_config
+    end
+
+    def load_estate_config
+      begin
+        config = YAML.load_file(config_path).deep_symbolize_keys
+        reformatted_config = reformat_config(config)
+        return reformatted_config
+      rescue ArgumentError, Psych::SyntaxError
+        raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in config'
+      rescue Errno::ENOENT
+        raise Bcome::Exception::MissingNetworkConfig, config_path
+      end
+    end
+
   end
 end
