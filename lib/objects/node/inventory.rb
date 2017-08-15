@@ -116,7 +116,7 @@ module Bcome::Node
     end
 
     def direct_invoke_server(method, identifier)
-     if resource = resources.for_identifier(identifier)
+      if resource = resources.for_identifier(identifier)
         resource.send(method)
       else
         raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
