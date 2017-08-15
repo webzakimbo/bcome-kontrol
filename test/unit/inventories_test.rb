@@ -8,11 +8,9 @@ class InventoriesTest < ActiveSupport::TestCase
     estate = given_a_dummy_estate
 
     views = [
-      {
-        identifier: "foo", 
-        description: "bar",
-        type: "inventory"
-      }
+      identifier: "foo",
+      description: "bar",
+      type: "inventory"
     ]
 
     # When
@@ -28,24 +26,35 @@ class InventoriesTest < ActiveSupport::TestCase
     # Given
     estate = given_a_dummy_estate
 
-    public_ip_address_server_1 = "111.222.333.444"
-    public_ip_address_server_2 = "999.888.777.666"
+    ips = [
+      "111.222.333.444", "999.888.777.666"
+    ]  
 
-    server_data = [
-      { identifier: given_a_random_string_of_length(4), public_ip_address: public_ip_address_server_1 },
-      { identifier: given_a_random_string_of_length(4), public_ip_address: public_ip_address_server_2 }
+    identifiers = [
+      given_a_random_string_of_length(4), given_a_random_string_of_length(4)
     ]
+   
+    collection_crumb = given_a_random_string_of_length(3)
+
+    server_data = { 
+      "#{estate.namespace}:#{collection_crumb}" => [
+         { :identifier => identifiers[0], public_ip_address: ips[0] },
+         { :identifier =>  identifiers[1], public_ip_address: ips[1] },
+       ]
+    }.deep_symbolize_keys
 
     views = [
-      identifier: "foo",
+      identifier: collection_crumb,
       description: "bar",
       type: "inventory",
-      static_servers: server_data
+      load_machines_from_cache: true
     ]
 
     # When
     ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
     inventory = estate.resources.first
+
+    inventory.expects(:load_machines_config).returns(server_data).at_least_once
     inventory.load_nodes
  
     # Sanity
@@ -56,8 +65,8 @@ class InventoriesTest < ActiveSupport::TestCase
     # And also that
     inventory.resources.each_with_index do |resource, index|
       assert resource.is_a?(::Bcome::Node::Server::Static)
-      assert resource.public_ip_address == server_data[index][:public_ip_address]
-      assert resource.identifier == server_data[index][:identifier] 
+      assert resource.public_ip_address == ips[index]
+      assert resource.identifier == identifiers[index]
       assert resource.parent == inventory
     end
   end
@@ -74,23 +83,26 @@ class InventoriesTest < ActiveSupport::TestCase
     remote_node = mock("remote node")
     remote_node.expects(:identifier).returns(duplicate_identifier).at_least_once
     remote_node.expects(:dynamic_server?).returns(true)
+
+    collection_crumb = given_a_random_string_of_length(3)
  
-    static_server_data = [
-      {
-        identifier: duplicate_identifier,
-        public_ip_address: static_node_ip_address
-      }
-    ]
+    static_server_data = {
+      "#{estate.namespace}:#{collection_crumb}" => [
+        { :identifier => duplicate_identifier, public_ip_address: static_node_ip_address }
+      ]
+    }.deep_symbolize_keys
 
     views = [
-      identifier: "foo",
+      identifier: collection_crumb,
       description: "bar",
       type: "inventory",
-      static_servers: static_server_data
+      load_machines_from_cache: true
     ]
 
     ::Bcome::Node::Factory.send(:new).create_tree(estate, views)
     inventory = estate.resources.first
+    inventory.expects(:load_machines_config).returns(static_server_data).at_least_once
+
     inventory.load_nodes
 
     # Sanity

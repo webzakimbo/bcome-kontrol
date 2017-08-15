@@ -47,8 +47,9 @@ class NodeTest < ActiveSupport::TestCase
   def test_description_is_required
     # Given
     config = {
-      identifier: 'dummy',
-      type: 'collection'
+      'dummy': {
+        type: 'collection'
+      }
     }
 
     YAML.expects(:load_file).returns(config)
@@ -62,7 +63,7 @@ class NodeTest < ActiveSupport::TestCase
   def test_identifier_is_required_for_all_subnodes
     # Given
     config = {
-      identifier: 'dummy',
+      'dummy': {
       description: 'top level estate',
       type: 'collection',
       views: [
@@ -71,6 +72,7 @@ class NodeTest < ActiveSupport::TestCase
           type: 'collection'
         }
       ]
+    }
     }
 
     YAML.expects(:load_file).returns(config)
@@ -215,7 +217,7 @@ class NodeTest < ActiveSupport::TestCase
   def test_identifiers_must_be_unique
     # Given
     config = {
-      identifier: 'toplevel',
+      'toplevel': {
       description: 'the top level node',
       type: 'collection',
       views: [
@@ -223,6 +225,7 @@ class NodeTest < ActiveSupport::TestCase
         { identifier: 'two', description: 'node 2', type: 'collection' },
         { identifier: 'one', description: 'node 1 again', type: 'collection' }
       ]
+     }
     }
 
     YAML.expects(:load_file).returns(config)
@@ -236,15 +239,16 @@ class NodeTest < ActiveSupport::TestCase
   def test_that_identifiers_dont_have_spaces
     # Given
     config = {
-      type: 'collection',
-      description: 'invalid identifier name',
-      identifier: ' foo'
+      ' foo': {
+        type: 'collection',
+        description: 'invalid identifier name',
+      }
     }
 
     YAML.expects(:load_file).returns(config)
 
     # when/then
-    assert_raise Bcome::Exception::InvalidIdentifier do
+    assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do
       ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
@@ -252,15 +256,16 @@ class NodeTest < ActiveSupport::TestCase
   def test_that_identifiers_dont_have_spaces_two
     # Given
     config = {
-      type: 'collection',
-      description: 'invalid identifier name',
-      identifier: ' foo '
+      " foo": {
+        type: 'collection',
+        description: 'invalid identifier name',
+      }
     }
 
     YAML.expects(:load_file).returns(config)
 
     # when/then
-    assert_raise Bcome::Exception::InvalidIdentifier do
+    assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do
       ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
@@ -268,15 +273,17 @@ class NodeTest < ActiveSupport::TestCase
   def test_that_identifiers_dont_have_spaces_three
     # Given
     config = {
-      type: 'collection',
-      description: 'invalid identifier name',
-      identifier: 'foo '
+      "foo ":
+      {
+        type: 'collection',
+        description: 'invalid identifier name',
+      }
     }
 
     YAML.expects(:load_file).returns(config)
 
     # when/then
-    assert_raise Bcome::Exception::InvalidIdentifier do
+    assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do
       ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
@@ -284,15 +291,17 @@ class NodeTest < ActiveSupport::TestCase
   def test_that_identifiers_dont_have_spaces_four
     # Given
     config = {
-      type: 'collection',
-      description: 'invalid identifier name',
-      identifier: 'f o o'
+      "f o o":
+      {
+        type: 'collection',
+        description: 'invalid identifier name',
+      }
     }
 
     YAML.expects(:load_file).returns(config)
 
     # when/then
-    assert_raise Bcome::Exception::InvalidIdentifier do
+    assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do
       ::Bcome::Node::Factory.send(:new).init_tree
     end
   end
@@ -302,12 +311,13 @@ class NodeTest < ActiveSupport::TestCase
     method_symbol = given_a_random_string_of_length(4)
 
     config = {
+      'toplevel': {
       type: 'collection',
       description: 'a top level view',
-      identifier: 'toplevel',
       views: [
         { type: 'collection', description: 'a collection', identifier: method_symbol.to_s }
       ]
+     }
     }
 
     YAML.expects(:load_file).returns(config)
@@ -325,13 +335,13 @@ class NodeTest < ActiveSupport::TestCase
     constant_name = 'FooBar'
 
     config = {
+      'toplevel': {
       type: 'collection',
       description: 'a top level view',
-      identifier: 'toplevel',
       views: [
         { type: 'collection', description: 'a collection', identifier: constant_name.to_s }
       ]
-
+     }
     }
 
     YAML.expects(:load_file).returns(config)

@@ -9,12 +9,14 @@ class NodeTest < ActiveSupport::TestCase
     node_identifier = 'myservername'
 
     config = {
+     "#{estate_identifier}": {
       type: 'collection',
       description: 'a top level view',
       identifier: estate_identifier,
       views: [
         { type: 'collection', description: 'a collection', identifier: node_identifier }
-      ]
+      ]  
+     }
     }
 
     YAML.expects(:load_file).returns(config)

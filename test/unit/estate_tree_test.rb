@@ -6,16 +6,14 @@ class EstateTreeTest < ActiveSupport::TestCase
 
   def given_a_dummy_estate_config
     {
-      identifier: 'dummy',
-      description: 'A dummy estate',
-      type: 'collection',
-      views: [
-        {
-          type: 'collection',
-          identifier: 'whatever',
-          description: 'and ever'
-        }
-      ]
+      'dummy': {
+        description: 'A dummy estate',
+        type: 'collection',
+      },
+      'dummy:whatever': {
+         type: 'collection',
+         description: 'and ever'
+      }    
     }
   end
 
@@ -31,42 +29,11 @@ class EstateTreeTest < ActiveSupport::TestCase
     Bcome::Node::Factory.send(:new).init_tree
   end
 
-  def test_should_default_top_level_identifier_to_bcome_if_not_provided
-    # Given
-    config = given_a_dummy_estate_config
-    config[:identifier] = nil
-
-    mock_yaml_estate_load_return(config)
-
-    # when
-    estate = Bcome::Node::Factory.send(:new).init_tree
-
-    # then
-    estate.identifier == Bcome::Node::Base::DEFAULT_IDENTIFIER
-  end
-
-  def test_should_create_tree_views
-    # Given
-    config = given_a_dummy_estate_config
-    mock_yaml_estate_load_return(config)
-
-    estate = ::Bcome::Node::Collection.new(given_estate_setup_params)
-    ::Bcome::Node::Collection.expects(:new).returns(estate)
-
-    views = config[:views]
-
-    factory = ::Bcome::Node::Factory.send(:new)
-    factory.expects(:create_tree).with(estate, views)
-
-    # When/then
-    factory.init_tree
-  end
-
   def test_should_validate_view_types
     # Given
     estate = given_a_dummy_estate
-    views = [
-      { type: 'i_dont_exist' }
+    views = [ 
+      { identifier: "foo", type: 'i_dont_exist' } 
     ]
 
     # When/then
@@ -91,28 +58,31 @@ class EstateTreeTest < ActiveSupport::TestCase
   def test_inventories_cannot_have_subviews_when_they_are_the_topmost_view
     # Given
     views = {
-      type: 'inventory',
-      identifier: 'topmostidentifier',
-      description: 'a top level inventory with subviews',
-      views: [
-        { identifier: 'ishouldnotbehere' }
-      ]
+      "topmostidentifier": {
+        type: 'inventory',
+        description: 'a top level inventory with subviews',
+      },
+      "topmostidentifier:impossibleview": {
+        type: "inventory",
+        description: "inventories cannot have subviews"
+      }
     }
 
     YAML.expects(:load_file).returns(views)
 
     # When/then
-    assert_raise ::Bcome::Exception::InventoriesCannotHaveSubViews do
+     assert_raise ::Bcome::Exception::InventoriesCannotHaveSubViews do
       ::Bcome::Node::Factory.send(:new).init_tree
-    end
+     end
   end
 
   def test_inventories_must_have_valid_types_even_when_they_are_the_topmost_view
     # Given
     views = {
-      type: 'aninvalidtype',
-      identifier: 'topmostidentifier',
-      description: 'a top level inventory with subviews'
+      'topmostidentifier': {
+        type: 'aninvalidtype',
+        description: 'a top level inventory with subviews'
+      }
     }
 
     YAML.expects(:load_file).returns(views)

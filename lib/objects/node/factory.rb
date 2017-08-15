@@ -39,7 +39,12 @@ module Bcome::Node
     end
 
     def create_node(config, parent = nil)
+      raise ::Bcome::Exception::InvalidNetworkConfig.new "missing config type" unless config[:type]
+
       klass = klass_for_view_type[config[:type]]
+
+      raise ::Bcome::Exception::InvalidNetworkConfig.new "invalid config type #{config[:type]}" unless klass
+
       node = klass.new(views: config, parent: parent)
       create_tree(node, config[:views]) if config[:views] && config[:views].any?
       parent.resources << node if parent

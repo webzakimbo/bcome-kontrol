@@ -153,13 +153,15 @@ class BootupTest < ActiveSupport::TestCase
     arguments = ['args']
 
     config = {
-      identifier: 'toplevel',
-      description: 'top level node',
-      type: 'collection',
-      views: [
-        { identifier: identifier, type: 'collection', description: "the node we'll execute our method on" }
-      ]
-    }
+      'toplevel': {
+        description: 'top level node',
+        type: 'collection',
+      },
+      "toplevel:#{identifier}": {
+        type: 'collection', 
+        description: "the node we'll execute our method on" 
+      }  
+    }  
 
     YAML.expects(:load_file).returns(config).at_least_once
     factory = Bcome::Node::Factory.send(:new)
@@ -179,12 +181,14 @@ class BootupTest < ActiveSupport::TestCase
     method_name = :methodthatdoesnotrequirearguments # Method added in our bootup helper
 
     config = {
-      identifier: 'toplevel',
-      description: 'top level node',
-      type: 'collection',
-      views: [
-        { identifier: identifier, type: 'collection', description: "the node we'll execute our method on" }
-      ]
+      'toplevel': {
+        description: 'top level node',
+        type: 'collection',
+      },  
+      "toplevel:#{identifier}": {
+        type: 'collection',
+        description: "the node we'll execute our method on"
+      }
     }
 
     YAML.expects(:load_file).returns(config).at_least_once
@@ -205,14 +209,16 @@ class BootupTest < ActiveSupport::TestCase
     method_name = :methodthattakesinoneargument
 
     config = {
-      identifier: 'toplevel',
-      description: 'top level node',
-      type: 'collection',
-      views: [
-        { identifier: identifier, type: 'collection', description: "the node we'll execute our method on" }
-      ]
+      'toplevel': {
+        description: 'top level node',
+        type: 'collection',
+      },
+      "toplevel:#{identifier}": {
+        type: 'collection',
+        description: "the node we'll execute our method on"
+      }
     }
-
+    
     # we create an estate first
     YAML.expects(:load_file).returns(config).at_least_once
     estate_instance = Bcome::Node::Factory.send(:new)
@@ -235,14 +241,16 @@ class BootupTest < ActiveSupport::TestCase
     method_name = :methodthattakesinoneargument # Method added in our bootup helper
 
     config = {
-      identifier: 'toplevel',
-      description: 'top level node',
-      type: 'collection',
-      views: [
-        { identifier: identifier, type: 'collection', description: "the node we'll execute our method on" }
-      ]
+      "toplevel": {
+        description: 'top level node',
+        type: 'collection',
+      },
+      "toplevel:#{identifier}": {
+        type: 'collection', 
+        description: "the node we'll execute our method on"
+      },
     }
-
+   
     YAML.expects(:load_file).returns(config).at_least_once
     estate_instance = Bcome::Node::Factory.send(:new)
 

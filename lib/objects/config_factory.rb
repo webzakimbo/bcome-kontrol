@@ -12,7 +12,6 @@ class Bcome::ConfigFactory
   end
 
   def add_crumbs(crumbs, data)
-    crumb_tree = @tree 
     views = @tree
     number_crumbs = crumbs.size
 
@@ -32,7 +31,8 @@ class Bcome::ConfigFactory
   end
 
   def hash_for_identifier_from_view(identifier, views)
-     views[:views].select{|v| v[:identifier].to_s == identifier.to_s }.first
+    raise ::Bcome::Exception::InventoriesCannotHaveSubViews.new "Inventory cannot have subviews - invalid network config" unless views.has_key?(:views)
+    views[:views].select{|v| v[:identifier].to_s == identifier.to_s }.first
   end
 
 end
