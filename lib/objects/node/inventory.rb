@@ -104,13 +104,25 @@ module Bcome::Node
     end
 
     def ssh(identifier)
-      if resource = resources.for_identifier(identifier)
-        resource.send(:ssh)
+      direct_invoke_server(:ssh, identifier)
+    end
+
+    def ping(identifier)
+      direct_invoke_server(:ping, identifier)
+    end
+
+    def tags(identifier)
+      direct_invoke_server(:tags, identifier)
+    end
+
+    def direct_invoke_server(method, identifier)
+     if resource = resources.for_identifier(identifier)
+        resource.send(method)
       else
         raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
       end
     end
-
+ 
     def cache_nodes_in_memory
       @cache_handler.do_cache_nodes!
     end
