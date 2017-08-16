@@ -29,8 +29,6 @@ module Bcome::Node
 
       set_view_attributes if @views
       validate_attributes
-
-      load_metadata
     end
 
     def enabled_menu_items
