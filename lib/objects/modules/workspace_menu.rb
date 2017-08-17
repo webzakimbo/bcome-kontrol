@@ -105,7 +105,7 @@ module Bcome::WorkspaceMenu
         description: "Save the current tree state",
         console_only: true
       },
-      reload!: {
+      reload: {
         description: "Restock this inventory from remote (hit 'save' after to persist)",
         console_only: true
       },

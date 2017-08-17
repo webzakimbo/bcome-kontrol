@@ -107,10 +107,6 @@ module Bcome::Node
       direct_invoke_server(:ssh, identifier)
     end
 
-    def ping(identifier)
-      direct_invoke_server(:ping, identifier)
-    end
-
     def tags(identifier)
       direct_invoke_server(:tags, identifier)
     end
@@ -135,7 +131,7 @@ module Bcome::Node
       @resources.active
     end
 
-    def reload!
+    def reload
       resources.unset!
       load_dynamic_nodes
       puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".informational
