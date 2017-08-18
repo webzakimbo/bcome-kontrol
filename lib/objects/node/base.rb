@@ -6,6 +6,7 @@ module Bcome::Node
     include Bcome::Node::Attributes
     include Bcome::WorkspaceMenu
     include Bcome::Node::LocalMetaDataFactory
+    include Bcome::Node::RegistryManagement
  
     DEFAULT_IDENTIFIER = "bcome"
 
