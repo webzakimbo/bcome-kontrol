@@ -33,7 +33,7 @@ module Bcome::Node
     end
 
     def enabled_menu_items
-      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :interactive, :tree, :ping, :put, :cd, :reload, :meta] 
+      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :interactive, :tree, :ping, :put, :cd, :reload, :meta, :registry] 
     end
 
     def has_proxy?

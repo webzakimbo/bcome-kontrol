@@ -111,6 +111,10 @@ module Bcome::WorkspaceMenu
       },
       meta: {
         description: "Print out all metadata related to this node"
+      },
+      registry: {
+        description: "List all user defined commands present in your registry, and available to this namespace",
+        :console_only => false
       }
     }
   end

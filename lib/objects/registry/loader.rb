@@ -9,11 +9,11 @@ module Bcome::Registry
       @data ||= do_load
     end
 
-    def commands_for_namespace(namespace)
-      command_group = ::Bcome::Registry::Command::Group.new
+    def command_group_for_node(node)
+      command_group = ::Bcome::Registry::Command::Group.new(node)
 
       data.each do |key, commands|
-        if namespace =~ /^#{key.to_s}/ 
+        if node.namespace =~ /^#{key.to_s}/ 
           commands.each {|c| command_group << ::Bcome::Registry::Command::Base.new_from_raw_command(c) }
         end
       end   
