@@ -22,7 +22,7 @@ module Bcome::Registry
               end
                  
               command_group << ::Bcome::Registry::Command::Base.new_from_raw_command(c) unless restrict_config?(node, c) 
-              ::Bcome::Registry::CommandList.instance.register(node, c[:console_command]) 
+              ::Bcome::Registry::CommandList.instance.register(node, c[:console_command].to_sym) 
            } 
           end
         rescue RegexpError => e
