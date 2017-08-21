@@ -1,10 +1,13 @@
 module Bcome::Node::RegistryManagement
 
   def user_command_wrapper
-    @user_command_wrapper ||= ::Bcome::Registry::Loader.instance.command_group_for_node(self)
+    @user_command_wrapper ||= do_load_user_command_wrapper
   end
 
-  # TODO - check for conflicts somehow: should not be able to add registry commands that override system commands
+  def do_load_user_command_wrapper
+    ::Bcome::Registry::Loader.instance.command_group_for_node(self)
+  end  
+
   def registry
     command_group = user_command_wrapper
     if command_group.has_commands?

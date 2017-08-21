@@ -30,6 +30,7 @@ module Bcome::Node
 
       set_view_attributes if @views
       validate_attributes
+      do_load_user_command_wrapper
     end
 
     def enabled_menu_items

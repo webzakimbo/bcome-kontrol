@@ -8,7 +8,7 @@ module Bcome::Registry
     def data
       @data ||= do_load
     end
-
+   
     def command_group_for_node(node)
       command_group = init_new_command_group(node)
 
@@ -20,9 +20,10 @@ module Bcome::Registry
               if node.is_node_level_method?(c[:console_command]) || command_group.console_method_name_exists?(c[:console_command]) 
                 raise ::Bcome::Exception::MethodNameConflictInRegistry.new "'#{c[:console_command]}'"
               end
-
+                 
               command_group << ::Bcome::Registry::Command::Base.new_from_raw_command(c) unless restrict_config?(node, c) 
-            } 
+              ::Bcome::Registry::CommandList.instance.register(node, c[:console_command]) 
+           } 
           end
         rescue RegexpError => e
           raise ::Bcome::Exception::InvalidRegexpMatcherInRegistry.new e.message

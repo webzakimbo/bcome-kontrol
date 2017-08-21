@@ -156,12 +156,22 @@ module Bcome::WorkspaceCommands
       method_sym.to_s
     elsif instance_variable_defined?("@#{method_sym}")
       instance_variable_get("@#{method_sym}")
-    end
+    else
+     puts "METHOD IS IN THE REGISTRY, this should be something we can execute"
+     # command = user_command_wrapper.command_for_console_command_name(method_sym)
 
+     # raise command.inspect
+
+    end
+  end
+
+  def method_in_registry?(method_sym)
+    puts "Looking for #{method_sym}"
+    ::Bcome::Registry::CommandList.instance.command_in_list?(self, method_sym)  
   end
 
   def method_is_available_on_node?(method_sym)
-    return resource_identifiers.include?(method_sym.to_s) || instance_variable_defined?("@#{method_sym}")
+    return resource_identifiers.include?(method_sym.to_s) || instance_variable_defined?("@#{method_sym}") || method_in_registry?(method_sym)
   end
 
   def visual_hierarchy
