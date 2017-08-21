@@ -1,6 +1,8 @@
 module Bcome::Registry::Command
   class Group
 
+    attr_reader :all_commands
+
     def initialize(node)
       @all_commands = {}
       @node = node
