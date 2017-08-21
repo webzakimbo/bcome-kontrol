@@ -10,12 +10,17 @@ module Bcome::Registry
     end
 
     def command_group_for_node(node)
-      command_group = ::Bcome::Registry::Command::Group.new(node)
+      command_group = init_new_command_group(node)
 
       data.each do |key, commands|
         begin
           if /^#{key.to_s}$/.match(node.namespace) 
             commands.each {|c|
+              # Verify that the proposed user registered method does not conflict with either an existing method name, instance var, or other registry command name for this node
+              if node.is_node_level_method?(c[:console_command]) || command_group.console_method_name_exists?(c[:console_command]) 
+                raise ::Bcome::Exception::MethodNameConflictInRegistry.new "'#{c[:console_command]}'"
+              end
+
               command_group << ::Bcome::Registry::Command::Base.new_from_raw_command(c) unless restrict_config?(node, c) 
             } 
           end
@@ -24,6 +29,10 @@ module Bcome::Registry
         end
       end   
       return command_group
+    end
+
+    def init_new_command_group(node)
+      ::Bcome::Registry::Command::Group.new(node)
     end
 
     def restrict_config?(node, command_config)
