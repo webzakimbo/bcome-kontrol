@@ -173,5 +173,13 @@ module Bcome::Node
       [:views] 
     end
 
+    private
+
+    def to_ary
+      # due to my method_missing implementation, the following is required.
+      # with thanks to https://tenderlovemaking.com/2011/06/28/til-its-ok-to-return-nil-from-to_ary.html & http://yehudakatz.com/2010/01/02/the-craziest-fing-bug-ive-ever-seen/
+      nil
+    end
+
   end
 end
