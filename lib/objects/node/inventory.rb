@@ -103,15 +103,20 @@ module Bcome::Node
       end
     end
 
-    def ssh(identifier)
+    def ssh(identifier = nil)
       direct_invoke_server(:ssh, identifier)
     end
 
-    def tags(identifier)
+    def tags(identifier = nil)
       direct_invoke_server(:tags, identifier)
     end
 
     def direct_invoke_server(method, identifier)
+      unless identifier
+        puts "\nPlease provide a machine identifier, e.g. #{method} machinename\n".warning unless identifier
+        return
+      end
+   
       if resource = resources.for_identifier(identifier)
         resource.send(method)
       else

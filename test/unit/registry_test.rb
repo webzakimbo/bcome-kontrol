@@ -3,6 +3,14 @@ load "#{File.dirname(__FILE__)}/../base.rb"
 class RegistryTest < ActiveSupport::TestCase
   include UnitTestHelper
 
+    setup do
+      Bcome::Registry::CommandList.instance.teardown! 
+    end
+
+    teardown do
+      Bcome::Registry::CommandList.instance.teardown!
+    end
+
     def given_mocked_context_command_data_from_registry(group_name = given_a_random_string_of_length(4))
       {
         :type => "external",
@@ -20,7 +28,7 @@ class RegistryTest < ActiveSupport::TestCase
       namespace = given_a_random_string_of_length(3)
       node = mock("A mocked node")
       node.stubs(:is_node_level_method?).returns(false)
-      node.expects(:namespace).returns(namespace)
+      node.stubs(:namespace).returns(namespace)
 
       # and a setup containing an arbitrary number of commands for that namespace
       group_name = given_a_random_string_of_length(5)
@@ -35,7 +43,9 @@ class RegistryTest < ActiveSupport::TestCase
       ::Bcome::Registry::Loader.instance.expects(:data).returns(registry_data)
 
       # When
-      command_group = ::Bcome::Registry::Loader.instance.command_group_for_node(node)
+      ::Bcome::Registry::Loader.instance.set_command_group_for_node(node)
+      command_group = ::Bcome::Registry::CommandList.instance.group_for_node(node)
+
 
       # Then
       # We've got a group, keyed on the correct group name, containing the correct number of commands
@@ -64,7 +74,7 @@ class RegistryTest < ActiveSupport::TestCase
       node = mock("A mocked node")
       node.stubs(:is_node_level_method?).returns(false)
 
-      node.expects(:namespace).returns(namespace)
+      node.stubs(:namespace).returns(namespace)
    
       # and a 3 groups
       group_name_1 = given_a_random_string_of_length(5)
@@ -90,7 +100,8 @@ class RegistryTest < ActiveSupport::TestCase
       ::Bcome::Registry::Loader.instance.expects(:data).returns(registry_data)
 
       # When
-      command_group = ::Bcome::Registry::Loader.instance.command_group_for_node(node)
+      ::Bcome::Registry::Loader.instance.set_command_group_for_node(node)
+      command_group = ::Bcome::Registry::CommandList.instance.group_for_node(node)
 
       assert command_group.is_a?(::Bcome::Registry::Command::Group)
       assert command_group.has_commands?
@@ -106,11 +117,13 @@ class RegistryTest < ActiveSupport::TestCase
 
     def test_should_catch_invalid_regex_in_registry
       # Given
-      # an abitrary namespace
+      namespace = "i:am:invalid(" 
+   
       node = mock("A mocked node")
+      node.stubs(:namespace).returns(namespace)
 
       registry_data = {
-        "i:am:invalid(" =>
+        namespace =>
           [
             given_mocked_context_command_data_from_registry
           ]
@@ -120,7 +133,7 @@ class RegistryTest < ActiveSupport::TestCase
 
       # When/then
       assert_raise Bcome::Exception::InvalidRegexpMatcherInRegistry do
-        ::Bcome::Registry::Loader.instance.command_group_for_node(node)       
+        ::Bcome::Registry::Loader.instance.set_command_group_for_node(node)       
       end
     end
 
@@ -146,30 +159,31 @@ class RegistryTest < ActiveSupport::TestCase
       ]
 
 
-     all_keys = keys_we_expect_to_match + keys_we_dont_expect_to_match
+      all_keys = keys_we_expect_to_match + keys_we_dont_expect_to_match
+ 
+      node.stubs(:namespace).returns(namespace)
 
-     node.expects(:namespace).returns(namespace).times(all_keys.size)
-
-     registry_data = {}
-     all_keys.each {|key|
+      registry_data = {}
+      all_keys.each {|key|
        registry_data[key] = [
          # We'll just add a single command to each one, as we don't care how many we have, just that we have some
          # but, so we can identify them in our assertions shortly, we'll set the group name to the registry regex matcher
          given_mocked_context_command_data_from_registry(key)
-       ]
-     }
+        ]
+      }
  
-     ::Bcome::Registry::Loader.instance.expects(:data).returns(registry_data)
+      ::Bcome::Registry::Loader.instance.expects(:data).returns(registry_data)
 
-     # When
-     command_group = ::Bcome::Registry::Loader.instance.command_group_for_node(node)
+      # When
+      ::Bcome::Registry::Loader.instance.set_command_group_for_node(node)
+      command_group = ::Bcome::Registry::CommandList.instance.group_for_node(node)
  
-     # Then
-     # We expect to have matched all our keys
-     keys_we_expect_to_match.each {|key_we_expect_to_match|
-       assert command_group.all_commands.has_key?(key_we_expect_to_match)
-     }   
-   end
+      # Then
+      # We expect to have matched all our keys
+      keys_we_expect_to_match.each {|key_we_expect_to_match|
+        assert command_group.all_commands.has_key?(key_we_expect_to_match)
+      }   
+    end
 
   def test_should_honour_node_restrictions_when_command_is_server_node_level_only
     # Given
@@ -177,7 +191,7 @@ class RegistryTest < ActiveSupport::TestCase
 
     node = mock("A mocked node")
     node.stubs(:is_node_level_method?).returns(false)
-    node.expects(:namespace).returns(namespace)
+    node.stubs(:namespace).returns(namespace)
 
     node.expects(:is_a?).with(::Bcome::Node::Server::Base).returns(true)
 
@@ -197,7 +211,8 @@ class RegistryTest < ActiveSupport::TestCase
     ::Bcome::Registry::Loader.instance.expects(:data).returns(registry_data)
 
     # When 
-    command_group = ::Bcome::Registry::Loader.instance.command_group_for_node(node)
+    ::Bcome::Registry::Loader.instance.set_command_group_for_node(node)
+    command_group = ::Bcome::Registry::CommandList.instance.group_for_node(node)
 
     # Then both our commands should be present, keyed on the group name
     commands = command_group.all_commands[group_name]
@@ -210,7 +225,7 @@ class RegistryTest < ActiveSupport::TestCase
 
     node = mock("A mocked node")
     node.stubs(:is_node_level_method?).returns(false)
-    node.expects(:namespace).returns(namespace)
+    node.stubs(:namespace).returns(namespace)
 
     node.expects(:is_a?).with(::Bcome::Node::Server::Base).returns(false)
     
@@ -229,7 +244,8 @@ class RegistryTest < ActiveSupport::TestCase
     ::Bcome::Registry::Loader.instance.expects(:data).returns(registry_data)
 
     # When 
-    command_group = ::Bcome::Registry::Loader.instance.command_group_for_node(node)
+    ::Bcome::Registry::Loader.instance.set_command_group_for_node(node)
+    command_group = ::Bcome::Registry::CommandList.instance.group_for_node(node)
 
     # Then both our commands should be present, keyed on the group name
     commands = command_group.all_commands[group_name]
@@ -358,9 +374,9 @@ class RegistryTest < ActiveSupport::TestCase
     command_group.stubs(:all_commands).returns(all_commands)
 
     # Then
-    assert command_group.command_for_console_command_name("command_1") == command1
-    assert command_group.command_for_console_command_name("command_2") == command2
-    assert command_group.command_for_console_command_name("command_3") == command3
+    assert command_group.command_for_console_command_name(:command_1) == command1
+    assert command_group.command_for_console_command_name(:command_2) == command2
+    assert command_group.command_for_console_command_name(:command_3) == command3
 
     # And also that
     assert command_group.command_for_console_command_name("I_dont_exist") == nil
@@ -393,7 +409,7 @@ class RegistryTest < ActiveSupport::TestCase
 
     # When/Then
     assert_raise ::Bcome::Exception::MethodNameConflictInRegistry do
-      ::Bcome::Registry::Loader.instance.command_group_for_node(node)
+      ::Bcome::Registry::Loader.instance.set_command_group_for_node(node)
     end
   end
 
@@ -434,7 +450,7 @@ class RegistryTest < ActiveSupport::TestCase
       
     # When/Then
     assert_raise ::Bcome::Exception::MethodNameConflictInRegistry do
-      ::Bcome::Registry::Loader.instance.command_group_for_node(node)
+      ::Bcome::Registry::Loader.instance.set_command_group_for_node(node)
     end
   end 
 end

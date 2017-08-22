@@ -157,16 +157,12 @@ module Bcome::WorkspaceCommands
     elsif instance_variable_defined?("@#{method_sym}")
       instance_variable_get("@#{method_sym}")
     else
-     puts "METHOD IS IN THE REGISTRY, this should be something we can execute"
-     # command = user_command_wrapper.command_for_console_command_name(method_sym)
-
-     # raise command.inspect
-
+      command = user_command_wrapper.command_for_console_command_name(method_sym)
+      command.execute(self, arguments)
     end
   end
 
   def method_in_registry?(method_sym)
-    puts "Looking for #{method_sym}"
     ::Bcome::Registry::CommandList.instance.command_in_list?(self, method_sym)  
   end
 

@@ -31,7 +31,7 @@ module Bcome::Registry::Command
     end
 
     def command_for_console_command_name(command_name)
-      user_registered_console_commands.select{|command| command.console_command == command_name }.first
+      user_registered_console_commands.select{|command| command.console_command.to_sym == command_name }.first
     end
 
     def pretty_print

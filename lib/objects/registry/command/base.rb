@@ -25,6 +25,10 @@ module Bcome::Registry::Command
       validate
     end
 
+    def execute(*params)
+      raise "Should be overriden"
+    end
+
     def expected_keys
       [:console_command, :group, :description]
     end

@@ -3,6 +3,10 @@ module Bcome::Registry::Command
 
     # In which the bcome context is passed to an external call
 
+    def execute(node, arguments)
+      raise "in execute"
+    end
+
     def expected_keys
       super + [:local_command]
     end

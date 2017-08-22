@@ -9,7 +9,11 @@ module Bcome::Registry
       @data ||= do_load
     end
    
-    def command_group_for_node(node)
+    def set_command_group_for_node(node)
+      if group_for_node = ::Bcome::Registry::CommandList.instance.group_for_node(node)
+        return group_for_node
+      end 
+
       command_group = init_new_command_group(node)
 
       data.each do |key, commands|
@@ -20,16 +24,15 @@ module Bcome::Registry
               if node.is_node_level_method?(c[:console_command]) || command_group.console_method_name_exists?(c[:console_command]) 
                 raise ::Bcome::Exception::MethodNameConflictInRegistry.new "'#{c[:console_command]}'"
               end
-                 
               command_group << ::Bcome::Registry::Command::Base.new_from_raw_command(c) unless restrict_config?(node, c) 
-              ::Bcome::Registry::CommandList.instance.register(node, c[:console_command].to_sym) 
+              ::Bcome::Registry::CommandList.instance.register(node, c[:console_command].to_sym)
            } 
           end
         rescue RegexpError => e
           raise ::Bcome::Exception::InvalidRegexpMatcherInRegistry.new e.message
         end
-      end   
-      return command_group
+      end
+      ::Bcome::Registry::CommandList.instance.add_group_for_node(node, command_group)   
     end
 
     def init_new_command_group(node)
@@ -56,6 +59,7 @@ module Bcome::Registry
     end
 
     def do_load
+      return {} unless File.exist?(FILE_PATH)
       begin
         file_data = YAML.load_file(FILE_PATH).deep_symbolize_keys
       rescue Psych::SyntaxError => e
