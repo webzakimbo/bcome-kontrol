@@ -93,15 +93,25 @@ module Bcome::Node
     end
 
     def invoke(method_name, arguments = [])
-      if respond_to?(method_name)
-        begin
-          if arguments && arguments.any?
-            send(method_name, *arguments)
-          else
-            send(method_name)
+      if method_is_available_on_node?(method_name)
+        if respond_to?(method_name)        
+          # Invoke a method on node that's defined by the system
+          begin
+            if arguments && arguments.any?
+              send(method_name, *arguments)
+            else
+              send(method_name)
+            end
+          rescue ArgumentError
+            raise ::Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine.new method_name
           end
-        rescue ArgumentError
-          raise ::Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine.new method_name
+        else
+          # TODO
+          puts "#todo: sort out the arguments #{arguments.inspect}"
+          puts "#todo: some kind of arguments parse?"
+          # Invoke a user defined (registry) method
+          command = user_command_wrapper.command_for_console_command_name(method_name.to_sym)
+          command.execute(self, arguments)
         end
       else
         # Final crumb is neither a node level context nor an executable method on the penultimate node level context

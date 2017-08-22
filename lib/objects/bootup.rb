@@ -69,6 +69,10 @@ module Bcome
     end
 
     def parser
+      # TODO - passing foo:bar:deployment_method results in invalid breadcrumb unless
+      # 1. We allow underscores?
+      # 2. We validate the names of methods with _ allowed, and restrict to A-Za-z_   ... would seem to be the way to go
+      # 3. And then update the regex in the parser & update the tests
       @parser ||= ::Bcome::Parser::BreadCrumb.new(@breadcrumbs)
     end
 

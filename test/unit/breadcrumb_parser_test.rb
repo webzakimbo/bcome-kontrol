@@ -10,7 +10,11 @@ class BreadCrumbParserTest < ActiveSupport::TestCase
       { breadcrumb: 'foo:bar:woo:', expectation: %w[foo bar woo] },
       { breadcrumb: '123', expectation: ['123'] },
       { breadcrumb: '123:456', expectation: %w[123 456] },
-      { breadcrumb: '123:456:', expectation: %w[123 456] }
+      { breadcrumb: '123:456:', expectation: %w[123 456] },
+      { breadcrumb: '123_:456:', expectation: %w[123_ 456] },
+      { breadcrumb: '123:do_foo:', expectation: %w[123 do_foo] },
+      { breadcrumb: '123:do_foo_:', expectation: %w[123 do_foo_] },
+      { breadcrumb: '_123:456:', expectation: %w[_123 456] },
     ]
 
     test_breadcrumbs.each do |test_crumbs|

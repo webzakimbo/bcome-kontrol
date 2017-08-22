@@ -167,7 +167,7 @@ module Bcome::WorkspaceCommands
   end
 
   def method_is_available_on_node?(method_sym)
-    return resource_identifiers.include?(method_sym.to_s) || instance_variable_defined?("@#{method_sym}") || method_in_registry?(method_sym)
+    return resource_identifiers.include?(method_sym.to_s) || instance_variable_defined?("@#{method_sym}") || method_in_registry?(method_sym) || respond_to?(method_sym)
   end
 
   def visual_hierarchy
