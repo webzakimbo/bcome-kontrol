@@ -76,11 +76,11 @@ module Bcome::Ssh
     end
 
     def ssh_command
-      command = if has_proxy?
-                  "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_ip_address}"
-                else
-                  "ssh #{user}@#{@context_node.public_ip_address}"
-                end
+      if has_proxy?
+        "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_ip_address}"
+      else
+        "ssh #{user}@#{@context_node.public_ip_address}"
+      end
     end
 
     def user
