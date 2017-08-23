@@ -73,7 +73,7 @@ module Bcome::Node
 
     def save
       @answer = ::Bcome::Interactive::Session.run(self,
-                                                  :capture_input, terminal_prompt: 'Are you sure you want to cache these machines (saving will overwrite any previous selections) [Y|N] ? ')
+                                                  :capture_input, terminal_prompt: "\nAre you sure you want to cache these machines (saving will overwrite any previous selections) [Y|N] ? ")
 
       if @answer && @answer == 'Y'
         cache_nodes_in_memory
