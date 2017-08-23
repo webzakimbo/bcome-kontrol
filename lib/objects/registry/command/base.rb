@@ -25,6 +25,17 @@ module Bcome::Registry::Command
       validate
     end
 
+    def process_arguments(arguments)
+      # Arguments are either provided as an Array (command line invocation), or as a Hash (console invocation)
+      if arguments.is_a?(Array)
+        ::Bcome::Registry::Arguments::CommandLine.process(arguments, defaults)
+      elsif arguments.is_a?(Hash)
+        raise "Write processor for console based arguments"
+      else
+        raise "Handle invalid arguments"
+      end
+    end
+
     def execute(*params)
       raise "Should be overriden"
     end

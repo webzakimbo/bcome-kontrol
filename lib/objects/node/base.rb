@@ -106,9 +106,6 @@ module Bcome::Node
             raise ::Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine.new method_name
           end
         else
-          # TODO
-          puts "#todo: sort out the arguments #{arguments.inspect}"
-          puts "#todo: some kind of arguments parse?"
           # Invoke a user defined (registry) method
           command = user_command_wrapper.command_for_console_command_name(method_name.to_sym)
           command.execute(self, arguments)
