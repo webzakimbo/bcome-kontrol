@@ -1,9 +1,8 @@
 module Bcome::Node
   class MetaDataLoader
-
     include ::Singleton
 
-    META_DATA_FILE_PATH_PREFIX = "bcome/metadata".freeze
+    META_DATA_FILE_PATH_PREFIX = 'bcome/metadata'.freeze
 
     def initialize
       @all_metadata_filenames = Dir["#{META_DATA_FILE_PATH_PREFIX}/*"]
@@ -24,11 +23,10 @@ module Bcome::Node
           filedata = YAML.load_file(filename).deep_symbolize_keys
           all_meta_data.merge!(filedata)
         rescue Psych::SyntaxError => e
-          raise ::Bcome::Exception::InvalidMetaDataConfig.new "Error: #{e.message}"
+          raise Bcome::Exception::InvalidMetaDataConfig, "Error: #{e.message}"
         end
       end
-      return all_meta_data
+      all_meta_data
     end
-
   end
 end

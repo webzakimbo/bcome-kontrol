@@ -1,6 +1,5 @@
 module Bcome::Node::LocalMetaDataFactory
-
-  META_DATA_FILE_PATH_PREFIX = "bcome/metadata".freeze
+  META_DATA_FILE_PATH_PREFIX = 'bcome/metadata'.freeze
 
   def metadata
     @node_metadata ||= do_create_metadata
@@ -11,7 +10,7 @@ module Bcome::Node::LocalMetaDataFactory
   end
 
   def meta
-    data_print_from_hash(raw_metadata, "Metadata")
+    data_print_from_hash(raw_metadata, 'Metadata')
   end
 
   def raw_metadata
@@ -21,5 +20,4 @@ module Bcome::Node::LocalMetaDataFactory
   def metadata_for_namespace
     ::Bcome::Node::MetaDataLoader.instance.data_for_namespace(namespace)
   end
-
 end

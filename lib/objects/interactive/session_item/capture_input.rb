@@ -1,8 +1,7 @@
 module Bcome::Interactive::SessionItem
   class CaptureInput < ::Bcome::Interactive::SessionItem::Base
-
     def do
-      return action
+      action
     end
 
     def terminal_prompt
@@ -11,12 +10,11 @@ module Bcome::Interactive::SessionItem
 
     def action
       input = get_input
-      return input.empty? ? get_input : input
+      input.empty? ? get_input : input
     end
 
     def has_start_message?
       false
     end
-
   end
 end

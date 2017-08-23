@@ -63,7 +63,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def terminal_prompt
-      ">\s".bold.terminal_prompt  
+      ">\s".bold.terminal_prompt
     end
 
     def exit?(input)
@@ -92,7 +92,7 @@ module Bcome::Interactive::SessionItem
         begin
           machine.ssh_driver.ssh_connect!
         rescue
-          #Bcome::ProgressBar.instance.reset! 
+          # Bcome::ProgressBar.instance.reset!
           soft_reset
           raise Bcome::Exception::CouldNotInitiateSshConnection, machine.namespace
           break

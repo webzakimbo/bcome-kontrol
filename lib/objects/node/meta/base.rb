@@ -1,17 +1,16 @@
 module Bcome::Node::Meta
   class Base
-
     attr_reader :data
-  
+
     def initialize(data)
       @data = data.deep_symbolize_keys
     end
 
     def has_key_and_value?(matchers)
-      raise ::Bcome::Exception::InvalidMatcherQuery.new unless matchers[:key] && matchers[:values].is_a?(Array)
+      raise Bcome::Exception::InvalidMatcherQuery unless matchers[:key] && matchers[:values].is_a?(Array)
       key = matchers[:key].to_sym
       values = matchers[:values]
-      return @data.has_key?(key) && values.include?(@data[key])
+      @data.key?(key) && values.include?(@data[key])
     end
 
     def dump
@@ -23,12 +22,11 @@ module Bcome::Node::Meta
     def fetch(key)
       key = key.to_sym
 
-      if @data.has_key?(key)
+      if @data.key?(key)
         @data[key]
       else
-        raise ::Bcome::Exception::CantFindKeyInMetadata.new key unless @data.has_key?(key)
+        raise Bcome::Exception::CantFindKeyInMetadata, key unless @data.key?(key)
       end
     end
-
   end
 end

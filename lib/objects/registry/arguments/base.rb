@@ -1,16 +1,15 @@
 module Bcome::Registry::Arguments
   class Base
-
     attr_reader :arguments, :defaults, :processed_arguments, :merged_arguments
 
     class << self
       def process(arguments, defaults)
         processor = new(arguments, defaults)
         processor.do_process
-      end 
+      end
     end
 
-    def initialize(arguments, defaults)
+    def initialize(_arguments, defaults)
       @defaults = defaults ? defaults : {}
       validate
     end
@@ -24,15 +23,14 @@ module Bcome::Registry::Arguments
 
     def merge_arguments_with_defaults
       @merged_arguments = @defaults.symbolize_keys.merge(arguments_to_merge.symbolize_keys)
-    end   
+    end
 
     def arguments_to_merge
       @arguments
     end
 
     def validate
-      raise ::Bcome::Exception::InvalidRegistryArgumentType.new "invalid default registry argument format" unless @defaults.is_a?(Hash)
+      raise Bcome::Exception::InvalidRegistryArgumentType, 'invalid default registry argument format' unless @defaults.is_a?(Hash)
     end
-
   end
 end

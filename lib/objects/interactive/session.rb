@@ -1,7 +1,6 @@
 module Bcome::Interactive
   class Session
     class << self
-
       def run(node, session_type, init_data = {})
         session_end_message = "\ninteractive session ended\n".informational
         begin
@@ -18,16 +17,15 @@ module Bcome::Interactive
 
       def session_type_to_klass
         {
-          :interactive_ssh => ::Bcome::Interactive::SessionItem::TransparentSsh,
-          :capture_input => ::Bcome::Interactive::SessionItem::CaptureInput
+          interactive_ssh: ::Bcome::Interactive::SessionItem::TransparentSsh,
+          capture_input: ::Bcome::Interactive::SessionItem::CaptureInput
         }
       end
-
     end
 
     attr_reader :responses, :node
 
-    def initialize(node, item_klass, init_data) 
+    def initialize(node, item_klass, init_data)
       @item_klass = item_klass
       @node = node
       @responses = {}
@@ -42,6 +40,5 @@ module Bcome::Interactive
     def start_item
       @start_item ||= @item_klass.new(self, @init_data)
     end
-
   end
 end

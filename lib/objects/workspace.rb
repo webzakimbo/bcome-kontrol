@@ -21,7 +21,7 @@ class ::Bcome::Workspace
     @context.irb_workspace = main_context.workspace if main_context
     @context.previous_irb_workspace = params[:current_context] if params[:current_context]
     set_irb_prompt
-    spawn_into_console_for_context 
+    spawn_into_console_for_context
     nil
   end
 

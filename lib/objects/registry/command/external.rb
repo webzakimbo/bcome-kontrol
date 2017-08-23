@@ -1,6 +1,5 @@
 module Bcome::Registry::Command
   class External < Base
-
     # In which the bcome context is passed to an external call
 
     def execute(node, arguments)
@@ -16,7 +15,7 @@ module Bcome::Registry::Command
     def construct_full_command(node, arguments)
       substituted_command = construct_substituted_command(arguments)
       namespaced_command = namespace_command(node, substituted_command)
-      return namespaced_command
+      namespaced_command
     end
 
     def construct_substituted_command(arguments)
@@ -27,12 +26,12 @@ module Bcome::Registry::Command
         substitute_with = merged_arguments[substitution.to_sym]
         unless substitute_with
           error_message_suffix = "- missing '#{substitution}' from command '#{local_command}'"
-          raise ::Bcome::Exception::MissingArgumentForRegistryCommand.new error_message_suffix
+          raise Bcome::Exception::MissingArgumentForRegistryCommand, error_message_suffix
         end
 
         substituted_command.gsub!("%#{substitution}%", substitute_with)
       end
-      return substituted_command
+      substituted_command
     end
 
     def namespace_command(node, command)
@@ -50,8 +49,7 @@ module Bcome::Registry::Command
     def do_pretty_print
       menu_str = super + "\n\s\s\s\slocal command:\s".resource_key + local_command.resource_value
       menu_str += "\n\s\s\s\sdefaults:\s".resource_key + defaults.inspect.resource_value
-      return menu_str + "\n\n"
+      menu_str + "\n\n"
     end
-
   end
 end

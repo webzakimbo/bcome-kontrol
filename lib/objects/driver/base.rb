@@ -1,6 +1,5 @@
 module Bcome::Driver
   class Base
-
     class << self
       def create_from_config(config)
         raise Bcome::Exception::InvalidNetworkDriverType, "Missing config parameter 'type'" unless config[:type]
@@ -26,6 +25,5 @@ module Bcome::Driver
     def config
       @params
     end
-
   end
 end

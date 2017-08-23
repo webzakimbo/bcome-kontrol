@@ -1,5 +1,4 @@
 class String
-
   include StringColourStylesheet
 
   # with thanks to http://simianuprising.com/wp-content/uploads/2012/08/solarized-reference-horizontal.png
@@ -60,6 +59,6 @@ class String
     colour_codes.keys.each do |colour_code|
       puts "#{colour_code}:  #{send(colour_code)} #{send(colour_code, :bold)} | #{send(colour_code, :highlight)}, #{send(colour_code, :highlight).bold}"
     end
-    return 
+    nil
   end
 end

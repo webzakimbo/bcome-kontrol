@@ -5,7 +5,7 @@ module Bcome::Parser
     class << self
       def parse(raw_crumbs)
         parser = new(raw_crumbs)
-        return parser.parse!
+        parser.parse!
       end
     end
 

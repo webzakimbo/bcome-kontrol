@@ -1,9 +1,8 @@
 module Bcome::Node::Server
   class Static < Bcome::Node::Server::Base
-
     def self.to_s
-      "static server"
-    end 
+      'static server'
+    end
 
     def initialize(params)
       config = params[:views]
@@ -15,12 +14,10 @@ module Bcome::Node::Server
       super
     end
 
-    def cloud_tags
-      @cloud_tags
-    end
+    attr_reader :cloud_tags
 
     def verify_we_have_at_least_one_interface(config)
-      raise ::Bcome::Exception::MissingIpaddressOnServer.new(config) unless has_at_least_one_interface?
+      raise Bcome::Exception::MissingIpaddressOnServer, config unless has_at_least_one_interface?
     end
 
     def has_at_least_one_interface?
@@ -29,7 +26,6 @@ module Bcome::Node::Server
 
     def static_server?
       true
-    end 
-
+    end
   end
 end

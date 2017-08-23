@@ -1,5 +1,4 @@
 module Bcome::WorkspaceCommands
-
   def ls(active_only = false)
     puts "\n\n" + visual_hierarchy.hierarchy + "\n"
     puts "\t" + "Available #{list_key}s:".title + "\n\n"
@@ -12,7 +11,7 @@ module Bcome::WorkspaceCommands
     new_line
     nil
   end
- 
+
   def lsa
     show_active_only = true
     ls(show_active_only)
@@ -38,24 +37,23 @@ module Bcome::WorkspaceCommands
 
   def list_in_tree(tab, resources)
     resources.sort_by(&:identifier).each do |resource|
-      unless resource.parent && !(resource.parent.resources.is_active_resource?(resource))
-        resource.load_nodes if resource.is_a?(Bcome::Node::Inventory) && !resource.nodes_loaded?   
-        print_tree_view_for_resource(tab, resource)
-        list_in_tree("#{tab}\t", resource.resources) 
-      end
+      next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
+      resource.load_nodes if resource.is_a?(Bcome::Node::Inventory) && !resource.nodes_loaded?
+      print_tree_view_for_resource(tab, resource)
+      list_in_tree("#{tab}\t", resource.resources)
     end
   end
 
   def print_tree_view_for_resource(tab, resource)
-    separator = "-"
+    separator = '-'
     tree_item = tab.to_s + separator.resource_key + " #{resource.type.resource_key} \s#{resource.identifier.resource_value}"
-    tree_item += " (empty set)" if !resource.server? && !resource.resources.has_active_nodes?
+    tree_item += ' (empty set)' if !resource.server? && !resource.resources.has_active_nodes?
     puts tree_item
   end
 
   def cd(identifier)
     if resource = resources.for_identifier(identifier)
-      if resource.parent.resources.is_active_resource?(resource) 
+      if resource.parent.resources.is_active_resource?(resource)
         ::Bcome::Workspace.instance.set(current_context: self, context: resource)
       else
         puts "\nCannot enter context - #{identifier} is disabled. To enable enter 'enable #{identifier}'\n".error
@@ -71,8 +69,8 @@ module Bcome::WorkspaceCommands
   end
 
   def run(*raw_commands)
-    raise ::Bcome::Exception::MethodInvocationRequiresParameter.new "Please specify commands when invoking 'run'" if raw_commands.empty?    
-    results = {} 
+    raise Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
+    results = {}
     machines.pmap do |machine|
       commands = machine.do_run(raw_commands)
       results[machine.namespace] = commands
@@ -92,7 +90,7 @@ module Bcome::WorkspaceCommands
       next unless attribute_value
 
       desc += "\t"
-      desc += is_active ? "#{key}".resource_key : "#{key}".resource_key_inactive
+      desc += is_active ? key.to_s.resource_key : key.to_s.resource_key_inactive
       desc += "\s" * (12 - key.length)
       attribute_value = value == :identifier ? attribute_value.underline : attribute_value
       desc += is_active ? attribute_value.resource_value : attribute_value.resource_value_inactive
@@ -107,35 +105,35 @@ module Bcome::WorkspaceCommands
   end
 
   def disable(*ids)
-    ids.each {|id| resources.do_disable(id) }
+    ids.each { |id| resources.do_disable(id) }
   end
 
   def enable(*ids)
-    ids.each {|id| resources.do_enable(id) }
+    ids.each { |id| resources.do_enable(id) }
   end
 
   def clear!
     # Clear any disabled selection at this level and at all levels below
     resources.clear!
-    resources.each {|r| r.clear! }
+    resources.each(&:clear!)
     nil
   end
 
   def workon(*ids)
     resources.disable!
-    ids.each {|id| resources.do_enable(id) }
-    puts "\nYou are now working on '#{ids.join(", ")}\n".informational
+    ids.each { |id| resources.do_enable(id) }
+    puts "\nYou are now working on '#{ids.join(', ')}\n".informational
   end
 
   def disable!
     resources.disable!
-    resources.each {|r| r.disable! }
+    resources.each(&:disable!)
     nil
   end
 
   def enable!
     resources.enable!
-    resources.each {|r| r.enable! }
+    resources.each(&:enable!)
     nil
   end
 
@@ -146,7 +144,7 @@ module Bcome::WorkspaceCommands
   end
 
   def is_node_level_method?(method_sym)
-    self.respond_to?(method_sym) || method_is_available_on_node?(method_sym) 
+    respond_to?(method_sym) || method_is_available_on_node?(method_sym)
   end
 
   def method_missing(method_sym, *arguments, &block)
@@ -163,11 +161,11 @@ module Bcome::WorkspaceCommands
   end
 
   def method_in_registry?(method_sym)
-    ::Bcome::Registry::CommandList.instance.command_in_list?(self, method_sym)  
+    ::Bcome::Registry::CommandList.instance.command_in_list?(self, method_sym)
   end
 
   def method_is_available_on_node?(method_sym)
-    return resource_identifiers.include?(method_sym.to_s) || instance_variable_defined?("@#{method_sym}") || method_in_registry?(method_sym) || respond_to?(method_sym)
+    resource_identifiers.include?(method_sym.to_s) || instance_variable_defined?("@#{method_sym}") || method_in_registry?(method_sym) || respond_to?(method_sym)
   end
 
   def visual_hierarchy

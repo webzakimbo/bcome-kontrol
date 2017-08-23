@@ -1,7 +1,5 @@
 module Bcome::Registry::Arguments
-
   class CommandLine < Base
-
     def initialize(arguments, defaults)
       @arguments = arguments ? arguments : []
       @processed_arguments = {}
@@ -20,19 +18,18 @@ module Bcome::Registry::Arguments
     private
 
     def parse_arguments
-      @arguments.each {|argument|
+      @arguments.each do |argument|
         argument =~ /^(.+)=(.+)$/
-        raise ::Bcome::Exception::MalformedCommandLineArguments.new argument unless $1 || $2
-        key = $1.to_sym ; value = $2
-        raise ::Bcome::Exception::DuplicateCommandLineArgumentKey.new "'#{key}'" if @processed_arguments.has_key?(key)
+        raise Bcome::Exception::MalformedCommandLineArguments, argument unless Regexp.last_match(1) || Regexp.last_match(2)
+        key = Regexp.last_match(1).to_sym; value = Regexp.last_match(2)
+        raise Bcome::Exception::DuplicateCommandLineArgumentKey, "'#{key}'" if @processed_arguments.key?(key)
         @processed_arguments[key] = value
-      }
+      end
     end
 
     def validate
-      raise ::Bcome::Exception::InvalidRegistryArgumentType.new "invalid argument format" unless @arguments.is_a?(Array)
+      raise Bcome::Exception::InvalidRegistryArgumentType, 'invalid argument format' unless @arguments.is_a?(Array)
       super
     end
-
   end
 end

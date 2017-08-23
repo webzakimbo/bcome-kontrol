@@ -1,64 +1,61 @@
 module StringColourStylesheet
-
   def error
-    self.bc_red.bold
+    bc_red.bold
   end
 
   def disabled
-    self.bc_white
+    bc_white
   end
 
   def title
-    self.bc_cyan.underline
+    bc_cyan.underline
   end
 
   def warning
-    self.bc_orange.bold
+    bc_orange.bold
   end
 
   def resource_key
-    self.bc_white
+    bc_white
   end
 
   def resource_key_inactive
-    self.bc_grey
+    bc_grey
   end
 
   def resource_value_inactive
-    self.bc_grey
+    bc_grey
   end
 
   def resource_value
-    self.bc_green
+    bc_green
   end
 
   def hierarchy
-    self.bc_green.bold
+    bc_green.bold
   end
 
   def informational
-    self.bc_blue
+    bc_blue
   end
 
   def instructional
-    self.bc_magenta
+    bc_magenta
   end
 
   def terminal_prompt
-    self.bc_cyan
+    bc_cyan
   end
-  
+
   def progress
-    self.bc_green
+    bc_green
   end
 
   def success
-    self.bc_green
+    bc_green
   end
 
   def namespace
-    self.bc_cyan
+    bc_cyan
   end
-
-
 end

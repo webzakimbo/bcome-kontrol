@@ -25,7 +25,7 @@ module ::Bcome::Ssh
       print_output unless ::Bcome::Orchestrator.instance.command_output_silenced?
     end
 
-    def ssh_exec!(ssh, command)  # NON PTY (i.e no pseudo-terminal)
+    def ssh_exec!(ssh, command) #  NON PTY (i.e no pseudo-terminal)
       ssh.open_channel do |channel|
         channel.exec(command.raw) do |_cha, success|
           unless success
@@ -51,6 +51,5 @@ module ::Bcome::Ssh
       end
       ssh.loop
     end
-
   end
 end

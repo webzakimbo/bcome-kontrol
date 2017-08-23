@@ -1,9 +1,8 @@
 module Bcome::Node::Server
   class Dynamic < Bcome::Node::Server::Base
     class << self
-
       def to_s
-        "dynamic server"
+        'dynamic server'
       end
 
       def new_from_fog_instance(fog_instance, parent)
@@ -30,12 +29,11 @@ module Bcome::Node::Server
 
     def do_generate_cloud_tags
       raw_tags = ec2_server ? ec2_server.tags.deep_symbolize_keys : {}
-      return ::Bcome::Node::Meta::Cloud.new(raw_tags)
+      ::Bcome::Node::Meta::Cloud.new(raw_tags)
     end
 
     def ec2_server
-      self.views[:ec2_server]
-    end  
-
+      views[:ec2_server]
+    end
   end
 end

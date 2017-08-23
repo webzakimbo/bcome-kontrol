@@ -1,6 +1,5 @@
 module Bcome::Node
   class CacheHandler
-
     def initialize(inventory_node)
       @inventory_node = inventory_node
     end
@@ -15,12 +14,11 @@ module Bcome::Node
       @inventory_node.views[:load_machines_from_cache] = true
       static_server_data = dynamic_nodes_to_cache_hash(nodes)
       @inventory_node.views[:static_servers] = static_server_data
-      return
-    end  
+      nil
+    end
 
     def dynamic_nodes_to_cache_hash(nodes)
-      nodes.collect{|node| node.cache_data }
-    end  
-
+      nodes.collect(&:cache_data)
+    end
   end
 end

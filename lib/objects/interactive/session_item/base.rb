@@ -1,6 +1,5 @@
 module Bcome::Interactive::SessionItem
   class Base
-
     def initialize(session, init_data)
       @session = session
       @init_data = init_data
@@ -33,6 +32,5 @@ module Bcome::Interactive::SessionItem
     def get_input(message = terminal_prompt)
       ::Readline.readline("\n#{message}", true).squeeze('').to_s
     end
-
   end
 end

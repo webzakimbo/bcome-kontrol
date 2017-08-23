@@ -6,8 +6,8 @@ module Bcome::Ssh
     PROXY_CONNECT_PREFIX = 'ssh -o StrictHostKeyChecking=no -W %h:%p'.freeze
     PROXY_SSH_PREFIX = 'ssh -o UserKnownHostsFile=/dev/null -o "ProxyCommand ssh -W %h:%p'.freeze
 
-    SCRIPTS_PATH = 'bcome/scripts'
- 
+    SCRIPTS_PATH = 'bcome/scripts'.freeze
+
     def initialize(config, context_node)
       @config = config
       @context_node = context_node
@@ -58,31 +58,30 @@ module Bcome::Ssh
     end
 
     def do_execute_script(script_name)
-      # TODO - work out how to execute our script using the existing SSH connection so that this process is faster
+      # TODO: - work out how to execute our script using the existing SSH connection so that this process is faster
       local_path_to_script = "#{SCRIPTS_PATH}/#{script_name}.sh"
-      raise ::Bcome::Exception::OrchestrationScriptDoesNotExist.new local_path_to_script unless File.exist?(local_path_to_script)
+      raise Bcome::Exception::OrchestrationScriptDoesNotExist, local_path_to_script unless File.exist?(local_path_to_script)
 
       # upload & then execute the file remotely... is not actually quicker, even though it re-uses existing ssh connection
-      #tmp_file_name = "#{script_name}-#{Time.now.to_i}.sh"
-      #remote_path = "/tmp/#{tmp_file_name}"
-      #@context_node.put local_path_to_script, remote_path  
-      #command = @context_node.run "bash #{remote_path}"
-      #@context_node.run "rm #{remote_path}"
-      #return command.first
+      # tmp_file_name = "#{script_name}-#{Time.now.to_i}.sh"
+      # remote_path = "/tmp/#{tmp_file_name}"
+      # @context_node.put local_path_to_script, remote_path
+      # command = @context_node.run "bash #{remote_path}"
+      # @context_node.run "rm #{remote_path}"
+      # return command.first
 
       execute_script_command = "#{ssh_command} \"bash -s\" < #{local_path_to_script}"
       command = ::Bcome::Command::Local.run(execute_script_command)
-      return command
-    end
-   
-    def ssh_command
-      if has_proxy?
-        command = "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_ip_address}"
-      else
-        command = "ssh #{user}@#{@context_node.public_ip_address}"
-      end
+      command
     end
 
+    def ssh_command
+      command = if has_proxy?
+                  "#{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_ip_address}"
+                else
+                  "ssh #{user}@#{@context_node.public_ip_address}"
+                end
+    end
 
     def user
       @config[:user] ? @config[:user] : fallback_local_user
@@ -112,7 +111,7 @@ module Bcome::Ssh
         raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
       rescue Errno::EPIPE => e
         raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
-      end 
+      end
       @ssh_con
     end
 
@@ -128,30 +127,30 @@ module Bcome::Ssh
     end
 
     def put(local_path, remote_path)
-      raise Bcome::Exception::MissingParamsForScp.new("'put' requires a local_path and a remote_path") if local_path.to_s.empty? || remote_path.to_s.empty?
+      raise Bcome::Exception::MissingParamsForScp, "'put' requires a local_path and a remote_path" if local_path.to_s.empty? || remote_path.to_s.empty?
       puts "\n(#{@context_node.namespace})\s".namespace + "Uploading #{local_path} to #{remote_path}\n".informational
-  
+
       begin
-        scp.upload!(local_path, remote_path, :recursive => true) do |ch, name, sent, total|
+        scp.upload!(local_path, remote_path, recursive: true) do |_ch, name, sent, total|
           puts "#{name}: #{sent}/#{total}".progress
         end
-      rescue Exception => e  # scp just throws generic exceptions :-/
+      rescue Exception => e # scp just throws generic exceptions :-/
         puts e.message.error
       end
-      return
+      nil
     end
 
     def get(remote_path, local_path)
-      raise Bcome::Exception::MissingParamsForScp.new("'get' requires a local_path and a remote_path") if local_path.to_s.empty? || remote_path.to_s.empty?
+      raise Bcome::Exception::MissingParamsForScp, "'get' requires a local_path and a remote_path" if local_path.to_s.empty? || remote_path.to_s.empty?
       puts "\n(#{@context_node.namespace})\s".namespace + "Downloading #{remote_path} to #{local_path}\n".informational
 
       begin
-      scp.download!(remote_path, local_path, :recursive => true) do |ch, name, sent, total|
-        puts "#{name}: #{sent}/#{total}".progress
-      end
+        scp.download!(remote_path, local_path, recursive: true) do |_ch, name, sent, total|
+          puts "#{name}: #{sent}/#{total}".progress
+        end
       rescue Exception => e # scp just throws generic exceptions :-/
         puts e.message.error
-      end  
+      end
     end
 
     def ssh_connection(_bootstrap = false)

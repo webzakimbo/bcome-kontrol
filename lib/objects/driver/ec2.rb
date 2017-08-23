@@ -1,10 +1,9 @@
 module Bcome::Driver
   class Ec2 < Bcome::Driver::Base
-
     def initialize(*params)
       super
-      raise Bcome::Exception::Ec2DriverMissingProvisioningRegion.new(params.inspect) unless provisioning_region
-    end 
+      raise Bcome::Exception::Ec2DriverMissingProvisioningRegion, params.inspect unless provisioning_region
+    end
 
     def fog_client
       @fog_client ||= get_fog_client
