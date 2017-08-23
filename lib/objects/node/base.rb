@@ -102,8 +102,8 @@ module Bcome::Node
             else
               send(method_name)
             end
-          rescue ArgumentError
-            raise ::Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine.new method_name
+          rescue ArgumentError => e
+            raise ::Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine.new method_name + "error message - #{e.message}"
           end
         else
           # Invoke a user defined (registry) method

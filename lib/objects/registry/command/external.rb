@@ -3,6 +3,7 @@ module Bcome::Registry::Command
     # In which the bcome context is passed to an external call
 
     def execute(node, arguments)
+
       full_command = construct_full_command(node, arguments)
       begin
         puts "\n(external) > #{full_command}".bc_blue + "\n\n"
