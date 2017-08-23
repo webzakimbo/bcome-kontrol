@@ -21,6 +21,7 @@ module Bcome::Registry::Command
 
     def initialize(data)
       @data = data
+      @data[:defaults] = {} unless @data[:defaults]
       validate
     end
 
