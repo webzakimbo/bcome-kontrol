@@ -268,7 +268,6 @@ class BootupTest < ActiveSupport::TestCase
 
   def test_should_raise_when_penultimate_crumb_references_neither_node_nor_invokable_method_nor_user_registry_method
     # Given
-    identifier = given_a_random_string_of_length(4)
     method_name = :i_dont_exist
     spawn_into_context = true
 
