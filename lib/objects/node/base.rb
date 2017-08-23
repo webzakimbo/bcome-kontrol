@@ -133,6 +133,11 @@ module Bcome::Node
       "#{ parent ? "#{parent.namespace}:" : "" }#{identifier}"
     end
 
+    def keyed_namespace
+      splits = namespace.split(":") ; 
+      splits[1..splits.size].join(":")
+    end
+
     def has_parent?
       !@parent.nil?
     end

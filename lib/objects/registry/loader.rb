@@ -18,7 +18,7 @@ module Bcome::Registry
 
       data.each do |key, commands|
         begin
-          if /^#{key.to_s}$/.match(node.namespace) 
+          if /^#{key.to_s}$/.match(node.keyed_namespace) 
             commands.each {|c|
               # Verify that the proposed user registered method does not conflict with either an existing method name, instance var, or other registry command name for this node
               if node.is_node_level_method?(c[:console_command]) || command_group.console_method_name_exists?(c[:console_command]) 

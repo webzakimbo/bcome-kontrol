@@ -28,7 +28,7 @@ class RegistryTest < ActiveSupport::TestCase
       namespace = given_a_random_string_of_length(3)
       node = mock("A mocked node")
       node.stubs(:is_node_level_method?).returns(false)
-      node.stubs(:namespace).returns(namespace)
+      node.stubs(:keyed_namespace).returns(namespace)
 
       # and a setup containing an arbitrary number of commands for that namespace
       group_name = given_a_random_string_of_length(5)
@@ -74,7 +74,7 @@ class RegistryTest < ActiveSupport::TestCase
       node = mock("A mocked node")
       node.stubs(:is_node_level_method?).returns(false)
 
-      node.stubs(:namespace).returns(namespace)
+      node.stubs(:keyed_namespace).returns(namespace)
    
       # and a 3 groups
       group_name_1 = given_a_random_string_of_length(5)
@@ -120,7 +120,7 @@ class RegistryTest < ActiveSupport::TestCase
       namespace = "i:am:invalid(" 
    
       node = mock("A mocked node")
-      node.stubs(:namespace).returns(namespace)
+      node.stubs(:keyed_namespace).returns(namespace)
 
       registry_data = {
         namespace =>
@@ -161,7 +161,7 @@ class RegistryTest < ActiveSupport::TestCase
 
       all_keys = keys_we_expect_to_match + keys_we_dont_expect_to_match
  
-      node.stubs(:namespace).returns(namespace)
+      node.stubs(:keyed_namespace).returns(namespace)
 
       registry_data = {}
       all_keys.each {|key|
@@ -191,7 +191,7 @@ class RegistryTest < ActiveSupport::TestCase
 
     node = mock("A mocked node")
     node.stubs(:is_node_level_method?).returns(false)
-    node.stubs(:namespace).returns(namespace)
+    node.stubs(:keyed_namespace).returns(namespace)
 
     node.expects(:is_a?).with(::Bcome::Node::Server::Base).returns(true)
 
@@ -225,7 +225,7 @@ class RegistryTest < ActiveSupport::TestCase
 
     node = mock("A mocked node")
     node.stubs(:is_node_level_method?).returns(false)
-    node.stubs(:namespace).returns(namespace)
+    node.stubs(:keyed_namespace).returns(namespace)
 
     node.expects(:is_a?).with(::Bcome::Node::Server::Base).returns(false)
     
@@ -386,7 +386,7 @@ class RegistryTest < ActiveSupport::TestCase
     # Given
     namespace = given_a_random_string_of_length(3)
     node = mock("whatever")
-    node.stubs(:namespace).returns(namespace)
+    node.stubs(:keyed_namespace).returns(namespace)
 
     blocked_console_method_name = :block_me
     node.stubs(:is_node_level_method?).returns(true)
@@ -418,7 +418,7 @@ class RegistryTest < ActiveSupport::TestCase
     namespace = given_a_random_string_of_length(3)
 
     node = mock("whatever")
-    node.stubs(:namespace).returns(namespace)
+    node.stubs(:keyed_namespace).returns(namespace)
     node.stubs(:is_node_level_method?).returns(false)
  
     duplicate_console_method_name = given_a_random_string_of_length(14)

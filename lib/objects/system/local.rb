@@ -2,7 +2,9 @@ module Bcome::System
   class Local
     include Singleton
 
-    def execute_command(raw_command)
+    def execute_command(raw_command, print_out_command = false)
+      puts "\n> #{raw_command}".bc_blue + "\n" if print_out_command
+
       local_command = command(raw_command)
       if local_command.failed? && !in_console_session?
         # we fail fast if we're not in a console session

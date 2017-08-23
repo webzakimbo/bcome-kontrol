@@ -26,14 +26,15 @@ module Bcome::Registry::Command
     end
 
     def process_arguments(arguments)
-      # Arguments are either provided as an Array (command line invocation), or as a Hash (console invocation)
-      if arguments.is_a?(Array)
-        ::Bcome::Registry::Arguments::CommandLine.process(arguments, defaults)
-      elsif arguments.is_a?(Hash)
-        raise "Write processor for console based arguments"
-      else
-        raise "Handle invalid arguments"
+      merged_arguments = {}
+
+      if [Array, Hash].include?(arguments.class)
+        processor_klass = arguments.is_a?(Array) ? ::Bcome::Registry::Arguments::CommandLine : ::Bcome::Registry::Arguments::Console
+        merged_arguments = processor_klass.process(arguments, defaults)
+      elsif defaults
+        merged_arguments = defaults
       end
+      return merged_arguments
     end
 
     def execute(*params)

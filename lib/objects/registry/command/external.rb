@@ -4,13 +4,43 @@ module Bcome::Registry::Command
     # In which the bcome context is passed to an external call
 
     def execute(node, arguments)
-      # arguments   raise if substitution and no default value set
-      # local_command
-      process_arguments(arguments)
+      full_command = construct_full_command(node, arguments)
+      begin
+        puts "\n(external) > #{full_command}".bc_blue + "\n\n"
+        system(full_command)
+      rescue Interrupt
+        puts "\nExiting gracefully from interrupt\n".warning
+      end
+    end
+
+    def construct_full_command(node, arguments)
+      substituted_command = construct_substituted_command(arguments)
+      namespaced_command = namespace_command(node, substituted_command)
+      return namespaced_command
+    end
+
+    def construct_substituted_command(arguments)
+      substituted_command = local_command
+      merged_arguments = process_arguments(arguments)
+
+      local_command_substitutions.each do |substitution|
+        substitute_with = merged_arguments[substitution.to_sym]
+        unless substitute_with
+          error_message_suffix = "- missing '#{substitution}' from command '#{local_command}'"
+          raise ::Bcome::Exception::MissingArgumentForRegistryCommand.new error_message_suffix
+        end
+
+        substituted_command.gsub!("%#{substitution}%", substitute_with)
+      end
+      return substituted_command
+    end
+
+    def namespace_command(node, command)
+      "#{command} bcome_context=\"#{node.keyed_namespace}\""
     end
 
     def local_command_substitutions
-      local_command.scan(/%\d+%/).uniq
+      local_command.scan(/%(.+)%/).uniq.flatten
     end
 
     def expected_keys

@@ -11,19 +11,19 @@ module Bcome::Registry
     end  
 
     def add_group_for_node(node, group)
-      @groups_for_nodes[node.namespace] = group
+      @groups_for_nodes[node.keyed_namespace] = group
     end
 
     def group_for_node(node)
-      @groups_for_nodes[node.namespace]
+      @groups_for_nodes[node.keyed_namespace]
     end
     
     def register(node, command_name)
-      @list[node.namespace] ? (@list[node.namespace] << command_name) : (@list[node.namespace] = [command_name])
+      @list[node.keyed_namespace] ? (@list[node.keyed_namespace] << command_name) : (@list[node.keyed_namespace] = [command_name])
     end
 
     def command_in_list?(node, command_name)
-      @list.has_key?(node.namespace) && @list[node.namespace].include?(command_name.to_sym)
+      @list.has_key?(node.keyed_namespace) && @list[node.keyed_namespace].include?(command_name.to_sym)
     end
 
     def teardown!
