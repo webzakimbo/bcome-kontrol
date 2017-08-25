@@ -28,5 +28,6 @@ module Bcome::Node
       end
       m.flatten
     end
+
   end
 end

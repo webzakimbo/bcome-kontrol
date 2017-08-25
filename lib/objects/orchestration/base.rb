@@ -2,8 +2,7 @@ module Bcome::Orchestration
   class Base
 
     def execute(keyed_namespace)
-      # TODO - we need a better way of keying into contexts without calling bootup.do every times as we've already loaded everything in
-
+      puts "Executing #{self.class} for #{keyed_namespace}"
       # currently we: context = ::Bcome::Bootup.orchestrate(breadcrumb) 
       # but this actually ends up back at Bcome::Node::Factory and it reloads... so how can we avoid a reload?
 

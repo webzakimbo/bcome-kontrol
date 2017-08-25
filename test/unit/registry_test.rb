@@ -452,5 +452,20 @@ class RegistryTest < ActiveSupport::TestCase
     assert_raise ::Bcome::Exception::MethodNameConflictInRegistry do
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(node)
     end
-  end 
+  end
+
+  def test_should_correctly_create_an_internally_process_context_command
+    # test that it has an accessor on it for the class we're going to execute
+    # test it raises when the class is not present
+    # test we can evaluate the class and that it exists
+    # test that class can be executed
+    # test that class is passed namespace (keyed) and that we can then traverse the context to retrieve it
+    # test that the user generated class has the correct interface (i.e. do(context))
+    # test that the context is then passed to the user generated class method
+    # test that we can call other internally processed class from the main class
+
+  end
+
+
+
 end
