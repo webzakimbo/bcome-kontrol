@@ -3,7 +3,7 @@ module Bcome::Registry::Command
     # In which the bcome context is passed to an external call
 
     def expected_keys
-      super + []
+      super + [:orch_klass]
     end
   end
 end
