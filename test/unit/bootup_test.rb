@@ -6,14 +6,22 @@ load "#{File.dirname(__FILE__)}/bootup_helper.rb"
 class BootupTest < ActiveSupport::TestCase
   include UnitTestHelper
 
+  setup do
+    Bcome::Bootup.instance.send(:teardown!)
+  end
+
+  teardown do
+    Bcome::Bootup.instance.send(:teardown!)
+  end
+
   def test_should_initialize_a_bootup
     # Given
     breadcrumbs = 'foo:bar'
     argument = given_a_random_string_of_length(5)
 
     # When
-    bootup = ::Bcome::Bootup.new(breadcrumbs: breadcrumbs,
-                                 arguments: argument)
+    ::Bcome::Bootup.instance.set({ breadcrumbs: breadcrumbs, arguments: argument })
+    bootup = ::Bcome::Bootup.instance
 
     # Then
     assert bootup.breadcrumbs == breadcrumbs
@@ -29,15 +37,16 @@ class BootupTest < ActiveSupport::TestCase
     breadcrumbs = "#{crumb1}:#{crumb2}"
 
     # When
-    bootup = ::Bcome::Bootup.new(breadcrumbs: breadcrumbs)
+    ::Bcome::Bootup.instance.set(breadcrumbs: breadcrumbs)
 
     # Then
-    assert bootup.crumbs == [crumb1, crumb2]
+    assert ::Bcome::Bootup.instance.crumbs == [crumb1, crumb2]
   end
 
   def test_should_initialize_estate_tree_to_get_estate
     # Given
-    bootup = ::Bcome::Bootup.new(breadcrumbs: nil)
+    ::Bcome::Bootup.instance.set(breadcrumbs: nil)
+    bootup = ::Bcome::Bootup.instance
 
     estate = Bcome::Node::Collection.new(given_estate_setup_params)
     factory = ::Bcome::Node::Factory.send(:new)
@@ -55,7 +64,8 @@ class BootupTest < ActiveSupport::TestCase
   def test_should_set_context_if_no_crumbs
     # Given
     spawn_into_context = true
-    bootup = ::Bcome::Bootup.new({ breadcrumbs: nil }, spawn_into_context)
+    ::Bcome::Bootup.instance.set({ breadcrumbs: nil }, spawn_into_context)
+    bootup = ::Bcome::Bootup.instance
 
     estate = Bcome::Node::Collection.new(given_estate_setup_params)
     bootup.expects(:estate).returns(estate)
@@ -70,7 +80,8 @@ class BootupTest < ActiveSupport::TestCase
 
   def test_should_traverse_tree_if_crumbs
     # Given
-    bootup = ::Bcome::Bootup.new(breadcrumbs: 'foo:bar')
+    ::Bcome::Bootup.instance.set(breadcrumbs: 'foo:bar')
+    bootup = ::Bcome::Bootup.instance
 
     assert bootup.crumbs.size == 2
 
@@ -81,7 +92,7 @@ class BootupTest < ActiveSupport::TestCase
     # When/then
     bootup.do
   end
-
+  
   def test_should_traverse_dummy_tree
     # Given
     estate = given_a_dummy_estate
@@ -100,7 +111,7 @@ class BootupTest < ActiveSupport::TestCase
     ::Bcome::Workspace.instance.expects(:set).with(context: found_context)
 
     # When/then
-    ::Bcome::Bootup.do(breadcrumbs: breadcrumbs)
+    ::Bcome::Bootup.set_and_do(breadcrumbs: breadcrumbs)
   end
 
   def test_should_invoke_crumb_as_method_on_context
@@ -121,7 +132,7 @@ class BootupTest < ActiveSupport::TestCase
     ::Bcome::Node::Factory.expects(:instance).returns(factory)
 
     # When/then
-    ::Bcome::Bootup.do(breadcrumbs: breadcrumbs)
+    ::Bcome::Bootup.set_and_do(breadcrumbs: breadcrumbs)
   end
 
   def test_should_invoke_crumb_as_method_on_context_passing_in_an_argument
@@ -143,7 +154,7 @@ class BootupTest < ActiveSupport::TestCase
     found_context.expects(:invoke).with('five', argument)
 
     # When/then
-    ::Bcome::Bootup.do(breadcrumbs: breadcrumbs, arguments: argument)
+    ::Bcome::Bootup.set_and_do(breadcrumbs: breadcrumbs, arguments: argument)
   end
 
   def test_should_be_able_to_pass_an_argument_to_an_invoked_method_on_a_context
@@ -170,7 +181,7 @@ class BootupTest < ActiveSupport::TestCase
     Bcome::Node::Factory.expects(:instance).returns(factory)
 
     # When/then
-    ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", arguments: arguments)
+    ::Bcome::Bootup.set_and_do(breadcrumbs: "#{identifier}:#{method_name}", arguments: arguments)
 
     # And all our expectations are met
   end
@@ -198,7 +209,7 @@ class BootupTest < ActiveSupport::TestCase
     Bcome::Node::Factory.expects(:instance).returns(factory)
 
     # When/then
-    ::Bcome::Bootup.do(breadcrumbs: "#{identifier}:#{method_name}", arguments: nil)
+    ::Bcome::Bootup.set_and_do(breadcrumbs: "#{identifier}:#{method_name}", arguments: nil)
 
     # And all our expectations are met
   end
@@ -226,11 +237,11 @@ class BootupTest < ActiveSupport::TestCase
     Bcome::Node::Factory.expects(:instance).returns(estate_instance)
 
     spawn_into_context = true
-    bootup = ::Bcome::Bootup.new( {breadcrumbs: "#{identifier}:#{method_name}", arguments: nil}, spawn_into_context)
+    ::Bcome::Bootup.instance.set( {breadcrumbs: "#{identifier}:#{method_name}", arguments: nil}, spawn_into_context)
 
     # When/then
     assert_raise Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine do
-      bootup.do
+      ::Bcome::Bootup.instance.do
     end
     # And all our expectations are met
   end
@@ -257,11 +268,11 @@ class BootupTest < ActiveSupport::TestCase
     Bcome::Node::Factory.expects(:instance).returns(estate_instance)
  
     spawn_into_context = true
-    bootup = ::Bcome::Bootup.new({ breadcrumbs: "#{identifier}:#{method_name}", arguments: nil }, spawn_into_context)
+    ::Bcome::Bootup.instance.set({ breadcrumbs: "#{identifier}:#{method_name}", arguments: nil }, spawn_into_context)
 
     # When/then
     assert_raise Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine do
-      bootup.do
+      ::Bcome::Bootup.instance.do
     end
     # and also that all our expectations are met
   end
@@ -282,12 +293,11 @@ class BootupTest < ActiveSupport::TestCase
     estate_instance = Bcome::Node::Factory.send(:new)
     Bcome::Node::Factory.expects(:instance).returns(estate_instance)
 
-    bootup = ::Bcome::Bootup.new({ breadcrumbs: method_name, arguments: nil}, spawn_into_context)
+    ::Bcome::Bootup.instance.set({ breadcrumbs: method_name, arguments: nil}, spawn_into_context)
 
     # When/then
     assert_raise Bcome::Exception::InvalidBreadcrumb do
-      bootup.do
+      ::Bcome::Bootup.instance.do
     end
   end
-
 end

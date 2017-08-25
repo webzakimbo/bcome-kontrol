@@ -16,7 +16,7 @@ class ::Bcome::Orchestrator
   end
 
   def get(breadcrumb = nil)
-    context = ::Bcome::Bootup.orchestrate(breadcrumb)
+    context = ::Bcome::Bootup.traverse(breadcrumb)
     context.load_nodes if context.is_a?(::Bcome::Node::Inventory) && !context.nodes_loaded?
     context
   end

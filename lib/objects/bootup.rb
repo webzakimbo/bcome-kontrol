@@ -1,33 +1,33 @@
 module Bcome
   class Bootup
-    class << self
-      def do(params, spawn_into_console = true)
-        bootup = new(params, spawn_into_console)
-        context = bootup.do
-        return context
+
+    def self.set_and_do(params, spawn_into_console = true)
+        instance.set(params, spawn_into_console)
+        instance.do
       rescue Bcome::Exception::Base => e
         puts e.pretty_display
       rescue Excon::Error::Socket => e
         puts "\nNo network access - please check your connection and try again\n".red
-      end
-
-      def orchestrate(breadcrumbs = nil, spawn_into_console = false)
-        spawn_into_console = false
-        context = ::Bcome::Bootup.do({ breadcrumbs: breadcrumbs }, spawn_into_console)
-        context
-      end
     end
+
+    def self.traverse(breadcrumbs = nil, spawn_into_console = false)  # TODO - don't do this, call the above instead
+      spawn_into_console = false
+      ::Bcome::Bootup.set_and_do({ breadcrumbs: breadcrumbs }, spawn_into_console)
+    end
+
+    include Singleton
 
     attr_reader :breadcrumbs, :arguments
 
-    def initialize(params, spawn_into_console = false)
+    def set(params, spawn_into_console = false)
       @breadcrumbs = params[:breadcrumbs]
       @arguments = params[:arguments]
       @spawn_into_console = spawn_into_console
-    end
+    end 
 
     def do
-      crumbs.empty? ? init_context(estate) : traverse(estate)
+      context = crumbs.empty? ? init_context(estate) : traverse(estate)
+      return context
     end
 
     def init_context(context)
@@ -66,11 +66,18 @@ module Bcome
     end
 
     def parser
-      @parser ||= ::Bcome::Parser::BreadCrumb.new(@breadcrumbs)
+      ::Bcome::Parser::BreadCrumb.new(@breadcrumbs)
     end
 
     def crumbs
       parser.crumbs
     end
+
+    private
+
+    def teardown!
+      @estate = nil
+    end
+
   end
 end
