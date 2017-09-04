@@ -29,5 +29,9 @@ module Bcome::Node
       m.flatten
     end
 
+    def collection?
+      true
+    end
+
   end
 end

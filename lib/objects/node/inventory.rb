@@ -25,6 +25,10 @@ module Bcome::Node
       matches_for(data_wrapper, matchers)
     end
 
+    def machine_by_identifier(identifier)    # TODO - document this as being a selector for orchestration (as well as the cloud matches thing)
+      return resources.active.select {|machine| machine.identifier == identifier }.first
+    end
+
     def matches_for(data_wrapper, matchers)
       resources.active.select do |machine|
         machine.send(data_wrapper).has_key_and_value?(matchers)
@@ -136,6 +140,10 @@ module Bcome::Node
       resources.unset!
       load_dynamic_nodes
       puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".informational
+    end
+
+    def inventory?
+      true
     end
 
     def override_server_identifier?

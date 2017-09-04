@@ -33,6 +33,18 @@ module Bcome::Node
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
     end
 
+    def collection?
+      false
+    end
+
+    def inventory?
+      false
+    end
+
+    def server?
+      false
+    end
+
     def enabled_menu_items
       [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :interactive, :tree, :ping, :put, :cd, :reload, :meta, :registry] 
     end
@@ -63,10 +75,6 @@ module Bcome::Node
       raise ::Bcome::Exception::MissingIdentifierOnView.new(@views.inspect) unless @identifier
       raise ::Bcome::Exception::InvalidIdentifier.new("'#{@identifier}' contains whitespace") if @identifier =~ /\s/
     end
-
-    def server?
-      false
-    end  
 
     def requires_description?
       true
