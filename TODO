@@ -1,23 +1,35 @@
 
+
+DOCUMENTATION
+
+* Orchetration (internal) -
+# TODO
+    # Document that @node & @arguments are available
+    # Execute the above
+    # Call another Orch class from this one (passing it a context by keyed_namespace)
+    # Method to create some kind of workflow? i.e. capture the return code perhaps and exit? continue for success? Need to define what a successful return code is (0, 2) etc
+    # Document
+    # - the select accessors available at inventory & collection level (e.g. how do I fetch a machine?),
+    # - document cloud matches
+    # - document traversing between contexts... stress @node is where the command was available at, but doesn't mean you're restricted to that particular node
+
+
+## BUG / BAD DESIGN:  We do not specify from the base namespace when keying into something, e.g. we ommit 'ewok' when defining our proxy server...
+
+** Patterns when setting up networks.yml
+
+one project with multipe environments 
+multiple projects spready across different hosts or hosting accounts etc
+
+
+
 MENU
 
-  ** smaller menu item when not in console to exclude things that you can't do from external (if any) ... stuff like  'workon', 'enable', 'disable' makes no sense
-
-
-A. Collapse views or selections from views into 1?
-
 C. Orchestration
-
-Need to be able to
-1. Script with full estate (default config)
-2. Script with partial estate (default config & a traversal)
-3. Pass CONF= to the script we want to run
 
 .bcomerc ?
 
 Aims
-- Write scripts that can interact with all machines within a view
-- Ability to orchestrate across networks & web hosts, on static or dynamic instances
 - Include a generator to generate an orchestration file: this would be an initialization file (so can code around it as part of a bigger framework if we want). Init file to include as minimum
   some comments on top as to how to run it, its namespace etc
 
