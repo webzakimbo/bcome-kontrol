@@ -7,7 +7,7 @@ module Bcome::Node
     def inventories
       inv = []
       @resources.active.each do |r|
-        inv << if r.is_a?(Bcome::Node::Inventory)
+        inv << if r.inventory?
                  r
                else
                  r.inventories
@@ -19,7 +19,7 @@ module Bcome::Node
     def machines
       m = []
       @resources.active.each do |resource|
-        if resource.is_a?(::Bcome::Node::Inventory)
+        if resource.inventory?
           resource.load_nodes unless resource.nodes_loaded?
           m << resource.resources.active
         else

@@ -8,6 +8,7 @@ module Bcome::Node
     DEFAULT_CONFIG_NAME = 'networks.yml'.freeze
     INVENTORY_KEY = 'inventory'.freeze
     COLLECTION_KEY = 'collection'.freeze
+    SUBSELECT_KEY = 'inventory-subselect'.freeze
     BCOME_RC_FILENAME = '.bcomerc'.freeze
 
     def init_tree
@@ -63,7 +64,8 @@ module Bcome::Node
     def klass_for_view_type
       {
         COLLECTION_KEY => ::Bcome::Node::Collection,
-        INVENTORY_KEY => ::Bcome::Node::Inventory
+        INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
+        SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect
       }
     end
 
