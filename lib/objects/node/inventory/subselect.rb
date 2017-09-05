@@ -4,27 +4,19 @@ module Bcome::Node::Inventory
     def initialize(*params)
       super
       raise ::Bcome::Exception::MissingSubselectionKey.new @views if !@views[:subselect_from] 
-      #load_parent_inventory
-      # raise ::Bcome::Exception::InvalidSubSelectionKey.new @views if key is not a valid crumb
-      # load the nodes on the parent if not yet loaded
+    end
+
+    def parent_inventory
+      @parent_inventory ||= load_parent_inventory
     end
 
     def load_parent_inventory
       parent_crumb = @views[:subselect_from]
       @parent_crumb = ::Bcome::Orchestrator.instance.get(parent_crumb)
-      raise ::Bcome::Exception::SubSelectionMissingParent.new @views if !@parent_crumb
-
-      raise ::Bcome::Exception::CanOnlySubSelectOnInventory.new @views unless @parent_crumb.inventory? # Includes both defined inventory, and other sub-selections
+      raise ::Bcome::Exception::CanOnlySubselectOnInventory.new "breadcrumb'#{parent_crumb}' represents a #{@parent_crumb.class}'" unless @parent_crumb.inventory? # Includes both defined inventory, and other sub-selections
+      @parent_crumb
     end
  
- #   def resources
- #     @resources ||= 
- #   end 
-
-
-
-
-
     # TODO
     # Unit test the creation of these sub-selects.
     # Sub-select rationale:  1. We can get the machine yaml config down even smaller by removing duplication of nodes 2. We move a little close to merging disparate networks into one view, although unsure yet
