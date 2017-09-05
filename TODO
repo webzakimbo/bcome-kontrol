@@ -1,5 +1,9 @@
 
 
+# Can we pin the version of IRB in the Gemfile?
+# Subselects:  Have concept of invisibile views?  That way we can setup  a parent view and have it hidden, and just show the subselects should we so wish.  NICE.
+
+
 DOCUMENTATION
 
 * Orchetration (internal) -
