@@ -11,6 +11,8 @@ module Bcome::Node::Resources
       parent_inventory.load_nodes unless parent_inventory.nodes_loaded?
       # TODO - this is our flex point: subselected nodes are the same as the parents
       # TODO - pass in ec2_filters & test for presence of filters. empty filters = {}
+      # TODO - sub inventories that are the union of two or more other inventories (merged inventories?)
+      # TODO -  def save ; puts "'save' is not availble on sub-selected views" ; end
       @nodes = parent_inventory.resources.nodes
     end
 
