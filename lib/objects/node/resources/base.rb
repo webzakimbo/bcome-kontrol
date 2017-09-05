@@ -2,13 +2,19 @@ module Bcome::Node::Resources
   class Base
     include Enumerable
 
-    def initialize
+    attr_reader :nodes
+
+    def initialize(*params)
       @nodes = []
       @disabled_resources = []
     end
 
     def each
       @nodes.each { |node| yield(node) }
+    end
+
+    def merge_from(other_resources)
+      @nodes = other_resources.nodes
     end
 
     def <<(node)

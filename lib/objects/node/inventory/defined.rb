@@ -80,7 +80,6 @@ module Bcome::Node::Inventory
     end
 
     def load_nodes
-      puts "In load nodes for #{namespace}"
       set_static_servers
       load_dynamic_nodes unless @load_machines_from_cache
     end

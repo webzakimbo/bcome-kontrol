@@ -10,13 +10,14 @@ module Bcome::Node::Inventory
       @parent_inventory ||= load_parent_inventory
     end
 
-    def load_parent_inventory
-      parent_crumb = @views[:subselect_from]
-      @parent_crumb = ::Bcome::Orchestrator.instance.get(parent_crumb)
-      raise ::Bcome::Exception::CanOnlySubselectOnInventory.new "breadcrumb'#{parent_crumb}' represents a #{@parent_crumb.class}'" unless @parent_crumb.inventory? # Includes both defined inventory, and other sub-selections
-      @parent_crumb
+    def resources
+      @resources ||= ::Bcome::Node::Resources::SubselectInventory.new(:parent_crumb => @views[:subselect_from])
     end
- 
+
+    def nodes_loaded?
+      true 
+    end
+
     # TODO
     # Unit test the creation of these sub-selects.
     # Sub-select rationale:  1. We can get the machine yaml config down even smaller by removing duplication of nodes 2. We move a little close to merging disparate networks into one view, although unsure yet
@@ -33,14 +34,6 @@ module Bcome::Node::Inventory
       # TODO - Delegate down to the parent inventory and reload that, which will refresh this view 
       super
     end
-
-    def load_nodes
-      puts "Gotcha: Load from defined parent"
-      # validate subselect has defined parent
-      # traverse to it, and then cache on the subselect
-      # load nodes from that, and apply the subselect
-    end
-
 
   end
 end
