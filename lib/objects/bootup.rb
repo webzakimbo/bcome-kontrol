@@ -41,6 +41,7 @@ module Bcome
     def traverse(starting_context)
       starting_context = estate
       crumbs.each_with_index do |crumb, _index|
+
         # Some contexts' resources are loaded dynamically and do not come from the estate config. As we're traversing, we'll need to load
         # them if necessary
         starting_context.load_nodes if starting_context.inventory? && !starting_context.nodes_loaded?

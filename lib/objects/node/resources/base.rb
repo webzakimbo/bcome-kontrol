@@ -13,10 +13,6 @@ module Bcome::Node::Resources
       @nodes.each { |node| yield(node) }
     end
 
-    def merge_from(other_resources)
-      @nodes = other_resources.nodes
-    end
-
     def <<(node)
       existing_node = for_identifier(node.identifier)
       if existing_node

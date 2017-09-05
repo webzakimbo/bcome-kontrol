@@ -11,6 +11,10 @@ module Bcome::Node
     SUBSELECT_KEY = 'inventory-subselect'.freeze
     BCOME_RC_FILENAME = '.bcomerc'.freeze
 
+    def bucket
+      @bucket ||= {}
+    end
+
     def init_tree
       @estate = create_node(estate_config)
       @estate
@@ -48,6 +52,9 @@ module Bcome::Node
       node = klass.new(views: config, parent: parent)
       create_tree(node, config[:views]) if config[:views] && config[:views].any?
       parent.resources << node if parent
+
+      bucket[node.keyed_namespace] = node
+
       node
     end
 
