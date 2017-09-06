@@ -11,7 +11,8 @@ backlog
   Pin the version of IRB in the gemfile
   Allow hide views so that we can have "all" type views that are used as the basis for further subselects
   orchestration:  1. Call one internal orchestration class from another 2. Mechanism to setup some kind of workflow (involves error code handling)
-
+  implement puppet_sync in full in our installation project. 
+ 
 bugs
   interactive mode bug
   deadlock bug on parallel processing
