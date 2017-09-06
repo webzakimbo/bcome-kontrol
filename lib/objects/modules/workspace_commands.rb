@@ -2,12 +2,19 @@ module Bcome::WorkspaceCommands
   def ls(active_only = false)
     puts "\n\n" + visual_hierarchy.hierarchy + "\n"
     puts "\t" + "Available #{list_key}s:".title + "\n\n"
+
     iterate_over = active_only ? @resources.active : @resources
-    iterate_over.sort_by(&:identifier).each do |resource|
-      is_active = @resources.is_active_resource?(resource)
-      puts resource.pretty_description(is_active)
-      puts "\n"
+ 
+    if iterate_over.any?
+      iterate_over.sort_by(&:identifier).each do |resource|
+        is_active = @resources.is_active_resource?(resource)
+        puts resource.pretty_description(is_active)
+        puts "\n"
+      end
+    else
+      puts "\tNo resources found".informational
     end
+
     new_line
     nil
   end

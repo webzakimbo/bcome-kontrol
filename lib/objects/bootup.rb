@@ -10,7 +10,7 @@ module Bcome
         puts "\nNo network access - please check your connection and try again\n".red
     end
 
-    def self.traverse(breadcrumbs = nil, spawn_into_console = false)  # TODO - don't do this, call the above instead
+    def self.traverse(breadcrumbs = nil, spawn_into_console = false) 
       spawn_into_console = false
       ::Bcome::Bootup.set_and_do({ breadcrumbs: breadcrumbs }, spawn_into_console)
     end

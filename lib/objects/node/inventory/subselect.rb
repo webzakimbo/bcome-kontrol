@@ -15,13 +15,12 @@ module Bcome::Node::Inventory
       @resources ||= do_set_resources
     end
 
-    # TODO - messy as FUCK
     def update_nodes
       resources.update_nodes(self)
     end
 
     def do_set_resources 
-      ::Bcome::Node::Resources::SubselectInventory.new(:parent_crumb => @views[:subselect_from], :filters => filters)
+      ::Bcome::Node::Resources::SubselectInventory.new(:parent_inventory => parent_inventory, :filters => filters)
     end
 
     def nodes_loaded?
@@ -33,22 +32,28 @@ module Bcome::Node::Inventory
       @views[:filters] ? @views[:filters] : {}
     end
 
-    # TODO
-    # TODO - test creating a subselet from another subselect
-    # TODO - if not available servers, then  "No servers found"
-    # Unit test the creation of these sub-selects.
-    # !!  TODO - a sub-select does not contain ssh connection stuff: this is inherited from the parent inventory: this is how we can then merge networks into views. WOW.  This is going to work 
-    # TODO - subseletion may be valid but return no results, so indicate this with a friendly message
-    # TODO - sub inventories that are the union of two or more other inventories (merged inventories?)
-    # TODO -  def save ; puts "'save' is not availble on sub-selected views" ; end
-
     def self.to_s
       'sub-inventory'
     end
 
-    def reload
-      # TODO - Delegate down to the parent inventory and reload that, which will refresh this view 
-      super
+    def do_reload
+      parent_inventory.do_reload
+      resources.run_subselect
+      update_nodes
+    end
+
+    private
+
+    def parent_inventory
+      @parent_inventory ||= load_parent_inventory
+    end
+
+    def load_parent_inventory
+      parent_crumb = @views[:subselect_from]
+      parent = ::Bcome::Node::Factory.instance.bucket[parent_crumb] 
+      raise ::Bcome::Exception::CannotFindSubselectionParent.new "for key '#{parent_crumb}'" unless parent
+      raise ::Bcome::Exception::CanOnlySubselectOnInventory.new "breadcrumb'#{parent_crumb}' represents a #{parent.class}'" unless parent.inventory?
+      parent
     end
 
   end

@@ -8,7 +8,6 @@ module Bcome::Registry::Command
         processed_arguments = process_arguments(arguments)
         orchestrator = orch_klass.new(node, arguments)
         orchestrator.do_execute 
-        # TODO - think about how to return exist codes, and report on success. Handled here rather than internally.
       rescue Interrupt
         puts "\nExiting gracefully from interrupt\n".warning
       end

@@ -73,10 +73,9 @@ module Bcome::Node::Inventory
       @cache_handler.do_cache_nodes!
     end
 
-    def reload
+    def do_reload
       resources.unset!
-      load_dynamic_nodes
-      puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".informational
+      load_dynamic_nodes 
     end
 
     def load_nodes

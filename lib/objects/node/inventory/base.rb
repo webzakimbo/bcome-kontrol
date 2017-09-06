@@ -16,7 +16,7 @@ module Bcome::Node::Inventory
       matches_for(data_wrapper, matchers)
     end
 
-    def machine_by_identifier(identifier)    # TODO - document this as being a selector for orchestration (as well as the cloud matches thing)
+    def machine_by_identifier(identifier)    
       return resources.active.select {|machine| machine.identifier == identifier }.first
     end
 
@@ -78,7 +78,8 @@ module Bcome::Node::Inventory
     end
 
     def reload
-      raise "Should be overridden"
+      do_reload
+      puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".informational
     end
 
     def inventory?

@@ -6,8 +6,10 @@
 
 DOCUMENTATION
 
-* Orchetration (internal) -
-# TODO
+lib/objects/nodes/inventory/base.rb  def machine_by_identifier(identifier)    #  document this as being a selector for orchestration (as well as the cloud matches thing)
+
+
+* Orchestration (internal) -
     # Document that @node & @arguments are available
     # Execute the above
     # Call another Orch class from this one (passing it a context by keyed_namespace)
@@ -17,6 +19,9 @@ DOCUMENTATION
     # - document cloud matches
     # - document traversing between contexts... stress @node is where the command was available at, but doesn't mean you're restricted to that particular node
 
+* Sub-selects
+  A new kind of sub-select that unions two or more other inventories
+  SSH connection details must come from its origin inventory
 
 ## BUG / BAD DESIGN:  We do not specify from the base namespace when keying into something, e.g. we ommit 'ewok' when defining our proxy server...
 

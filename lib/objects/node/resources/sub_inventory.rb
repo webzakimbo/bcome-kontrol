@@ -51,17 +51,8 @@ module Bcome::Node::Resources
     end
 
     def parent_inventory
-      @parent_inventory ||= load_parent_inventory
+      @config[:parent_inventory]
     end
-
-    def load_parent_inventory
-      parent_crumb = @config[:parent_crumb]
-      parent = ::Bcome::Node::Factory.instance.bucket[parent_crumb]  # TODO - this is a better way of grabbing a context than ORCH.get which does a traverse.  REPLACE
-      raise ::Bcome::Exception::CannotFindSubselectionParent.new "for key '#{parent_crumb}'" unless parent   
-      raise ::Bcome::Exception::CanOnlySubselectOnInventory.new "breadcrumb'#{parent_crumb}' represents a #{parent.class}'" unless parent.inventory? 
-      parent
-    end
-
 
   end
 end

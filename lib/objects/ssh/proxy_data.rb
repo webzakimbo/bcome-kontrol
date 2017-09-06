@@ -17,7 +17,7 @@ module Bcome::Ssh
 
     def valid_host_lookups
       {
-        by_inventory_node: :get_host_by_inventory_node, # TODO: - deprecate this one in favour of get_host_by_namespace which has a bit more precision
+        by_inventory_node: :get_host_by_inventory_node, 
         by_host_or_ip: :get_host_or_ip_from_config,
         by_bcome_namespace: :get_host_by_namespace
       }
