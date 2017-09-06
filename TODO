@@ -1,85 +1,43 @@
 
+Backlog
 
-# Can we pin the version of IRB in the Gemfile?
-# Subselects:  Have concept of invisibile views?  That way we can setup  a parent view and have it hidden, and just show the subselects should we so wish.  NICE.
+v 1.0
+=====
 
+Code
+----
 
-DOCUMENTATION
+backlog 
+  Pin the version of IRB in the gemfile
+  Allow hide views so that we can have "all" type views that are used as the basis for further subselects
+  orchestration:  1. Call one internal orchestration class from another 2. Mechanism to setup some kind of workflow (involves error code handling)
 
-lib/objects/nodes/inventory/base.rb  def machine_by_identifier(identifier)    #  document this as being a selector for orchestration (as well as the cloud matches thing)
+bugs
+  interactive mode bug
+  deadlock bug on parallel processing
+  bad design: w do not specify from the base namespace when keying into something, e.g. we ommit 'ewok' when defining our proxy server...
 
-
-* Orchestration (internal) -
-    # Document that @node & @arguments are available
-    # Execute the above
-    # Call another Orch class from this one (passing it a context by keyed_namespace)
-    # Method to create some kind of workflow? i.e. capture the return code perhaps and exit? continue for success? Need to define what a successful return code is (0, 2) etc
-    # Document
-    # - the select accessors available at inventory & collection level (e.g. how do I fetch a machine?),
-    # - document cloud matches
-    # - document traversing between contexts... stress @node is where the command was available at, but doesn't mean you're restricted to that particular node
-
-* Sub-selects
-  A new kind of sub-select that unions two or more other inventories
-  SSH connection details must come from its origin inventory
-
-## BUG / BAD DESIGN:  We do not specify from the base namespace when keying into something, e.g. we ommit 'ewok' when defining our proxy server...
-
-** Patterns when setting up networks.yml
-
-one project with multipe environments 
-multiple projects spready across different hosts or hosting accounts etc
+Documentation
+-------------
 
 
+work out what needs to be documented
+lib/objects/nodes/inventory/base.rb  def machine_by_identifier(identifier)  document this as being a selector for orchestration (as well as the cloud matches thing)
+orchestration (internal)
+  - @node & @arguments are available
+  - execute the above
+  - call one orchestration class from another (passing it a context by keyed namespace)
+  - the select accessors available at inventory & collection level (e.g. how do I fetch a machine?)
+  - traversing between contexts... stress @node is where the command was available at, but doesn't mean you're restricted to that particular node
+cloud matches
+... and everything else!
+document patters for setting up networks: flat inventory / collection of environments / collection of environments with sub-selects / different platforms with collections and everything else below
 
-MENU
 
-C. Orchestration
+v.1.2
+=====
 
-.bcomerc ?
-
-Aims
-- Include a generator to generate an orchestration file: this would be an initialization file (so can code around it as part of a bigger framework if we want). Init file to include as minimum
-  some comments on top as to how to run it, its namespace etc
-
-* B_PIN represents the tree structure of a view
-
-change “configs” to “views” - a view is a representation of a collection of networks, with exclusions and some cached and non-cached inventories
-
-We need a mechanism to
-
-* Target a view with a basic script
-* Script is RUBY, and has access to the B_PIN
-* We reference nodes by breamdcrumb namespace
-
-e.g.
-
-resource = B_PIN.get(“foo:bar”)
-resource.run
-resource.put
-
-Where a resource may be either a collection, static or dynamic inventory, or an individual server
-
-When we run a command, we get the command output returned, with which we can then programmatically “do stuff”
-
-** Can we compile down to bash scripts, and then excuse those natively? ** Do we even need to?
-
-Our orchestration will initiate connections to all machines (like interactive mode) at the start
-
-so
-
-bcome-orch “namespace” script_name
-
-(B_PIN then represents the namespace)
-
-B_PIN.open_connections
-… do stuff …
-
-(5) Drivers
-
-Other platforms
-
-digital ocean
-rackspace
-etc etc
-
+Code
+----
+  A new kind of sub-select that unions two or more other inventories where SSH connection details must come from its the origin inventory
+  Drivers for other platforms: digital ocean / azure / rackspace etc
