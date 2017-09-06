@@ -1,16 +1,13 @@
 module Bcome::Registry::Command
   class Internal < Base
-
     # In which the bcome context is passed to an external call
 
     def execute(node, arguments)
-      begin
-        processed_arguments = process_arguments(arguments)
-        orchestrator = orch_klass.new(node, arguments)
-        orchestrator.do_execute 
-      rescue Interrupt
-        puts "\nExiting gracefully from interrupt\n".warning
-      end
+      process_arguments(arguments)
+      orchestrator = orch_klass.new(node, arguments)
+      orchestrator.do_execute
+    rescue Interrupt
+      puts "\nExiting gracefully from interrupt\n".warning
     end
 
     def validate(*params)
@@ -23,10 +20,10 @@ module Bcome::Registry::Command
 
     def do_constantize_orch_klass
       klass_name = "Bcome::Orchestration::#{@data[:orch_klass]}"
-      begin  
+      begin
         klass_name.constantize
       rescue NameError
-        raise ::Bcome::Exception::CannotFindInternalRegistryKlass.new "'#{@data[:console_command]}'. #{klass_name} does not exist. Make sure you've created this class inside your orchestration folder in bcome/orchestration"
+        raise Bcome::Exception::CannotFindInternalRegistryKlass, "'#{@data[:console_command]}'. #{klass_name} does not exist. Make sure you've created this class inside your orchestration folder in bcome/orchestration"
       end
     end
 

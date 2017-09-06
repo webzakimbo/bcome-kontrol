@@ -1,6 +1,5 @@
 module Bcome::Node::Inventory
   class Base < ::Bcome::Node::Base
-
     def initialize(*params)
       super
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @views if @views[:views] && !@views[:views].empty?
@@ -16,8 +15,8 @@ module Bcome::Node::Inventory
       matches_for(data_wrapper, matchers)
     end
 
-    def machine_by_identifier(identifier)    
-      return resources.active.select {|machine| machine.identifier == identifier }.first
+    def machine_by_identifier(identifier)
+      resources.active.select { |machine| machine.identifier == identifier }.first
     end
 
     def matches_for(data_wrapper, matchers)
@@ -89,6 +88,5 @@ module Bcome::Node::Inventory
     def override_server_identifier?
       !@override_identifier.nil?
     end
-
   end
 end

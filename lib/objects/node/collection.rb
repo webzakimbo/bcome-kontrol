@@ -32,6 +32,5 @@ module Bcome::Node
     def collection?
       true
     end
-
   end
 end

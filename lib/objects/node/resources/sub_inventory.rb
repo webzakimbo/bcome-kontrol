@@ -1,6 +1,5 @@
 module Bcome::Node::Resources
   class SubselectInventory < Bcome::Node::Resources::Inventory
-
     def initialize(config)
       @config = config
       super
@@ -16,24 +15,24 @@ module Bcome::Node::Resources
 
       @nodes = new_set
     end
-  
+
     def update_nodes(inventory)
       new_set = []
 
-      @nodes.collect{|node| 
-        new_node = node.dup_with_new_parent(inventory) 
+      @nodes.collect do |node|
+        new_node = node.dup_with_new_parent(inventory)
         if inventory.override_server_identifier?
           new_node.identifier =~ /#{inventory.override_identifier}/
           new_node.update_identifier(Regexp.last_match(1)) if Regexp.last_match(1)
         end
         new_set << new_node
-      } 
+      end
       @nodes = new_set
     end
 
     def filter_by_tags(nodes)
       tag_filters.each do |key, values|
-        nodes = nodes.select{|node| node.has_tagged_value?(key, values) }
+        nodes = nodes.select { |node| node.has_tagged_value?(key, values) }
       end
       nodes
     end
@@ -42,7 +41,7 @@ module Bcome::Node::Resources
       @config[:parent_crumb]
     end
 
-    def filters 
+    def filters
       @config[:filters]
     end
 
@@ -53,6 +52,5 @@ module Bcome::Node::Resources
     def parent_inventory
       @config[:parent_inventory]
     end
-
   end
 end

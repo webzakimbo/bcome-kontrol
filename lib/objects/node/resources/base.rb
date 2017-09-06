@@ -4,7 +4,7 @@ module Bcome::Node::Resources
 
     attr_reader :nodes
 
-    def initialize(*params)
+    def initialize(*_params)
       @nodes = []
       @disabled_resources = []
     end

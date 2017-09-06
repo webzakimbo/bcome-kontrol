@@ -17,7 +17,7 @@ class ::Bcome::Orchestrator
 
   def get(breadcrumb = nil)
     context = ::Bcome::Bootup.traverse(breadcrumb)
-    raise ::Bcome::Exception::NoNodeFoundForBreadcrumb.new breadcrumb unless context
+    raise Bcome::Exception::NoNodeFoundForBreadcrumb, breadcrumb unless context
     context.load_nodes if context.inventory? && !context.nodes_loaded?
     context
   end

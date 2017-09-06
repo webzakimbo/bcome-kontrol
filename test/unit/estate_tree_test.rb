@@ -167,7 +167,7 @@ class EstateTreeTest < ActiveSupport::TestCase
     assert level3.resources.size == 1
 
     level4 = level3.resources.first
-    assert level4.is_a?(::Bcome::Node::Inventory)
+    assert level4.is_a?(::Bcome::Node::Inventory::Defined)
     assert level4.parent == level3
     assert level4.resources.empty?
   end

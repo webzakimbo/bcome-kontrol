@@ -1,6 +1,5 @@
 module Bcome::Node::Inventory
   class Defined < ::Bcome::Node::Inventory::Base
-
     MACHINES_CACHE_PATH = 'machines-cache.yml'.freeze
 
     def self.to_s
@@ -75,7 +74,7 @@ module Bcome::Node::Inventory
 
     def do_reload
       resources.unset!
-      load_dynamic_nodes 
+      load_dynamic_nodes
     end
 
     def load_nodes

@@ -1,14 +1,9 @@
 module Bcome::Node::Inventory
   class Subselect < ::Bcome::Node::Inventory::Base
-
     def initialize(*params)
       super
-      raise ::Bcome::Exception::MissingSubselectionKey.new @views if !@views[:subselect_from] 
+      raise Bcome::Exception::MissingSubselectionKey, @views unless @views[:subselect_from]
       update_nodes
-    end
-
-    def parent_inventory
-      @parent_inventory ||= load_parent_inventory
     end
 
     def resources
@@ -19,12 +14,12 @@ module Bcome::Node::Inventory
       resources.update_nodes(self)
     end
 
-    def do_set_resources 
-      ::Bcome::Node::Resources::SubselectInventory.new(:parent_inventory => parent_inventory, :filters => filters)
+    def do_set_resources
+      ::Bcome::Node::Resources::SubselectInventory.new(parent_inventory: parent_inventory, filters: filters)
     end
 
     def nodes_loaded?
-      true 
+      true
     end
 
     def filters
@@ -50,11 +45,10 @@ module Bcome::Node::Inventory
 
     def load_parent_inventory
       parent_crumb = @views[:subselect_from]
-      parent = ::Bcome::Node::Factory.instance.bucket[parent_crumb] 
-      raise ::Bcome::Exception::CannotFindSubselectionParent.new "for key '#{parent_crumb}'" unless parent
-      raise ::Bcome::Exception::CanOnlySubselectOnInventory.new "breadcrumb'#{parent_crumb}' represents a #{parent.class}'" unless parent.inventory?
+      parent = ::Bcome::Node::Factory.instance.bucket[parent_crumb]
+      raise Bcome::Exception::CannotFindSubselectionParent, "for key '#{parent_crumb}'" unless parent
+      raise Bcome::Exception::CanOnlySubselectOnInventory, "breadcrumb'#{parent_crumb}' represents a #{parent.class}'" unless parent.inventory?
       parent
     end
-
   end
 end

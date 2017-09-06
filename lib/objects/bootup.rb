@@ -1,16 +1,15 @@
 module Bcome
   class Bootup
-
     def self.set_and_do(params, spawn_into_console = true)
-        instance.set(params, spawn_into_console)
-        instance.do
-      rescue Bcome::Exception::Base => e
-        puts e.pretty_display
-      rescue Excon::Error::Socket => e
-        puts "\nNo network access - please check your connection and try again\n".red
+      instance.set(params, spawn_into_console)
+      instance.do
+    rescue Bcome::Exception::Base => e
+      puts e.pretty_display
+    rescue Excon::Error::Socket => e
+      puts "\nNo network access - please check your connection and try again\n".red
     end
 
-    def self.traverse(breadcrumbs = nil, spawn_into_console = false) 
+    def self.traverse(breadcrumbs = nil, spawn_into_console = false)
       spawn_into_console = false
       ::Bcome::Bootup.set_and_do({ breadcrumbs: breadcrumbs }, spawn_into_console)
     end
@@ -23,11 +22,11 @@ module Bcome
       @breadcrumbs = params[:breadcrumbs]
       @arguments = params[:arguments]
       @spawn_into_console = spawn_into_console
-    end 
+    end
 
     def do
       context = crumbs.empty? ? init_context(estate) : traverse(estate)
-      return context
+      context
     end
 
     def init_context(context)
@@ -41,7 +40,6 @@ module Bcome
     def traverse(starting_context)
       starting_context = estate
       crumbs.each_with_index do |crumb, _index|
-
         # Some contexts' resources are loaded dynamically and do not come from the estate config. As we're traversing, we'll need to load
         # them if necessary
         starting_context.load_nodes if starting_context.inventory? && !starting_context.nodes_loaded?
@@ -79,6 +77,5 @@ module Bcome
     def teardown!
       @estate = nil
     end
-
   end
 end

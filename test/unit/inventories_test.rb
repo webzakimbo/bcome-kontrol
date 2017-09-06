@@ -18,7 +18,7 @@ class InventoriesTest < ActiveSupport::TestCase
     inventory = estate.resources.first
   
     # Then
-    assert inventory.is_a?(::Bcome::Node::Inventory)
+    assert inventory.is_a?(::Bcome::Node::Inventory::Defined)
     assert inventory.class.to_s == "inventory"
   end
 
@@ -59,7 +59,7 @@ class InventoriesTest < ActiveSupport::TestCase
  
     # Sanity
     assert inventory.parent == estate
-    assert inventory.is_a?(::Bcome::Node::Inventory)
+    assert inventory.is_a?(::Bcome::Node::Inventory::Defined)
     assert inventory.resources.size == 2
     
     # And also that

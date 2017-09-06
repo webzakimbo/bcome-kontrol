@@ -4,7 +4,7 @@ module Bcome::WorkspaceCommands
     puts "\t" + "Available #{list_key}s:".title + "\n\n"
 
     iterate_over = active_only ? @resources.active : @resources
- 
+
     if iterate_over.any?
       iterate_over.sort_by(&:identifier).each do |resource|
         is_active = @resources.is_active_resource?(resource)
