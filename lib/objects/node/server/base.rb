@@ -1,12 +1,31 @@
 module Bcome::Node::Server
   class Base < Bcome::Node::Base
 
+    def dup_with_new_parent(new_parent)
+      new_node = self.clone
+      new_node.update_parent(new_parent)
+      new_node
+    end  
+
+    def update_parent(new_parent)
+      @parent = new_parent
+    end
+
     def tags
       data_print_from_hash(cloud_tags.data, "Tags")
     end
   
     def cloud_tags
       @generated_tags ||= do_generate_cloud_tags
+    end
+
+    def has_tagged_value?(key, values)
+      matchers = { :key => key, :values => values }
+      cloud_tags.has_key_and_value?(matchers)
+    end
+
+    def update_identifier(new_identifier)
+      @identifier = new_identifier
     end
 
     def do_generate_cloud_tags
