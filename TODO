@@ -17,6 +17,7 @@ bugs
   interactive mode bug
   deadlock bug on parallel processing
   bad design: w do not specify from the base namespace when keying into something, e.g. we ommit 'ewok' when defining our proxy server...
+  delay to get to NameError: /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/modules/workspace_commands.rb:158:in `method_missing'  
 
 Documentation
 -------------
