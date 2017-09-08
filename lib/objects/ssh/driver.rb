@@ -7,6 +7,8 @@ module Bcome::Ssh
     PROXY_SSH_PREFIX = 'ssh -o UserKnownHostsFile=/dev/null -o "ProxyCommand ssh -W %h:%p'.freeze
 
     SCRIPTS_PATH = 'bcome/scripts'.freeze
+  
+    SSH_RECONNECTION_ATTEMPTS = 3
 
     def initialize(config, context_node)
       @config = config
@@ -97,16 +99,31 @@ module Bcome::Ssh
     end
 
     def ssh_connect!(verbose = false)
+      number_connection_attempts = 0
+
+      while number_connection_attempts < SSH_RECONNECTION_ATTEMPTS 
+        begin
+          number_connection_attempts += 1   
+          @connection = do_ssh_connect!(verbose)
+        rescue Bcome::Exception::CouldNotInitiateSshConnection => e
+          raise e if number_connection_attempts == SSH_RECONNECTION_ATTEMPTS
+        end
+      end
+      @connection
+    end
+
+    def do_ssh_connect!(verbose = false)
+      connection = nil
       begin
         Timeout::timeout(timeout_in_seconds) do      
-          @connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
+          connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
         end
       rescue Timeout::Error => e
         raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
       rescue Errno::EPIPE => e
         raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
       end
-      return @connection
+      return connection
     end
 
     def ping

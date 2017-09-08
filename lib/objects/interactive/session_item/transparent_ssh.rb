@@ -11,8 +11,8 @@ module Bcome::Interactive::SessionItem
     end
 
     def do
+      Bcome::ProgressBar.instance.reset!
       system('clear')
-      puts "\nOpening SSH connections".bc_cyan
       puts ''
       open_ssh_connections
       show_menu
@@ -85,7 +85,18 @@ module Bcome::Interactive::SessionItem
     end
 
     def open_ssh_connections
-      node.open_ssh_connections
+      in_progress = true
+      Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
+
+      node.machines.pmap do |machine|
+        machine.open_ssh_connection unless machine.has_ssh_connection?
+        Bcome::ProgressBar.instance.indicate_and_increment!(progress_bar_config, in_progress)
+      end
+
+      in_progress = false
+      Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
+      Bcome::ProgressBar.instance.reset!
+      system("clear")
     end
 
     def close_ssh_connections
@@ -103,13 +114,13 @@ module Bcome::Interactive::SessionItem
       {
         prefix: "\sOpening SSH connections\s",
         indice: '...',
-        indice_descriptor: "of #{resources.size}"
+        indice_descriptor: "of #{node.machines.size}"
       }
     end
 
     def list_machines
       puts "\n"
-      resources.each do |machine|
+      node.machines.each do |machine|
         puts "\s- #{machine.namespace}"
       end
     end

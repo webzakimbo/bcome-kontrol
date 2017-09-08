@@ -4,7 +4,7 @@ gemspec
 gem 'mocha'
 gem 'rake'
 gem 'require_all'
-gem 'rubocop'
+#gem 'rubocop'
 gem 'ruby-prof'
 gem 'test-unit'
 gem 'test-unit-activesupport'
