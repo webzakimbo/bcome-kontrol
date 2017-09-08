@@ -16,6 +16,19 @@ module Bcome::Node
       inv.flatten
     end
 
+    def inventories
+      i = [] 
+      @resources.active.each do |resource|
+        if resource.inventory?
+          i << resources
+        else
+          i << resource.inventories
+        end
+      end
+      i.flatten
+    end
+
+
     def machines
       m = []
       @resources.active.each do |resource|

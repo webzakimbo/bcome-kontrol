@@ -1,5 +1,6 @@
 module Bcome::Node::Inventory
   class Base < ::Bcome::Node::Base
+
     def initialize(*params)
       super
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @views if @views[:views] && !@views[:views].empty?
@@ -26,7 +27,7 @@ module Bcome::Node::Inventory
     end
 
     def enabled_menu_items
-      super + %i[ssh]
+      super + %i[ssh interactive]
     end
 
     def menu_items

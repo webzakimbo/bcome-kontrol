@@ -24,6 +24,10 @@ module Bcome::WorkspaceCommands
     ls(show_active_only)
   end
 
+  def interactive
+    ::Bcome::Interactive::Session.run(self, :interactive_ssh)
+  end
+
   def tree
     puts "\nTree view\n".title
     tab = ''
@@ -69,10 +73,6 @@ module Bcome::WorkspaceCommands
       raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
       puts "#{identifier} not found"
     end
-  end
-
-  def interactive
-    ::Bcome::Interactive::Session.run(self, :interactive_ssh)
   end
 
   def run(*raw_commands)

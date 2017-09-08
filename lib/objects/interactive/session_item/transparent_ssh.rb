@@ -7,24 +7,28 @@ module Bcome::Interactive::SessionItem
     DANGER_CMD = "rm\s+-r|rm\s+-f|rm\s+-fr|rm\s+-rf|rm".freeze
 
     def resources
-      node.machines
+      node.server? ? [node] : node.resources
     end
 
     def do
       system('clear')
-      puts "Opening ssh connections"
+      puts "\nOpening SSH connections".bc_cyan
       puts ''
-      if connected_to_all_nodes? 
-        show_menu
-        puts ''
-        list_machines
-        action
-      end
+      open_ssh_connections
+      show_menu
+      puts ''
+      list_machines
+      action
     end
 
     def action
       input = get_input
-      return if exit?(input)
+
+      if exit?(input)
+        close_ssh_connections
+        return
+      end
+
       if show_menu?(input)
         show_menu
       elsif list_machines?(input)
@@ -80,31 +84,12 @@ module Bcome::Interactive::SessionItem
       input == LIST_KEY
     end
 
-    def attempt_to_open_all_connections(nodes = resources)
-      nodes.pmap do |resource|
-        begin
-          raise "#{resource.namespace} is already connected" if resource.has_ssh_connection?
-          puts "connecting to: #{resource.namespace}"
-
-          resource.ssh_driver.ssh_connect! unless resource.has_ssh_connection? 
-        rescue ::Bcome::Exception::CouldNotInitiateSshConnection 
-        end 
-      end
+    def open_ssh_connections
+      node.open_ssh_connections
     end
 
-    def connected_to_all_nodes?
-   #   in_progress = true
-#
- #     # First attempt to connect
- #     attempt_to_open_all_connections
- #     unconnected_nodes = resources.select(&:has_no_ssh_connection?)
-#
-#      indicate_failed_nodes(unconnected_nodes) if unconnected_nodes.any?
- #     return !unconnected_nodes.any?
-
-      puts "Interactive session flexpoint"
-
-      return false
+    def close_ssh_connections
+      node.close_ssh_connections
     end
 
     def indicate_failed_nodes(unconnected_nodes)

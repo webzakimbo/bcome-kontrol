@@ -85,25 +85,28 @@ module Bcome::Ssh
       has_proxy? ? @context_node.internal_ip_address : @context_node.public_ip_address
     end
 
-    def ssh_connect!(verbose = false)
+    def net_ssh_params(verbose = false)
       ssh_keys = @config[:ssh_keys]
       raise Bcome::Exception::InvalidSshConfig, "Missing ssh keys for #{@context_node.namespace}" unless ssh_keys
-      net_ssh_params = { keys: ssh_keys, paranoid: false }
-      net_ssh_params[:proxy] = proxy if has_proxy?
-      net_ssh_params[:timeout] = timeout_in_seconds
-      net_ssh_params[:verbose] = :debug if verbose
-     
+
+      params = { keys: @config[:ssh_keys], paranoid: false }
+      params[:proxy] = proxy if has_proxy?
+      params[:timeout] = timeout_in_seconds
+      params[:verbose] = :debug if verbose
+      return params
+    end
+
+    def ssh_connect!(verbose = false)
       begin
-        # We handle timeouts in code rather than on the connection itself: rationale - bcome doesn't care at which hop in a connection a timeout occurs, just that it has.
         Timeout::timeout(timeout_in_seconds) do      
-          @ssh_con = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
+          @connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
         end
       rescue Timeout::Error => e
         raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
       rescue Errno::EPIPE => e
         raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
       end
-      @ssh_con
+      return @connection
     end
 
     def ping
@@ -144,12 +147,18 @@ module Bcome::Ssh
       end
     end
 
+    def close_ssh_connection
+      return unless @connection
+      @connection.close unless @connection.closed?  
+      @connection = nil
+    end
+
     def ssh_connection(_bootstrap = false)
-      has_open_ssh_con? ? @ssh_con : ssh_connect!
+      has_open_ssh_con? ? @connection : ssh_connect!
     end
 
     def has_open_ssh_con?
-      @ssh_con && !@ssh_con.closed?
+      !@connection.nil? && !@connection.closed?
     end
   end
 end

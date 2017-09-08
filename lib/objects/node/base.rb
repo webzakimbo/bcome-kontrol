@@ -46,7 +46,7 @@ module Bcome::Node
     end
 
     def enabled_menu_items
-      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :interactive, :tree, :ping, :put, :cd, :reload, :meta, :registry] 
+      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :tree, :ping, :put, :cd, :reload, :meta, :registry, :interactive] 
     end
 
     def has_proxy?
@@ -160,6 +160,20 @@ module Bcome::Node
         "Description": :description,
         "Type": :type
       }
+    end
+
+    def close_ssh_connections
+      machines.pmap do |machine|
+        machine.close_ssh_connection
+      end
+      return
+    end
+
+    def open_ssh_connections
+      machines.pmap do |machine|
+        machine.open_ssh_connection unless machine.has_ssh_connection?
+      end
+      return
     end
 
     def execute_local(command)

@@ -1,5 +1,6 @@
 module Bcome::Node::Resources
   class Inventory < Bcome::Node::Resources::Base
+
     def <<(node)
       if existing_node = for_identifier(node.identifier)
         if existing_node.static_server? && node.dynamic_server?
@@ -21,5 +22,6 @@ module Bcome::Node::Resources
     def unset!
       @nodes = []
     end
+
   end
 end

@@ -67,6 +67,14 @@ module Bcome::Node::Server
       base_items
     end
 
+    def open_ssh_connection
+      ssh_driver.ssh_connection  
+    end
+
+    def close_ssh_connection
+      ssh_driver.close_ssh_connection
+    end
+
     def has_ssh_connection?
       ssh_driver.has_open_ssh_con?
     end
