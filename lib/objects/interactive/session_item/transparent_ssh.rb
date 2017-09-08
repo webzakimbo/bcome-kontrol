@@ -12,12 +12,14 @@ module Bcome::Interactive::SessionItem
 
     def do
       system('clear')
-      show_menu
+      puts "Opening ssh connections"
       puts ''
-      open_ssh_connections!
-      puts ''
-      list_machines
-      action
+      if connected_to_all_nodes? 
+        show_menu
+        puts ''
+        list_machines
+        action
+      end
     end
 
     def action
@@ -36,7 +38,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def show_menu
-      system('clear'); print start_message
+      print start_message
     end
 
     def handle_the_unwise(input)
@@ -78,30 +80,38 @@ module Bcome::Interactive::SessionItem
       input == LIST_KEY
     end
 
-    def soft_reset
-      system('clear')
-      show_menu
-      puts "\n\n"
+    def attempt_to_open_all_connections(nodes = resources)
+      nodes.pmap do |resource|
+        begin
+          raise "#{resource.namespace} is already connected" if resource.has_ssh_connection?
+          puts "connecting to: #{resource.namespace}"
+
+          resource.ssh_driver.ssh_connect! unless resource.has_ssh_connection? 
+        rescue ::Bcome::Exception::CouldNotInitiateSshConnection 
+        end 
+      end
     end
 
-    def open_ssh_connections!
-      in_progress = true
-      Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
-      Bcome::ProgressBar.instance.reset!
-      resources.pmap do |machine|
-        begin
-          machine.ssh_driver.ssh_connect!
-        rescue
-          # Bcome::ProgressBar.instance.reset!
-          soft_reset
-          raise Bcome::Exception::CouldNotInitiateSshConnection, machine.namespace
-          break
-        end
-        Bcome::ProgressBar.instance.indicate_and_increment!(progress_bar_config, in_progress)
-      end
-      in_progress = false
-      Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
-      Bcome::ProgressBar.instance.reset!
+    def connected_to_all_nodes?
+   #   in_progress = true
+#
+ #     # First attempt to connect
+ #     attempt_to_open_all_connections
+ #     unconnected_nodes = resources.select(&:has_no_ssh_connection?)
+#
+#      indicate_failed_nodes(unconnected_nodes) if unconnected_nodes.any?
+ #     return !unconnected_nodes.any?
+
+      puts "Interactive session flexpoint"
+
+      return false
+    end
+
+    def indicate_failed_nodes(unconnected_nodes)
+     puts "Error: Could not initiate an ssh connection to the following nodes".error
+     unconnected_nodes.each do |node|
+       puts "\s\s - #{node.namespace}".bc_cyan
+     end
     end
 
     def progress_bar_config

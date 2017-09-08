@@ -92,9 +92,10 @@ module Bcome::Ssh
       net_ssh_params[:proxy] = proxy if has_proxy?
       net_ssh_params[:timeout] = timeout_in_seconds
       net_ssh_params[:verbose] = :debug if verbose
+     
       begin
         # We handle timeouts in code rather than on the connection itself: rationale - bcome doesn't care at which hop in a connection a timeout occurs, just that it has.
-        Timeout.timeout timeout_in_seconds do
+        Timeout::timeout(timeout_in_seconds) do      
           @ssh_con = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
         end
       rescue Timeout::Error => e
