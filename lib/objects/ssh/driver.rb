@@ -20,7 +20,7 @@ module Bcome::Ssh
       config = {
         user: user,
         ssh_keys: @config[:ssh_keys],
-        timeout: timeout_in_seconds
+        timeout: 1 # TODO -RESET THIS VALUE TO THE VAR timeout_in_seconds
       }
       if has_proxy?
         config[:host_or_ip] = @context_node.internal_ip_address
@@ -113,15 +113,12 @@ module Bcome::Ssh
     end
 
     def do_ssh_connect!(verbose = false)
+      puts "Trying to connect"
       connection = nil
       begin
-        Timeout::timeout(timeout_in_seconds) do      
-          connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
-        end
-      rescue Timeout::Error => e
-        raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
-      rescue Errno::EPIPE => e
-        raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
+        connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
+      rescue Net::SSH::Proxy::ConnectError, Net::SSH::ConnectionTimeout, Errno::EPIPE => e
+         raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
       end
       return connection
     end

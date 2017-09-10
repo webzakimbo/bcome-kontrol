@@ -12,7 +12,7 @@ module Bcome::Interactive::SessionItem
 
     def do
       Bcome::ProgressBar.instance.reset!
-      system('clear')
+#      system('clear')
       puts ''
       open_ssh_connections
       show_menu
@@ -89,6 +89,7 @@ module Bcome::Interactive::SessionItem
       Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
 
       node.machines.pmap do |machine|
+        puts "open: #{machine.namespace}"
         machine.open_ssh_connection unless machine.has_ssh_connection?
         Bcome::ProgressBar.instance.indicate_and_increment!(progress_bar_config, in_progress)
       end
@@ -96,7 +97,7 @@ module Bcome::Interactive::SessionItem
       in_progress = false
       Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
       Bcome::ProgressBar.instance.reset!
-      system("clear")
+#      system("clear")
     end
 
     def close_ssh_connections
