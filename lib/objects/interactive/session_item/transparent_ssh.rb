@@ -12,7 +12,6 @@ module Bcome::Interactive::SessionItem
 
     def do
       Bcome::ProgressBar.instance.reset!
-#      system('clear')
       puts ''
       open_ssh_connections
       show_menu
@@ -42,7 +41,10 @@ module Bcome::Interactive::SessionItem
     end
 
     def show_menu
-      print start_message
+      warning = "\n\sCommands entered here will be executed on " + 'EVERY'.underline + ' machine in your selection.'
+      second_warning = "\n\n\s" + 'Use with CAUTION.'.warning
+      info = "\n\n\s\\l list machines\n\s\\q to quit\n\s\\? this message".informational
+      puts "#{warning}#{second_warning}#{info}\n"    
     end
 
     def handle_the_unwise(input)
@@ -62,10 +64,6 @@ module Bcome::Interactive::SessionItem
     end
 
     def start_message
-      warning = "\n\sCommands entered here will be executed on " + 'EVERY'.underline + ' machine in your selection.'
-      second_warning = "\n\n\s" + 'Use with CAUTION.'.warning
-      info = "\n\n\s\\l list machines\n\s\\q to quit\n\s\\? this message".informational
-      "#{warning}#{second_warning}#{info}\n"
     end
 
     def terminal_prompt
@@ -88,8 +86,7 @@ module Bcome::Interactive::SessionItem
       in_progress = true
       Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
 
-      node.machines.pmap do |machine|
-        puts "open: #{machine.namespace}"
+      node.machines.each do |machine|
         machine.open_ssh_connection unless machine.has_ssh_connection?
         Bcome::ProgressBar.instance.indicate_and_increment!(progress_bar_config, in_progress)
       end
@@ -97,7 +94,7 @@ module Bcome::Interactive::SessionItem
       in_progress = false
       Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
       Bcome::ProgressBar.instance.reset!
-#      system("clear")
+      system("clear")
     end
 
     def close_ssh_connections

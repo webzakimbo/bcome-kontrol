@@ -99,21 +99,6 @@ module Bcome::Ssh
     end
 
     def ssh_connect!(verbose = false)
-      number_connection_attempts = 0
-
-      while number_connection_attempts < SSH_RECONNECTION_ATTEMPTS 
-        begin
-          number_connection_attempts += 1   
-          @connection = do_ssh_connect!(verbose)
-        rescue Bcome::Exception::CouldNotInitiateSshConnection => e
-          raise e if number_connection_attempts == SSH_RECONNECTION_ATTEMPTS
-        end
-      end
-      @connection
-    end
-
-    def do_ssh_connect!(verbose = false)
-      puts "Trying to connect"
       connection = nil
       begin
         connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
