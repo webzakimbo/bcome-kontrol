@@ -15,12 +15,9 @@ backlog
   implement puppet_sync in full in our installation project. 
  
 bugs
-  bcome foo:bar:server ; ssh_driver - Takes AGES to return the driver. What is it doing?
   interactive mode bcome prod:interactive opening itself many times
-  interactive mode connection bug
   deadlock bug on parallel processing
   bad design: w do not specify from the base namespace when keying into something, e.g. we ommit 'ewok' when defining our proxy server...
-  delay to get to NameError: /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/modules/workspace_commands.rb:158:in `method_missing'  
 
   Broken pipe: Open bcome, with no network connection & wait: prod bastion server
 
@@ -30,6 +27,10 @@ bugs
   packet_write_wait: Connection to 54.227.24.184: Broken pipe
   packet_write_wait: Connection to 54.227.24.184: Broken pipe
   packet_write_wait: Connection to 54.227.24.184: Broken pipe
+
+
+issues
+  interactive mode is reliant on a sound backend: e.g. single bastion & ubuntu 16.04 has issues
 
 
 > df -h

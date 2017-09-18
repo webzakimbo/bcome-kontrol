@@ -155,7 +155,9 @@ module Bcome::WorkspaceCommands
   end
 
   def method_missing(method_sym, *arguments, &block)
-    super unless method_is_available_on_node?(method_sym)
+    unless method_is_available_on_node?(method_sym)
+      raise NameError, "NameError: undefined local variable or method '#{method_sym}'"
+    end
 
     if resource_identifiers.include?(method_sym.to_s)
       method_sym.to_s
