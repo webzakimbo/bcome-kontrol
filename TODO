@@ -6,14 +6,13 @@ v 1.0
 
 Code
 ----
-
-backlog 
-  interactive mode: needs to be unique list of machines
+  backlog
   Pin the version of IRB in the gemfile
   Allow hide views so that we can have "all" type views that are used as the basis for further subselects
   orchestration:  1. Call one internal orchestration class from another 2. Mechanism to setup some kind of workflow (involves error code handling)
   implement puppet_sync in full in our installation project. 
- 
+  interactive mode should over unique machines (we can work out duplicates from sub-selects but not from duplicate inventories...yet) 
+
 bugs
   deadlock bug on parallel processing
   bad design: w do not specify from the base namespace when keying into something, e.g. we ommit 'ewok' when defining our proxy server...
