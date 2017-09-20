@@ -6,8 +6,8 @@ module Bcome::Interactive::SessionItem
 
     DANGER_CMD = "rm\s+-r|rm\s+-f|rm\s+-fr|rm\s+-rf|rm".freeze
 
-    def resources
-      node.server? ? [node] : node.resources.active
+    def machines
+      node.server? ? [node] : node.machines
     end
 
     def do
@@ -86,7 +86,7 @@ module Bcome::Interactive::SessionItem
       in_progress = true
       Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
 
-      resources.each do |machine|
+      machines.pmap do |machine|
         machine.open_ssh_connection unless machine.has_ssh_connection?
         Bcome::ProgressBar.instance.indicate_and_increment!(progress_bar_config, in_progress)
       end
@@ -118,13 +118,13 @@ module Bcome::Interactive::SessionItem
 
     def list_machines
       puts "\n"
-      resources.each do |machine|
+        machines.each do |machine|
         puts "\s- #{machine.namespace}"
       end
     end
 
     def execute_on_machines(user_input)
-      resources.pmap do |machine|
+      machines.pmap do |machine|
         machine.run(user_input)
       end
     end
