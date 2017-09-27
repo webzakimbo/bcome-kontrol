@@ -7,8 +7,6 @@ module Bcome::Ssh
     PROXY_SSH_PREFIX = 'ssh -o UserKnownHostsFile=/dev/null -o "ProxyCommand ssh -W %h:%p'.freeze
 
     SCRIPTS_PATH = 'bcome/scripts'.freeze
-  
-    SSH_RECONNECTION_ATTEMPTS = 3
 
     def initialize(config, context_node)
       @config = config
@@ -20,7 +18,7 @@ module Bcome::Ssh
       config = {
         user: user,
         ssh_keys: @config[:ssh_keys],
-        timeout: 1 # TODO -RESET THIS VALUE TO THE VAR timeout_in_seconds
+        timeout: timeout_in_seconds
       }
       if has_proxy?
         config[:host_or_ip] = @context_node.internal_ip_address
