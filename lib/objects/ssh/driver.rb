@@ -99,13 +99,13 @@ module Bcome::Ssh
     end
 
     def ssh_connect!(verbose = false)
-      connection = nil
+      @connection = nil
       begin
-        connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
+        @connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
       rescue Net::SSH::Proxy::ConnectError, Net::SSH::ConnectionTimeout, Errno::EPIPE => e
          raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
       end
-      return connection
+      return @connection
     end
 
     def ping

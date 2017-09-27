@@ -102,7 +102,6 @@ module Bcome::Interactive::SessionItem
     end
 
     def indicate_failed_nodes(unconnected_nodes)
-     puts "Error: Could not initiate an ssh connection to the following nodes".error
      unconnected_nodes.each do |node|
        puts "\s\s - #{node.namespace}".bc_cyan
      end
