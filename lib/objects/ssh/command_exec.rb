@@ -16,6 +16,8 @@ module ::Bcome::Ssh
 
     def execute!
       # TODO: - catch IOError: closed stream here and re-connect gracefully
+      # to reproduce: open connections, and let them timeout then re-enter command (interactive mode)
+
       @commands.each do |command|
         node = command.node
         ssh = node.ssh_driver.ssh_connection
