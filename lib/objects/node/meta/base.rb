@@ -21,6 +21,10 @@ module Bcome::Node::Meta
       end
     end
 
+    def all
+      @data
+    end
+
     def fetch(key)
       key = key.to_sym
 
