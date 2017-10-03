@@ -21,7 +21,7 @@ module Bcome::Node
       @all_metadata_filenames.each do |filename|
         begin
           filedata = YAML.load_file(filename)
-          all_meta_data.merge!(filedata)
+          all_meta_data.deep_merge!(filedata)
         rescue Psych::SyntaxError => e
           raise Bcome::Exception::InvalidMetaDataConfig, "Error: #{e.message}"
         end
