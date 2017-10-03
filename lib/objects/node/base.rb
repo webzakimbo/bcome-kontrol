@@ -46,7 +46,7 @@ module Bcome::Node
     end
 
     def enabled_menu_items
-      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :tree, :ping, :put, :cd, :reload, :meta, :registry, :interactive] 
+      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :tree, :ping, :put, :rsync, :cd, :reload, :meta, :registry, :interactive] 
     end
 
     def has_proxy?
@@ -57,10 +57,17 @@ module Bcome::Node
       ssh_driver.proxy
     end
 
-    def put(local_path, remote_path)
+    def scp(local_path, remote_path)
       resources.active.each do |resource|
         resource.put(local_path, remote_path)
       end
+      return
+    end
+
+    def rsync(local_path, remote_path)
+      resources.active.each do |resource|
+        resource.rsync(local_path, remote_path)
+      end   
       return
     end
 

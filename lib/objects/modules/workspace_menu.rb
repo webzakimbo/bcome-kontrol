@@ -84,10 +84,16 @@ module Bcome::WorkspaceMenu
         console_only: false
       },
       put: {
-        description: 'upload a file',
+        description: 'upload a file or directory using scp',
         usage: "put 'local/path','remote/path'",
         console_only: false,
         terminal_usage: "put 'local/path' 'remote/path'"
+      },
+      rsync: {
+        description: 'upload a file or directory using rsync (faster)',
+        usage: "rsync 'local/path','remote/path'",
+        console_only: false,
+        terminal_usage: "rsync 'local/path' 'remote/path'"
       },
       get: {
         description: 'download a file',

@@ -32,6 +32,20 @@ module Bcome::Ssh
       config
     end
 
+    def rsync(local_path, remote_path)
+      raise Bcome::Exception::MissingParamsForRsync, "'rsync' requires a local_path and a remote_path" if local_path.to_s.empty? || remote_path.to_s.empty?
+      command = rsync_command(local_path, remote_path)
+      @context_node.execute_local(command)
+    end
+  
+    def rsync_command(local_path, remote_path)
+      if has_proxy?
+        "rsync -av -e \"ssh -A #{bastion_host_user}@#{@proxy_data.host} ssh -o StrictHostKeyChecking=no\" #{local_path} #{user}@#{@context_node.internal_ip_address}:#{remote_path}"
+      else
+        "rsync -av #{local_path} #{user}@#{@context_node.public_ip_address}:#{remote_path}"
+      end
+    end
+
     def timeout_in_seconds
       @config[:timeout_in_seconds] ||= Bcome::Ssh::Driver::DEFAULT_TIMEOUT_IN_SECONDS
     end
