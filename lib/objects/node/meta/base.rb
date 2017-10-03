@@ -3,7 +3,7 @@ module Bcome::Node::Meta
     attr_reader :data
 
     def initialize(data)
-      @data = data.deep_symbolize_keys
+      @data = data
     end
 
     def has_key_and_value?(matchers)
@@ -26,8 +26,6 @@ module Bcome::Node::Meta
     end
 
     def fetch(key)
-      key = key.to_sym
-
       if @data.key?(key)
         @data[key]
       else

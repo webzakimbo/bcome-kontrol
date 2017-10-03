@@ -191,8 +191,9 @@ module Bcome::Node
     def data_print_from_hash(data, heading)
       puts "\n#{heading.title}"
       puts ""
+
       if data.keys.any?
-        data.sort.to_h.each do |key, value|
+        data.each do |key, value|
           puts "#{key.to_s.resource_key}: #{value.to_s.informational}"
         end
       else
