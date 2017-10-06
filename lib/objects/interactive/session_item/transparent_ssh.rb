@@ -5,13 +5,12 @@ module Bcome::Interactive::SessionItem
     LIST_KEY = '\\l'.freeze
 
     DANGER_CMD = "rm\s+-r|rm\s+-f|rm\s+-fr|rm\s+-rf|rm".freeze
-
+    
     def machines
       node.server? ? [node] : node.machines
     end
 
     def do
-      Bcome::ProgressBar.instance.reset!
       puts ''
       open_ssh_connections
       show_menu
@@ -83,17 +82,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def open_ssh_connections
-      in_progress = true
-      Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
-
-      machines.pmap do |machine|
-        machine.open_ssh_connection unless machine.has_ssh_connection?
-        Bcome::ProgressBar.instance.indicate_and_increment!(progress_bar_config, in_progress)
-      end
-
-      in_progress = false
-      Bcome::ProgressBar.instance.indicate(progress_bar_config, in_progress)
-      Bcome::ProgressBar.instance.reset!
+      ::Bcome::Ssh::ConnectionHandler.connect(node, { :show_progress => true })
       system("clear")
     end
 
@@ -105,14 +94,6 @@ module Bcome::Interactive::SessionItem
      unconnected_nodes.each do |node|
        puts "\s\s - #{node.namespace}".bc_cyan
      end
-    end
-
-    def progress_bar_config
-      {
-        prefix: "\sOpening SSH connections\s",
-        indice: '...',
-        indice_descriptor: "of #{node.machines.size}"
-      }
     end
 
     def list_machines

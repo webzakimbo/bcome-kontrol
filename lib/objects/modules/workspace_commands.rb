@@ -86,7 +86,7 @@ module Bcome::WorkspaceCommands
   end
 
   def ping
-    machines.pmap(&:ping)
+    ::Bcome::Ssh::ConnectionHandler.connect(self, { :is_ping => true })
   end
 
   def pretty_description(is_active = true)
