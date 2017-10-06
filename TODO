@@ -10,8 +10,6 @@ Code
   backlo
   Pin the version of IRB in the gemfile
   orchestration:  1. Call one internal orchestration class from another 2. Mechanism to setup some kind of workflow (involves error code handling)
-  implement puppet_sync in full in our installation project. 
-  interactive mode should over unique machines (we can work out duplicates from sub-selects but not from duplicate inventories...yet) 
 
 bugs
   deadlock bug on parallel processing
