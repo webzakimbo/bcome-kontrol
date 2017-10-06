@@ -1,5 +1,13 @@
 module Bcome::Node::Server
   class Base < Bcome::Node::Base
+    
+    attr_reader :origin_object_id
+
+    def initialize(*params)
+      super
+      # Set the object_id - sub inventories dup servers into new collections. This allows us to spot duplicates when interacting with collections
+      @origin_object_id = object_id
+    end
 
     def dup_with_new_parent(new_parent)
       new_node = self.clone

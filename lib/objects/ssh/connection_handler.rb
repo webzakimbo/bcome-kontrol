@@ -4,13 +4,13 @@ module Bcome::Ssh
     MAX_CONNECTION_ATTEMPTS = 3
 
     class << self
-      def connect(node, config)
+      def connect(node, config = {})
          handler = new(node, config)
          handler.connect
       end
     end
 
-    def initialize(node, config)
+    def initialize(node, config = {})
       @node = node
       @config = config
       @servers_to_connect = machines.dup
@@ -46,6 +46,7 @@ module Bcome::Ssh
       # from bcome, so, we'll sweep up failures and re-try to connect up to MAX_CONNECTION_ATTEMPTS.  Once connected, we're generally good - and any subsequent connection failures
       # within a specific session will be handled ad-hoc and re-connection is automatic.
       while @servers_to_connect.any? && connection_attempt <= MAX_CONNECTION_ATTEMPTS
+        puts (connection_attempt == 0) ? "Initiating connections".informational : "Retrying failed connections".warning
         do_connect
         connection_attempt += 1
       end
@@ -64,12 +65,12 @@ module Bcome::Ssh
            } 
            puts server.print_ping_result(ping_result)
         }
+      end
 
-        if @servers_to_connect.any?
-          puts "Failed to connect to #{@servers_to_connect.size} nodes".warning
-        else
-          puts "All nodes are reachable".informational
-        end
+      if @servers_to_connect.any?
+        puts "Failed to connect to #{@servers_to_connect.size} nodes".error
+      else
+        puts "All nodes reachable".success
       end
     end
 

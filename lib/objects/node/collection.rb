@@ -16,17 +16,32 @@ module Bcome::Node
       inv.flatten
     end
 
+    def filter_duplicates(original_set)
+      instance_lookup = []
+      filtered_set = []
+      original_set.each {|server|
+        unless instance_lookup.include?(server.origin_object_id)
+          filtered_set << server
+          instance_lookup << server.origin_object_id
+        end  
+      }
+      filtered_set 
+    end
+
     def machines
-      m = []
+      set = []
       @resources.active.each do |resource|
         if resource.inventory?
           resource.load_nodes unless resource.nodes_loaded?
-          m << resource.resources.active
+          set << resource.resources.active
         else
-          m << resource.machines
+          set << resource.machines
         end
       end
-      m.flatten
+
+      set.flatten!
+
+      filter_duplicates(set)
     end
 
     def collection?

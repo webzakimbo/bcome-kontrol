@@ -78,6 +78,9 @@ module Bcome::WorkspaceCommands
   def run(*raw_commands)
     raise Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
     results = {}
+
+    ::Bcome::Ssh::ConnectionHandler.connect(self, {})
+
     machines.pmap do |machine|
       commands = machine.do_run(raw_commands)
       results[machine.namespace] = commands
