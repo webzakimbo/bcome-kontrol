@@ -14,8 +14,9 @@ module Bcome::Node::Server
       @bootstrap ? true : false
     end  
 
-    def bootstrap
+    def toogle_bootstrap
       @bootstrap = (@bootstrap ? false : true)
+      puts "Bootstrap is #{bootstrap? ? "on" : "off" }".informational
     end
 
     def dup_with_new_parent(new_parent)
