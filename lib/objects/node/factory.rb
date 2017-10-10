@@ -93,8 +93,8 @@ module Bcome::Node
     def load_estate_config
       config = YAML.load_file(config_path).deep_symbolize_keys
       return config
-    rescue ArgumentError, Psych::SyntaxError
-      raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in config'
+    rescue ArgumentError, Psych::SyntaxError => e
+      raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in config' + e.message
     rescue Errno::ENOENT
       raise Bcome::Exception::MissingNetworkConfig, config_path
     end

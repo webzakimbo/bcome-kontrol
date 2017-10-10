@@ -7,6 +7,15 @@ module Bcome::Node::Server
       super
       # Set the object_id - sub inventories dup servers into new collections. This allows us to spot duplicates when interacting with collections
       @origin_object_id = object_id
+      @bootstrap = false
+    end
+
+    def bootstrap?
+      @bootstrap ? true : false
+    end  
+
+    def bootstrap
+      @bootstrap = (@bootstrap ? false : true)
     end
 
     def dup_with_new_parent(new_parent)

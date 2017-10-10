@@ -14,6 +14,8 @@ class NetworkDriverTest < ActiveSupport::TestCase
     # When
     driver = Bcome::Ssh::Driver.new(config, node)
 
+    driver.expects(:bootstrap?).returns(false)
+
     # Then
     assert driver.is_a?(Bcome::Ssh::Driver)
     assert driver.has_proxy? == false
@@ -25,6 +27,8 @@ class NetworkDriverTest < ActiveSupport::TestCase
     config = {}
     node = mock('server node')
     driver = Bcome::Ssh::Driver.new(config, node)
+
+    driver.expects(:bootstrap?).returns(false)
 
     system_user = given_a_random_string_of_length(5)
     ::Bcome::System::Local.instance.expects(:local_user).returns(system_user)
@@ -54,19 +58,19 @@ class NetworkDriverTest < ActiveSupport::TestCase
     ::Bcome::Ssh::ProxyData.expects(:new).with(config[:proxy], node).returns(mocked_proxy_data)
     
     mocked_proxy = mock("proxy")
-    proxy_connection_string = "#{Bcome::Ssh::Driver::PROXY_CONNECT_PREFIX} #{bastion_host_user}@#{bastion_host}"
+    proxy_connection_string = "ssh #{Bcome::Ssh::Driver::PROXY_CONNECT_PREFIX} #{bastion_host_user}@#{bastion_host}"
     ::Net::SSH::Proxy::Command.expects(:new).with(proxy_connection_string).returns(mocked_proxy)
        
     # when
     driver = Bcome::Ssh::Driver.new(config, node)
     driver.expects(:fallback_local_user).returns(node_user)
-
+    driver.expects(:bootstrap?).returns(false).at_least_once
     returned_proxy = driver.proxy
 
     # then
     assert returned_proxy == mocked_proxy
 
-    ssh_connection_string = "#{Bcome::Ssh::Driver::PROXY_SSH_PREFIX} #{bastion_host_user}@#{bastion_host}\" #{node_user}@#{node_hostname}"
+    ssh_connection_string = "ssh #{Bcome::Ssh::Driver::PROXY_SSH_PREFIX} #{bastion_host_user}@#{bastion_host}\" #{node_user}@#{node_hostname}"
     node.expects(:execute_local).with(ssh_connection_string).returns(true)
  
     # When/then
