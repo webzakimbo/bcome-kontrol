@@ -14,8 +14,8 @@ module Bcome::Node::Server
       @bootstrap ? true : false
     end  
 
-    def toogle_bootstrap
-      @bootstrap = (@bootstrap ? false : true)
+    def toggle_bootstrap(set_to = (@bootstrap ? false : true))
+      @bootstrap = set_to
       puts "Bootstrap is #{bootstrap? ? "on" : "off" }".informational
     end
 
