@@ -54,7 +54,7 @@ module Bcome::Registry::Command
     end
 
     def do_pretty_print
-      menu_str = "\s\s\s\s" + "command:\s".resource_key + console_command.underline.resource_value
+      menu_str = "\n\s\s\s\s" + "command:\s".resource_key + console_command.underline.resource_value
       menu_str += "\n\s\s\s\s" + "description:\s".resource_key + description.resource_value 
     end
 

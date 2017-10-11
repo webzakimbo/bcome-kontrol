@@ -34,7 +34,7 @@ module Bcome::Registry::Command
     def pretty_print
       puts "\nRegistered commands".title + "\sfor #{@node.class} #{@node.keyed_namespace}".resource_value + "\n\n"
       all_commands.sort.each do |group_name, commands|
-        puts "\s\s\s\s" + group_name.title + "\n\n"
+        puts "\s\s\s\s" + group_name.title + "\n"
         commands.each(&:pretty_print)
         print "\n"
       end
