@@ -182,7 +182,13 @@ module Bcome::Node::Server
       raw_commands = raw_commands.is_a?(String) ? [raw_commands] : raw_commands
       commands = raw_commands.collect{|raw_command| ::Bcome::Ssh::Command.new({ :node => self, :raw => raw_command }) }
       command_exec = ::Bcome::Ssh::CommandExec.new(commands)
-      command_exec.execute!
+
+      begin
+        command_exec.execute!
+      rescue IOError  # Typically occurs after a timeout if the session has been left idle
+        open_ssh_connection  
+      end
+
       commands.each {|c| c.unset_node }
       return commands
     end
