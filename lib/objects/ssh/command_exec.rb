@@ -21,7 +21,14 @@ module ::Bcome::Ssh
       @commands.each do |command|
         node = command.node
         ssh = node.ssh_driver.ssh_connection
-        ssh_exec!(ssh, command)
+
+        begin
+          ssh_exec!(ssh, command)
+        rescue IOError  # Typically occurs after a timeout if the session has been left idle
+          node.open_ssh_connection
+          ssh_exec!(ssh, command)  # retry, once 
+        end 
+ 
         output_append("\n(#{node.namespace})$".terminal_prompt + ">\s#{command.raw} (#{command.pretty_result})\n")
         output_append(command.output.to_s)
       end
