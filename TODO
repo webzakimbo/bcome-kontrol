@@ -1,15 +1,21 @@
 
 Backlog
 
+
+todo
+
+orchestration that takes input ? e.g. iptables -A INPUT -s 65.55.44.100 -j DROP  and pass it the IP?
+
+
+
+
 v 1.0
 =====
 
 Code
 ----
   Long delay for method missing still from things like registry coding - needs to be fixed.
-  backlo
   Pin the version of IRB in the gemfile
-  orchestration:  1. Call one internal orchestration class from another 2. Mechanism to setup some kind of workflow (involves error code handling)
 
 bugs
   deadlock bug on parallel processing
@@ -23,10 +29,6 @@ bugs
   packet_write_wait: Connection to 54.227.24.184: Broken pipe
   packet_write_wait: Connection to 54.227.24.184: Broken pipe
   packet_write_wait: Connection to 54.227.24.184: Broken pipe
-
-
-issues
-  interactive mode is reliant on a sound backend: e.g. single bastion & ubuntu 16.04 has issues
 
 
 > df -h
