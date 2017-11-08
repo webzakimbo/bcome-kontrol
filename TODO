@@ -2,6 +2,38 @@
 Backlog
 
 
+EXCEPTION HANDLING FOR DOCUMENATION
+
+1. Network block incorrectly defined, need to catch and explain:
+
+:myinventory:
+  :description: A full list of my servers servers
+  :type: inventory
+  
+  :network: ec2
+  :credentials_key: econsultancy
+  :provisioning_region: us-east-1
+  
+  :ec2_filters:
+    :instance-state-name: running
+
+2. Clear exception message when breadcrumb is invalid, e.g. contains hyphens
+
+DOCS
+
+Network patterns:
+
+1 platform, multiple environments (all in same provisioning zone)
+Single inventory
+1 platform, multiple environments with sub-selects
+
+cd where id becomes with an integer fails, e.g. cd 123foo rather than cd "123foo"
+
+
+
+
+
+
 todo
 
 orchestration that takes input ? e.g. iptables -A INPUT -s 65.55.44.100 -j DROP  and pass it the IP?
