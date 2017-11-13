@@ -29,7 +29,9 @@ Single inventory
 
 cd where id becomes with an integer fails, e.g. cd 123foo rather than cd "123foo"
 
+REMOVE 'reload' command from collection menu: should not be here!
 
+ADD IN !! 'get' to the server-level inventory level
 
 
 
