@@ -71,6 +71,13 @@ module Bcome::Node
       return
     end
 
+    def put(local_path, remote_path)
+      resources.active.each do |resource|
+        resource.put(local_path, remote_path)
+      end
+      return
+    end
+ 
     def validate_attributes
       validate_identifier 
       raise ::Bcome::Exception::MissingDescriptionOnView.new(@views.inspect) if requires_description? && !@description
@@ -184,7 +191,7 @@ module Bcome::Node
     end
 
     def execute_local(command)
-      puts "(local) > #{command}"
+      # TODO - REMOVED output of comment for doc recordings puts "(local) > #{command}"
       system(command)
     end
 

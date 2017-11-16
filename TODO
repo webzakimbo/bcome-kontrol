@@ -4,6 +4,9 @@ Backlog
 
 EXCEPTION HANDLING FOR DOCUMENATION
 
+
+BUG: 'put' is missing from inventory
+e
 1. Network block incorrectly defined, need to catch and explain:
 
 :myinventory:
