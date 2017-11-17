@@ -4,6 +4,9 @@ Backlog
 
 EXCEPTION HANDLING FOR DOCUMENATION
 
+A scriptd interactive mode? let user define list of machine to add... programattically.
+
+I.e. an interface onto adding selections, and then a simple hook to load in interactive mode.
 
 1. Network block incorrectly defined, need to catch and explain:
 
