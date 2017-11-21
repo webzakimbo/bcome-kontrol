@@ -105,8 +105,9 @@ module Bcome::Node::Server
       ssh_driver.do_ssh
     end
 
-    def execute_script(script_path)
-      ssh_driver.do_execute_script(script_path)
+    def execute_script(script_name)
+      command_result = ::Bcome::Ssh::ScriptExec.execute(self, script_name)
+      return command_result
     end
 
     def rsync(local_path, remote_path)

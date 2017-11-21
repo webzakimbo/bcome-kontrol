@@ -7,8 +7,6 @@ module Bcome::Ssh
     PROXY_CONNECT_PREFIX = '-o StrictHostKeyChecking=no -W %h:%p'.freeze
     PROXY_SSH_PREFIX = '-o UserKnownHostsFile=/dev/null -o "ProxyCommand ssh -W %h:%p'.freeze
 
-    SCRIPTS_PATH = 'bcome/scripts'.freeze
-
     def initialize(config, context_node)
       @config = config
       @context_node = context_node
@@ -66,14 +64,6 @@ module Bcome::Ssh
 
     def do_ssh
       @context_node.execute_local(ssh_command)
-    end
-
-    def do_execute_script(script_name)
-      local_path_to_script = "#{SCRIPTS_PATH}/#{script_name}.sh"
-      raise Bcome::Exception::OrchestrationScriptDoesNotExist, local_path_to_script unless File.exist?(local_path_to_script)
-      execute_script_command = "#{ssh_command} \"bash -s\" < #{local_path_to_script}"
-      command = ::Bcome::Command::Local.run(execute_script_command)
-      command
     end
 
     def bastion_host_user

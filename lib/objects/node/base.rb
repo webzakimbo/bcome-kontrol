@@ -60,7 +60,8 @@ module Bcome::Node
     def proxy
       ssh_driver.proxy
     end
-
+   
+    # TODO - why not do these in parallel?
     def scp(local_path, remote_path)
       resources.active.each do |resource|
         resource.put(local_path, remote_path)
@@ -80,6 +81,15 @@ module Bcome::Node
         resource.put(local_path, remote_path)
       end
       return
+    end
+
+    def execute_script(script_name)
+      results = {}
+      machines.pmap do |machine|
+        command = machine.execute_script(script_name)
+        results[machine.namespace] = command
+      end
+      results
     end
  
     def validate_attributes
