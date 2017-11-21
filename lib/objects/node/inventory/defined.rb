@@ -15,7 +15,22 @@ module Bcome::Node::Inventory
     end
 
     def enabled_menu_items
-      super + %i[save]
+      super + %i[save reload]
+    end
+
+    def menu_items
+      base_items = super.dup
+
+      base_items[:reload] = {
+        description: "Restock this inventory from remote (hit 'save' after to persist)",
+        console_only: true
+      }
+      base_items
+    end
+
+    def reload
+      do_reload
+      puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".informational
     end
 
     def set_static_servers

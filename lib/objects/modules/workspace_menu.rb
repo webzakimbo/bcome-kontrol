@@ -110,10 +110,6 @@ module Bcome::WorkspaceMenu
         description: 'Save the current tree state',
         console_only: true
       },
-      reload: {
-        description: "Restock this inventory from remote (hit 'save' after to persist)",
-        console_only: true
-      },
       meta: {
         description: 'Print out all metadata related to this node'
       },
