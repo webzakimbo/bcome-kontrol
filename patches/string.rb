@@ -41,7 +41,7 @@ class String
   def blinking
     "\033[5m#{self}\033[0m"
   end
-
+  
   def method_missing(method_sym, *arguments, &bc_lack)
     if colour_code = colour_codes[method_sym]
       if (arguments[0] == :highlight) && highlight_colour = highlight_colour_codes[method_sym]
@@ -55,10 +55,23 @@ class String
   end
 
   def swatch
-    puts 'Colour | Colour Bold | Colour Highlight | Colour Highlight & Bold'
     colour_codes.keys.each do |colour_code|
-      puts "#{colour_code}:  #{send(colour_code)} #{send(colour_code, :bold)} | #{send(colour_code, :highlight)}, #{send(colour_code, :highlight).bold}"
+      puts "#{colour_code.to_s.underline}\n"
+      puts "\tNormal: #{send(colour_code)} usage: \"#{self}\".#{colour_code})"
+      puts "\tBold: #{send(colour_code).bold} usage: \"#{self}\".#{colour_code}.bold)"
+      puts "\tHighlight: #{send(colour_code, :highlight)} usage: \"#{self}\".#{colour_code}(:highlight))"
+      puts "\tHighlight & bold: #{send(colour_code, :highlight).bold} usage: \"#{self}\".#{colour_code}(:highlight)).bold"
+      puts "\n\n"
     end
     nil
   end
+
+  def stylesheet
+    StringColourStylesheet.public_instance_methods.each do |method|
+      puts "\s\s#{method.to_s.underline}: #{send(method)} \s\s\susage: \"#{self}\".#{method}"
+    end
+    nil
+  end
+
+
 end
