@@ -19,7 +19,7 @@ module Bcome::Registry::Command
     end
 
     def construct_substituted_command(arguments)
-      substituted_command = local_command
+      substituted_command = local_command.dup
       merged_arguments = process_arguments(arguments)
 
       local_command_substitutions.each do |substitution|
