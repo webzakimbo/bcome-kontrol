@@ -8,7 +8,7 @@ module Bcome::Node::RegistryManagement
     if command_group && command_group.has_commands?
       command_group.pretty_print
     else
-      puts "\nThere are no registered user commands for this namespace\n".warning
+      puts "\nYou have no registry commands configured for this namespace.\n".warning
     end
   end
 end
