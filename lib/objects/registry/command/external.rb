@@ -39,7 +39,7 @@ module Bcome::Registry::Command
     end
 
     def local_command_substitutions
-      local_command.scan(/%(.+)%/).uniq.flatten
+      local_command.scan(/%([^%]*)%/).flatten.uniq
     end
 
     def expected_keys

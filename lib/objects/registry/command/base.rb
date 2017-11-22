@@ -25,6 +25,10 @@ module Bcome::Registry::Command
       validate
     end
 
+    def defaults
+      @data[:defaults]
+    end
+
     def process_arguments(arguments)
       merged_arguments = {}
 
@@ -47,15 +51,6 @@ module Bcome::Registry::Command
 
     def method_missing(method_sym, *arguments, &block)
       @data.key?(method_sym) ? @data[method_sym] : super
-    end
-
-    def pretty_print
-      puts do_pretty_print
-    end
-
-    def do_pretty_print
-      menu_str = "\n\s\s\s\s" + "command:\s".resource_key + console_command.underline.resource_value
-      menu_str += "\n\s\s\s\s" + "description:\s".resource_key + description.resource_value 
     end
 
     def validate

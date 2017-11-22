@@ -31,14 +31,42 @@ module Bcome::Registry::Command
       user_registered_console_commands.select { |command| command.console_command.to_sym == command_name }.first
     end
 
+    def item_spacing(item)
+      "\s" * (menu_item_spacing_length - item.length)
+    end
+
+    def menu_item_spacing_length
+      16
+    end
+
+    def tab_spacing
+      "\s" * 3
+    end
+
     def pretty_print
-      puts "\nRegistered commands".title + "\sfor #{@node.class} #{@node.keyed_namespace}".resource_value + "\n\n"
-      all_commands.sort.each do |group_name, commands|
-        puts "\s\s\s\s" + group_name.title + "\n"
-        commands.each(&:pretty_print)
-        print "\n"
+      puts "\nRegistry commands".title + "\sfor #{@node.class} #{@node.keyed_namespace}".resource_value + "\n\n"
+      all_commands.sort.each do |group_name, commands|   
+        puts tab_spacing + group_name.title + "\n\n"
+        commands.each do |command|
+          command_key = command.console_command
+          description = command.description
+          defaults = command.defaults
+
+          puts tab_spacing + command_key.resource_key + item_spacing(command_key) + description.resource_value 
+
+          if ::Bcome::System::Local.instance.in_console_session?
+            usage_string = "#{command_key}"
+          else
+            usage_string = "bcome #{ @node.keyed_namespace.empty? ? "" : "#{@node.keyed_namespace}:"    }#{command_key}"
+          end 
+ 
+          puts tab_spacing + ("\s" * menu_item_spacing_length) + 'usage: '.instructional + usage_string + defaults.inspect + "\n\n"
+
+        end
+        puts "\n"
       end
       nil
     end
+
   end
 end
