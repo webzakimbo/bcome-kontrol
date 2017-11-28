@@ -63,8 +63,8 @@ module Bcome::Ssh
     end  
 
     def do_ssh
-      puts "(local) > #{ssh_command}"
-      @context_node.execute_local(ssh_command)
+      cmd = ssh_command
+      @context_node.execute_local(cmd)
     end
 
     def bastion_host_user

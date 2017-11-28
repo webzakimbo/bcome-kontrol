@@ -205,7 +205,7 @@ module Bcome::Node
     end
 
     def execute_local(command)
-      # TODO - REMOVED output of comment for doc recordings puts "(local) > #{command}"
+      puts "(local) > #{command}"
       system(command)
     end
 
