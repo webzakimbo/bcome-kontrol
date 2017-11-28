@@ -63,6 +63,7 @@ module Bcome::Ssh
     end  
 
     def do_ssh
+      puts "(local) > #{ssh_command}"
       @context_node.execute_local(ssh_command)
     end
 
