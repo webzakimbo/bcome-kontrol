@@ -96,7 +96,13 @@ module Bcome::Node
     rescue ArgumentError, Psych::SyntaxError => e
       raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in config' + e.message
     rescue Errno::ENOENT
+      raise Bcome::Exception::DeprecationWarning if is_running_deprecated_configs?
       raise Bcome::Exception::MissingNetworkConfig, config_path
     end
+
+    def is_running_deprecated_configs?
+      File.exist?("bcome/config/platform.yml")
+    end
+
   end
 end

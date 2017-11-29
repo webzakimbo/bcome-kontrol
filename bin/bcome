@@ -2,9 +2,14 @@
 
 require 'bcome'
 
-spawn_into_console = true
-arguments = ARGV - [ARGV[0]]
-::Bcome::Bootup.set_and_do({ breadcrumbs: ARGV[0], arguments: arguments }, spawn_into_console)
+begin
+  spawn_into_console = true
+  arguments = ARGV - [ARGV[0]]
+  ::Bcome::Bootup.set_and_do({ breadcrumbs: ARGV[0], arguments: arguments }, spawn_into_console)
 
-# close any trailing connections
-Bcome::Bootup.instance.estate.close_ssh_connections
+  # close any trailing connections
+  Bcome::Bootup.instance.estate.close_ssh_connections
+
+rescue ::Bcome::Exception::Base
+  puts "bcome terminated unexpectedly".warning
+end
