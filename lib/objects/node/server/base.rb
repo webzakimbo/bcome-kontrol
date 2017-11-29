@@ -71,7 +71,7 @@ module Bcome::Node::Server
     end
 
     def enabled_menu_items
-      (super + [:ssh, :tags]) - [:enable, :disable, :enable!, :disable!]
+      (super + [:get, :ssh, :tags]) - [:enable, :disable, :enable!, :disable!]
     end
 
     def menu_items
@@ -82,6 +82,14 @@ module Bcome::Node::Server
       base_items[:ssh] = {
         description: "initiate an ssh connection to this server",
       }
+      base_items[:get] = {
+        description: "Download a file or directory",
+        console_only: false,
+        usage: "get \"/remote/path\", \"/local/path\"",
+        terminal_usage: "get \"/remote/path\" \"/local/path\""
+      }
+
+
       base_items
     end
 
