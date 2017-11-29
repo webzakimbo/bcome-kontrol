@@ -1,10 +1,10 @@
 module Bcome::Registry::Command
   class Internal < Base
-    # In which the bcome context is passed to an external call
+    # In which the bcome context is an external (extended framework) call
 
     def execute(node, arguments)
-      process_arguments(arguments)
-      orchestrator = orch_klass.new(node, arguments)
+      merged_arguments = process_arguments(arguments)
+      orchestrator = orch_klass.new(node, merged_arguments)
       orchestrator.do_execute
     rescue Interrupt
       puts "\nExiting gracefully from interrupt\n".warning
