@@ -1,61 +1,43 @@
 
-Backlog
 
-check it works in ubuntu!
+Missing from docs
+=================
 
+- passing arguments to an OrchKlass (external command)
+- call one orchestration class from another (passing it a context by keyed namespace)
+- the select accessors available at inventory & collection level (e.g. how do I fetch a machine?)
+- traversing between contexts... stress @node is where the command was available at, but doesn't mean you're restricted to that particular node
 
-EXCEPTION HANDLING FOR DOCUMENATION
+Backlog to launch
+=================
+Bug 1
+-----
 
-A scriptd interactive mode? let user define list of machine to add... programattically.
-
-I.e. an interface onto adding selections, and then a simple hook to load in interactive mode.
-
-1. Network block incorrectly defined, need to catch and explain:
+Network block incorrectly defined: Need to catch and explain
 
 :myinventory:
   :description: A full list of my servers servers
   :type: inventory
-  
+
   :network: ec2
   :credentials_key: econsultancy
   :provisioning_region: us-east-1
-  
+
   :ec2_filters:
     :instance-state-name: running
 
-2. Clear exception message when breadcrumb is invalid, e.g. contains hyphens
 
-DOCS
+Bug 2
+-----
+Clear exception message when breadcrumb is invalid, e.g. contains hyphens
 
-Network patterns:
 
-1 platform, multiple environments (all in same provisioning zone)
-Single inventory
-1 platform, multiple environments with sub-selects
-
+Bug 3
+=====
 cd where id becomes with an integer fails, e.g. cd 123foo rather than cd "123foo"
 
-REMOVE 'reload' command from collection menu: should not be here!
-
-ADD IN !! 'get' to the server-level inventory level
-
-
-
-
-todo
-
-orchestration that takes input ? e.g. iptables -A INPUT -s 65.55.44.100 -j DROP  and pass it the IP?
-
-
-
-
-v 1.0
-=====
-
-Code
-----
-  Long delay for method missing still from things like registry coding - needs to be fixed.
-  Pin the version of IRB in the gemfile
+Bug 4
+-----
 
 bugs
   deadlock bug on parallel processing
@@ -73,54 +55,50 @@ bugs
 
 > df -h
 IOError: closed stream
-	from <internal:prelude>:134:in `__write_nonblock'
-	from <internal:prelude>:134:in `write_nonblock'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/proxy/command.rb:83:in `send'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/buffered_io.rb:102:in `send_pending'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:271:in `block in ev_do_handle_events'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:270:in `each'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:270:in `ev_do_handle_events'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/event_loop.rb:110:in `ev_select_and_postprocess'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/event_loop.rb:29:in `process'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:216:in `process'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:178:in `block in loop'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:178:in `loop'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:178:in `loop'
-	from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/ssh/command_exec.rb:53:in `ssh_exec!'
-	from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/ssh/command_exec.rb:22:in `block in execute!'
-	from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/ssh/command_exec.rb:19:in `each'
-	from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/ssh/command_exec.rb:19:in `execute!'
-	from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/node/server/base.rb:163:in `do_run'
-	from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/node/server/base.rb:170:in `run'
-	from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/interactive/session_item/transparent_ssh.rb:130:in `block in execute_on_machines'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/pmap-1.1.1/lib/pmap.rb:82:in `block (2 levels) in pmap'
-	from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/pmap-1.1.1/lib/pmap/thread_pool.rb:58:in `block in spawn_worker'
+        from <internal:prelude>:134:in `__write_nonblock'
+        from <internal:prelude>:134:in `write_nonblock'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/proxy/command.rb:83:in `send'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/buffered_io.rb:102:in `send_pending'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:271:in `block in ev_do_handle_events'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:270:in `each'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:270:in `ev_do_handle_events'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/event_loop.rb:110:in `ev_select_and_postprocess'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/event_loop.rb:29:in `process'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:216:in `process'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:178:in `block in loop'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:178:in `loop'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/net-ssh-4.1.0/lib/net/ssh/connection/session.rb:178:in `loop'
+        from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/ssh/command_exec.rb:53:in `ssh_exec!'
+        from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/ssh/command_exec.rb:22:in `block in execute!'
+        from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/ssh/command_exec.rb:19:in `each'
+        from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/ssh/command_exec.rb:19:in `execute!'
+        from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/node/server/base.rb:163:in `do_run'
+        from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/node/server/base.rb:170:in `run'
+        from /Users/guillaume/workspace/webzakimbo/gems/dev/bcome-kontrol/lib/objects/interactive/session_item/transparent_ssh.rb:130:in `block in execute_on_machines'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/pmap-1.1.1/lib/pmap.rb:82:in `block (2 levels) in pmap'
+        from /Users/guillaume/.rvm/gems/ruby-2.3.1@bcome-kontrol-installation/gems/pmap-1.1.1/lib/pmap/thread_pool.rb:58:in `block in spawn_worker'
+
+
+
+Clean up menus
+===============
+REMOVE 'reload' command from collection menu: should not be here!
+ADD IN !! 'get' to the server-level inventory level
 
 
 
 
+Testing
+=======
 
-Documentation
--------------
-
-
-work out what needs to be documented
-lib/objects/nodes/inventory/base.rb  def machine_by_identifier(identifier)  document this as being a selector for orchestration (as well as the cloud matches thing)
-orchestration (internal)
-  - @node & @arguments are available
-  - execute the above
-  - call one orchestration class from another (passing it a context by keyed namespace)
-  - the select accessors available at inventory & collection level (e.g. how do I fetch a machine?)
-  - traversing between contexts... stress @node is where the command was available at, but doesn't mean you're restricted to that particular node
-cloud matches
-... and everything else!
-document patters for setting up networks: flat inventory / collection of environments / collection of environments with sub-selects / different platforms with collections and everything else below
+Test in ubuntu
 
 
-v.1.2
-=====
+Backlog v 1.1
+==============
 
-Code
-----
-  A new kind of sub-select that unions two or more other inventories where SSH connection details must come from its the origin inventory
-  Drivers for other platforms: digital ocean / azure / rackspace etc
+A scriptd interactive mode? let user define list of machine to add... programattically.
+I.e. an interface onto adding selections, and then a simple hook to load in interactive mode.
+orchestration that takes input ? e.g. iptables -A INPUT -s 65.55.44.100 -j DROP  and pass it the IP?
+A new kind of sub-select that unions two or more other inventories where SSH connection details must come from its the origin inventory
+Drivers for other platforms: digital ocean / azure / rackspace etc
