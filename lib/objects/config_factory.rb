@@ -15,7 +15,7 @@ class Bcome::ConfigFactory
     number_crumbs = crumbs.size
 
     crumbs.each_with_index do |crumb, index|
-      is_last_crumb = number_crumbs == (index + 1) ? true : false
+      is_last_crumb = number_crumbs == (index + 1)
       if this_view = hash_for_identifier_from_view(crumb, views)
         views = this_view
       else

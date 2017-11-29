@@ -1,6 +1,5 @@
 module Bcome::Ssh
   class Driver
-
     attr_reader :config, :bootstrap_settings
 
     DEFAULT_TIMEOUT_IN_SECONDS = 5
@@ -46,7 +45,7 @@ module Bcome::Ssh
 
     def proxy
       return nil unless has_proxy?
-      connection_string = bootstrap? ? bootstrap_proxy_connection_string : proxy_connection_string 
+      connection_string = bootstrap? ? bootstrap_proxy_connection_string : proxy_connection_string
       ::Net::SSH::Proxy::Command.new(connection_string)
     end
 
@@ -59,8 +58,8 @@ module Bcome::Ssh
     end
 
     def bootstrap_proxy_connection_string
-       "ssh -i #{@bootstrap_settings.ssh_key_path} -o StrictHostKeyChecking=no -W %h:%p #{@bootstrap_settings.bastion_host_user}@#{@proxy_data.host}"
-    end  
+      "ssh -i #{@bootstrap_settings.ssh_key_path} -o StrictHostKeyChecking=no -W %h:%p #{@bootstrap_settings.bastion_host_user}@#{@proxy_data.host}"
+    end
 
     def do_ssh
       cmd = ssh_command
@@ -68,7 +67,7 @@ module Bcome::Ssh
     end
 
     def bastion_host_user
-      (bootstrap? && @bootstrap_settings.bastion_host_user) ? @bootstrap_settings.bastion_host_user : @proxy_data.bastion_host_user ? @proxy_data.bastion_host_user : user
+      bootstrap? && @bootstrap_settings.bastion_host_user ? @bootstrap_settings.bastion_host_user : @proxy_data.bastion_host_user ? @proxy_data.bastion_host_user : user
     end
 
     def ssh_command
@@ -89,7 +88,7 @@ module Bcome::Ssh
     end
 
     def user
-      (bootstrap? && @bootstrap_settings.user) ? @bootstrap_settings.user : @config[:user] ? @config[:user] : fallback_local_user
+      bootstrap? && @bootstrap_settings.user ? @bootstrap_settings.user : @config[:user] ? @config[:user] : fallback_local_user
     end
 
     def fallback_local_user
@@ -106,7 +105,7 @@ module Bcome::Ssh
       params[:proxy] = proxy if has_proxy?
       params[:timeout] = timeout_in_seconds
       params[:verbose] = :debug if verbose
-      return params
+      params
     end
 
     def ssh_keys
@@ -140,14 +139,14 @@ module Bcome::Ssh
       end
     end
 
-    def ssh_connect!(verbose = false)
+    def ssh_connect!(_verbose = false)
       @connection = nil
       begin
         @connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
       rescue Net::SSH::Proxy::ConnectError, Net::SSH::ConnectionTimeout, Errno::EPIPE => e
-         raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
+        raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
       end
-      return @connection
+      @connection
     end
 
     def ping
@@ -190,7 +189,7 @@ module Bcome::Ssh
 
     def close_ssh_connection
       return unless @connection
-      @connection.close unless @connection.closed?  
+      @connection.close unless @connection.closed?
       @connection = nil
     end
 

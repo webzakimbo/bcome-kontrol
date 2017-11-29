@@ -9,7 +9,7 @@ module Bcome::Interactive
         rescue ::Bcome::Exception::InteractiveSessionHalt => e
           puts session_end_message
         rescue  ::Bcome::Exception::CouldNotInitiateSshConnection => e
-          puts "Caught connection error #2"
+          puts 'Caught connection error #2'
           puts e.message.error
         rescue ::IRB::Abort
           puts session_end_message

@@ -1,12 +1,11 @@
 module ::Bcome::Ssh
   class ScriptExec
-
     SCRIPTS_PATH = 'bcome/scripts'.freeze
 
     class << self
       def execute(server, script_name)
         executor = new(server, script_name)
-        return executor.execute
+        executor.execute
       end
     end
 
@@ -18,8 +17,8 @@ module ::Bcome::Ssh
 
     def execute
       command = execute_command
-      pretty_print(command) 
-      return command
+      pretty_print(command)
+      command
     end
 
     def execute_command
@@ -27,12 +26,12 @@ module ::Bcome::Ssh
       raise Bcome::Exception::OrchestrationScriptDoesNotExist, local_path_to_script unless File.exist?(local_path_to_script)
       execute_script_command = "#{@ssh_driver.ssh_command} \"bash -s\" < #{local_path_to_script}"
       command = ::Bcome::Command::Local.run(execute_script_command)
-      return command
+      command
     end
 
     def pretty_print(command)
       output_append("\n(#{@server.namespace})$".terminal_prompt + "> ./#{SCRIPTS_PATH}/#{@script_name}.sh - \s#{command.pretty_result}\n")
-      output_append(command.stdout)  # append stderr
+      output_append(command.stdout) # append stderr
       output_append "\nSTDERR: #{command.stderr}" if command.failed?
       puts "\n\n#{@output_string}\n\n"
     end
@@ -40,6 +39,5 @@ module ::Bcome::Ssh
     def output_append(output_string)
       @output_string = "#{@output_string}#{output_string}"
     end
-
   end
 end

@@ -1,31 +1,7 @@
 
 
-Missing from docs
-=================
-
-- passing arguments to an OrchKlass (external command)
-- call one orchestration class from another (passing it a context by keyed namespace)
-- the select accessors available at inventory & collection level (e.g. how do I fetch a machine?)
-- traversing between contexts... stress @node is where the command was available at, but doesn't mean you're restricted to that particular node
-
 Backlog to launch
 =================
-Bug 1
------
-
-Network block incorrectly defined: Need to catch and explain
-
-:myinventory:
-  :description: A full list of my servers servers
-  :type: inventory
-
-  :network: ec2
-  :credentials_key: econsultancy
-  :provisioning_region: us-east-1
-
-  :ec2_filters:
-    :instance-state-name: running
-
 
 Bug 2
 -----

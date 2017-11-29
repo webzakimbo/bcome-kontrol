@@ -89,7 +89,7 @@ module Bcome::WorkspaceCommands
   end
 
   def ping
-    ::Bcome::Ssh::ConnectionHandler.connect(self, { :is_ping => true })
+    ::Bcome::Ssh::ConnectionHandler.connect(self, is_ping: true)
   end
 
   def pretty_description(is_active = true)
@@ -157,7 +157,7 @@ module Bcome::WorkspaceCommands
     respond_to?(method_sym) || method_is_available_on_node?(method_sym)
   end
 
-  def method_missing(method_sym, *arguments, &block)
+  def method_missing(method_sym, *arguments)
     unless method_is_available_on_node?(method_sym)
       raise NameError, "NameError: undefined local variable or method '#{method_sym}'"
     end

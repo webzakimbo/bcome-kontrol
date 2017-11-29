@@ -9,7 +9,7 @@ module Bcome
       puts "\nNo network access - please check your connection and try again\n".red
     end
 
-    def self.traverse(breadcrumbs = nil, spawn_into_console = false)
+    def self.traverse(breadcrumbs = nil, _spawn_into_console = false)
       spawn_into_console = false
       ::Bcome::Bootup.set_and_do({ breadcrumbs: breadcrumbs }, spawn_into_console)
     end
@@ -37,7 +37,7 @@ module Bcome
       end
     end
 
-    def traverse(starting_context)
+    def traverse(_starting_context)
       starting_context = estate
       crumbs.each_with_index do |crumb, _index|
         # Some contexts' resources are loaded dynamically and do not come from the estate config. As we're traversing, we'll need to load

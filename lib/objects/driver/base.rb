@@ -2,6 +2,7 @@ module Bcome::Driver
   class Base
     class << self
       def create_from_config(config)
+        raise Bcome::Exception::InvalidNetworkDriverType, 'Your network configurtion is invalid' unless config.is_a?(Hash)
         raise Bcome::Exception::InvalidNetworkDriverType, "Missing config parameter 'type'" unless config[:type]
         config_klass_key = config[:type].to_sym
         driver_klass = klass_for_type[config_klass_key]

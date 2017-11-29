@@ -1,6 +1,5 @@
 module Bcome::Node::Inventory
   class Base < ::Bcome::Node::Base
-
     def initialize(*params)
       super
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @views if @views[:views] && !@views[:views].empty?

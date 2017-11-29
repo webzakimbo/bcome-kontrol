@@ -1,12 +1,11 @@
 module Bcome::Ssh
   class ConnectionHandler
-
     MAX_CONNECTION_ATTEMPTS = 3
 
     class << self
       def connect(node, config = {})
-         handler = new(node, config)
-         handler.connect
+        handler = new(node, config)
+        handler.connect
       end
     end
 
@@ -21,15 +20,15 @@ module Bcome::Ssh
     def machines
       @node.server? ? [@node] : @node.machines
     end
-    
+
     def show_progress?
       @config[:show_progress] ? true : false
     end
- 
+
     def ping?
       @config[:is_ping] ? true : false
     end
- 
+
     def reset_progress
       ::Bcome::ProgressBar.instance.reset!
     end
@@ -46,7 +45,7 @@ module Bcome::Ssh
       # from bcome, so, we'll sweep up failures and re-try to connect up to MAX_CONNECTION_ATTEMPTS.  Once connected, we're generally good - and any subsequent connection failures
       # within a specific session will be handled ad-hoc and re-connection is automatic.
       while @servers_to_connect.any? && connection_attempt <= MAX_CONNECTION_ATTEMPTS
-        puts (connection_attempt == 0) ? "Initiating connections".informational : "Retrying failed connections".warning
+        puts connection_attempt == 0 ? 'Initiating connections'.informational : 'Retrying failed connections'.warning
         do_connect
         connection_attempt += 1
       end
@@ -56,27 +55,27 @@ module Bcome::Ssh
         reset_progress
       end
 
-      if ping?  
-         # If any machines remain, then we couldn't connect to them
-         @servers_to_connect.each {|server|
-           ping_result = {
-             success: false,
-             error: last_connection_exception_for(server)
-           } 
-           puts server.print_ping_result(ping_result)
-        }
+      if ping?
+        # If any machines remain, then we couldn't connect to them
+        @servers_to_connect.each do |server|
+          ping_result = {
+            success: false,
+            error: last_connection_exception_for(server)
+          }
+          puts server.print_ping_result(ping_result)
+        end
       end
 
       if @servers_to_connect.any?
         puts "Failed to connect to #{@servers_to_connect.size} nodes".error
       else
-        puts "All nodes reachable".success
+        puts 'All nodes reachable'.success
       end
     end
 
-   def last_connection_exception_for(server)
-     @connection_exceptions[server]
-   end
+    def last_connection_exception_for(server)
+      @connection_exceptions[server]
+    end
 
     def do_connect
       @servers_to_connect.pmap do |server|
@@ -98,6 +97,5 @@ module Bcome::Ssh
         indice_descriptor: "of #{machines.size}"
       }
     end
-
   end
 end

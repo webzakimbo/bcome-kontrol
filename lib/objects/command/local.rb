@@ -2,7 +2,7 @@ require 'open3'
 
 module Bcome::Command
   class Local
-    def self.run(raw_command, success_exit_codes = [0])
+    def self.run(raw_command, _success_exit_codes = [0])
       command = new(raw_command)
       command.syscall
       command
@@ -36,6 +36,5 @@ module Bcome::Command
     def pretty_result
       is_success? ? "success / exit code: #{exit_code}".success : "failure / exit code: #{exit_code}".error
     end
-
   end
 end

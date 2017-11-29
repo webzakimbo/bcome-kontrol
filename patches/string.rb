@@ -41,7 +41,7 @@ class String
   def blinking
     "\033[5m#{self}\033[0m"
   end
-  
+
   def method_missing(method_sym, *arguments, &bc_lack)
     if colour_code = colour_codes[method_sym]
       if (arguments[0] == :highlight) && highlight_colour = highlight_colour_codes[method_sym]
@@ -72,6 +72,4 @@ class String
     end
     nil
   end
-
-
 end

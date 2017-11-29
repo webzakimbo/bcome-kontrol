@@ -46,25 +46,24 @@ module Bcome::Registry::Command
     def in_console_session?
       ::Bcome::System::Local.instance.in_console_session?
     end
-  
-    def pretty_print ## TODO - revisit. This is a mess
 
+    def pretty_print ## TODO - revisit. This is a mess
       puts "\nRegistry commands".title + "\sfor #{@node.class} #{@node.keyed_namespace}".resource_value + "\n\n"
-      all_commands.sort.each do |group_name, commands|   
+      all_commands.sort.each do |group_name, commands|
         puts tab_spacing + group_name.title + "\n\n"
         commands.each do |command|
           command_key = command.console_command
           description = command.description
           defaults = command.defaults
 
-          puts tab_spacing + command_key.resource_key + item_spacing(command_key) + description.resource_value 
+          puts tab_spacing + command_key.resource_key + item_spacing(command_key) + description.resource_value
 
-          usage_string = in_console_session? ? "#{command_key}" : "bcome #{ @node.keyed_namespace.empty? ? "" : "#{@node.keyed_namespace}:"    }#{command_key}" 
+          usage_string = in_console_session? ? command_key.to_s : "bcome #{@node.keyed_namespace.empty? ? '' : "#{@node.keyed_namespace}:"}#{command_key}"
           puts tab_spacing + ("\s" * menu_item_spacing_length) + 'usage: '.instructional + usage_string
 
           if defaults.keys.any?
-            defaults_usage = in_console_session? ? "\s\"#{ defaults.collect{|key,value| "#{key}=your-value" }.join(",") }\"" : "\s" + defaults.collect{|key, value| "#{key}=your-value" }.join("\s")
-            puts tab_spacing + ("\s" * menu_item_spacing_length) + "defaults:\s".instructional + defaults.collect{|k,v| "#{k}=#{v}" }.join(", ")
+            defaults_usage = in_console_session? ? "\s\"#{defaults.collect { |key, _value| "#{key}=your-value" }.join(',')}\"" : "\s" + defaults.collect { |key, _value| "#{key}=your-value" }.join("\s")
+            puts tab_spacing + ("\s" * menu_item_spacing_length) + "defaults:\s".instructional + defaults.collect { |k, v| "#{k}=#{v}" }.join(', ')
             puts tab_spacing + ("\s" * menu_item_spacing_length) + "override:\s".instructional + usage_string + defaults_usage
           end
           puts "\n"
@@ -73,6 +72,5 @@ module Bcome::Registry::Command
       end
       nil
     end
-
   end
 end

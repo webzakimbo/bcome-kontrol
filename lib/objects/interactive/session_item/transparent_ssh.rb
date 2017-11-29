@@ -5,7 +5,7 @@ module Bcome::Interactive::SessionItem
     LIST_KEY = '\\l'.freeze
 
     DANGER_CMD = "rm\s+-r|rm\s+-f|rm\s+-fr|rm\s+-rf|rm".freeze
-    
+
     def machines
       node.server? ? [node] : node.machines
     end
@@ -43,7 +43,7 @@ module Bcome::Interactive::SessionItem
       warning = "\n\sCommands entered here will be executed on " + 'EVERY'.underline + ' machine in your selection.'
       second_warning = "\n\n\s" + 'Use with CAUTION.'.warning
       info = "\n\n\s\\l list machines\n\s\\q to quit\n\s\\? this message".informational
-      puts "#{warning}#{second_warning}#{info}\n"    
+      puts "#{warning}#{second_warning}#{info}\n"
     end
 
     def handle_the_unwise(input)
@@ -59,11 +59,10 @@ module Bcome::Interactive::SessionItem
     def prompt_for_confirmation(message)
       answer = get_input(message)
       prompt_for_confirmation(message) unless %w[Y N].include?(answer)
-      answer == 'Y' ? true : false
+      answer == 'Y'
     end
 
-    def start_message
-    end
+    def start_message; end
 
     def terminal_prompt
       ">\s".bold.terminal_prompt
@@ -82,8 +81,8 @@ module Bcome::Interactive::SessionItem
     end
 
     def open_ssh_connections
-      ::Bcome::Ssh::ConnectionHandler.connect(node, { :show_progress => true })
-      system("clear")
+      ::Bcome::Ssh::ConnectionHandler.connect(node, show_progress: true)
+      system('clear')
     end
 
     def close_ssh_connections
@@ -91,14 +90,14 @@ module Bcome::Interactive::SessionItem
     end
 
     def indicate_failed_nodes(unconnected_nodes)
-     unconnected_nodes.each do |node|
-       puts "\s\s - #{node.namespace}".bc_cyan
-     end
+      unconnected_nodes.each do |node|
+        puts "\s\s - #{node.namespace}".bc_cyan
+      end
     end
 
     def list_machines
       puts "\n"
-        machines.each do |machine|
+      machines.each do |machine|
         puts "\s- #{machine.namespace}"
       end
     end

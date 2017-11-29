@@ -7,7 +7,7 @@ module Bcome::WorkspaceMenu
       next if !::Bcome::System::Local.instance.in_console_session? && item[:console_only]
       puts tab_spacing + menu_item.to_s.resource_key + item_spacing(menu_item) + (menu_items[menu_item][:description]).to_s.resource_value
       if item[:usage] || item[:terminal_usage]
-        usage_string = ::Bcome::System::Local.instance.in_console_session? ? item[:usage] : "bcome #{ keyed_namespace.empty? ? "" : "#{keyed_namespace}:"    }#{item[:terminal_usage]}"
+        usage_string = ::Bcome::System::Local.instance.in_console_session? ? item[:usage] : "bcome #{keyed_namespace.empty? ? '' : "#{keyed_namespace}:"}#{item[:terminal_usage]}"
         puts tab_spacing + ("\s" * menu_item_spacing_length) + 'usage: '.instructional + usage_string
       end
       puts "\n"
@@ -120,8 +120,8 @@ module Bcome::WorkspaceMenu
       execute_script: {
         description: 'execute a bash script',
         console_only: false,
-        usage: "execute_script \"script_name\"",
-        terminal_usage: "execute_script script_name"
+        usage: 'execute_script "script_name"',
+        terminal_usage: 'execute_script script_name'
       }
     }
   end

@@ -19,13 +19,13 @@ module Bcome::Node
     def filter_duplicates(original_set)
       instance_lookup = []
       filtered_set = []
-      original_set.each {|server|
+      original_set.each do |server|
         unless instance_lookup.include?(server.origin_object_id)
           filtered_set << server
           instance_lookup << server.origin_object_id
-        end  
-      }
-      filtered_set 
+        end
+      end
+      filtered_set
     end
 
     def machines

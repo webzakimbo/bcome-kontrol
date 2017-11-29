@@ -1,6 +1,5 @@
 module Bcome::Ssh
   class Bootstrap
-
     def initialize(config)
       @config = config
     end
@@ -16,6 +15,5 @@ module Bcome::Ssh
     def bastion_host_user
       @config[:bastion_host_user]
     end
-
   end
 end
