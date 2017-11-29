@@ -10,8 +10,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Toolkit for managing machines - simplify your workflow.'
   spec.description   = 'Provides a console interface for traversing a hierarchy of platforms -> environment -> servers, and exposes common administration tools for the managemenent either of individual servers, or groups of servers. The system is driven from simple configuration and is extensible. It integrates with AWS EC2 for dynamic network discovery. Machines may be interacted with directly from the command line.'
   spec.homepage      = 'https://github.com/webzakimbo/bcome'
-  spec.license       = 'MIT'
-
+  spec.license       = 'GNU GPL V.3'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
   spec.executables = ['bcome']
