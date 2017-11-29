@@ -3,11 +3,6 @@
 Backlog to launch
 =================
 
-Bug 2
------
-Clear exception message when breadcrumb is invalid, e.g. contains hyphens
-
-
 Bug 3
 =====
 cd where id becomes with an integer fails, e.g. cd 123foo rather than cd "123foo"
