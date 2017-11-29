@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Toolkit for managing machines - simplify your workflow.'
   spec.description   = 'Provides a console interface for traversing a hierarchy of platforms -> environment -> servers, and exposes common administration tools for the managemenent either of individual servers, or groups of servers. The system is driven from simple configuration and is extensible. It integrates with AWS EC2 for dynamic network discovery. Machines may be interacted with directly from the command line.'
-  spec.homepage      = 'https://github.com/webzakimbo/bcome'
+  spec.homepage      = 'https://github.com/webzakimbo/bcome-kontrol'
   spec.license       = 'GNU GPL V.3'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
@@ -25,10 +25,10 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'rsync', '~> 1.0'
   spec.post_install_message = %q{
-    Bcome 1.0 is a rewrite!
+    Deprecation warning: bcome 1.0 is a rewrite!
 
     See https://github.com/webzakimbo/bcome-kontrol for our new documentation.
 
-    The older version will not be supported, but will remain. If you'd like to stick to the older gem version, then pin your Bcome gem to version 0.7.0
+    The older version will no longer be supported. If you'd like to stick to the older gem version, then pin your bcome gem to version 0.7.0
   }
 end
