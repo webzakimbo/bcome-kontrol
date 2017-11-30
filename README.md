@@ -2,4 +2,4 @@
 
 Automation & Real-time orchestration
 
-Please see our documentation here: <a href="https://webzakimbo.github.io/bcome-docs/">https://webzakimbo.github.io/bcome-docs/</a>.
+Please see our documentation here: <a target="_new" href="https://webzakimbo.github.io/bcome-docs/">https://webzakimbo.github.io/bcome-docs/</a>.
