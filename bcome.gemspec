@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Automation and real-time orchestration toolkit'
   spec.description   = "Automation and real-time orchestration toolkit:  no more re-inventing the wheel for common & basic dev ops tasks.  Network discovery / access machines by SSH / deploy applications / apply orchestration / enable automation.  Amazon EC2 integration"
   spec.homepage      = 'https://github.com/webzakimbo/bcome-kontrol'
-  spec.license       = 'GNU GPL V.3'
+  spec.license       = 'GPL-3.0'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
   spec.executables = ['bcome']
