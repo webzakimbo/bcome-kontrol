@@ -113,6 +113,13 @@ module Bcome::Node::Server
       ssh_driver.do_ssh
     end
 
+    # TODO - document
+    def pseudo_tty(command)
+      ssh_cmd = ssh_driver.ssh_command.gsub("ssh", "ssh -t")
+      tty_command = "#{ssh_cmd} '#{command}'"
+      execute_local(tty_command)
+    end
+
     def execute_script(script_name)
       command_result = ::Bcome::Ssh::ScriptExec.execute(self, script_name)
       return command_result
