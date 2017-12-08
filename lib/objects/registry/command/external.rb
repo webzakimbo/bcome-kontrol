@@ -24,11 +24,12 @@ module Bcome::Registry::Command
 
       local_command_substitutions.each do |substitution|
         substitute_with = merged_arguments[substitution.to_sym]
-        unless substitute_with
+        if substitute_with.nil?
           error_message_suffix = "- missing '#{substitution}' from command '#{local_command}'"
           raise Bcome::Exception::MissingArgumentForRegistryCommand, error_message_suffix
         end
-
+  
+        substitute_with = [TrueClass, FalseClass].include?(substitute_with.class) ? (substitute_with ? "true" : "false") : substitute_with
         substituted_command.gsub!("%#{substitution}%", substitute_with)
       end
       substituted_command
