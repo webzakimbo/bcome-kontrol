@@ -71,7 +71,7 @@ module Bcome::Node::Server
     end
 
     def enabled_menu_items
-      (super + [:get, :ssh, :tags]) - [:enable, :disable, :enable!, :disable!]
+      (super + [:get, :ssh, :tags, :pseudo_tty]) - [:enable, :disable, :enable!, :disable!]
     end
 
     def menu_items
@@ -88,7 +88,12 @@ module Bcome::Node::Server
         usage: "get \"/remote/path\", \"/local/path\"",
         terminal_usage: "get \"/remote/path\" \"/local/path\""
       }
-
+      base_items[:pseudo_tty] = {
+        description: "Invoke a pseudo-tty session",
+        console_only: false,
+        usage: "pseudo_tty \"your command\"",
+        terminal_usage: "pseudo_tty \"your command\""
+      }
 
       base_items
     end
@@ -113,7 +118,6 @@ module Bcome::Node::Server
       ssh_driver.do_ssh
     end
 
-    # TODO - document
     def pseudo_tty(command)
       ssh_cmd = ssh_driver.ssh_command.gsub("ssh", "ssh -t")
       tty_command = "#{ssh_cmd} '#{command}'"
