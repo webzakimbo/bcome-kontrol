@@ -24,11 +24,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rainbow', '~> 2.2.1'
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'rsync', '~> 1.0'
-  spec.post_install_message = %q{
-    Deprecation warning: bcome 1.0 is a rewrite and is not backwards compatible with previous versions.
-
-    See https://github.com/webzakimbo/bcome-kontrol for our new documentation.
-
-    The older version will no longer be supported. If you'd like to stick to the older gem version, then pin your bcome gem to version 0.7.0
-  }
 end
