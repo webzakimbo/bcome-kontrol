@@ -25,6 +25,10 @@ module Bcome::Node::Resources
           new_node.identifier =~ /#{inventory.override_identifier}/
           new_node.update_identifier(Regexp.last_match(1)) if Regexp.last_match(1)
         end
+
+        # Register the new node with the registry
+        ::Bcome::Registry::Loader.instance.set_command_group_for_node(new_node)
+
         new_set << new_node
       end
       @nodes = new_set
