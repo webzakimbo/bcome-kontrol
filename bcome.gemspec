@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'bcome'
-  spec.version       = '1.1.0'
+  spec.version       = '1.1.1'
   spec.authors       = ['Guillaume Roderick (Webzakimbo)']
   spec.email         = ['guillaume@webzakimbo.com']
 
