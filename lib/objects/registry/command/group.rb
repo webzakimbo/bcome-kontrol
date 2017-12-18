@@ -32,6 +32,7 @@ module Bcome::Registry::Command
     end
 
     def item_spacing(item)
+      raise ::Bcome::Exception::InvalidRegistryCommandNameLength.new "command '#{item}' exceeds length limit of #{menu_item_spacing_length}" if item.length > menu_item_spacing_length
       "\s" * (menu_item_spacing_length - item.length)
     end
 
