@@ -5,7 +5,9 @@ module Bcome::Ssh
     end
 
     def ssh_key_path
-      @config[:ssh_key_path]
+      key_path = `eval directory=#{@config[:ssh_key_path]}; echo $directory`
+      key_path =~ /(.+)\n/
+      $1
     end
 
     def user
