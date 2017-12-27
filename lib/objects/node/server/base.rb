@@ -16,7 +16,7 @@ module Bcome::Node::Server
 
     def toggle_bootstrap(set_to = (@bootstrap ? false : true))
       @bootstrap = set_to
-      puts "Bootstrap is #{bootstrap? ? "on" : "off" }".informational
+      puts "Bootstrap #{bootstrap? ? "on" : "off" } for #{namespace}".informational
     end
 
     def dup_with_new_parent(new_parent)
