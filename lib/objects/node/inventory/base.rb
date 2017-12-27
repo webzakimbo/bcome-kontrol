@@ -32,6 +32,7 @@ module Bcome::Node::Inventory
       resources.active.each do |machine|
         machine.toggle_bootstrap(set_to)
       end
+      @bootstrap = (@bootstrap ? false : true)
       return
     end
      
