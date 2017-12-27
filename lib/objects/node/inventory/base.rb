@@ -1,8 +1,11 @@
 module Bcome::Node::Inventory
   class Base < ::Bcome::Node::Base
+
     def initialize(*params)
       super
       raise Bcome::Exception::InventoriesCannotHaveSubViews, @views if @views[:views] && !@views[:views].empty?
+
+      @bootstrap = false
     end
 
     def meta_matches(matchers)
@@ -25,6 +28,13 @@ module Bcome::Node::Inventory
       end
     end
 
+    def toggle_bootstrap(set_to = (@bootstrap ? false : true))
+      resources.active.each do |machine|
+        machine.toggle_bootstrap(set_to)
+      end
+      return
+    end
+     
     def enabled_menu_items
       super + %i[ssh]
     end
