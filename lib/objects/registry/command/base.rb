@@ -14,7 +14,8 @@ module Bcome::Registry::Command
       def valid_types
         {
           external: ::Bcome::Registry::Command::External,
-          internal: ::Bcome::Registry::Command::Internal
+          internal: ::Bcome::Registry::Command::Internal,
+          shortcut: ::Bcome::Registry::Command::Shortcut
         }
       end
     end
