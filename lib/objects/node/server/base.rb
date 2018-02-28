@@ -10,6 +10,17 @@ module Bcome::Node::Server
       @bootstrap = false
     end
 
+    # override a server namespace's parameters. This enables features such as specific SSH parameters for a specific server, e.g. my use case was a 
+    # single debian box within an ubuntu network, where I needed to access the machine bootstrapping mode with the 'admin' rather 'ubuntu' username.
+    def set_view_attributes
+      super
+      overridden_attributes = ::Bcome::Node::Factory.instance.machines_data_for_namespace(namespace.to_sym)
+      overridden_attributes.each do |override_key, override_value|
+        instance_variable_name = "@#{override_key}"
+        instance_variable_set(instance_variable_name, override_value)   
+      end
+    end
+
     def bootstrap?
       @bootstrap ? true : false
     end  

@@ -41,7 +41,7 @@ module Bcome::Node::Attributes
   def recurse_hash_data_for_instance_var(instance_var_name, parent_key)
     instance_data = instance_variable_defined?(instance_var_name) ? instance_variable_get(instance_var_name) : {}
     instance_data ||= {}
-    instance_data = parent.send(parent_key).merge(instance_data) if has_parent?
+    instance_data = parent.send(parent_key).deep_merge(instance_data) if has_parent?
     instance_data
   end
 end

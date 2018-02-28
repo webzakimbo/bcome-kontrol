@@ -6,6 +6,8 @@ module Bcome::Node
 
     CONFIG_PATH = 'bcome'.freeze
     DEFAULT_CONFIG_NAME = 'networks.yml'.freeze
+    SERVER_OVERRIDE_CONFIG_NAME = 'machines-data.yml'.freeze
+
     INVENTORY_KEY = 'inventory'.freeze
     COLLECTION_KEY = 'collection'.freeze
     SUBSELECT_KEY = 'inventory-subselect'.freeze
@@ -22,6 +24,10 @@ module Bcome::Node
 
     def config_path
       "#{CONFIG_PATH}/#{config_file_name}"
+    end
+
+    def machines_data_path
+      "#{CONFIG_PATH}/#{SERVER_OVERRIDE_CONFIG_NAME}"
     end
 
     def config_file_name
@@ -46,7 +52,7 @@ module Bcome::Node
       raise Bcome::Exception::InvalidNetworkConfig, 'missing config type' unless config[:type]
 
       klass = klass_for_view_type[config[:type]]
-
+ 
       raise Bcome::Exception::InvalidNetworkConfig, "invalid config type #{config[:type]}" unless klass
 
       node = klass.new(views: config, parent: parent)
@@ -84,6 +90,14 @@ module Bcome::Node
       @estate_config ||= reformat_config(load_estate_config)
     end
 
+    def machines_data
+      @machines_data ||= load_machines_data
+    end
+
+    def machines_data_for_namespace(namespace)
+      machines_data[namespace] ? machines_data[namespace] : {}
+    end
+
     def rewrite_estate_config(data)
       File.open(config_path, 'w') do |file|
         file.write data.to_yaml
@@ -94,10 +108,18 @@ module Bcome::Node
       config = YAML.load_file(config_path).deep_symbolize_keys
       return config
     rescue ArgumentError, Psych::SyntaxError => e
-      raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in config' + e.message
+      raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in network config' + e.message
     rescue Errno::ENOENT
       raise Bcome::Exception::DeprecationWarning if is_running_deprecated_configs?
       raise Bcome::Exception::MissingNetworkConfig, config_path
+    end
+
+    def load_machines_data
+      return {} unless File.exist?(machines_data_path)    
+      config = YAML.load_file(machines_data_path).deep_symbolize_keys
+      return config
+    rescue ArgumentError, Psych::SyntaxError => e
+      raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in machines data config' + e.message
     end
 
     def is_running_deprecated_configs?
