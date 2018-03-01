@@ -8,7 +8,7 @@ module Bcome::Command
       command
     end
 
-    attr_reader :stdout, :stderr
+    attr_reader :stdout, :stderr, :process_status
 
     def initialize(command, success_exit_codes = [0])
       @command = command

@@ -109,6 +109,10 @@ module Bcome::Node::Server
       base_items
     end
 
+    def local_port_forward(start_port, end_port)
+      ssh_driver.local_port_forward(start_port, end_port)
+    end
+
     def open_ssh_connection
       ssh_driver.ssh_connection  
     end
