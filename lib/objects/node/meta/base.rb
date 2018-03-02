@@ -25,9 +25,11 @@ module Bcome::Node::Meta
       @data
     end
 
-    def fetch(key)
+    def fetch(key, default = nil)
       if @data.key?(key)
         @data[key]
+      elsif default
+        return default
       else
         raise Bcome::Exception::CantFindKeyInMetadata, key unless @data.key?(key)
       end
