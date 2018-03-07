@@ -1,5 +1,8 @@
 module Bcome::Driver
   class Ec2 < Bcome::Driver::Base
+  
+    PATH_TO_FOG_CREDENTIALS = "#{ENV['HOME']}/.fog".freeze
+
     def initialize(*params)
       super
       raise Bcome::Exception::Ec2DriverMissingProvisioningRegion, params.inspect unless provisioning_region
@@ -20,6 +23,10 @@ module Bcome::Driver
 
     def loading
       fog_client.servers.all({})
+    end
+
+    def raw_fog_credentials
+      @raw_fog_credentials ||= YAML.load_file(PATH_TO_FOG_CREDENTIALS)[credentials_key]
     end
 
     def credentials_key
