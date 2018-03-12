@@ -81,9 +81,18 @@ module Bcome::Ssh
 
     def local_port_forward(start_port, end_port)
       if has_proxy?
-        tunnel_command = "ssh -N -L #{start_port}:#{@context_node.internal_ip_address}:#{end_port} #{bastion_host_user}@#{@proxy_data.host}"
+        
+        if bootstrap?
+          tunnel_command = "ssh -N -L #{start_port}:#{@context_node.internal_ip_address}:#{end_port} -i #{@bootstrap_settings.ssh_key_path} #{bastion_host_user}@#{@proxy_data.host}"
+        else
+          tunnel_command = "ssh -N -L #{start_port}:#{@context_node.internal_ip_address}:#{end_port} #{bastion_host_user}@#{@proxy_data.host}"
+        end
       else
-        tunnel_command = "ssh -N -L #{start_port}:#{@context_node.public_ip_address}:#{end_port}"
+        if bootstrap?
+          tunnel_command = "ssh -i #{@bootstrap_settings.ssh_key_path} -N -L #{start_port}:#{@context_node.public_ip_address}:#{end_port}"
+        else
+          tunnel_command = "ssh -N -L #{start_port}:#{@context_node.public_ip_address}:#{end_port}"
+        end
       end
 
       tunnel = ::Bcome::Ssh::Tunnel::LocalPortForward.new(tunnel_command)
