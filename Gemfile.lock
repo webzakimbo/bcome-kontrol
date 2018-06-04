@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bcome (1.1.4)
+    bcome (1.2.0)
       activesupport (= 5.1)
       awesome_print (= 1.8.0)
       fog-aws (~> 0.12.0)
@@ -24,7 +24,7 @@ GEM
     awesome_print (1.8.0)
     builder (3.2.3)
     concurrent-ruby (1.0.5)
-    excon (0.59.0)
+    excon (0.60.0)
     fog-aws (0.12.0)
       fog-core (~> 1.38)
       fog-json (~> 1.0)
@@ -49,11 +49,11 @@ GEM
     minitest (5.10.3)
     mocha (1.2.1)
       metaclass (~> 0.0.1)
-    multi_json (1.12.2)
+    multi_json (1.13.1)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (4.1.0)
-    nokogiri (1.8.1)
+    nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
     parallel (1.12.0)
     parser (2.4.0.2)
