@@ -50,7 +50,7 @@ module Bcome::Node
     end
 
     def enabled_menu_items
-      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :tree, :ping, :put, :rsync, :cd, :meta, :registry, :interactive, :execute_script] 
+      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :tree, :ping, :put, :rsync, :cd, :meta, :pack_metadata, :unpack_metadata, :registry, :interactive, :execute_script] 
     end
 
     def has_proxy?
@@ -91,6 +91,14 @@ module Bcome::Node
       end
       results
     end
+
+    def pack_metadata
+      ::Bcome::Encryptor.instance.pack
+    end
+
+    def unpack_metadata
+      ::Bcome::Encryptor.instance.unpack
+    end 
  
     def validate_attributes
       validate_identifier 
