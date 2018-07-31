@@ -75,7 +75,7 @@ module Bcome::Node::Resources
     end
 
     def for_identifier(identifier)
-      resource = @nodes.select { |node| node.identifier == identifier }.first
+      resource = @nodes.select { |node| node.identifier == identifier }.last
       resource
     end
 

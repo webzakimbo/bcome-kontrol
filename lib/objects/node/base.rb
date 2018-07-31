@@ -57,6 +57,10 @@ module Bcome::Node
       ssh_driver.has_proxy?
     end
 
+    def identifier=(new_identifier)
+      @identifier = new_identifier
+    end
+
     def proxy
       ssh_driver.proxy
     end
@@ -108,8 +112,12 @@ module Bcome::Node
 
     def validate_identifier
       @identifier = DEFAULT_IDENTIFIER if is_top_level_node? && !@identifier && !is_a?(::Bcome::Node::Server::Base)
-      raise ::Bcome::Exception::MissingIdentifierOnView.new(@views.inspect) unless @identifier
-      raise ::Bcome::Exception::InvalidIdentifier.new("'#{@identifier}' contains whitespace") if @identifier =~ /\s/
+
+      @identifier = "NO-ID_#{Time.now.to_i}" unless @identifier
+
+      #raise ::Bcome::Exception::MissingIdentifierOnView.new(@views.inspect) unless @identifier
+      @identifier.gsub!(/\s/, "_") if @identifier =~ /\s/
+      #raise ::Bcome::Exception::InvalidIdentifier.new("'#{@identifier}' contains whitespace") if @identifier =~ /\s/
     end
 
     def requires_description?

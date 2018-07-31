@@ -7,8 +7,11 @@ module Bcome::Node::Resources
           # We remove the static server from our selection
           @nodes.delete(existing_node)
         else
-          exception_message = "#{node.identifier} is not unique within namespace #{node.parent.namespace}"
-          raise Bcome::Exception::NodeIdentifiersMustBeUnique, exception_message
+
+        # If we find a node with a duplicate identifier, we'll add a digit to the end
+        existing_node =~ /.+(\d)/
+        digit = $1 ? ($1.to_i + 1)  : 1
+        node.identifier = "#{node.identifier}#{digit}"
         end
       end
       @nodes << node

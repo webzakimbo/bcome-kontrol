@@ -25,7 +25,7 @@ module Bcome::Parser
     end
 
     def validate!
-      raise Bcome::Exception::InvalidBcomeBreadcrumb.new "- letters, numbers & underscores only" unless @raw_crumbs =~ /^([a-z0-9A-Z_]+)(:\s*[a-z0-9A-Z_]+)*:?$/i
+      #raise Bcome::Exception::InvalidBcomeBreadcrumb.new "- letters, numbers & underscores only" unless @raw_crumbs =~ /^([a-z0-9A-Z_]+)(:\s*[a-z0-9A-Z_]+)*:?$/i
     end
   end
 end

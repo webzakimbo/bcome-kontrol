@@ -60,7 +60,7 @@ module Bcome::Node::Inventory
     end
 
     def tags(identifier = nil)
-      direct_invoke_server(:tags, identifier)
+      identifier.nil? ? direct_invoke_all_servers(:tags) : direct_invoke_server(:tags, identifier)
     end
 
     def direct_invoke_server(method, identifier)
@@ -74,6 +74,11 @@ module Bcome::Node::Inventory
       else
         raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'"
       end
+    end
+
+    def direct_invoke_all_servers(method)
+      resources.active.each {|m| m.send(method) }
+      return
     end
 
     def cache_nodes_in_memory

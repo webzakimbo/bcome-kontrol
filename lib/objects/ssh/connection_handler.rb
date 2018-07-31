@@ -69,7 +69,7 @@ module Bcome::Ssh
       if @servers_to_connect.any?
         puts "Failed to connect to #{@servers_to_connect.size} nodes".error
       else
-        puts 'All nodes reachable'.success
+        puts 'All nodes reachable   '.success
       end
     end
 
