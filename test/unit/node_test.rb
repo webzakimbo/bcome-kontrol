@@ -60,7 +60,7 @@ class NodeTest < ActiveSupport::TestCase
     end
   end
 
-  def test_identifier_is_required_for_all_subnodes
+  def test_identifier_can_be_null_for_any_node
     # Given
     config = {
       'dummy': {
@@ -78,9 +78,7 @@ class NodeTest < ActiveSupport::TestCase
     YAML.expects(:load_file).returns(config)
 
     # When/then
-    assert_raise Bcome::Exception::MissingIdentifierOnView do
-      Bcome::Node::Factory.send(:new).init_tree
-    end
+    Bcome::Node::Factory.send(:new).init_tree
   end
 
   def test_type_is_required
@@ -236,7 +234,7 @@ class NodeTest < ActiveSupport::TestCase
     end
   end
 
-  def test_that_identifiers_dont_have_spaces
+  def test_that_identifiers_can_have_spaces
     # Given
     config = {
       ' foo': {
@@ -248,12 +246,10 @@ class NodeTest < ActiveSupport::TestCase
     YAML.expects(:load_file).returns(config)
 
     # when/then
-    assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do
-      ::Bcome::Node::Factory.send(:new).init_tree
-    end
+    ::Bcome::Node::Factory.send(:new).init_tree
   end
 
-  def test_that_identifiers_dont_have_spaces_two
+  def test_that_identifiers_can_have_spaces_two
     # Given
     config = {
       " foo": {
@@ -263,14 +259,12 @@ class NodeTest < ActiveSupport::TestCase
     }
 
     YAML.expects(:load_file).returns(config)
-
+ 
     # when/then
-    assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do
-      ::Bcome::Node::Factory.send(:new).init_tree
-    end
+    ::Bcome::Node::Factory.send(:new).init_tree
   end
 
-  def test_that_identifiers_dont_have_spaces_three
+  def test_that_identifiers_can_have_spaces_three
     # Given
     config = {
       "foo ":
@@ -283,12 +277,10 @@ class NodeTest < ActiveSupport::TestCase
     YAML.expects(:load_file).returns(config)
 
     # when/then
-    assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do
-      ::Bcome::Node::Factory.send(:new).init_tree
-    end
+    ::Bcome::Node::Factory.send(:new).init_tree
   end
 
-  def test_that_identifiers_dont_have_spaces_four
+  def test_that_identifiers_can_have_spaces_four
     # Given
     config = {
       "f o o":
@@ -301,9 +293,7 @@ class NodeTest < ActiveSupport::TestCase
     YAML.expects(:load_file).returns(config)
 
     # when/then
-    assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do
-      ::Bcome::Node::Factory.send(:new).init_tree
-    end
+    ::Bcome::Node::Factory.send(:new).init_tree
   end
 
   def test_should_return_string_matching_method_missing_if_matches_a_node_identifier

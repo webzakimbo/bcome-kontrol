@@ -44,19 +44,6 @@ class StaticServerTest < ActiveSupport::TestCase
     assert static_server.internal_ip_address == internal_ip_address
   end
 
-  def test_should_ensure_that_required_fields_are_required
-    # Given/When/Then
-    assert_raise ::Bcome::Exception::MissingIdentifierOnView do
-      ::Bcome::Node::Server::Static.new({ views: { public_ip_address: "XX.XX.XX.XX.XX" } })
-    end
-
-    # Given/When/Then
-    # We require either an internal or a public ip address
-    assert_raise ::Bcome::Exception::MissingIpaddressOnServer do
-      ::Bcome::Node::Server::Static.new({ views: { identifier: "foo" }})
-    end 
-  end
-
   def test_should_be_able_to_set_description_on_server
     # Given
     description = given_a_random_string_of_length(10)

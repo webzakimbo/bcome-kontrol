@@ -3,8 +3,6 @@ class BreadCrumbParserTest < ActiveSupport::TestCase
   def test_should_parse_breadcrumbs
     # Given
     test_breadcrumbs = [
-      { breadcrumb: '', expectation: [] },
-      { breadcrumb: nil, expectation: [] },
       { breadcrumb: 'foo', expectation: ['foo'] },
       { breadcrumb: 'foo:bar', expectation: %w[foo bar] },
       { breadcrumb: 'foo:bar:woo:', expectation: %w[foo bar woo] },
@@ -25,10 +23,4 @@ class BreadCrumbParserTest < ActiveSupport::TestCase
     end
   end
 
-  def test_should_raise_if_invalid_breadcrumb
-    # Given/when/then
-    assert_raise Bcome::Exception::InvalidBcomeBreadcrumb do
-      ::Bcome::Parser::BreadCrumb.new('-')
-    end
-  end
 end
