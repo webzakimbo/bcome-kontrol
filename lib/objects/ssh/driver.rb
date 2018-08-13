@@ -50,7 +50,12 @@ module Bcome::Ssh
     end
 
     def has_proxy?
+      return false if proxy_config_value && proxy_config_value == -1
       !@config[:proxy].nil?
+    end
+
+    def proxy_config_value
+      @config[:proxy]
     end
 
     def proxy_connection_string
