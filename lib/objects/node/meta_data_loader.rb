@@ -17,7 +17,20 @@ module Bcome::Node
     end
 
     def data_for_namespace(namespace)
-      data[namespace.to_sym] ? data[namespace.to_sym] : {}
+      static_data = data[namespace.to_sym] ? data[namespace.to_sym] : {}
+      static_data.merge(terraform_data_for_namespace(namespace))
+    end
+
+    def terraform_data_for_namespace(namespace)
+      parser = Bcome::Terraform::Parser.new(namespace)
+      attributes = parser.attributes
+      if attributes.keys.any?
+        {
+          "terraform_attributes" => attributes
+        }
+      else
+        {}
+      end
     end
 
     def prompt_for_decryption_key
