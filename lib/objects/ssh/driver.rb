@@ -77,11 +77,24 @@ module Bcome::Ssh
 
     def ssh_command
       return bootstrap_ssh_command if bootstrap? && @bootstrap_settings.ssh_key_path
+
       if has_proxy?
-        "ssh #{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{user}@#{@context_node.internal_ip_address}"
+        "ssh #{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{node_level_ssh_key_connection_string}#{user}@#{@context_node.internal_ip_address}"
       else
-        "ssh #{user}@#{@context_node.public_ip_address}"
+        "ssh #{node_level_ssh_key_connection_string}#{user}@#{@context_node.public_ip_address}"
       end
+    end
+
+    def node_level_ssh_key_connection_string
+      key_specified_at_node_level? ? "-i #{node_level_ssh_key}\s" : ""
+    end
+
+    def key_specified_at_node_level?
+      !node_level_ssh_key.nil?
+    end  
+
+    def node_level_ssh_key
+      return (@config[:ssh_keys]) ? @config[:ssh_keys].first : nil
     end
 
     def local_port_forward(start_port, end_port)
