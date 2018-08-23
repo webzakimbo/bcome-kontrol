@@ -57,7 +57,7 @@ module Bcome::Orchestration
         :secret_key => ec2_credentials["aws_secret_access_key"]
       })
 
-      all_vars.collect{|key, value| "-var #{key}=#{value}"}.join("\s")
+      all_vars.collect{|key, value| "-var #{key}=\"#{value}\""}.join("\s")
     end
 
     def var_string
