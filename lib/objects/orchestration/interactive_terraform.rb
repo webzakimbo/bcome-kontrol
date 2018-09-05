@@ -14,8 +14,7 @@ module Bcome::Orchestration
       puts "INTERACTIVE TERRAFORM\n".underline
       puts "Namespace:\s" + "#{@node.namespace}".informational
       puts "Configuration Path:\s" + "#{path_to_env_config}/*".informational
-      puts "\nConfigured metadata:\s" 
-      puts terraform_metadata.inspect.informational
+      puts "\nConfigured metadata:\s" + terraform_metadata.inspect.informational
 
       puts "\nAny commands you enter here will be passed directly to Terraform in your configuration path scope."
     end
@@ -43,7 +42,7 @@ module Bcome::Orchestration
 
     # COMMAND PROCESSING
     def terraform_metadata
-      @terraform_metadata ||= @node.metadata.fetch(:terraform)
+      @terraform_metadata ||= @node.metadata.fetch("terraform", @node.metadata.fetch(:terraform, {}))
     end  
 
     # Get the terraform variables for this stack, and merge in with our EC2 access keys

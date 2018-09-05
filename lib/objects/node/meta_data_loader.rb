@@ -61,7 +61,7 @@ module Bcome::Node
           raise Bcome::Exception::InvalidMetaDataConfig, "Error: #{e.message}"
         end
       end
-      all_meta_data
+      return all_meta_data
     end
   end
 end
