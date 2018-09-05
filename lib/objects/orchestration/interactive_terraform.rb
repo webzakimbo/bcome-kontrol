@@ -43,9 +43,15 @@ module Bcome::Orchestration
 
     # COMMAND PROCESSING
     def terraform_metadata
-      @terraform_metadata ||= @node.metadata.fetch(:terraform, {})
+      @terraform_metadata ||= get_terraform_metadata
     end  
  
+    def get_terraform_metadata
+      return @node.metadata.fetch(:terraform) if @node.metadata.has_key?(:terraform)
+      return @node.metadata.fetch("terraform") if @node.metadata.has_key?("terraform")
+      return {}
+    end
+  
 
     # Get the terraform variables for this stack, and merge in with our EC2 access keys
     def form_var_string
