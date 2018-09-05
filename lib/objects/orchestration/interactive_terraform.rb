@@ -47,8 +47,8 @@ module Bcome::Orchestration
     end  
  
     def get_terraform_metadata
-      return @node.metadata.fetch(:terraform) if @node.metadata.has_key?(:terraform)
-      return @node.metadata.fetch("terraform") if @node.metadata.has_key?("terraform")
+      return @node.metadata.fetch(:terraform) if @node.metadata.fetch(:terraform)
+      return @node.metadata.fetch("terraform") if @node.metadata.fetch("terraform")
       return {}
     end
   
