@@ -49,8 +49,12 @@ module Bcome::Orchestration
     def form_var_string
       terraform_vars = terraform_metadata
       ec2_credentials = @node.network_driver.raw_fog_credentials
+     
+      cleaned_data = terraform_vars.select{|k,v|
+        !v.is_a?(Hash) && !v.is_a?(Array)
+      } # we can't yet handle nested terraform metadata on the command line so no arrays or hashes
 
-      all_vars = terraform_vars.merge({
+      all_vars = cleaned_data.merge({
         :access_key => ec2_credentials["aws_access_key_id"],
         :secret_key => ec2_credentials["aws_secret_access_key"]
       })
