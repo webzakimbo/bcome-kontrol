@@ -116,7 +116,9 @@ module Bcome::Node
       @identifier = "NO-ID_#{Time.now.to_i}" unless @identifier
 
       #raise ::Bcome::Exception::MissingIdentifierOnView.new(@views.inspect) unless @identifier
-      @identifier.gsub!(/\s/, "_") if @identifier =~ /\s/
+      @identifier.gsub!(/\s/, "_") # Remove whitespace 
+      @identifier.gsub!("-", "_") # change hyphens to undescores, hyphens don't play well in var names in irb
+
       #raise ::Bcome::Exception::InvalidIdentifier.new("'#{@identifier}' contains whitespace") if @identifier =~ /\s/
     end
 
