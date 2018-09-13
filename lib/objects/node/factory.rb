@@ -7,6 +7,7 @@ module Bcome::Node
     CONFIG_PATH = 'bcome'.freeze
     DEFAULT_CONFIG_NAME = 'networks.yml'.freeze
     SERVER_OVERRIDE_CONFIG_NAME = 'machines-data.yml'.freeze
+    LOCAL_OVERRIDE_CONFIG_NAME = 'me.yml'.freeze
 
     INVENTORY_KEY = 'inventory'.freeze
     COLLECTION_KEY = 'collection'.freeze
@@ -117,6 +118,23 @@ module Bcome::Node
     def load_machines_data
       return {} unless File.exist?(machines_data_path)    
       config = YAML.load_file(machines_data_path).deep_symbolize_keys
+      return config
+    rescue ArgumentError, Psych::SyntaxError => e
+      raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in machines data config' + e.message
+    end
+
+    def local_data
+      @local_data ||= load_local_data
+    end  
+
+    def local_data_path
+      "#{CONFIG_PATH}/#{LOCAL_OVERRIDE_CONFIG_NAME}"
+    end
+
+    def load_local_data
+      return {} unless File.exist?(local_data_path)
+      config = YAML.load_file(local_data_path) 
+      return {} if config.nil?
       return config
     rescue ArgumentError, Psych::SyntaxError => e
       raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in machines data config' + e.message
