@@ -102,7 +102,6 @@ module Bcome::WorkspaceCommands
       desc += "\t"
       desc += is_active ? key.to_s.resource_key : key.to_s.resource_key_inactive
       desc += "\s" * (12 - key.length)
-      attribute_value = value == :identifier ? attribute_value.underline : attribute_value
       desc += is_active ? attribute_value.resource_value : attribute_value.resource_value_inactive
       desc += "\n"
       desc = desc unless is_active
