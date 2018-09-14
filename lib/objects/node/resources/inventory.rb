@@ -8,10 +8,17 @@ module Bcome::Node::Resources
           @nodes.delete(existing_node)
         else
 
-        # If we find a node with a duplicate identifier, we'll add a digit to the end
-        existing_node =~ /.+(\d)/
-        digit = $1 ? ($1.to_i + 1)  : 1
-        node.identifier = "#{node.identifier}#{digit}"
+          # If we find a node with a duplicate identifier, we'll add a digit to the end
+          existing_node.identifier =~ /.+(\d)/
+          digit = $1
+
+          if digit
+            node.identifier = "#{node.identifier}#{digit.to_i + 1}"
+          else
+            node.identifier = "#{node.identifier}2"
+            existing_node.identifier = "#{existing_node.identifier}1"  
+          end        
+        
         end
       end
       @nodes << node
