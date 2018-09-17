@@ -3,7 +3,7 @@ require 'irb'
 module IRB
   class << self
     # with thanks: http://stackoverflow.com/questions/4749476/how-can-i-pass-arguments-to-irb-if-i-dont-specify-programfile
-    def parse_opts_with_ignoring_script
+    def parse_opts_with_ignoring_script(*params)
       arg = ARGV.first
       script = $PROGRAM_NAME
       parse_opts_without_ignoring_script
