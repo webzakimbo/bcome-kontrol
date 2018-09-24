@@ -31,6 +31,10 @@ module Bcome::Node::Inventory
       'sub-inventory'
     end
 
+    def reload
+      do_reload
+    end
+
     def do_reload
       parent_inventory.do_reload
       resources.run_subselect
