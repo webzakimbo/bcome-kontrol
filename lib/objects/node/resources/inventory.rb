@@ -9,7 +9,6 @@ module Bcome::Node::Resources
         else
           duplicate_nodes[node.identifier] = duplicate_nodes[node.identifier] ? (duplicate_nodes[node.identifier] + 1) : 2
           count = duplicate_nodes[node.identifier]
-
           node.identifier = "#{node.identifier}_#{count}"
         end
       end
@@ -30,6 +29,10 @@ module Bcome::Node::Resources
     def duplicate_nodes
       @duplicate_nodes ||= {}
     end
+
+    def reset_duplicate_nodes!
+      @duplicate_nodes = {}
+    end   
 
     def dynamic_nodes
       active.select(&:dynamic_server?)

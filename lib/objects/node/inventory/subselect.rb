@@ -36,9 +36,11 @@ module Bcome::Node::Inventory
     end
 
     def do_reload
+      parent_inventory.resources.reset_duplicate_nodes!
       parent_inventory.do_reload
       resources.run_subselect
       update_nodes
+      return
     end
 
     private

@@ -29,6 +29,7 @@ module Bcome::Node::Inventory
     end
 
     def reload
+      resources.reset_duplicate_nodes!
       do_reload
       puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".informational
     end
