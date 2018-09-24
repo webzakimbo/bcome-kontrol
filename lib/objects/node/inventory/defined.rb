@@ -99,9 +99,13 @@ module Bcome::Node::Inventory
 
     def load_dynamic_nodes
       raw_servers = fetch_server_list
+
       raw_servers.each do |raw_server|
         resources << ::Bcome::Node::Server::Dynamic.new_from_fog_instance(raw_server, self)
       end
+
+      resources.rename_initial_duplicate if resources.should_rename_initial_duplicate?
+
     end
 
     def fetch_server_list

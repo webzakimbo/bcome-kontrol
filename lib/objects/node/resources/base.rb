@@ -22,6 +22,10 @@ module Bcome::Node::Resources
       @nodes << node
     end
 
+    def should_rename_initial_duplicate?
+      return false
+    end
+
     def clear!
       @disabled_resources = []
     end
