@@ -134,7 +134,8 @@ module Bcome::Node::Server
     end
 
     def pseudo_tty(command)
-      ssh_cmd = ssh_driver.ssh_command.gsub("ssh", "ssh -t")
+      as_pseudo_tty = true
+      ssh_cmd = ssh_driver.ssh_command(as_pseudo_tty)
       tty_command = "#{ssh_cmd} '#{command}'"
       execute_local(tty_command)
     end

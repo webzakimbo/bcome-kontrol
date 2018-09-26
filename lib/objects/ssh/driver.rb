@@ -75,13 +75,13 @@ module Bcome::Ssh
       bootstrap? && @bootstrap_settings.bastion_host_user ? @bootstrap_settings.bastion_host_user : @proxy_data.bastion_host_user ? @proxy_data.bastion_host_user : user
     end
 
-    def ssh_command
+    def ssh_command(as_pseudo_tty = false)
       return bootstrap_ssh_command if bootstrap? && @bootstrap_settings.ssh_key_path
 
       if has_proxy?
-        "ssh #{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{node_level_ssh_key_connection_string}#{user}@#{@context_node.internal_ip_address}"
+        "#{as_pseudo_tty ? "ssh -t" : "ssh"} #{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{node_level_ssh_key_connection_string}#{user}@#{@context_node.internal_ip_address}"
       else
-        "ssh #{node_level_ssh_key_connection_string}#{user}@#{@context_node.public_ip_address}"
+        "#{as_pseudo_tty ? "ssh -t" : "ssh"} #{node_level_ssh_key_connection_string}#{user}@#{@context_node.public_ip_address}"
       end
     end
 
