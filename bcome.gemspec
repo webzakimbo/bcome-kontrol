@@ -3,11 +3,11 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'bcome'
-  spec.version       = '1.3.1'
+  spec.version       = '1.3.2'
   spec.authors       = ['Guillaume Roderick (Webzakimbo)']
   spec.email         = ['guillaume@webzakimbo.com']
-  spec.summary       = 'An orchestration framework for AWS EC2 for Rubyists'
-  spec.description   = "Organise your world, then integrate absolutely whatever you want in pure Ruby."
+  spec.summary       = 'Organise your world, then integrate absolutely whatever you want in pure Ruby.'
+  spec.description   = "An orchestration framework for AWS EC2"
   spec.homepage      = "https://bcome-kontrol.readthedocs.io/en/latest/"
   spec.license       = 'GPL-3.0'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
