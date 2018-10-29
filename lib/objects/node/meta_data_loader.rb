@@ -34,7 +34,7 @@ module Bcome::Node
     end
 
     def prompt_for_decryption_key
-      print "Enter your decryption key: ".informational
+      print "\nEnter your decryption key: ".informational
       @decryption_key = STDIN.noecho(&:gets).chomp
     end
 
