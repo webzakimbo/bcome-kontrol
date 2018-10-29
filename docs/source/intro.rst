@@ -1,9 +1,11 @@
 Welcome to Bcome
 ================
 
-Bcome is an orchestration framework for Rubyists.
+Bcome is an orchestration framework for Rubyists:  organise your world, then integrate absolutely whatever you want in pure Ruby.
 
 see the project on github_.
+
+It does a lot straight out the box...
 
 .. _github: https://github.com/webzakimbo/bcome-kontrol
 
@@ -11,6 +13,6 @@ see the project on github_.
 
    <a target="_blank" href="https://asciinema.org/a/q1bB7EQz7EUiQvXGR9ec75keV?autoplay=1&speed=2"><img src="https://asciinema.org/a/q1bB7EQz7EUiQvXGR9ec75keV.png" width="836"/></a>
 
-Organise your world, then integrate absolutely whatever you want in pure Ruby.
+... then add whatever custom orchestration you require.
 
 (NOTE: Amazon EC2 integration only for the time being. More providers coming).
