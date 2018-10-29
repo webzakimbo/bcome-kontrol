@@ -7,7 +7,7 @@
     :hidden:
 
     what/about
-    what/quick_look
+    what/features
 
 .. toctree::
     :maxdepth: 1
