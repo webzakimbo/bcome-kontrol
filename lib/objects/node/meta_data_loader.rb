@@ -34,8 +34,8 @@ module Bcome::Node
     end
 
     def prompt_for_decryption_key
-      message = "Please enter your metadata encryption key: ".informational
-      @decryption_key = ::Readline.readline("\n#{message}", true).squeeze('').to_s
+      print "Enter your decryption key: ".informational
+      @decryption_key = STDIN.noecho(&:gets).chomp
     end
 
     def load_file_data_for(filepath)
