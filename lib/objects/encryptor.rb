@@ -23,8 +23,8 @@ module Bcome
     end
 
     def prompt_for_key
-      message = "Please enter an encryption key (and if your data is already encrypted, you must provide the same key): ".informational
-      @key = ::Readline.readline("\n#{message}", true).squeeze('').to_s
+      print "Please enter an encryption key (and if your data is already encrypted, you must provide the same key): ".informational
+      @key = STDIN.noecho(&:gets).chomp
       puts "\n"
     end
 
