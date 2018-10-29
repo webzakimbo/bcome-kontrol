@@ -1,0 +1,6 @@
+******************
+Namespace Patterns
+******************
+
+.. contents:: contents
+

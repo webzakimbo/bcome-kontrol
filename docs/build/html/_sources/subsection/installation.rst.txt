@@ -1,0 +1,26 @@
+************
+Installation
+************
+
+.. contents:: contents
+
+Project structure
+=================
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur in eros et blandit. Nunc maximus,
+nisl at auctor vestibulum, justo ex sollicitudin ligula, id faucibus urna orci tristique nisl.
+Duis auctor rutrum orci, in ornare lacus condimentum quis. Quisque arcu velit, facilisis quis interdum ac,
+hendrerit auctor mauris. Curabitur urna nibh, porttitor at ante sit amet, vestibulum interdum dolor.
+Duis dictum elit orci, tincidunt imperdiet sem pellentesque et. In vehicula pellentesque varius.
+Phasellus a turpis sollicitudin, bibendum massa et, imperdiet neque. Integer quis sapien in magna rutrum bibendum.
+
+
+Cloud integration
+=================
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur in eros et blandit. Nunc maximus,
+nisl at auctor vestibulum, justo ex sollicitudin ligula, id faucibus urna orci tristique nisl.
+Duis auctor rutrum orci, in ornare lacus condimentum quis. Quisque arcu velit, facilisis quis interdum ac,
+hendrerit auctor mauris. Curabitur urna nibh, porttitor at ante sit amet, vestibulum interdum dolor.
+Duis dictum elit orci, tincidunt imperdiet sem pellentesque et. In vehicula pellentesque varius.
+

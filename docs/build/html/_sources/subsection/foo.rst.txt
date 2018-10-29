@@ -1,0 +1,16 @@
+****
+XXX
+****
+
+.. contents:: contents
+
+YYY
+====
+
+
+Some text
+
+ZZZ
+====
+
+Some text

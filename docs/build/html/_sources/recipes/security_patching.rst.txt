@@ -1,0 +1,10 @@
+******************
+Mass orchestration
+******************
+.. contents:: contents
+
+
+A real-world example: Security Patching
+=======================================
+
+

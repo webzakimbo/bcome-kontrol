@@ -1,0 +1,35 @@
+********************
+Basic ruby scripting
+********************
+
+.. contents:: contents
+
+Overview
+========
+
+xxx
+
+Basics
+======
+
+xxx
+
+Executing a script
+==================
+
+xxx
+
+Methods
+=======
+
+xxx
+
+Accessors
+=========
+
+xxx
+
+Script colours
+==============
+
+xxx

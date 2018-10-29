@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Caching Inventories &mdash; Bcome 1.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Testing connections" href="testing_connections.html" />
+    <link rel="prev" title="Commands" href="commands.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Bcome
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">What is Bcome?</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../what/about.html">About</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../what/quick_look.html">A quick look</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../starting/installation.html">Installation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Namespace Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../namespaces/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../namespaces/basic_configuration.html">Basic configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../namespaces/connecting_clouds.html">Connecting clouds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../namespaces/cleaning_up_server_names.html">Cleaning up server names</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../namespaces/caching_server_lookups.html">Caching server lookups</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../namespaces/inventory_filtering.html">Inventory filtering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../namespaces/sub_selected_inventories.html">Sub-selected inventories</a></li>
+</ul>
+<p class="caption"><span class="caption-text">SSH configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ssh_configuration/overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ssh_configuration/direct_connections.html">Direct connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ssh_configuration/proxied_connections.html">Proxied connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ssh_configuration/bootstrapping.html">Bootstrapping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ssh_configuration/configuration_inheritance.html">Configuration Inheritance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ssh_configuration/making_use_of_your_local_config.html">Making use of your local SSH config</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="navigation.html">Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Caching Inventories</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-cache">How to cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#caching-sub-selected-inventories">Caching sub-selected inventories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#disabling-a-cache">Disabling a cache</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing_connections.html">Testing connections</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssh_to_a_server.html">SSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="executing_commands.html">Executing commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pseudo_tty.html">Pseudo-tty</a></li>
+<li class="toctree-l1"><a class="reference internal" href="file_transfers.html">File transfers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interactive_mode.html">Interactive Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bootstrapping_mode.html">Bootstrapping mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="port_forwarding.html">Port Forwarding</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Basic Scripting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../scripting/bash_scripting.html">Bash scripting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripting/ruby_scripting.html">Basic ruby scripting</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Orchestration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../orchestration/registry.html">The Registry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../orchestration/metadata_framework.html">The metadata framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../orchestration/internal_hooks.html">Internal Hooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../orchestration/external_hooks.html">External Hooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../orchestration/tags.html">Tags</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Recipes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/deployment.html">Deployment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/security_patching.html">Mass orchestration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/server_spec_integration.html">Server Spec integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/port_forwarding.html">Port Forwarding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../recipes/terraform.html">Terraform</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bcome</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Caching Inventories</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/usage/caching_inventories.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="caching-inventories">
+<h1>Caching Inventories<a class="headerlink" href="#caching-inventories" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>You’ll notice a slight delay (varying depending on your internet connection) when loading into a Bcome inventory for the first time. This is because Bcome is making a call across the wire to EC2 to retrieve the server manifests matching your particular network configuration and filters.</p>
+<p>You may cache these manifests for a speedier loading time.</p>
+<p>Caching may only be applied to an inventory namespace, and can not be applied to a collection namespace. This will allow you to leave dynamic inventories (e.g. representing an auto-scaling group or some other scheme where your manifest is subject to regular change) uncached.</p>
+<p>Note that examples in this section will utilise the reference network configuration detailed here.</p>
+</div>
+<div class="section" id="how-to-cache">
+<h2>How to cache<a class="headerlink" href="#how-to-cache" title="Permalink to this headline">¶</a></h2>
+<p>To enable caching, enter the namepace for a given inventory in shell mode and hit save.</p>
+<p>e.g. to cache your staging inventory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; bcome staging
+root&gt; staging&gt; save
+</pre></div>
+</div>
+<p>You will be prompted to confirm.</p>
+<p>Should your server manifest change, you may reload the manifest from remote, and the re-cache as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&gt; bcome staging
+root&gt; staging&gt; reload
+root&gt; staging&gt; save
+</pre></div>
+</div>
+<p>Again, you will be prompted to confirm that you want to proceed</p>
+</div>
+<div class="section" id="caching-sub-selected-inventories">
+<h2>Caching sub-selected inventories<a class="headerlink" href="#caching-sub-selected-inventories" title="Permalink to this headline">¶</a></h2>
+<p>A sub-selected inventory cannot be directly cached as it is generated as a sub-selection from a parent inventory. You must apply caching to the parent inventory to effect caching on a sub-selection namespace (and in the same vein, all re-caching must be applied to the parent).</p>
+</div>
+<div class="section" id="disabling-a-cache">
+<h2>Disabling a cache<a class="headerlink" href="#disabling-a-cache" title="Permalink to this headline">¶</a></h2>
+<p>When a manifest is cached the following key is added to your network configuration file against the cached manifest:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span>
+  <span class="l l-Scalar l-Scalar-Plain">:load_machines_from_cache</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nn">...</span>
+</pre></div>
+</div>
+<p>To disable a cache, remove this key-value pair entirely or set its value to false, and then re-save your networks.yml network configuration file. You’ll need to exit &amp; re-enter any affected Bcome shells you may have open.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="testing_connections.html" class="btn btn-neutral float-right" title="Testing connections" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="commands.html" class="btn btn-neutral" title="Commands" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, webzakimbo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

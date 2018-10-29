@@ -1,0 +1,300 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5. Usage &mdash; Bcome 1.3.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="6. Bash scripting" href="bash_scripting.html" />
+    <link rel="prev" title="4. SSH Configuration" href="ssh_configuration.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Bcome
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about.html">1. About Bcome</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">2. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="namespace_configuration.html">3. Namespace Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssh_configuration.html">4. SSH Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">5.1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-navigation">5.2. Basic navigation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-list">5.3. Command list</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#caching-inventories">5.4. Caching inventories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing-connections">5.5. Testing connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ssh-to-a-server">5.6. SSH to a server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executing-commands">5.7. Executing commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pseudo-tty">5.8. Pseudo tty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file-transfers">5.9. File transfers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interactive-mode">5.10. Interactive mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bootstrapping-mode">5.11. Bootstrapping mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#local-port-forwarding">5.12. Local port forwarding</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bash_scripting.html">6. Bash scripting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ruby_scripting.html">7. Basic ruby scripting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="orchestration.html">8. Orchestration</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bcome</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>5. Usage</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/subsection/usage.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="usage">
+<h1><a class="toc-backref" href="#id1">5. Usage</a><a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<div class="contents topic" id="contents">
+<p class="topic-title first">contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#usage" id="id1">Usage</a><ul>
+<li><a class="reference internal" href="#overview" id="id2">Overview</a></li>
+<li><a class="reference internal" href="#basic-navigation" id="id3">Basic navigation</a></li>
+<li><a class="reference internal" href="#command-list" id="id4">Command list</a></li>
+<li><a class="reference internal" href="#caching-inventories" id="id5">Caching inventories</a></li>
+<li><a class="reference internal" href="#testing-connections" id="id6">Testing connections</a></li>
+<li><a class="reference internal" href="#ssh-to-a-server" id="id7">SSH to a server</a></li>
+<li><a class="reference internal" href="#executing-commands" id="id8">Executing commands</a></li>
+<li><a class="reference internal" href="#pseudo-tty" id="id9">Pseudo tty</a></li>
+<li><a class="reference internal" href="#file-transfers" id="id10">File transfers</a></li>
+<li><a class="reference internal" href="#interactive-mode" id="id11">Interactive mode</a></li>
+<li><a class="reference internal" href="#bootstrapping-mode" id="id12">Bootstrapping mode</a></li>
+<li><a class="reference internal" href="#local-port-forwarding" id="id13">Local port forwarding</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="section" id="overview">
+<h2><a class="toc-backref" href="#id2">5.1. Overview</a><a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="basic-navigation">
+<h2><a class="toc-backref" href="#id3">5.2. Basic navigation</a><a class="headerlink" href="#basic-navigation" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="command-list">
+<h2><a class="toc-backref" href="#id4">5.3. Command list</a><a class="headerlink" href="#command-list" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="caching-inventories">
+<h2><a class="toc-backref" href="#id5">5.4. Caching inventories</a><a class="headerlink" href="#caching-inventories" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="testing-connections">
+<h2><a class="toc-backref" href="#id6">5.5. Testing connections</a><a class="headerlink" href="#testing-connections" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="ssh-to-a-server">
+<h2><a class="toc-backref" href="#id7">5.6. SSH to a server</a><a class="headerlink" href="#ssh-to-a-server" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="executing-commands">
+<h2><a class="toc-backref" href="#id8">5.7. Executing commands</a><a class="headerlink" href="#executing-commands" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="pseudo-tty">
+<h2><a class="toc-backref" href="#id9">5.8. Pseudo tty</a><a class="headerlink" href="#pseudo-tty" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="file-transfers">
+<h2><a class="toc-backref" href="#id10">5.9. File transfers</a><a class="headerlink" href="#file-transfers" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="interactive-mode">
+<h2><a class="toc-backref" href="#id11">5.10. Interactive mode</a><a class="headerlink" href="#interactive-mode" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="bootstrapping-mode">
+<h2><a class="toc-backref" href="#id12">5.11. Bootstrapping mode</a><a class="headerlink" href="#bootstrapping-mode" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+<div class="section" id="local-port-forwarding">
+<h2><a class="toc-backref" href="#id13">5.12. Local port forwarding</a><a class="headerlink" href="#local-port-forwarding" title="Permalink to this headline">¶</a></h2>
+<p>xxx</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="bash_scripting.html" class="btn btn-neutral float-right" title="6. Bash scripting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ssh_configuration.html" class="btn btn-neutral" title="4. SSH Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, webzakimbo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

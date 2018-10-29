@@ -1,0 +1,26 @@
+**************
+Bash scripting
+**************
+
+.. contents:: contents
+
+Introduction
+============
+
+xxx
+
+Setup
+=====
+
+xxx
+
+
+Hello world
+===========
+
+xxx
+
+Troubleshooting
+===============
+
+xxx

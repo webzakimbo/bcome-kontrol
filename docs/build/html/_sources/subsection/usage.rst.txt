@@ -1,0 +1,65 @@
+*****
+Usage
+*****
+
+.. contents:: contents
+
+Overview
+========
+
+xxx
+
+Basic navigation
+================
+
+xxx
+
+Command list
+============
+
+xxx
+
+Caching inventories
+===================
+
+xxx
+
+Testing connections
+===================
+
+xxx
+
+SSH to a server
+===============
+
+xxx
+
+Executing commands
+==================
+
+xxx
+
+Pseudo tty
+==========
+
+xxx
+
+File transfers
+==============
+
+xxx
+
+Interactive mode
+================
+
+xxx
+
+Bootstrapping mode
+==================
+
+xxx
+
+Local port forwarding
+=====================
+
+xxx
