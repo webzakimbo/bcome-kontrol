@@ -45,7 +45,7 @@ module Bcome::Ssh
       # from bcome, so, we'll sweep up failures and re-try to connect up to MAX_CONNECTION_ATTEMPTS.  Once connected, we're generally good - and any subsequent connection failures
       # within a specific session will be handled ad-hoc and re-connection is automatic.
       while @servers_to_connect.any? && connection_attempt <= MAX_CONNECTION_ATTEMPTS
-        puts connection_attempt == 0 ? 'Initiating connections'.informational : 'Retrying failed connections'.warning
+        puts "Retrying failed connections\n".warning if connection_attempt > 1
         do_connect
         connection_attempt += 1
       end
