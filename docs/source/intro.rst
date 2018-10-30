@@ -5,6 +5,12 @@ Bcome is an orchestration framework for Rubyists:  organise your world, then int
 
 See the project on github_.
 
+It's very quick to setup:
+
+.. raw:: html
+
+  <a target="_blank" href="https://asciinema.org/a/150930"><img src="https://asciinema.org/a/150930.png" width="836"/></a>
+
 It does a lot straight out the box:
 
 .. _github: https://github.com/webzakimbo/bcome-kontrol
