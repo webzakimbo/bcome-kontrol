@@ -9,7 +9,7 @@ It's very quick to setup:
 
 .. raw:: html
 
-  <a target="_blank" href="https://asciinema.org/a/150930"><img src="https://asciinema.org/a/150930.png" width="836"/></a>
+  <a target="_blank" href="https://asciinema.org/a/150930?autoplay=1&speed=2"><img src="https://asciinema.org/a/150930.png" width="836"/></a>
 
 It does a lot straight out the box:
 
