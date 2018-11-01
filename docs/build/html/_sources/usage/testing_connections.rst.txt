@@ -4,8 +4,6 @@ Testing connections
 
 SSH Connections may be tested with Bcome's 'ping' command.  This can be done either at the level of an individual machine, or groups of machines.
 
-Note that examples in this section will utilise the reference network configuration detailed here.
-
 Ping all machines in an estate
 ==============================
 
