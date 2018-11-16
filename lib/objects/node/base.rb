@@ -87,6 +87,13 @@ module Bcome::Node
       return
     end
 
+    def put_from_string(string, remote_path)
+      resources.active.each do |resource|
+        resource.put_from_string(local_path, remote_path)
+      end
+      return
+    end
+
     def execute_script(script_name)
       results = {}
       machines.pmap do |machine|

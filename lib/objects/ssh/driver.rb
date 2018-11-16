@@ -231,6 +231,21 @@ module Bcome::Ssh
       nil
     end
 
+    def put_from_string(string, remote_path)
+      raise Bcome::Exception::MissingParamsForScp, "'put' requires a string and a remote_path" if string.to_s.empty? || remote_path.to_s.empty?
+      puts "\n(#{@context_node.namespace})\s".namespace + "Uploading from string to #{remote_path}\n".informational
+
+      begin
+        scp.upload!(StringIO.new(string), remote_path) do |_ch, name, sent, total|
+          puts "#{name}: #{sent}/#{total}".progress
+        end
+      rescue Exception => e # scp just throws generic exceptions :-/
+        puts e.message.error
+      end
+      nil
+    end
+
+
     def get(remote_path, local_path)
       raise Bcome::Exception::MissingParamsForScp, "'get' requires a local_path and a remote_path" if local_path.to_s.empty? || remote_path.to_s.empty?
       puts "\n(#{@context_node.namespace})\s".namespace + "Downloading #{remote_path} to #{local_path}\n".informational

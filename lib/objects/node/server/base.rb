@@ -153,6 +153,10 @@ module Bcome::Node::Server
       ssh_driver.put(local_path, remote_path)
     end
 
+    def put_from_string(string, remote_path)
+      ssh_driver.put_from_string(string, remote_path)
+    end
+
     def get(remote_path, local_path)
       ssh_driver.get(remote_path, local_path)
     end
