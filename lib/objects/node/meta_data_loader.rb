@@ -29,7 +29,7 @@ module Bcome::Node
       attributes = parser.attributes
 
       terraform_data = { #1. Make all the modules' data accessible
-        "tfstate" => parser.state
+        "tf_modules" => parser.state.modules
       }       
 
       ## 2. Keep the old broken implementation
