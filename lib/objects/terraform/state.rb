@@ -27,6 +27,7 @@ module Bcome::Terraform
     end
 
     def resources
+      # TODO What was I thinking ...  We need all the modules...
       return {} unless config_exists?
       return config["modules"][0]["resources"]
     end
