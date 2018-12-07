@@ -22,15 +22,20 @@ module Bcome::Node
     end
 
     def terraform_data_for_namespace(namespace)
+      ## TODO Not sure what was being smoked, but this only adds in data for the first module
+      ## Until I can fix, we will: 
+
       parser = Bcome::Terraform::Parser.new(namespace)
       attributes = parser.attributes
-      if attributes.keys.any?
-        {
-          "terraform_attributes" => attributes
-        }
-      else
-        {}
-      end
+
+      terraform_data = { #1. Make all the modules' data accessible
+        "tfstate_modules" => parser.state
+      }       
+
+      ## 2. Keep the old broken implementation
+      terraform_data["terraform_attributes"] = attributes if attributes.keys.any?
+
+      terraform_data
     end
 
     def prompt_for_decryption_key

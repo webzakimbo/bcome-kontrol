@@ -26,10 +26,15 @@ module Bcome::Terraform
       JSON.parse(File.read(config_path))
     end
 
+    def modules
+      return {} unless config_exists?
+      return config["modules"]
+    end
+  
     def resources
       # TODO What was I thinking ...  We need all the modules...
       return {} unless config_exists?
-      return config["modules"][0]["resources"]
+      return modules[0]["resources"]
     end
   end
 end
