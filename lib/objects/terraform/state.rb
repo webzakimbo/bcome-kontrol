@@ -26,6 +26,10 @@ module Bcome::Terraform
       JSON.parse(File.read(config_path))
     end
 
+    def module_by_path(path_name)
+      modules.select{|m| m["path"].include?(path_name) }.first
+    end
+
     def modules
       return {} unless config_exists?
       return config["modules"]
