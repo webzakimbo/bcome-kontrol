@@ -22,7 +22,7 @@ module Bcome::Terraform
     end
 
     def config
-      raise "No terraform tstate for this environment" unless config_exists?
+      return {} unless config_exists?
       JSON.parse(File.read(config_path))
     end
 
