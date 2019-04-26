@@ -89,6 +89,12 @@ module Bcome::WorkspaceMenu
         console_only: false,
         terminal_usage: "put 'local/path' 'remote/path'"
       },
+      put_str: {
+        description: 'Write a file /to/remote/path from a string',
+        usage: 'put_str',
+        console_only: false,
+        terminal_usage: "put_str '<file contents>', 'remote/path'"
+      },
       rsync: {
         description: 'upload a file or directory using rsync (faster)',
         usage: "rsync 'local/path','remote/path'",

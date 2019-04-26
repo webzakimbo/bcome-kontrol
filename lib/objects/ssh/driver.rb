@@ -231,7 +231,7 @@ module Bcome::Ssh
       nil
     end
 
-    def put_from_string(string, remote_path)
+    def put_str(string, remote_path)
       raise Bcome::Exception::MissingParamsForScp, "'put' requires a string and a remote_path" if string.to_s.empty? || remote_path.to_s.empty?
       puts "\n(#{@context_node.namespace})\s".namespace + "Uploading from string to #{remote_path}\n".informational
 

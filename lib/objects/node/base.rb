@@ -50,7 +50,7 @@ module Bcome::Node
     end
 
     def enabled_menu_items
-      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :tree, :ping, :put, :rsync, :cd, :meta, :pack_metadata, :unpack_metadata, :registry, :interactive, :execute_script] 
+      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :tree, :ping, :put, :put_str, :rsync, :cd, :meta, :pack_metadata, :unpack_metadata, :registry, :interactive, :execute_script] 
     end
 
     def has_proxy?
@@ -87,9 +87,9 @@ module Bcome::Node
       return
     end
 
-    def put_from_string(string, remote_path)
+    def put_str(string, remote_path)
       resources.active.each do |resource|
-        resource.put_from_string(local_path, remote_path)
+        resource.put_str(string, remote_path)
       end
       return
     end
