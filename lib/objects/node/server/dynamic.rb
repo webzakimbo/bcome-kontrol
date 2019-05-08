@@ -1,4 +1,4 @@
-module Bcome::Node::Server  # TODO - SPLIT INTO EC2 AND GCP
+module Bcome::Node::Server  # TODO - ABSTRACT INTO EC2 AND GCP DERIVED TYPES
   class Dynamic < Bcome::Node::Server::Base
     class << self
       def to_s
@@ -15,10 +15,14 @@ module Bcome::Node::Server  # TODO - SPLIT INTO EC2 AND GCP
         end
    
         params = {
-          # TODO
+          identifier: gcp_instance.name,
+          internal_ip_address: gcp_instance.network_interfaces.first.network_ip,
+          public_ip_address: gcp_instance.network_interfaces.first.access_configs.first.nat_ip, # TODO 1. never really solved presentation of multiple network interfaces, 2. nat_ip? 
+          role: "role TODO",                                                ## ^^ bcome should have them all, but choose (or to be configurable) as to what to present/default to 
+          gcp_server: gcp_instance  # TODO override         
         }
 
-
+        new(parent: parent, views: params)
       end
 
       def new_from_fog_instance(fog_instance, parent)
@@ -38,8 +42,7 @@ module Bcome::Node::Server  # TODO - SPLIT INTO EC2 AND GCP
           ec2_server: fog_instance
         }
 
-        new(parent: parent,
-            views: params)
+        new(parent: parent, views: params)
       end
     end
 
