@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rainbow', '~> 2.2'
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'rsync', '~> 1.0'
+  spec.add_dependency 'google-api-client', '0.29.1'
 end

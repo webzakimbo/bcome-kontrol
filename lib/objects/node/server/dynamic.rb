@@ -1,8 +1,24 @@
-module Bcome::Node::Server
+module Bcome::Node::Server  # TODO - SPLIT INTO EC2 AND GCP
   class Dynamic < Bcome::Node::Server::Base
     class << self
       def to_s
         'dynamic server'
+      end
+
+      def new_from_gcp_instance(gcp_instance, parent)
+        identifier = "TODO"
+ 
+        # TODO Consolidate with fog method
+        if parent.override_server_identifier?
+          identifier =~ /#{parent.override_identifier}/
+          identifier = Regexp.last_match(1) if Regexp.last_match(1)
+        end
+   
+        params = {
+          # TODO
+        }
+
+
       end
 
       def new_from_fog_instance(fog_instance, parent)

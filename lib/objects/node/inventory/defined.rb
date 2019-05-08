@@ -102,7 +102,13 @@ module Bcome::Node::Inventory
       raw_servers = fetch_server_list
 
       raw_servers.each do |raw_server|
-        resources << ::Bcome::Node::Server::Dynamic.new_from_fog_instance(raw_server, self)
+        if raw_server.is_a?(Google::Apis::ComputeBeta::Instance)
+          resourcs << ::Bcome::Node::Server::Dynamic.new_from_gcp_instance(raw_server, self)
+        elsif raw_server.is_a?(Fog::Compute::AWS::Server)
+          resources << ::Bcome::Node::Server::Dynamic.new_from_fog_instance(raw_server, self)
+        else
+          Bcome::Exception::UnknownDynamicServerType, 'Unknown dynamic server type' 
+        end
       end
 
       resources.rename_initial_duplicate if resources.should_rename_initial_duplicate?

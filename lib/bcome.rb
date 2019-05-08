@@ -12,6 +12,11 @@ require 'active_support/core_ext'
 require 'pp'
 require 'awesome_print'
 require 'io/console'
+require 'google/apis/compute_beta'
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
+
+require 'fileutils' # TODO - prob won't need this if we can bypass oauth requirements for gcp api
 
 require_all "#{File.dirname(__FILE__)}/../patches"
 require_all "#{File.dirname(__FILE__)}/../lib/objects"

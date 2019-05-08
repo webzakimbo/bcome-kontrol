@@ -14,7 +14,8 @@ module Bcome::Driver
       def klass_for_type
         {
           static: ::Bcome::Driver::Static,
-          ec2: ::Bcome::Driver::Ec2
+          ec2: ::Bcome::Driver::Ec2,
+          gcp: ::Bcome::Driver::Gcp
         }
       end
     end

@@ -46,7 +46,7 @@ module Bcome::Node
     end
 
     def load_file_data_for(filepath)
-     if filepath =~ /.enc/  # encrypted file contents 
+      if filepath =~ /.enc/  # encrypted file contents 
         prompt_for_decryption_key unless decryption_key
         encrypted_contents = File.read(filepath)     
         decrypted_contents = encrypted_contents.decrypt(decryption_key) 
