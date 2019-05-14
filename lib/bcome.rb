@@ -13,10 +13,13 @@ require 'pp'
 require 'awesome_print'
 require 'io/console'
 require 'google/apis/compute_beta'
+require 'google/api_client/client_secrets'
+require 'google/api_client/auth/installed_app'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
-
-require 'fileutils' # TODO - prob won't need this if we can bypass oauth requirements for gcp api
+require 'google/api_client/auth/storage'
+require 'google/api_client/auth/storages/file_store'
+require 'fileutils'
 
 require_all "#{File.dirname(__FILE__)}/../patches"
 require_all "#{File.dirname(__FILE__)}/../lib/objects"
