@@ -11,7 +11,7 @@ module Bcome::Driver
       begin
         instances = gcp_compute_service.list_instances(@params[:project], @params[:zone])
       rescue Google::Apis::AuthorizationError
-        # TODO - handle appropriately
+        raise ::Bcome::Exception::CannotAuthenticateToGcp.new 
       end
     
       instances.items
