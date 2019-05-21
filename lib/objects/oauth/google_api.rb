@@ -1,12 +1,7 @@
 module Bcome::Oauth
   class GoogleApi
 
-    # TODO - add appropriate exception handling
-
-    # TODO - thought needs to be given to the credentials file. Possibly allow user to specify path, or otherwise we store it in ~/
-    # It needs to be out of scope of the application root, in any case.
-    CREDENTIAL_FILE = "#{$0}-oauth2.json"
-    CREDENTIAL_DIR = "/Users/guillaume/Desktop"  # Temp/ obv
+    CREDENTIAL_FILE = "gcp-oauth2.json".freeze
 
     def initialize(service, scopes)
       @service = service
@@ -14,11 +9,7 @@ module Bcome::Oauth
     end
 
     def storage
-      @storage ||= ::Google::APIClient::Storage.new(Google::APIClient::FileStore.new(path_to_credentials_file))
-    end
-
-    def path_to_credentials_file
-      "#{CREDENTIAL_DIR}/#{CREDENTIAL_FILE}"
+      @storage ||= ::Google::APIClient::Storage.new(Google::APIClient::FileStore.new(CREDENTIAL_FILE))
     end
 
     def authorize!
