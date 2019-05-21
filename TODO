@@ -6,7 +6,9 @@ Backlog v 1.4
 
 * Network drivers for other platforms in this order: GCP, Azure, Digital Ocean, Rackspace
 
+* Generators for orchestration scripts
+
 * A scripted interactive mode? let user define list of machine to add... programatically.
 I.e. an interface onto adding selections, and then a simple hook to load in interactive mode. (i.e. boot into mode with seed file stating selections - kind of like a static manifest)
 
-* A new inventory sub-select that unions two or more other inventories where SSH connection details come from each origin inventory, this will allow us to union inventories across disparate clouds/dcs/whatever
+* A new inventory sub-select that unions two or more other inventories merging together machines from entirely disparate networks, this will allow us to union inventories across disparate clouds/dcs/whatever

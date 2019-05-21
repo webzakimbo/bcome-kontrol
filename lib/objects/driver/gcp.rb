@@ -32,7 +32,7 @@ module Bcome::Driver
       # The system already includes a default scope of https://www.googleapis.com/auth/compute.readonly, which is the minimum Bcome needs to list resources.
       # I've included flexibility to add additional scopes to assist with specific orchestrative cases.
       # TODO - document how to define & add additional scopes
-      authentication = ::Bcome::Oauth::GoogleApi.new(gcp_service, service_scopes)
+      authentication = ::Bcome::Oauth::GoogleApi.new(gcp_service, service_scopes, @node)
       authentication.do!
     end
 
