@@ -90,7 +90,7 @@ module Bcome::Node::Inventory
     end
 
     def machines
-      @resources.active
+      resources.active
     end
 
     def inventory?
