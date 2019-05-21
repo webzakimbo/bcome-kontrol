@@ -34,7 +34,7 @@ module Bcome::Driver
     def gcp_compute_authenticate!
       # Service scopes are now specified directly from the network config
       # A minumum scope of https://www.googleapis.com/auth/compute.readonly is required in order to list resources.
-      authentication = ::Bcome::Oauth::GoogleApi.new(gcp_service, service_scopes, @node)
+      authentication = ::Bcome::Oauth::GoogleApi.new(gcp_service, service_scopes, @node, @params[:secrets_path])
       authentication.do!
     end
 

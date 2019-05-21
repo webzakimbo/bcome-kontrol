@@ -29,7 +29,7 @@ module Bcome::Oauth
     def load_client_secrets
       begin
         ::Google::APIClient::ClientSecrets.load(@path_to_secrets)
-      rescue Exception
+      rescue Exception => e
         raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
       end
     end
