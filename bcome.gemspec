@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.bindir = 'bin'
   spec.executables = ['bcome']
   spec.require_paths = ['lib']
-  spec.add_dependency 'activesupport', '5.1'
+  spec.add_dependency 'activesupport', '5.2.3'
   spec.add_dependency 'awesome_print', '1.8.0'
   spec.add_dependency 'fog-aws', '~> 0.12.0'
   spec.add_dependency 'net-scp', '~> 1.2', '>= 1.2.1'
