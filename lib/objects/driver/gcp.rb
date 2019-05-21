@@ -13,6 +13,8 @@ module Bcome::Driver
         instances = gcp_compute_service.list_instances(@params[:project], @params[:zone])
       rescue Google::Apis::AuthorizationError
         raise ::Bcome::Exception::CannotAuthenticateToGcp.new 
+      rescue Google::Apis::ClientError => e
+        raise ::Bcome::Exception::Generic, "Namespace #{@node.namespace} / #{e.message}"
       end
     
       instances.items
@@ -45,7 +47,7 @@ module Bcome::Driver
     end
 
     def validate_service_scopes
-      raise ::Bcome::Exception::MissingGcpServiceScopes.new "Missing gcp service scopes. Please define as minimum https://www.googleapis.com/auth/compute.readonly" unless has_service_scopes_defined?
+      raise ::Bcome::Exception::MissingGcpServiceScopes.new "Please define as minimum https://www.googleapis.com/auth/compute.readonly" unless has_service_scopes_defined?
     end
  
     def has_service_scopes_defined?
