@@ -5,6 +5,7 @@ module Bcome::Driver
 
     def initialize(*params)
       super
+      validate_service_scopes
     end
 
     def fetch_server_list(filters)
@@ -29,9 +30,8 @@ module Bcome::Driver
     end
 
     def gcp_compute_authenticate!
-      # The system already includes a default scope of https://www.googleapis.com/auth/compute.readonly, which is the minimum Bcome needs to list resources.
-      # I've included flexibility to add additional scopes to assist with specific orchestrative cases.
-      # TODO - document how to define & add additional scopes
+      # Service scopes are now specified directly from the network config
+      # A minumum scope of https://www.googleapis.com/auth/compute.readonly is required in order to list resources.
       authentication = ::Bcome::Oauth::GoogleApi.new(gcp_service, service_scopes, @node)
       authentication.do!
     end
@@ -40,19 +40,17 @@ module Bcome::Driver
       @gcp_service ||= ::Google::Apis::ComputeBeta::ComputeService.new
     end
 
-    def default_scope
-      # The minimum scope Bcome needs in order to function: this allows for the readonly listing of resources
-      ["https://www.googleapis.com/auth/compute.readonly"]
-    end
-
     def service_scopes
-      client_scopes = has_client_defined_scopes? ? @params[:gcp_service_scopes] : []
-      return default_scope + client_scopes
+      @params[:service_scopes]
     end
 
-    def has_client_defined_scopes?
-      @params[:gcp_service_scopes] && @params[:gcp_service_scopes].is_a?(Array)
+    def validate_service_scopes
+      raise ::Bcome::Exception::MissingGcpServiceScopes.new "Missing gcp service scopes. Please define as minimum https://www.googleapis.com/auth/compute.readonly" unless has_service_scopes_defined?
     end
-
+ 
+    def has_service_scopes_defined?
+      service_scopes && service_scopes.any?
+    end
+ 
   end
 end
