@@ -1,17 +1,24 @@
 module Bcome::Oauth
   class GoogleApi
 
+    CREDENTIAL_DIRECTORY = ".gauth".freeze
     CREDENTIAL_FILE_SUFFIX = "oauth2.json".freeze
 
     def initialize(service, scopes, node, path_to_secrets)
       @service = service
       @scopes = scopes
       @node = node
-      @path_to_secrets = path_to_secrets
+      @path_to_secrets = "#{CREDENTIAL_DIRECTORY}/#{path_to_secrets}"
+      # All credentials are held in .gauth
+      ensure_credential_directory
     end
 
     def storage
-      @storage ||= ::Google::APIClient::Storage.new(Google::APIClient::FileStore.new(credential_file))
+      @storage ||= ::Google::APIClient::Storage.new(Google::APIClient::FileStore.new(full_path_to_credential_file))
+    end
+
+    def full_path_to_credential_file
+      "#{CREDENTIAL_DIRECTORY}/#{credential_file}"
     end
 
     def credential_file
@@ -53,6 +60,10 @@ module Bcome::Oauth
 
       end
       return @service
+    end
+
+    def ensure_credential_directory
+      FileUtils.mkdir_p CREDENTIAL_DIRECTORY
     end
 
   end
