@@ -28,7 +28,7 @@ class String
       crypt = cipher.update(tempkey)
       crypt << cipher.final()
       return crypt
-    rescue Exception => e
+    rescue Exception
       raise ::Bcome::Exception::InvalidMetaDataEncryptionKey.new
     end
   end
