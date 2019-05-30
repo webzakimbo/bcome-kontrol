@@ -11,7 +11,7 @@ module Bcome::Driver
 
     def fetch_server_list(filters)
       begin
-        instances = gcp_compute_service.list_instances(@params[:project], @params[:zone])
+        instances = gcp_service.list_instances(@params[:project], @params[:zone])
       rescue Google::Apis::AuthorizationError
         raise ::Bcome::Exception::CannotAuthenticateToGcp.new 
       rescue Google::Apis::ClientError => e
@@ -20,10 +20,6 @@ module Bcome::Driver
     
       instances.items
     end
-
-    def gcp_compute_service
-      @gcp_compute_service ||= get_gcp_compute_service
-    end  
 
     protected
 
@@ -42,30 +38,28 @@ module Bcome::Driver
 
     def auth_schemes
       {
-        :oauth => :gcp_authenticate_via_oauth, 
-        :serviceaccount => :gcp_authenticate_via_service_account
+        :oauth => ::Bcome::Driver::Gcp::Authentication::Oauth, 
+        :serviceaccount => ::Bcome::Driver::Gcp::Authentication::ServiceAccount,
+        :api_key => ::Bcome::Driver::Gcp::Authentication::ApiKey
       }
     end 
 
     def get_gcp_compute_service
-      send(auth_scheme)
-      gcp_service
-    end
-
-    def gcp_authenticate_via_service_account
-      ## TODO - placeholder for service account authentication
-      gcp_service
-    end
-
-    def gcp_authenticate_via_oauth
       # Service scopes are now specified directly from the network config
       # A minumum scope of https://www.googleapis.com/auth/compute.readonly is required in order to list resources.
-      authentication = ::Bcome::Oauth::GoogleApi.new(gcp_service, service_scopes, @node, @params[:secrets_path])
+      authentication = auth_scheme.new(gcp_service, service_scopes, @node, @params[:secrets_path])
       authentication.do!
     end
 
     def gcp_service
-      @gcp_service ||= ::Google::Apis::ComputeBeta::ComputeService.new
+      @gcp_service ||= get_authenticated_gcp_service
+    end
+
+    def get_authenticated_gcp_service
+      service = ::Google::Apis::ComputeBeta::ComputeService.new
+      authentication = auth_scheme.new(service, service_scopes, @node, @params[:secrets_path])
+      authentication.do!
+      service
     end
 
     def service_scopes

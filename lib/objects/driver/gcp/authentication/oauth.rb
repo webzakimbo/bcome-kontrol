@@ -1,5 +1,5 @@
-module Bcome::Oauth
-  class GoogleApi
+module Bcome::Driver::Gcp::Authentication
+  class Oauth
 
     CREDENTIAL_DIRECTORY = ".gauth".freeze
     CREDENTIAL_FILE_SUFFIX = "oauth2.json".freeze
