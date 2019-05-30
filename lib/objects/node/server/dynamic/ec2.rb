@@ -1,8 +1,8 @@
-module Bcome::Node::Server::Dynamic 
+# frozen_string_literal: true
+
+module Bcome::Node::Server::Dynamic
   class Ec2 < Bcome::Node::Server::Dynamic::Base
-
     class << self
-
       def dynamic_server_type
         :ec2
       end
@@ -19,14 +19,13 @@ module Bcome::Node::Server::Dynamic
           description: "EC2 server - #{identifier}",
           ec2_server: fog_instance
         }
-  
+
         new(parent: parent, views: params)
       end
     end
 
-    def cloud_server        
+    def cloud_server
       views[:ec2_server]
     end
-
   end
 end

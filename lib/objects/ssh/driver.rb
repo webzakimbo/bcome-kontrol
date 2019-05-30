@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 module Bcome::Ssh
   class Driver
     attr_reader :config, :bootstrap_settings
 
     DEFAULT_TIMEOUT_IN_SECONDS = 5
-    PROXY_CONNECT_PREFIX = '-o StrictHostKeyChecking=no -W %h:%p'.freeze
-    PROXY_SSH_PREFIX = '-o UserKnownHostsFile=/dev/null -o "ProxyCommand ssh -W %h:%p'.freeze
+    PROXY_CONNECT_PREFIX = '-o StrictHostKeyChecking=no -W %h:%p'
+    PROXY_SSH_PREFIX = '-o UserKnownHostsFile=/dev/null -o "ProxyCommand ssh -W %h:%p'
 
     def initialize(config, context_node)
       @config = config
@@ -30,7 +32,7 @@ module Bcome::Ssh
       if has_proxy?
         config[:host_or_ip] = @context_node.internal_ip_address
         config[:proxy] = {
-          bastion_host:  @proxy_data.host,
+          bastion_host: @proxy_data.host,
           bastion_host_user: bastion_host_user
         }
       else
@@ -45,12 +47,14 @@ module Bcome::Ssh
 
     def proxy
       return nil unless has_proxy?
+
       connection_string = bootstrap? ? bootstrap_proxy_connection_string : proxy_connection_string
       ::Net::SSH::Proxy::Command.new(connection_string)
     end
 
     def has_proxy?
       return false if proxy_config_value && proxy_config_value == -1
+
       !@config[:proxy].nil?
     end
 
@@ -72,50 +76,50 @@ module Bcome::Ssh
     end
 
     def bastion_host_user
-      bootstrap? && @bootstrap_settings.bastion_host_user ? @bootstrap_settings.bastion_host_user : @proxy_data.bastion_host_user ? @proxy_data.bastion_host_user : user
+      bootstrap? && @bootstrap_settings.bastion_host_user ? @bootstrap_settings.bastion_host_user : @proxy_data.bastion_host_user || user
     end
 
     def ssh_command(as_pseudo_tty = false)
       return bootstrap_ssh_command if bootstrap? && @bootstrap_settings.ssh_key_path
 
       if has_proxy?
-        "#{as_pseudo_tty ? "ssh -t" : "ssh"} #{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{node_level_ssh_key_connection_string}#{user}@#{@context_node.internal_ip_address}"
+        "#{as_pseudo_tty ? 'ssh -t' : 'ssh'} #{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{node_level_ssh_key_connection_string}#{user}@#{@context_node.internal_ip_address}"
       else
-        "#{as_pseudo_tty ? "ssh -t" : "ssh"} #{node_level_ssh_key_connection_string}#{user}@#{@context_node.public_ip_address}"
+        "#{as_pseudo_tty ? 'ssh -t' : 'ssh'} #{node_level_ssh_key_connection_string}#{user}@#{@context_node.public_ip_address}"
       end
     end
 
     def node_level_ssh_key_connection_string
-      key_specified_at_node_level? ? "-i #{node_level_ssh_key}\s" : ""
+      key_specified_at_node_level? ? "-i #{node_level_ssh_key}\s" : ''
     end
 
     def key_specified_at_node_level?
       !node_level_ssh_key.nil?
-    end  
+    end
 
     def node_level_ssh_key
-      return (@config[:ssh_keys]) ? @config[:ssh_keys].first : nil
+      @config[:ssh_keys] ? @config[:ssh_keys].first : nil
     end
 
     def local_port_forward(start_port, end_port)
-      if has_proxy?
-        
-        if bootstrap?
-          tunnel_command = "ssh -N -L #{start_port}:#{@context_node.internal_ip_address}:#{end_port} -i #{@bootstrap_settings.ssh_key_path} #{bastion_host_user}@#{@proxy_data.host}"
-        else
-          tunnel_command = "ssh -N -L #{start_port}:#{@context_node.internal_ip_address}:#{end_port} #{bastion_host_user}@#{@proxy_data.host}"
-        end
-      else
-        if bootstrap?
-          tunnel_command = "ssh -i #{@bootstrap_settings.ssh_key_path} -N -L #{start_port}:#{@context_node.public_ip_address}:#{end_port}"
-        else
-          tunnel_command = "ssh -N -L #{start_port}:#{@context_node.public_ip_address}:#{end_port}"
-        end
-      end
+      tunnel_command = if has_proxy?
+
+                         if bootstrap?
+                           "ssh -N -L #{start_port}:#{@context_node.internal_ip_address}:#{end_port} -i #{@bootstrap_settings.ssh_key_path} #{bastion_host_user}@#{@proxy_data.host}"
+                         else
+                           "ssh -N -L #{start_port}:#{@context_node.internal_ip_address}:#{end_port} #{bastion_host_user}@#{@proxy_data.host}"
+                                          end
+                       else
+                         if bootstrap?
+                           "ssh -i #{@bootstrap_settings.ssh_key_path} -N -L #{start_port}:#{@context_node.public_ip_address}:#{end_port}"
+                         else
+                           "ssh -N -L #{start_port}:#{@context_node.public_ip_address}:#{end_port}"
+                                          end
+                       end
 
       tunnel = ::Bcome::Ssh::Tunnel::LocalPortForward.new(tunnel_command)
       tunnel.open!
-      return tunnel
+      tunnel
     end
 
     def bootstrap_ssh_command
@@ -128,7 +132,7 @@ module Bcome::Ssh
 
     def user
       # If we're in bootstrapping mode and have a bootstrap user set, return it
-      return @bootstrap_settings.user if (bootstrap? && @bootstrap_settings.user)
+      return @bootstrap_settings.user if bootstrap? && @bootstrap_settings.user
 
       # If we have a user explcitly set in the config, then return it
       return @config[:user] if @config[:user]
@@ -145,7 +149,7 @@ module Bcome::Ssh
     end
 
     def get_overriden_local_user
-      ::Bcome::Node::Factory.instance.local_data[:ssh_user]       
+      ::Bcome::Node::Factory.instance.local_data[:ssh_user]
     end
 
     def fallback_local_user
@@ -158,6 +162,7 @@ module Bcome::Ssh
 
     def net_ssh_params(verbose = false)
       raise Bcome::Exception::InvalidSshConfig, "Missing ssh keys for #{@context_node.namespace}" unless ssh_keys
+
       params = { keys: ssh_keys, paranoid: false }
       params[:proxy] = proxy if has_proxy?
       params[:timeout] = timeout_in_seconds
@@ -175,12 +180,14 @@ module Bcome::Ssh
 
     def rsync(local_path, remote_path)
       raise Bcome::Exception::MissingParamsForRsync, "'rsync' requires a local_path and a remote_path" if local_path.to_s.empty? || remote_path.to_s.empty?
+
       command = rsync_command(local_path, remote_path)
       @context_node.execute_local(command)
     end
 
     def rsync_command(local_path, remote_path)
       return bootstrap_rsync_command(local_path, remote_path) if bootstrap? && @bootstrap_settings.ssh_key_path
+
       if has_proxy?
         "rsync -av -e \"ssh -A #{bastion_host_user}@#{@proxy_data.host} ssh -o StrictHostKeyChecking=no\" #{local_path} #{user}@#{@context_node.internal_ip_address}:#{remote_path}"
       else
@@ -208,9 +215,9 @@ module Bcome::Ssh
 
     def ping
       ssh_connect!
-      return { success: true }
+      { success: true }
     rescue Exception => e
-      return { success: false, error: e }
+      { success: false, error: e }
     end
 
     def scp
@@ -219,6 +226,7 @@ module Bcome::Ssh
 
     def put(local_path, remote_path)
       raise Bcome::Exception::MissingParamsForScp, "'put' requires a local_path and a remote_path" if local_path.to_s.empty? || remote_path.to_s.empty?
+
       puts "\n(#{@context_node.namespace})\s".namespace + "Uploading #{local_path} to #{remote_path}\n".informational
 
       begin
@@ -233,6 +241,7 @@ module Bcome::Ssh
 
     def put_str(string, remote_path)
       raise Bcome::Exception::MissingParamsForScp, "'put' requires a string and a remote_path" if string.to_s.empty? || remote_path.to_s.empty?
+
       puts "\n(#{@context_node.namespace})\s".namespace + "Uploading from string to #{remote_path}\n".informational
 
       begin
@@ -245,9 +254,9 @@ module Bcome::Ssh
       nil
     end
 
-
     def get(remote_path, local_path)
       raise Bcome::Exception::MissingParamsForScp, "'get' requires a local_path and a remote_path" if local_path.to_s.empty? || remote_path.to_s.empty?
+
       puts "\n(#{@context_node.namespace})\s".namespace + "Downloading #{remote_path} to #{local_path}\n".informational
 
       begin
@@ -261,6 +270,7 @@ module Bcome::Ssh
 
     def close_ssh_connection
       return unless @connection
+
       @connection.close unless @connection.closed?
       @connection = nil
     end

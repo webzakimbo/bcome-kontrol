@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module Bcome::Node::Server
   class Base < Bcome::Node::Base
-    
     attr_reader :origin_object_id
 
     def initialize(*params)
@@ -10,46 +11,46 @@ module Bcome::Node::Server
       @bootstrap = false
     end
 
-    # override a server namespace's parameters. This enables features such as specific SSH parameters for a specific server, e.g. my use case was a 
+    # override a server namespace's parameters. This enables features such as specific SSH parameters for a specific server, e.g. my use case was a
     # single debian box within an ubuntu network, where I needed to access the machine bootstrapping mode with the 'admin' rather 'ubuntu' username.
     def set_view_attributes
       super
       overridden_attributes = ::Bcome::Node::Factory.instance.machines_data_for_namespace(namespace.to_sym)
       overridden_attributes.each do |override_key, override_value|
         instance_variable_name = "@#{override_key}"
-        instance_variable_set(instance_variable_name, override_value)   
+        instance_variable_set(instance_variable_name, override_value)
       end
     end
 
     def bootstrap?
       @bootstrap ? true : false
-    end  
+    end
 
     def toggle_bootstrap(set_to = (@bootstrap ? false : true))
       @bootstrap = set_to
-      puts "Bootstrap #{bootstrap? ? "on" : "off" } for #{namespace}".informational
+      puts "Bootstrap #{bootstrap? ? 'on' : 'off'} for #{namespace}".informational
     end
 
     def dup_with_new_parent(new_parent)
-      new_node = self.clone
+      new_node = clone
       new_node.update_parent(new_parent)
       new_node
-    end  
+    end
 
     def update_parent(new_parent)
       @parent = new_parent
     end
 
     def tags
-      data_print_from_hash(cloud_tags.data, "Tags")
+      data_print_from_hash(cloud_tags.data, 'Tags')
     end
-  
+
     def cloud_tags
       @generated_tags ||= do_generate_cloud_tags
     end
 
     def has_tagged_value?(key, values)
-      matchers = { :key => key, :values => values }
+      matchers = { key: key, values: values }
       cloud_tags.has_key_and_value?(matchers)
     end
 
@@ -58,11 +59,11 @@ module Bcome::Node::Server
     end
 
     def do_generate_cloud_tags
-      raise "Should be overidden"
+      raise 'Should be overidden'
     end
 
     def type
-      "server"
+      'server'
     end
 
     def machines
@@ -82,28 +83,28 @@ module Bcome::Node::Server
     end
 
     def enabled_menu_items
-      (super + [:get, :ssh, :tags, :pseudo_tty]) - [:enable, :disable, :enable!, :disable!]
+      (super + %i[get ssh tags pseudo_tty]) - %i[enable disable enable! disable!]
     end
 
     def menu_items
       base_items = super.dup
       base_items[:tags] = {
-        description: "print out remote EC2 tags"
+        description: 'print out remote EC2 tags'
       }
       base_items[:ssh] = {
-        description: "initiate an ssh connection to this server",
+        description: 'initiate an ssh connection to this server'
       }
       base_items[:get] = {
-        description: "Download a file or directory",
+        description: 'Download a file or directory',
         console_only: false,
-        usage: "get \"/remote/path\", \"/local/path\"",
-        terminal_usage: "get \"/remote/path\" \"/local/path\""
+        usage: 'get "/remote/path", "/local/path"',
+        terminal_usage: 'get "/remote/path" "/local/path"'
       }
       base_items[:pseudo_tty] = {
-        description: "Invoke a pseudo-tty session",
+        description: 'Invoke a pseudo-tty session',
         console_only: false,
-        usage: "pseudo_tty \"your command\"",
-        terminal_usage: "pseudo_tty \"your command\""
+        usage: 'pseudo_tty "your command"',
+        terminal_usage: 'pseudo_tty "your command"'
       }
 
       base_items
@@ -114,7 +115,7 @@ module Bcome::Node::Server
     end
 
     def open_ssh_connection
-      ssh_driver.ssh_connection  
+      ssh_driver.ssh_connection
     end
 
     def close_ssh_connection
@@ -128,7 +129,7 @@ module Bcome::Node::Server
     def has_no_ssh_connection?
       !has_ssh_connection?
     end
- 
+
     def ssh
       ssh_driver.do_ssh
     end
@@ -142,13 +143,13 @@ module Bcome::Node::Server
 
     def execute_script(script_name)
       command_result = ::Bcome::Ssh::ScriptExec.execute(self, script_name)
-      return command_result
+      command_result
     end
 
     def rsync(local_path, remote_path)
       ssh_driver.rsync(local_path, remote_path)
     end
-  
+
     def put(local_path, remote_path)
       ssh_driver.put(local_path, remote_path)
     end
@@ -165,7 +166,7 @@ module Bcome::Node::Server
       puts "\n" + visual_hierarchy.hierarchy + "\n"
       puts pretty_description
     end
-    alias :lsa :ls
+    alias lsa ls
 
     def ping
       ping_result = ssh_driver.ping
@@ -175,37 +176,34 @@ module Bcome::Node::Server
     def print_ping_result(ping_result = { success: true })
       result = {
         namespace => {
-          "connection" => ping_result[:success] ? "success" : "failed",
-          "ssh_config" => ssh_driver.pretty_config_details
+          'connection' => ping_result[:success] ? 'success' : 'failed',
+          'ssh_config' => ssh_driver.pretty_config_details
         }
       }
 
-      unless ping_result[:success]
-        result[namespace]["error"] = ping_result[:error].message
-      end
+      result[namespace]['error'] = ping_result[:error].message unless ping_result[:success]
 
       colour = ping_result[:success] ? :green : :red
 
-      ap result, {
-        :color => {
-           hash:  colour,
+      ap result,
+         color: {
+           hash: colour,
            symbol: colour,
            string: colour,
            keyword: colour,
            variable: colour,
            array: colour
-        }
-      }
+         }
     end
 
     def list_attributes
       attribs = {
         "identifier": :identifier,
         "internal ip": :internal_ip_address,
-        "public ip": :public_ip_address,
+        "public ip": :public_ip_address
       }
 
-      attribs.merge!("description": :description ) if has_description?
+      attribs.merge!("description": :description) if has_description?
       attribs
     end
 
@@ -214,21 +212,22 @@ module Bcome::Node::Server
       d[:internal_ip_address] = internal_ip_address if internal_ip_address
       d[:public_ip_address] = public_ip_address if public_ip_address
       d[:description] = description if description
-      d[:cloud_tags] = cloud_tags 
+      d[:cloud_tags] = cloud_tags
       d
     end
 
     def do_run(raw_commands)
       raw_commands = raw_commands.is_a?(String) ? [raw_commands] : raw_commands
-      commands = raw_commands.collect{|raw_command| ::Bcome::Ssh::Command.new({ :node => self, :raw => raw_command }) }
+      commands = raw_commands.collect { |raw_command| ::Bcome::Ssh::Command.new(node: self, raw: raw_command) }
       command_exec = ::Bcome::Ssh::CommandExec.new(commands)
       command_exec.execute!
-      commands.each {|c| c.unset_node }
-      return commands
+      commands.each(&:unset_node)
+      commands
     end
 
     def run(*raw_commands)
-      raise ::Bcome::Exception::MethodInvocationRequiresParameter.new "Please specify commands when invoking 'run'" if raw_commands.empty?
+      raise ::Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
+
       commands = do_run(raw_commands)
       commands
     end
@@ -244,6 +243,5 @@ module Bcome::Node::Server
     def dynamic_server?
       !static_server?
     end
-
-  end  
+  end
 end

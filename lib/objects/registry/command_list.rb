@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Registry
   class CommandList
     include Singleton

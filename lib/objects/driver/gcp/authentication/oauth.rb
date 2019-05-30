@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 module Bcome::Driver::Gcp::Authentication
   class Oauth
-
-    CREDENTIAL_DIRECTORY = ".gauth".freeze
-    CREDENTIAL_FILE_SUFFIX = "oauth2.json".freeze
+    CREDENTIAL_DIRECTORY = '.gauth'
+    CREDENTIAL_FILE_SUFFIX = 'oauth2.json'
 
     def initialize(service, scopes, node, path_to_secrets)
       @service = service
@@ -34,11 +35,9 @@ module Bcome::Driver::Gcp::Authentication
     end
 
     def load_client_secrets
-      begin
-        ::Google::APIClient::ClientSecrets.load(@path_to_secrets)
-      rescue Exception => e
-        raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
-      end
+      ::Google::APIClient::ClientSecrets.load(@path_to_secrets)
+    rescue Exception => e
+      raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
     end
 
     def do!
@@ -48,23 +47,22 @@ module Bcome::Driver::Gcp::Authentication
         print "\sDo not commit this file to source control\n".warning
 
         flow = Google::APIClient::InstalledAppFlow.new(
-          :client_id => client_secrets.client_id,
-          :client_secret => client_secrets.client_secret,
-          :scope => @scopes
+          client_id: client_secrets.client_id,
+          client_secret: client_secrets.client_secret,
+          scope: @scopes
         )
         begin
           @service.authorization = flow.authorize(storage)
-        rescue ArgumentError => e 
+        rescue ArgumentError => e
           raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
         end
 
       end
-      return @service
+      @service
     end
 
     def ensure_credential_directory
       FileUtils.mkdir_p CREDENTIAL_DIRECTORY
     end
-
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Registry::Command
   class External < Base
     # In which the bcome context is passed to an external call
@@ -28,8 +30,8 @@ module Bcome::Registry::Command
           error_message_suffix = "- missing '#{substitution}' from command '#{local_command}'"
           raise Bcome::Exception::MissingArgumentForRegistryCommand, error_message_suffix
         end
-  
-        substitute_with = [TrueClass, FalseClass].include?(substitute_with.class) ? (substitute_with ? "true" : "false") : substitute_with
+
+        substitute_with = [TrueClass, FalseClass].include?(substitute_with.class) ? (substitute_with ? 'true' : 'false') : substitute_with
         substituted_command.gsub!("%#{substitution}%", substitute_with)
       end
       substituted_command

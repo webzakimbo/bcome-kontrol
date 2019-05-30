@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Node::Resources
   class SubselectInventory < Bcome::Node::Resources::Inventory
     def initialize(config)
@@ -50,7 +52,7 @@ module Bcome::Node::Resources
     end
 
     def tag_filters
-      filters[:by_tag] ? filters[:by_tag] : {}
+      filters[:by_tag] || {}
     end
 
     def parent_inventory

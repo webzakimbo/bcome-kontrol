@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module Bcome::Driver
   class Ec2 < Bcome::Driver::Base
-  
-    PATH_TO_FOG_CREDENTIALS = "#{ENV['HOME']}/.fog".freeze
+    PATH_TO_FOG_CREDENTIALS = "#{ENV['HOME']}/.fog"
 
     def initialize(*params)
       super

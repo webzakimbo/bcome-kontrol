@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module Bcome::Driver
   class Gcp < Bcome::Driver::Base
-
-    APPLICATION_NAME = "Bcome console".freeze
+    APPLICATION_NAME = 'Bcome console'
 
     def initialize(*params)
       super
@@ -9,23 +10,23 @@ module Bcome::Driver
       validate_authentication_scheme
     end
 
-    def fetch_server_list(filters)
+    def fetch_server_list(_filters)
       begin
         instances = gcp_service.list_instances(@params[:project], @params[:zone])
       rescue Google::Apis::AuthorizationError
-        raise ::Bcome::Exception::CannotAuthenticateToGcp.new 
+        raise ::Bcome::Exception::CannotAuthenticateToGcp
       rescue Google::Apis::ClientError => e
         raise ::Bcome::Exception::Generic, "Namespace #{@node.namespace} / #{e.message}"
       end
-    
+
       instances.items
     end
 
     protected
 
     def validate_authentication_scheme
-      raise ::Bcome::Exception::MissingGcpAuthenticationScheme.new "node #{@node.namespace}" if @params[:authentication_scheme].nil? || @params[:authentication_scheme].empty?
-      raise ::Bcome::Exception::InvalidGcpAuthenticationScheme.new "Invalid GCP authentication scheme '#{@params[:authentication_scheme]}' for node #{@node.namespace}" unless auth_scheme
+      raise ::Bcome::Exception::MissingGcpAuthenticationScheme, "node #{@node.namespace}" if @params[:authentication_scheme].nil? || @params[:authentication_scheme].empty?
+      raise ::Bcome::Exception::InvalidGcpAuthenticationScheme, "Invalid GCP authentication scheme '#{@params[:authentication_scheme]}' for node #{@node.namespace}" unless auth_scheme
     end
 
     def invalid_auth_scheme?
@@ -38,11 +39,11 @@ module Bcome::Driver
 
     def auth_schemes
       {
-        :oauth => ::Bcome::Driver::Gcp::Authentication::Oauth, 
-        :serviceaccount => ::Bcome::Driver::Gcp::Authentication::ServiceAccount,
-        :api_key => ::Bcome::Driver::Gcp::Authentication::ApiKey
+        oauth: ::Bcome::Driver::Gcp::Authentication::Oauth,
+        serviceaccount: ::Bcome::Driver::Gcp::Authentication::ServiceAccount,
+        api_key: ::Bcome::Driver::Gcp::Authentication::ApiKey
       }
-    end 
+    end
 
     def get_gcp_compute_service
       # Service scopes are now specified directly from the network config
@@ -67,12 +68,11 @@ module Bcome::Driver
     end
 
     def validate_service_scopes
-      raise ::Bcome::Exception::MissingGcpServiceScopes.new "Please define as minimum https://www.googleapis.com/auth/compute.readonly" unless has_service_scopes_defined?
+      raise ::Bcome::Exception::MissingGcpServiceScopes, 'Please define as minimum https://www.googleapis.com/auth/compute.readonly' unless has_service_scopes_defined?
     end
- 
+
     def has_service_scopes_defined?
-      service_scopes && service_scopes.any?
+      service_scopes&.any?
     end
- 
   end
 end

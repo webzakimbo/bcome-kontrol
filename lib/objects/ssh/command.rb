@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ::Bcome::Ssh
   class Command
     attr_reader :raw, :stdout, :stderr, :exit_code, :node, :bootstrap

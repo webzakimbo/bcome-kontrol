@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Driver
   class Bucket
     include Singleton
@@ -8,7 +10,7 @@ module Bcome::Driver
 
     def driver_for_network_data(network_data, node)
       found_driver = @drivers.select { |driver| driver.config == network_data }.first
-      found_driver ? found_driver : create_network_driver(network_data, node)
+      found_driver || create_network_driver(network_data, node)
     end
 
     def create_network_driver(network_data, node)

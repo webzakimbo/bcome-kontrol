@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome
   class ProgressBar
     include Singleton

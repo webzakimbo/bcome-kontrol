@@ -1,9 +1,13 @@
-module Bcome::UiOutput
-  def output_error(string)
-    no_console_output(string.error)
-  end
+# frozen_string_literal: true
 
-  def no_console_output(string)
-    puts "\t\n#{string}\n\n"
+module Bcome
+  module UiOutput
+    def output_error(string)
+      no_console_output(string.error)
+    end
+
+    def no_console_output(string)
+      puts "\t\n#{string}\n\n"
+    end
   end
 end

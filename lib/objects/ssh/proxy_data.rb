@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Ssh
   class ProxyData
     def initialize(config, context_node)
@@ -30,8 +32,10 @@ module Bcome::Ssh
     def get_host
       raise Bcome::Exception::InvalidProxyConfig, 'Missing host id or namespace' unless @config[:host_id] || @config[:namespace]
       raise Bcome::Exception::InvalidProxyConfig, 'Missing host lookup method' unless @config[:host_lookup]
+
       host_lookup_method = valid_host_lookups[@config[:host_lookup].to_sym]
       raise Bcome::Exception::InvalidProxyConfig, "#{@config[:host_lookup]} is not a valid host lookup method" unless host_lookup_method
+
       send(host_lookup_method)
     end
 
@@ -44,12 +48,14 @@ module Bcome::Ssh
       resource = @context_node.recurse_resource_for_identifier(identifier)
       raise Bcome::Exception::CantFindProxyHostByIdentifier, identifier unless resource
       raise Bcome::Exception::ProxyHostNodeDoesNotHavePublicIp, identifier unless resource.public_ip_address
+
       resource.public_ip_address
     end
 
     def get_host_by_namespace
       node = ::Bcome::Orchestrator.instance.get(@config[:namespace])
       raise Bcome::Exception::CantFindProxyHostByNamespace, @config[:namespace] unless node
+
       node.public_ip_address
     end
   end

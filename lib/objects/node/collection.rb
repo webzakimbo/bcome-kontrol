@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Node
   class Collection < ::Bcome::Node::Base
     def self.to_s

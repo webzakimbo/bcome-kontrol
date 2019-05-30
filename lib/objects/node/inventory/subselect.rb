@@ -1,60 +1,68 @@
-module Bcome::Node::Inventory
-  class Subselect < ::Bcome::Node::Inventory::Base
-    def initialize(*params)
-      super
-      raise Bcome::Exception::MissingSubselectionKey, @views unless @views[:subselect_from]
-      update_nodes
-    end
+# frozen_string_literal: true
 
-    def resources
-      @resources ||= do_set_resources
-    end
+module Bcome
+  module Node
+    module Inventory
+      class Subselect < ::Bcome::Node::Inventory::Base
+        def initialize(*params)
+          super
+          raise Bcome::Exception::MissingSubselectionKey, @views unless @views[:subselect_from]
 
-    def update_nodes
-      resources.update_nodes(self)
-    end
+          update_nodes
+        end
 
-    def do_set_resources
-      ::Bcome::Node::Resources::SubselectInventory.new(parent_inventory: parent_inventory, filters: filters)
-    end
+        def resources
+          @resources ||= do_set_resources
+        end
 
-    def nodes_loaded?
-      true
-    end
+        def update_nodes
+          resources.update_nodes(self)
+        end
 
-    def filters
-      # Flex point for filters, as obviously we need to support more than just ec2 filtering eventually
-      @views[:filters] ? @views[:filters] : {}
-    end
+        def do_set_resources
+          ::Bcome::Node::Resources::SubselectInventory.new(parent_inventory: parent_inventory, filters: filters)
+        end
 
-    def self.to_s
-      'sub-inventory'
-    end
+        def nodes_loaded?
+          true
+        end
 
-    def reload
-      do_reload
-    end
+        def filters
+          # Flex point for filters, as obviously we need to support more than just ec2 filtering eventually
+          @views[:filters] || {}
+        end
 
-    def do_reload
-      parent_inventory.resources.reset_duplicate_nodes!
-      parent_inventory.do_reload
-      resources.run_subselect
-      update_nodes
-      return
-    end
+        def self.to_s
+          'sub-inventory'
+        end
 
-    private
+        def reload
+          do_reload
+        end
 
-    def parent_inventory
-      @parent_inventory ||= load_parent_inventory
-    end
+        def do_reload
+          parent_inventory.resources.reset_duplicate_nodes!
+          parent_inventory.do_reload
+          resources.run_subselect
+          update_nodes
+          nil
+        end
 
-    def load_parent_inventory
-      parent_crumb = @views[:subselect_from]
-      parent = ::Bcome::Node::Factory.instance.bucket[parent_crumb]
-      raise Bcome::Exception::CannotFindSubselectionParent, "for key '#{parent_crumb}'" unless parent
-      raise Bcome::Exception::CanOnlySubselectOnInventory, "breadcrumb'#{parent_crumb}' represents a #{parent.class}'" unless parent.inventory?
-      parent
+        private
+
+        def parent_inventory
+          @parent_inventory ||= load_parent_inventory
+        end
+
+        def load_parent_inventory
+          parent_crumb = @views[:subselect_from]
+          parent = ::Bcome::Node::Factory.instance.bucket[parent_crumb]
+          raise Bcome::Exception::CannotFindSubselectionParent, "for key '#{parent_crumb}'" unless parent
+          raise Bcome::Exception::CanOnlySubselectOnInventory, "breadcrumb'#{parent_crumb}' represents a #{parent.class}'" unless parent.inventory?
+
+          parent
+        end
+      end
     end
   end
 end

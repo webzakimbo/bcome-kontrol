@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'bcome'
 
@@ -9,7 +10,6 @@ begin
 
   # close any trailing connections
   Bcome::Bootup.instance.estate.close_ssh_connections
-
 rescue ::Bcome::Exception::Base
-  puts "bcome terminated unexpectedly".warning
+  puts 'bcome terminated unexpectedly'.warning
 end

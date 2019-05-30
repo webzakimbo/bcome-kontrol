@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Ssh
   class ConnectionHandler
     MAX_CONNECTION_ATTEMPTS = 3

@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module Bcome::Node::LocalMetaDataFactory
-  META_DATA_FILE_PATH_PREFIX = 'bcome/metadata'.freeze
+  META_DATA_FILE_PATH_PREFIX = 'bcome/metadata'
 
   def metadata
     @node_metadata ||= do_create_metadata

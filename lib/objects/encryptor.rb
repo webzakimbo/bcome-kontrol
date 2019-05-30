@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 module Bcome
   class Encryptor
-
-    UNENC_SIGNIFIER = "".freeze  
-    ENC_SIGNIFIER = "enc".freeze
+    UNENC_SIGNIFIER = ''
+    ENC_SIGNIFIER = 'enc'
 
     include Singleton
 
@@ -19,11 +20,11 @@ module Bcome
       else
         puts "\nNo unencrypted files to encrypt.\n".warning
       end
-      return
+      nil
     end
 
     def prompt_for_key
-      print "Please enter an encryption key (and if your data is already encrypted, you must provide the same key): ".informational
+      print 'Please enter an encryption key (and if your data is already encrypted, you must provide the same key): '.informational
       @key = STDIN.noecho(&:gets).chomp
       puts "\n"
     end
@@ -46,25 +47,26 @@ module Bcome
 
     def unpack
       prompt_for_key
-      toggle_packed_files(all_encrypted_filenames,:decrypt)
-      return
+      toggle_packed_files(all_encrypted_filenames, :decrypt)
+      nil
     end
 
     def toggle_packed_files(filenames, packer_method)
-      raise "Missing encryption key. Please set an encryption key" unless @key
+      raise 'Missing encryption key. Please set an encryption key' unless @key
+
       filenames.each do |filename|
         # Get raw
         raw_contents = File.read(filename)
- 
+
         if packer_method == :decrypt
-          filename =~ /#{path_to_metadata}\/(.+)\.enc/
-          opposing_filename = $1
-          action = "Unpacking"
+          filename =~ %r{#{path_to_metadata}/(.+)\.enc}
+          opposing_filename = Regexp.last_match(1)
+          action = 'Unpacking'
         else
-          filename =~ /#{path_to_metadata}\/(.*)/
-          opposing_filename = "#{$1}.enc"
-          action = "Packing"
-        end       
+          filename =~ %r{#{path_to_metadata}/(.*)}
+          opposing_filename = "#{Regexp.last_match(1)}.enc"
+          action = 'Packing'
+        end
 
         # Write encrypted/decryption action
         enc_decrypt_result = raw_contents.send(packer_method, @key)
@@ -72,19 +74,19 @@ module Bcome
         write_file(opposing_filename, enc_decrypt_result)
       end
       puts "\ndone".informational
-    end  
- 
+    end
+
     def path_to_metadata
-      "bcome/metadata"
+      'bcome/metadata'
     end
 
     def write_file(filename, contents)
       filepath = "#{path_to_metadata}/#{filename}"
-      File.open("#{filepath}", 'w') { |f| f.write(contents) }
+      File.open(filepath.to_s, 'w') { |f| f.write(contents) }
     end
- 
+
     def all_unencrypted_filenames
-      Dir["#{metadata_path}/*"].reject {|f| f =~ /\.enc/}  
+      Dir["#{metadata_path}/*"].reject { |f| f =~ /\.enc/ }
     end
 
     def all_encrypted_filenames
@@ -92,8 +94,7 @@ module Bcome
     end
 
     def metadata_path
-      "bcome/metadata"
+      'bcome/metadata'
     end
-
   end
 end

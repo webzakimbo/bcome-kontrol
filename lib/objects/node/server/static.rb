@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Node::Server
   class Static < Bcome::Node::Server::Base
     def self.to_s

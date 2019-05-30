@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ::Bcome::Ssh
   class CommandExec
     attr_reader :commands
@@ -38,9 +40,7 @@ module ::Bcome::Ssh
     def ssh_exec!(ssh, command) #  NON PTY (i.e no pseudo-terminal)
       ssh.open_channel do |channel|
         channel.exec(command.raw) do |_cha, success|
-          unless success
-            abort "FAILED: couldn't execute command (ssh.channel.exec)"
-          end
+          abort "FAILED: couldn't execute command (ssh.channel.exec)" unless success
 
           channel.on_data do |_ch, data|
             command.stdout += data

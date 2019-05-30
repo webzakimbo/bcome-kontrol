@@ -52,7 +52,7 @@ class NetworkDriverTest < ActiveSupport::TestCase
     node.expects(:internal_ip_address).returns(node_hostname)
 
     mocked_proxy_data = mock("proxy data")
-    mocked_proxy_data.expects(:bastion_host_user).returns(bastion_host_user).times(4)
+    mocked_proxy_data.expects(:bastion_host_user).returns(bastion_host_user).times(2)
     mocked_proxy_data.expects(:host).returns(bastion_host).times(2)
 
     ::Bcome::Ssh::ProxyData.expects(:new).with(config[:proxy], node).returns(mocked_proxy_data)

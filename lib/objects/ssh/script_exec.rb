@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module ::Bcome::Ssh
   class ScriptExec
-    SCRIPTS_PATH = 'bcome/scripts'.freeze
+    SCRIPTS_PATH = 'bcome/scripts'
 
     class << self
       def execute(server, script_name)
@@ -24,6 +26,7 @@ module ::Bcome::Ssh
     def execute_command
       local_path_to_script = "#{SCRIPTS_PATH}/#{@script_name}.sh"
       raise Bcome::Exception::OrchestrationScriptDoesNotExist, local_path_to_script unless File.exist?(local_path_to_script)
+
       execute_script_command = "#{@ssh_driver.ssh_command} \"bash -s\" < #{local_path_to_script}"
       command = ::Bcome::Command::Local.run(execute_script_command)
       command

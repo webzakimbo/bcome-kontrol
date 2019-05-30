@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Registry::Command
   class Internal < Base
     # In which the bcome context is an external (extended framework) call

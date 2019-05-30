@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::System
   class Local
     include Singleton
@@ -10,6 +12,7 @@ module Bcome::System
         # we fail fast if we're not in a console session
         raise Bcome::Exception::FailedToRunLocalCommand, "#{raw_command}. Error: " + local_command.stderr
       end
+
       local_command
     end
 

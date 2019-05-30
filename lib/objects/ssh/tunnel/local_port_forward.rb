@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 module Bcome::Ssh::Tunnel
   class LocalPortForward
- 
     def initialize(tunnel_command)
       @tunnel_command = tunnel_command
       @process_pid = nil
-    end 
+    end
 
     def open!
       puts "Opening tunnel: #{@tunnel_command}".informational
@@ -13,8 +14,7 @@ module Bcome::Ssh::Tunnel
 
     def close!
       puts "Closing tunnel with process pid ##{@process_pid}: #{@tunnel_command}".informational
-      ::Process.kill("HUP", @process_pid)
+      ::Process.kill('HUP', @process_pid)
     end
-
   end
 end

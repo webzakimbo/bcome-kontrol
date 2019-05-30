@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome
   class Bootup
     def self.set_and_do(params, spawn_into_console = true)
