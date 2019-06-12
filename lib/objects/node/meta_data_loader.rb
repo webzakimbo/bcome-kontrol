@@ -50,7 +50,13 @@ module Bcome::Node
         prompt_for_decryption_key unless decryption_key
         encrypted_contents = File.read(filepath)
         decrypted_contents = encrypted_contents.decrypt(decryption_key)
-        YAML.safe_load(decrypted_contents)
+
+        begin
+          YAML.load(decrypted_contents)
+        rescue Exception => e
+          raise ::Bcome::Exception::InvalidMetaDataConfig.new "#{e.class} #{e.message} - " + decrypted_contents
+        end
+
       else # unencrypted
         YAML.load_file(filepath)
       end
