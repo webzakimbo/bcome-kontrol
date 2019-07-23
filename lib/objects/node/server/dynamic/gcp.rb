@@ -36,8 +36,6 @@ module Bcome::Node::Server::Dynamic
 
     def do_generate_cloud_tags
       raw_labels = cloud_server.labels ? cloud_server.labels.deep_symbolize_keys : {}
-      puts raw_labels.inspect
-
       ::Bcome::Node::Meta::Cloud.new(raw_labels) 
     end
 
