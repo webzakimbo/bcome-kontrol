@@ -9,7 +9,9 @@ module Bcome
       iterate_over = active_only ? @resources.active : @resources
 
       if iterate_over.any?
+
         iterate_over.sort_by(&:identifier).each do |resource|
+          next if resource.hide? 
           is_active = @resources.is_active_resource?(resource)
           puts resource.pretty_description(is_active)
           puts "\n"
@@ -52,6 +54,7 @@ module Bcome
     def list_in_tree(tab, resources)
       resources.sort_by(&:identifier).each do |resource|
         next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
+        next if resource.hide?
 
         resource.load_nodes if resource.inventory? && !resource.nodes_loaded?
         print_tree_view_for_resource(tab, resource)

@@ -110,6 +110,10 @@ module Bcome::Node
       ::Bcome::Encryptor.instance.unpack
     end
 
+    def hide?
+      @views.has_key?(:hidden) && @views[:hidden]
+    end
+
     def validate_attributes
       validate_identifier
       raise ::Bcome::Exception::MissingDescriptionOnView, @views.inspect if requires_description? && !@description
