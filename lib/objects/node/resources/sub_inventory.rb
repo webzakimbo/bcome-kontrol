@@ -12,8 +12,9 @@ module Bcome::Node::Resources
       parent_inventory.load_nodes unless parent_inventory.nodes_loaded?
       new_set = parent_inventory.resources.nodes
 
-      # Filter by ec2_filters
-      new_set = filter_by_tags(new_set)
+      # ...by_tags: ec2
+      # ...by_label: gcp
+      new_set = filter_by_tags_or_label(new_set)
 
       @nodes = new_set
     end
@@ -36,7 +37,7 @@ module Bcome::Node::Resources
       @nodes = new_set
     end
 
-    def filter_by_tags(nodes)
+    def filter_by_tags_or_label(nodes)
       tag_filters.each do |key, values|
         nodes = nodes.select { |node| node.has_tagged_value?(key, values) }
       end
@@ -52,7 +53,7 @@ module Bcome::Node::Resources
     end
 
     def tag_filters
-      filters[:by_tag] || {}
+      filters[:by_tag] || filters[:by_label] || {}
     end
 
     def parent_inventory

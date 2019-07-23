@@ -20,7 +20,7 @@ module Bcome::Node::Server::Dynamic
       end
     end
 
-    def do_generate_cloud_tags
+    def do_generate_cloud_tags  # TODO - Should be moved to ::Bcome::Node::Server::Dynamic::EC2
       raw_tags = cloud_server ? cloud_server.tags.deep_symbolize_keys : {}
       ::Bcome::Node::Meta::Cloud.new(raw_tags)
     end
