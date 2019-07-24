@@ -31,7 +31,10 @@ module Bcome::Driver
     end
 
     def network_credentials
-      raw_fog_credentials
+      {
+        access_key: raw_fog_credentials['aws_access_key_id'],
+        secret_key: raw_fog_credentials['aws_secret_access_key']
+      }
     end  
  
     def raw_fog_credentials

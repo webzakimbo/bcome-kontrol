@@ -22,6 +22,17 @@ module Bcome::Driver
       instances.items
     end
 
+    def has_network_credentials?
+      true
+    end
+
+    def network_credentials
+      {
+        access_token: access_token,
+        project_name: @params[:project]
+      }
+    end
+
     protected
 
     def validate_authentication_scheme
@@ -54,6 +65,14 @@ module Bcome::Driver
 
     def gcp_service
       @gcp_service ||= get_authenticated_gcp_service
+    end
+
+    def access_token
+      gcp_service.authorization.access_token   
+    end
+
+    def authorization
+      gcp_service.authorization
     end
 
     def get_authenticated_gcp_service

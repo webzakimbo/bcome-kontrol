@@ -56,12 +56,7 @@ module Bcome::Orchestration
      
       if @node.network_driver.has_network_credentials?
         network_credentials = @node.network_driver.network_credentials
-
-        # Flex-point for GCP auth
-        all_vars = cleaned_data.merge(
-          access_key: network_credentials['aws_access_key_id'],
-          secret_key: network_credentials['aws_secret_access_key']
-        )
+        all_vars = cleaned_data.merge(network_credentials)
       end
 
       all_vars.collect { |key, value| "-var #{key}=\"#{value}\"" }.join("\s")
