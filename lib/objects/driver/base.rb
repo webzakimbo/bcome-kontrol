@@ -24,6 +24,14 @@ module Bcome::Driver
       end
     end
 
+    def has_network_credentials?
+      false
+    end
+
+    def network_credentials
+      raise "Should be overidden"
+    end
+
     def initialize(params, node)
       @params = params
       @node = node

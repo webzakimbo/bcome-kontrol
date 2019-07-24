@@ -26,6 +26,14 @@ module Bcome::Driver
       fog_client.servers.all({})
     end
 
+    def has_network_credentials?
+      true
+    end
+
+    def network_credentials
+      raw_fog_credentials
+    end  
+ 
     def raw_fog_credentials
       @raw_fog_credentials ||= YAML.load_file(PATH_TO_FOG_CREDENTIALS)[credentials_key]
     end

@@ -20,7 +20,8 @@ module Bcome::Ssh
     end
 
     def machines
-      @node.server? ? [@node] : @node.machines
+      skip_for_hidden = true # Skip servers withen hidden namespaces
+      @node.server? ? [@node] : @node.machines(skip_for_hidden)
     end
 
     def show_progress?

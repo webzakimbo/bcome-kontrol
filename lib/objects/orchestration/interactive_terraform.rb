@@ -47,16 +47,22 @@ module Bcome::Orchestration
     # Get the terraform variables for this stack, and merge in with our EC2 access keys
     def form_var_string
       terraform_vars = terraform_metadata
-      ec2_credentials = @node.network_driver.raw_fog_credentials
 
       cleaned_data = terraform_vars.select do |_k, v|
         !v.is_a?(Hash) && !v.is_a?(Array)
       end # we can't yet handle nested terraform metadata on the command line so no arrays or hashes
 
-      all_vars = cleaned_data.merge(
-        access_key: ec2_credentials['aws_access_key_id'],
-        secret_key: ec2_credentials['aws_secret_access_key']
-      )
+      all_vars = cleaned_data
+     
+      if @node.network_driver.has_network_credentials?
+        network_credentials = @node.network_driver.network_credentials
+
+        # Flex-point for GCP auth
+        all_vars = cleaned_data.merge(
+          access_key: network_credentials['aws_access_key_id'],
+          secret_key: network_credentials['aws_secret_access_key']
+        )
+      end
 
       all_vars.collect { |key, value| "-var #{key}=\"#{value}\"" }.join("\s")
     end

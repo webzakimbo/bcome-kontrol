@@ -26,7 +26,6 @@ module Bcome::Node::Server::Dynamic
           identifier: identifier,
           internal_ip_address: network_ip,
           public_ip_address: nat_ip, 
-          role: 'role TODO', ## ^^ bcome should have them all, but choose (or to be configurable) as to what to present/default to
           gcp_server: gcp_instance # TODO: override
         }
 

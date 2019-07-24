@@ -91,8 +91,8 @@ module Bcome
           :server
         end
 
-        def machines
-          resources.active
+        def machines(skip_for_hidden = false)
+          skip_for_hidden ? resources.active : resources.active.select{|r| !r.hide? }
         end
 
         def inventory?
