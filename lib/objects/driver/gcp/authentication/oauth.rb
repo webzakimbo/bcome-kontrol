@@ -43,8 +43,8 @@ module Bcome::Driver::Gcp::Authentication
     def do!
       authorize!
       if @storage.authorization.nil?
-        print "\nAuthenticating with GCP for network namespace #{@node.namespace}. Close browser window once done. A GCP secrets file named '#{credential_file}' will be placed in your project root.".informational
-        print "\sDo not commit this file to source control\n".warning
+        print "\nAuthenticating with GCP for #{@node.namespace}.\n\nWhen done, close the browser window and a secrets file named '#{credential_file}' will be placed in your project root.".informational
+        print "\n\nDo not commit this file to source control!\n".warning
 
         flow = Google::APIClient::InstalledAppFlow.new(
           client_id: client_secrets.client_id,
