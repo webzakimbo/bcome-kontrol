@@ -30,12 +30,13 @@ module Bcome::Node
 
       terraform_data = {}
 
-      if attributes.keys.any?
-        ## 1. Keep the old broken implementation
-        terraform_data['terraform_attributes'] = attributes if attributes.keys.any?
-        ## 2. But make all the data accessible
-        terraform_data['tf_state'] = parser.state.config
-      end
+      if attributes && attributes.keys.any?
+        # Radical departure, this makes way more sense than previous:
+        # Make the entire state accessible
+        terraform_data['terraform_tf_state'] = parser.state.config
+        # And provide a convenience accessor for our outputs
+        terraform_data['terraform_outputs'] = parser.state.config["outputs"] 
+     end
 
       terraform_data
     end

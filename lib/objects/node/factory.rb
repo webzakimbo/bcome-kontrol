@@ -14,6 +14,8 @@ module Bcome::Node
     INVENTORY_KEY = 'inventory'
     COLLECTION_KEY = 'collection'
     SUBSELECT_KEY = 'inventory-subselect'
+    MERGE_KEY = 'inventory-merge'
+
     BCOME_RC_FILENAME = '.bcomerc'
 
     def bucket
@@ -77,7 +79,8 @@ module Bcome::Node
       {
         COLLECTION_KEY => ::Bcome::Node::Collection,
         INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
-        SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect
+        SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect,
+        MERGE_KEY => ::Bcome::Node::Inventory::Merge
       }
     end
 
@@ -105,12 +108,11 @@ module Bcome::Node
 
     def load_estate_config
       config = YAML.load_file(config_path).deep_symbolize_keys
-      config
+      config.deep_merge(local_data)
     rescue ArgumentError, Psych::SyntaxError => e
       raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in network config' + e.message
     rescue Errno::ENOENT
       raise Bcome::Exception::DeprecationWarning if is_running_deprecated_configs?
-
       raise Bcome::Exception::MissingNetworkConfig, config_path
     end
 

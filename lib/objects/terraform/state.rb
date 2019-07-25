@@ -36,10 +36,8 @@ module Bcome::Terraform
     end
 
     def resources
-      # TODO: What was I thinking ...  We need all the modules...
       return {} unless config_exists?
-
-      config['resources']
+      config['resources'][0]
     end
   end
 end
