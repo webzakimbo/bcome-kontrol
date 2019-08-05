@@ -44,7 +44,7 @@ module Bcome::Orchestration
       @terraform_metadata ||= @node.metadata.fetch('terraform', @node.metadata.fetch(:terraform, {}))
     end
 
-    # Get the terraform variables for this stack, and merge in with our EC2 access keys
+    # Get the terraform variables for this stack, and merge in with our networking & ssh credentials
     def form_var_string
       terraform_vars = terraform_metadata
 
@@ -63,6 +63,9 @@ module Bcome::Orchestration
         network_credentials = @node.network_driver.network_credentials
         all_vars = cleaned_data.merge(network_credentials)
       end
+
+      all_vars[:ssh_user] = @node.ssh_driver.user
+      all_vars[:ssh_key_path] = @node.ssh_driver.ssh_keys.first
 
       all_vars.collect { |key, value| "-var #{key}=\"#{value}\"" }.join("\s")
     end
