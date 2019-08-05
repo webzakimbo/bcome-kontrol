@@ -15,6 +15,7 @@ module Bcome::Node
     COLLECTION_KEY = 'collection'
     SUBSELECT_KEY = 'inventory-subselect'
     MERGE_KEY = 'inventory-merge'
+    KUBE_CLUSTER = 'kube-cluster'
 
     BCOME_RC_FILENAME = '.bcomerc'
 
@@ -80,7 +81,8 @@ module Bcome::Node
         COLLECTION_KEY => ::Bcome::Node::Collection,
         INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
         SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect,
-        MERGE_KEY => ::Bcome::Node::Inventory::Merge
+        MERGE_KEY => ::Bcome::Node::Inventory::Merge,
+        KUBE_CLUSTER => ::Bcome::Node::Kube::Estate 
       }
     end
 

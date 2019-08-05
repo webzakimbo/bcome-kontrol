@@ -48,9 +48,14 @@ module Bcome::Orchestration
     def form_var_string
       terraform_vars = terraform_metadata
 
+      terraform_vars.each do |key, value|
+        # Join arrays into a string (note we cannot handle nested arrays yet)
+        terraform_vars[key] = value.join(",") if value.is_a?(Array)
+      end
+
       cleaned_data = terraform_vars.select do |_k, v|
-        !v.is_a?(Hash) && !v.is_a?(Array)
-      end # we can't yet handle nested terraform metadata on the command line so no arrays or hashes
+        !v.is_a?(Hash)
+      end # we can't yet handle nested terraform metadata on the command line so no hashes
 
       all_vars = cleaned_data
      

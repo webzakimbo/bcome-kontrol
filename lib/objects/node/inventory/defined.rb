@@ -103,6 +103,8 @@ module Bcome
         def load_dynamic_nodes
           raw_servers = fetch_server_list
 
+          raw_servers = raw_servers ? raw_servers : []
+
           raw_servers.each do |raw_server|
             if raw_server.is_a?(Google::Apis::ComputeBeta::Instance)
               resources << ::Bcome::Node::Server::Dynamic::Gcp.new_from_gcp_instance(raw_server, self)
