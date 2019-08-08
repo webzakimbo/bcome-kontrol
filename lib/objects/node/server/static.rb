@@ -6,6 +6,10 @@ module Bcome::Node::Server
       'static server'
     end
 
+    def host
+      "static"
+    end
+
     def initialize(params)
       config = params[:views]
       @identifier = config[:identifier]

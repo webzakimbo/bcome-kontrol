@@ -11,6 +11,10 @@ module Bcome::Node::Server
       @bootstrap = false
     end
 
+    def host
+      raise "Should be overidden"
+    end 
+
     # override a server namespace's parameters. This enables features such as specific SSH parameters for a specific server, e.g. my use case was a
     # single debian box within an ubuntu network, where I needed to access the machine bootstrapping mode with the 'admin' rather 'ubuntu' username.
     def set_view_attributes
@@ -200,10 +204,11 @@ module Bcome::Node::Server
       attribs = {
         "identifier": :identifier,
         "internal ip": :internal_ip_address,
-        "public ip": :public_ip_address
+        "public ip": :public_ip_address,
+        "host": :host
       }
 
-      attribs.merge!("description": :description) if has_description?
+      #attribs.merge!("description": :description) if has_description?
       attribs
     end
 

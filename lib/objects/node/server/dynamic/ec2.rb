@@ -24,6 +24,10 @@ module Bcome::Node::Server::Dynamic
       end
     end
 
+    def host
+      "EC2"
+    end 
+
     def cloud_server
       views[:ec2_server]
     end

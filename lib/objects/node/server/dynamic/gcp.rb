@@ -26,11 +26,15 @@ module Bcome::Node::Server::Dynamic
           identifier: identifier,
           internal_ip_address: network_ip,
           public_ip_address: nat_ip, 
-          gcp_server: gcp_instance # TODO: override
+          gcp_server: gcp_instance 
         }
 
         new(parent: parent, views: params)
       end
+    end
+
+    def host
+      "GCP"
     end
 
     def do_generate_cloud_tags
