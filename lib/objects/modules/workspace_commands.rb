@@ -36,10 +36,6 @@ module Bcome
     def tree
       puts "\nTree view\n".title
       tab = ''
-      parents.reverse.each do |p|
-        print_tree_view_for_resource(tab, p)
-        tab = "#{tab}\t"
-      end
       print_tree_view_for_resource(tab, self)
       list_in_tree("#{tab}\t", resources)
       print "\n"
