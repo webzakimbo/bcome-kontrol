@@ -14,6 +14,7 @@ module Bcome::Ssh
     def initialize(config, context_node)
       @config = config
       @context_node = context_node
+      @bootstrap_settings = @config[:bootstrap_settings] ? ::Bcome::Ssh::Bootstrap.new(@config[:bootstrap_settings]) : nil
     end
 
     def bastion_host_user
