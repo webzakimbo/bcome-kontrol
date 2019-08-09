@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-module Bcome::Ssh
-  class ProxyData
+module Bcome::Ssh::ProxyData
+  class SingleHop
     def initialize(config, context_node)
       @config = config
       @context_node = context_node
