@@ -34,7 +34,6 @@ module Bcome::Ssh
       @set_connection_wrangler ||= ::Bcome::Ssh::ConnectionWrangler.new(self)
     end
 
-
     def pretty_config_details  
       config = {
         user: user,
