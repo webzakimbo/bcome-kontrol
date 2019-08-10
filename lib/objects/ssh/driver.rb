@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-# TODO - MULTI-HOP PROXY DETAILS (#pretty_config_details)
+# TODO - fix pretty config details for proxy mode
 
 module Bcome::Ssh
   class Driver
-    attr_reader :config, :bootstrap_settings
+
+    attr_reader :config, :bootstrap_settings, :context_node
 
     include Bcome::Ssh::DriverConnection
     include Bcome::Ssh::DriverFunctions
@@ -14,33 +15,27 @@ module Bcome::Ssh
     def initialize(config, context_node)
       @config = config
       @context_node = context_node
-      @bootstrap_settings = @config[:bootstrap_settings] ? ::Bcome::Ssh::Bootstrap.new(@config[:bootstrap_settings]) : nil
     end
 
-    def bastion_host_user
-      bootstrap? && @bootstrap_settings.bastion_host_user ? @bootstrap_settings.bastion_host_user : @proxy_data.bastion_host_user || user
+    def connection_wrangler
+      @connection_wrangler ||= set_connection_wrangler
+    end  
+
+    def bootstrap_settings
+       @bootstrap_settings ||= set_bootstrap_settings
     end
 
-    def proxy_data
-      @proxy_data ||= set_proxy_data
+    def set_bootstrap_settings
+      return unless has_bootstrap_settings?
+      @bootstrap_settings ||= ::Bcome::Ssh::Bootstrap.new(@config[:bootstrap_settings])
     end
 
-    def set_proxy_data
-
-      ## TODO
-      ### Collapse ProxyData into one object, encapsulating the behaviour that we want
-
-      if has_proxy?
-        ::Bcome::Ssh::ProxyData::SingleHop.new(@config[:proxy], @context_node)
-      elsif has_multi_hop_proxy?
-        ::Bcome::Ssh::ProxyData::MultiHop.new(@config[:multi_hop_proxy], @context_node) 
-      else
-        nil
-      end      
+    def set_connection_wrangler
+      @set_connection_wrangler ||= ::Bcome::Ssh::ConnectionWrangler.new(self)
     end
 
 
-    def pretty_config_details  ### TODO proxy config to come from proxy_data
+    def pretty_config_details  
       config = {
         user: user,
         ssh_keys: ssh_keys,
@@ -83,7 +78,7 @@ module Bcome::Ssh
     end
 
     def has_bootstrap_settings?
-      !@bootstrap_settings.nil?
+      !@config[:bootstrap_settings].nil? 
     end
 
     def has_multi_hop_proxy?

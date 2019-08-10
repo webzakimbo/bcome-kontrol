@@ -1,19 +1,52 @@
 # frozen_string_literal: true
 
-module Bcome::Ssh::ProxyData
-  class SingleHop
-    def initialize(config, context_node)
+module Bcome::Ssh
+  class ProxyHop
+
+    attr_reader :parent
+
+    def initialize(config, context_node, parent)
       @config = config
       @context_node = context_node
+      @parent = parent
     end
 
     def host
       @host ||= get_host
     end
 
-    def bastion_host_user
-      @bastion_host_user ||= get_bastion_host_user
+    def user
+      @user ||= get_user
     end
+
+    def has_parent?
+      !parent.nil?
+    end
+
+    def get_ssh_string
+      con_str = "ProxyCommand ssh -W %h:%p\s"
+
+      if has_parent?
+        con_str += "-o\s\\\"#{parent.get_ssh_string}\\\"\s"
+      end
+
+      con_str += "#{user}@#{host}"
+      con_str
+    end
+
+    def get_connection_string
+      con_str = has_parent? ? "\"ProxyCommand ssh -W %h:%p" : ""
+      
+      if has_parent?
+        con_str += "\s#{parent.get_connection_string}\s"
+      end
+      
+      con_str += "#{user}@#{host}"
+      con_str += "\"" unless has_parent?
+
+      con_str
+    end
+
 
     private
 
@@ -25,8 +58,8 @@ module Bcome::Ssh::ProxyData
       }
     end
 
-    def get_bastion_host_user
-      @config[:bastion_host_user]
+    def get_user
+      @config[:bastion_host_user] || @config[:fallback_bastion_host_user]
     end
 
     def get_host

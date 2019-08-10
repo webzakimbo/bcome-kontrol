@@ -2,10 +2,7 @@ module ::Bcome::Ssh
   module DriverCommandStrings
 
     def proxy_connection_string
-       #puts "ssh -o StrictHostKeyChecking=no -W %h:%p #{bastion_host_user}@#{@proxy_data.host}"
-
-       connection_wrangler.proxy_connection_string
-
+      connection_wrangler.get_proxy_connection
     end
 
     def bootstrap_proxy_connection_string
