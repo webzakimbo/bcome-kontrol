@@ -63,10 +63,6 @@ module ::Bcome::Ssh
     def proxy
       return nil unless has_proxy?
       connection_string = bootstrap? ? bootstrap_proxy_connection_string : proxy_connection_string
-
-      puts 'D: ssh -W %h:%p -o "ProxyCommand ssh -W %h:%p guillaume@35.205.20.120" guillaume@34.76.240.101'
-      puts "A: #{connection_string}"
-
       ::Net::SSH::Proxy::Command.new(connection_string)
     end
 
