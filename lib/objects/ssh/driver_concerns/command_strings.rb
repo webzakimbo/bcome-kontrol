@@ -1,10 +1,11 @@
 module ::Bcome::Ssh
   module DriverCommandStrings
 
-    PROXY_SSH_PREFIX = '-o UserKnownHostsFile=/dev/null -o "ProxyCommand ssh -W %h:%p'
-
     def proxy_connection_string
-      "ssh -o StrictHostKeyChecking=no -W %h:%p #{bastion_host_user}@#{@proxy_data.host}"
+       #puts "ssh -o StrictHostKeyChecking=no -W %h:%p #{bastion_host_user}@#{@proxy_data.host}"
+
+       connection_wrangler.proxy_connection_string
+
     end
 
     def bootstrap_proxy_connection_string
@@ -12,21 +13,10 @@ module ::Bcome::Ssh
     end
 
     def ssh_command(as_pseudo_tty = false)
+      # TODO
       return bootstrap_ssh_command if bootstrap? && @bootstrap_settings.ssh_key_path
 
-      if has_multi_hop_proxy?
-        command_prefix = as_pseudo_tty ? "ssh -t" : "ssh"
-        command_suffix = "#{node_level_ssh_key_connection_string}#{user}@#{@context_node.internal_ip_address}"
-
-
-        raise @multi_hop_proxy_data.proxy_command
-
-
-      elsif has_proxy?
-        "#{as_pseudo_tty ? 'ssh -t' : 'ssh'} #{PROXY_SSH_PREFIX} #{bastion_host_user}@#{@proxy_data.host}\" #{node_level_ssh_key_connection_string}#{user}@#{@context_node.internal_ip_address}"
-      else
-        "#{as_pseudo_tty ? 'ssh -t' : 'ssh'} #{node_level_ssh_key_connection_string}#{user}@#{@context_node.public_ip_address}"
-      end
+      connection_wrangler.get_ssh_command(as_pseudo_tty: as_pseudo_tty)
     end
 
     def bootstrap_ssh_command

@@ -27,5 +27,16 @@ module ::Bcome::Ssh
       @fallback_local_user ||= ::Bcome::System::Local.instance.local_user
     end
 
+   def fallback_bastion_host_user
+      # This defines the default bastion host ssh username to utilise if bastion_host_user has not been set
+      # in a given proxy hop config.
+
+      # If bootstrapping mode is defined along with a bootstrapping bastion host use, then use that
+      return bootstrap_settings.bastion_host_user if has_bootstrap_settings? && bootstrap_settings.bastion_host_user
+       
+      # Otherwise we'll fall back to the local defined user
+      return user
+    end
+
   end
 end
