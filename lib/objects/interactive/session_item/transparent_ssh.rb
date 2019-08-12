@@ -9,7 +9,8 @@ module Bcome::Interactive::SessionItem
     DANGER_CMD = "rm\s+-r|rm\s+-f|rm\s+-fr|rm\s+-rf|rm"
 
     def machines
-      node.server? ? [node] : node.machines
+      skip_for_hidden = true
+      node.server? ? [node] : node.machines(skip_for_hidden)
     end
 
     def do
