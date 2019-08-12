@@ -11,6 +11,14 @@ module Bcome::Ssh
       @parent = parent
     end
 
+    def proxy_details
+      @config.merge(
+      {
+        proxy_host: host,
+        user: user
+      })
+    end
+
     def host
       @host ||= get_host
     end

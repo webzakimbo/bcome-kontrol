@@ -13,6 +13,12 @@ module Bcome::Ssh
 
     ## Accessors --
 
+    def proxy_details
+      return hops.reverse.collect{ |hop|
+        hop.proxy_details
+      }
+    end
+ 
     def first_hop
       hops.reverse.first
     end

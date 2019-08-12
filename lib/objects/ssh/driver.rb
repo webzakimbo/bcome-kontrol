@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# TODO - fix pretty config details for proxy mode
-
 module Bcome::Ssh
   class Driver
 
@@ -34,22 +32,20 @@ module Bcome::Ssh
       @set_connection_wrangler ||= ::Bcome::Ssh::ConnectionWrangler.new(self)
     end
 
-    def pretty_config_details  
+    def foo
       config = {
         user: user,
         ssh_keys: ssh_keys,
         timeout: timeout_in_seconds
       }
+
       if has_proxy?
-        config[:host_or_ip] = @context_node.internal_ip_address
-        config[:proxy] = {
-          bastion_host: @proxy_data.host,
-          bastion_host_user: bastion_host_user
-        }
+        config[:proxy] = connection_wrangler.proxy_details
       else
         config[:host_or_ip] = @context_node.public_ip_address
       end
-      config
+
+      return config
     end
 
     def proxy_config_value

@@ -20,7 +20,7 @@ module Bcome::Ssh
     end
 
     def machines
-      skip_for_hidden = true # Skip servers withen hidden namespaces
+      skip_for_hidden = true # Skip servers with hidden namespaces
       @node.server? ? [@node] : @node.machines(skip_for_hidden)
     end
 
@@ -58,7 +58,7 @@ module Bcome::Ssh
         reset_progress
       end
 
-      if ping?
+      if ping? # If this was a ping
         # If any machines remain, then we couldn't connect to them
         @servers_to_connect.each do |server|
           ping_result = {

@@ -40,13 +40,13 @@ module Bcome::Node
           resource.load_nodes unless resource.nodes_loaded?
           set << resource.resources.active
         else
-          set << resource.machines
+          set << resource.machines(skip_for_hidden)
         end
       end
 
       set.flatten!
-
-      filter_duplicates(set)
+      filtered_machines = filter_duplicates(set)
+      return filtered_machines
     end
 
     def collection?
