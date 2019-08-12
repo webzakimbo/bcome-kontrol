@@ -32,7 +32,7 @@ module Bcome::Ssh
       @set_connection_wrangler ||= ::Bcome::Ssh::ConnectionWrangler.new(self)
     end
 
-    def foo
+    def pretty_ssh_config
       config = {
         user: user,
         ssh_keys: ssh_keys,
