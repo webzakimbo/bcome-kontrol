@@ -59,10 +59,10 @@ module Bcome::Ssh
       con_str = "" 
  
       if has_parent?
-        con_str += "\s#{parent.get_rsync_string}\s"
+        con_str += "#{parent.get_rsync_string}\s"
       end
 
-      con_str += "ssh -A -t #{user}@#{host}\s"
+      con_str += "ssh -A -t #{user}@#{host}"
       con_str
     end
 

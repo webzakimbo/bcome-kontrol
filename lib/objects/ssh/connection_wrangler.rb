@@ -51,14 +51,16 @@ module Bcome::Ssh
       return cmd 
     end
 
+    # rsync -av -e "ssh -A guillaume@146.148.115.179 ssh -o StrictHostKeyChecking=no" config_mgmt/ guillaume@10.0.0.10:/home/guillaume
     def get_rsync_command(local_path, remote_path)
-      cmd = "rsync -anv -e\s"
+      cmd = "rsync -av -e\s"
       cmd += "\""
+         
       cmd += first_hop.get_rsync_string
-      cmd += "ssh -A -t #{@ssh_driver.user}@#{target_machine_ingress_ip}"
-      cmd += "\"\s"
-      cmd += "#{local_path} :#{remote_path}"
-      return cmd
+
+      cmd += "\sssh -o StrictHostKeyChecking=no\""
+      cmd += "\s#{local_path}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}:#{remote_path}"
+      cmd
     end
 
     protected
