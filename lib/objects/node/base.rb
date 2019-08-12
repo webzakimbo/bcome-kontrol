@@ -112,7 +112,7 @@ module Bcome::Node
 
     def hide?
       return true if @views.has_key?(:hidden) && @views[:hidden]
-      return parent.hide? if has_parent?
+      #return parent.hide? if has_parent?
       return false
     end
 
