@@ -55,7 +55,6 @@ module Bcome::Ssh
       con_str
     end
 
-
     private
 
     def valid_host_lookups
