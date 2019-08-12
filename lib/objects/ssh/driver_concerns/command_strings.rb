@@ -28,7 +28,8 @@ module ::Bcome::Ssh
       return bootstrap_rsync_command(local_path, remote_path) if bootstrap? && @bootstrap_settings.ssh_key_path
 
       if has_proxy?
-        "rsync -av -e \"ssh -A #{bastion_host_user}@#{@proxy_data.host} ssh -o StrictHostKeyChecking=no\" #{local_path} #{user}@#{@context_node.internal_ip_address}:#{remote_path}"
+        #"rsync -av -e \"ssh -A #{bastion_host_user}@#{@proxy_data.host} ssh -o StrictHostKeyChecking=no\" #{local_path} #{user}@#{@context_node.internal_ip_address}:#{remote_path}"
+        connection_wrangler.get_rsync_command(local_path, remote_path) 
       else
         "rsync -av #{local_path} #{user}@#{@context_node.public_ip_address}:#{remote_path}"
       end

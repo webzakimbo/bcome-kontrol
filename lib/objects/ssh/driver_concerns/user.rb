@@ -32,7 +32,7 @@ module ::Bcome::Ssh
       # in a given proxy hop config.
 
       # If bootstrapping mode is defined along with a bootstrapping bastion host use, then use that
-      return bootstrap_settings.bastion_host_user if has_bootstrap_settings? && bootstrap_settings.bastion_host_user
+      return bootstrap_settings.bastion_host_user if bootstrap? && has_bootstrap_settings? && bootstrap_settings.bastion_host_user
        
       # Otherwise we'll fall back to the local defined user
       return user

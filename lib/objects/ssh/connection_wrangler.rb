@@ -51,6 +51,23 @@ module Bcome::Ssh
       return cmd 
     end
 
+    def get_rsync_command(local_path, remote_path)
+      cmd = "rsync -av -e \"ssh #{@ssh_driver.node_level_ssh_key_connection_string} -A\s"
+
+      if single_hop?
+        cmd += "#{first_hop.user}@#{first_hop.host}"
+      else
+        cmd += first_hop.get_connection_string
+      end
+
+      cmd += "\"\s"
+      cmd += "#{local_path} #{@ssh_driver.user}@#{target_machine_ingress_ip}:#{remote_path}"
+ 
+      raise cmd.inspect
+
+      return cmd
+    end
+
     protected
 
     def target_machine_ingress_ip
