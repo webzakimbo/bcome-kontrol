@@ -27,7 +27,6 @@ module Bcome::Ssh
 
     def get_ssh_command(config = {}, proxy_only = false)
       cmd  = config[:as_pseudo_tty] ? "ssh -t" : "ssh"
-      cmd += "\s-o UserKnownHostsFile=/dev/null" # TODO !!!
       cmd += "\s-o\s" +  "\"#{first_hop.get_ssh_string}\"" if has_hop? 
       cmd += "\s#{@ssh_driver.node_level_ssh_key_connection_string}#{@ssh_driver.user}@#{target_machine_ingress_ip}" unless proxy_only
       return cmd 
