@@ -31,7 +31,7 @@ module ::Bcome::Ssh
     end
 
     def node_host_or_ip
-      (has_proxy? || has_multi_host_proxy?) ? @context_node.internal_ip_address : @context_node.public_ip_address
+      has_proxy? ? @context_node.internal_ip_address : @context_node.public_ip_address
     end
 
     def net_ssh_params(verbose = false)
