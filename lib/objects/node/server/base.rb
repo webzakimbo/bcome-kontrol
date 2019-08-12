@@ -181,8 +181,8 @@ module Bcome::Node::Server
       result = {
         namespace => {
           'connection' => ping_result[:success] ? 'success' : 'failed',
-          'ssh_config' => ssh_driver.foo
-        }
+          'ssh_config' => ssh_driver.pretty_ssh_config
+       }
       }
 
       result[namespace]['error'] = ping_result[:error].message unless ping_result[:success]
