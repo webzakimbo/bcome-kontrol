@@ -17,6 +17,8 @@ module Bcome::Driver
         raise ::Bcome::Exception::CannotAuthenticateToGcp
       rescue Google::Apis::ClientError => e
         raise ::Bcome::Exception::Generic, "Namespace #{@node.namespace} / #{e.message}"
+      rescue Google::Apis::TransmissionError => e
+        raise ::Bcome::Exception::Generic, "Cannot reach GCP - do you have an internet connection?"
       end
 
       instances.items
