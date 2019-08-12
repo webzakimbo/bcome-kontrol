@@ -55,6 +55,20 @@ module Bcome::Ssh
       con_str
     end
 
+    def get_rsync_string
+      con_str = "" 
+ 
+      if has_parent?
+        con_str += "\s#{parent.get_rsync_string}\s"
+      end
+
+      con_str += "ssh -A -t #{user}@#{host}\s"
+      con_str
+    end
+
+
+
+
     private
 
     def valid_host_lookups
