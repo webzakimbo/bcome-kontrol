@@ -41,6 +41,7 @@ module ::Bcome::Ssh
       params[:proxy] = proxy if has_proxy?
       params[:timeout] = timeout_in_seconds
       params[:verbose] = :debug if verbose
+
       params
     end
 
@@ -61,9 +62,11 @@ module ::Bcome::Ssh
     ## PROXYING --
 
     def proxy
-      return nil unless has_proxy?
-      connection_string = bootstrap? ? bootstrap_proxy_connection_string : proxy_connection_string
-      ::Net::SSH::Proxy::Command.new(connection_string)
+      # TODO - bootstrapping mode
+      #return nil unless has_proxy?
+      #connection_string = bootstrap? ? bootstrap_proxy_connection_string : proxy_connection_string
+
+      return connection_wrangler.proxy
     end
 
   end

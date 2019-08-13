@@ -1,4 +1,7 @@
 # frozen_string_literal: true
+
+require 'net/ssh/proxy/jump'
+
 module Bcome::Ssh
   class ConnectionWrangler
 
@@ -31,27 +34,16 @@ module Bcome::Ssh
       has_hop? && hops.size == 1
     end
 
-    def get_ssh_command(config = {}, proxy_only = false)
-       cmd = "ssh -J"
-       cmd += "\s" + hops.collect(&:get_ssh_string).join(",") 
-       cmd += "\s#{@ssh_driver.node_level_ssh_key_connection_string}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}"
-
-      return cmd 
+    def proxy
+      proxy = Net::SSH::Proxy::Jump.new(hops.reverse.collect(&:get_ssh_string).join(","))
+      return proxy
     end
 
-    def get_proxy_connection
-      proxy_prefix = "ssh -W %h:%p"
-
-      if single_hop?
-        cmd = "#{proxy_prefix} #{first_hop.user}@#{first_hop.host}"
-      else
-        cmd = "#{proxy_prefix} -o\s" 
-        cmd += first_hop.get_connection_string
-      end
-
-      raise cmd.inspect
-
-      return cmd
+    def get_ssh_command(config = {}, proxy_only = false)
+      cmd = "ssh -J"
+      cmd += "\s" + hops.collect(&:get_ssh_string).join(",") 
+      cmd += "\s#{@ssh_driver.node_level_ssh_key_connection_string}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}"
+      return cmd 
     end
 
     def get_rsync_command(local_path, remote_path)
