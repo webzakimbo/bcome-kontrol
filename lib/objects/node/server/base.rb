@@ -189,15 +189,7 @@ module Bcome::Node::Server
 
       colour = ping_result[:success] ? :green : :red
 
-      ap result,
-         color: {
-           hash: colour,
-           symbol: colour,
-           string: colour,
-           keyword: colour,
-           variable: colour,
-           array: colour
-         }
+      ap(result, { indent: -2, color:  { hash: colour, symbol: colour, string: colour, keyword: colour, variable: colour, array: "cyan" }} )
     end
 
     def list_attributes
