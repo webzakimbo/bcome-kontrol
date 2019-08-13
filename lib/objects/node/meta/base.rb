@@ -18,6 +18,10 @@ module Bcome::Node::Meta
       @data.key?(key) && values.include?(@data[key])
     end
 
+    def keys
+      @data.keys
+    end
+
     def dump
       @data.each do |k, v|
         puts "#{k} => #{v.resource_value}"
