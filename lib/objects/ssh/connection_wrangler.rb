@@ -32,9 +32,10 @@ module Bcome::Ssh
     end
 
     def get_ssh_command(config = {}, proxy_only = false)
-      cmd  = config[:as_pseudo_tty] ? "ssh -t" : "ssh"
-      cmd += "\s-o\s" +  "\"#{first_hop.get_ssh_string}\"" if has_hop? 
-      cmd += "\s#{@ssh_driver.node_level_ssh_key_connection_string}#{@ssh_driver.user}@#{target_machine_ingress_ip}" unless proxy_only
+       cmd = "ssh -J"
+       cmd += "\s" + hops.collect(&:get_ssh_string).join(",") 
+       cmd += "\s#{@ssh_driver.node_level_ssh_key_connection_string}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}"
+
       return cmd 
     end
 
@@ -48,10 +49,11 @@ module Bcome::Ssh
         cmd += first_hop.get_connection_string
       end
 
-      return cmd 
+      raise cmd.inspect
+
+      return cmd
     end
 
-    # rsync -av -e "ssh -A guillaume@146.148.115.179 ssh -o StrictHostKeyChecking=no" config_mgmt/ guillaume@10.0.0.10:/home/guillaume
     def get_rsync_command(local_path, remote_path)
       cmd = "rsync -av -e\s"
       cmd += "\""
@@ -79,7 +81,7 @@ module Bcome::Ssh
       hop_collection = []
 
       parent = nil
-      iterable_configs.reverse.each do |config|
+      iterable_configs.each do |config|
         hop = set_proxy_hop(config, parent)
         hop_collection << hop
         parent = hop

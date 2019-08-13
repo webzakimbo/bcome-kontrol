@@ -31,15 +31,9 @@ module Bcome::Ssh
       !parent.nil?
     end
 
-    def get_ssh_string
-      con_str = "ProxyCommand ssh -W %h:%p\s"
-
-      if has_parent?
-        con_str += "-o\s\\\"#{parent.get_ssh_string}\\\"\s"
-      end
-
-      con_str += "#{user}@#{host}"
-      con_str
+    def get_ssh_string(is_first_hop = false)
+      con_str = "#{user}@#{host}"
+      return con_str
     end
 
     def get_connection_string
