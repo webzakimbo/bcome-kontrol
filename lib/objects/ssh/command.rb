@@ -2,7 +2,7 @@
 
 module ::Bcome::Ssh
   class Command
-    attr_reader :raw, :stdout, :stderr, :exit_code, :node, :bootstrap
+    attr_reader :raw, :stdout, :stderr, :exit_code, :node
 
     def initialize(params)
       @raw = params[:raw]
@@ -19,8 +19,6 @@ module ::Bcome::Ssh
     def pretty_result
       is_success? ? 'success'.success : 'failure'.error
     end
-
-    attr_writer :bootstrap
 
     def output
       command_output = is_success? ? @stdout : "Exit code: #{@exit_code}\n\nSTDERR: #{@stderr}"

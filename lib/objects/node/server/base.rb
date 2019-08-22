@@ -8,7 +8,6 @@ module Bcome::Node::Server
       super
       # Set the object_id - sub inventories dup servers into new collections. This allows us to spot duplicates when interacting with collections
       @origin_object_id = object_id
-      @bootstrap = false
     end
 
     def host
@@ -16,7 +15,7 @@ module Bcome::Node::Server
     end 
 
     # override a server namespace's parameters. This enables features such as specific SSH parameters for a specific server, e.g. my use case was a
-    # single debian box within an ubuntu network, where I needed to access the machine bootstrapping mode with the 'admin' rather 'ubuntu' username.
+    # single debian box within an ubuntu network, where I needed to access the machine with the 'admin' rather 'ubuntu' username.
     def set_view_attributes
       super
       overridden_attributes = ::Bcome::Node::Factory.instance.machines_data_for_namespace(namespace.to_sym)
@@ -24,15 +23,6 @@ module Bcome::Node::Server
         instance_variable_name = "@#{override_key}"
         instance_variable_set(instance_variable_name, override_value)
       end
-    end
-
-    def bootstrap?
-      @bootstrap ? true : false
-    end
-
-    def toggle_bootstrap(set_to = (@bootstrap ? false : true))
-      @bootstrap = set_to
-      puts "Bootstrap #{bootstrap? ? 'on' : 'off'} for #{namespace}".informational
     end
 
     def dup_with_new_parent(new_parent)

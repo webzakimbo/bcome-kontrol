@@ -3,7 +3,7 @@
 module Bcome::Ssh
   class Driver
 
-    attr_reader :config, :bootstrap_settings, :context_node
+    attr_reader :config, :context_node
 
     include Bcome::Ssh::DriverConnection
     include Bcome::Ssh::DriverFunctions
@@ -18,15 +18,6 @@ module Bcome::Ssh
     def connection_wrangler
       @connection_wrangler ||= set_connection_wrangler
     end  
-
-    def bootstrap_settings
-       @bootstrap_settings ||= set_bootstrap_settings
-    end
-
-    def set_bootstrap_settings
-      return unless has_bootstrap_settings?
-      @bootstrap_settings ||= ::Bcome::Ssh::Bootstrap.new(@config[:bootstrap_settings])
-    end
 
     def set_connection_wrangler
       @set_connection_wrangler ||= ::Bcome::Ssh::ConnectionWrangler.new(self)
@@ -66,14 +57,6 @@ module Bcome::Ssh
 
     def node_level_ssh_key
       @config[:ssh_keys] ? @config[:ssh_keys].first : nil
-    end
-
-    def bootstrap?
-      @context_node.bootstrap? && has_bootstrap_settings?
-    end
-
-    def has_bootstrap_settings?
-      !@config[:bootstrap_settings].nil? 
     end
 
     def has_multi_hop_proxy?

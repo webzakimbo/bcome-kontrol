@@ -34,10 +34,6 @@ module Bcome::Node
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
     end
 
-    def bootstrap?
-      false
-    end
-
     def collection?
       false
     end

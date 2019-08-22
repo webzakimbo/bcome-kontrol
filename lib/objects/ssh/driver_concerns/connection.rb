@@ -22,7 +22,7 @@ module ::Bcome::Ssh
       @connection = nil
     end
 
-    def ssh_connection(_bootstrap = false)
+    def ssh_connection
       has_open_ssh_con? ? @connection : ssh_connect!
     end
 
@@ -52,11 +52,7 @@ module ::Bcome::Ssh
     ## SSH KEYS
 
     def ssh_keys
-      if bootstrap?
-        [@bootstrap_settings.ssh_key_path]
-      else
-        @config[:ssh_keys]
-      end
+      @config[:ssh_keys]
     end
 
     ## PROXYING --

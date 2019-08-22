@@ -7,8 +7,6 @@ module Bcome
         def initialize(*params)
           super
           raise Bcome::Exception::InventoriesCannotHaveSubViews, @views if @views[:views] && !@views[:views].empty?
-
-          @bootstrap = false
         end
 
         def meta_matches(matchers)
@@ -29,14 +27,6 @@ module Bcome
           resources.active.select do |machine|
             machine.send(data_wrapper).has_key_and_value?(matchers)
           end
-        end
-
-        def toggle_bootstrap(set_to = (@bootstrap ? false : true))
-          resources.active.each do |machine|
-            machine.toggle_bootstrap(set_to)
-          end
-          @bootstrap = (@bootstrap ? false : true)
-          nil
         end
 
         def enabled_menu_items
