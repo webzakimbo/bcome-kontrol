@@ -5,13 +5,8 @@ module ::Bcome::Ssh
       connection_wrangler.get_ssh_command(as_pseudo_tty: as_pseudo_tty)
     end
     
-    # TODO
     def rsync_command(local_path, remote_path)
-      if has_proxy?
-        connection_wrangler.get_rsync_command(local_path, remote_path) 
-      else
-        "rsync -av #{local_path} #{user}@#{@context_node.public_ip_address}:#{remote_path}"
-      end
+      connection_wrangler.get_rsync_command(local_path, remote_path) 
     end
 
     # TODO

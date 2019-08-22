@@ -40,8 +40,8 @@ module Bcome::Ssh
     end
 
     def get_ssh_command(config = {}, proxy_only = false)
-      cmd = "ssh -J"
-      cmd += "\s" + hops.collect(&:get_ssh_string).join(",") 
+      cmd = has_hop? ? "ssh -J" : "ssh"
+      cmd += "\s" + hops.collect(&:get_ssh_string).join(",") if has_hop?
       cmd += "\s#{@ssh_driver.node_level_ssh_key_connection_string}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}"
       return cmd 
     end
@@ -50,7 +50,7 @@ module Bcome::Ssh
       cmd = "rsync -av -e\s"
       cmd += "\""
          
-      cmd += first_hop.get_rsync_string
+      cmd += first_hop.get_rsync_string if has_hop?
 
       cmd += "\sssh -o StrictHostKeyChecking=no\""
       cmd += "\s#{local_path}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}:#{remote_path}"
