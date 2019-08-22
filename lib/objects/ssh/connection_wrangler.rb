@@ -52,7 +52,14 @@ module Bcome::Ssh
       cmd += first_hop.get_rsync_string if has_hop?
       cmd += "\sssh -o StrictHostKeyChecking=no\""
       cmd += "\s#{local_path}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}:#{remote_path}"
-      cmd
+      return cmd
+    end
+
+    def get_local_port_forward_command(start_port, end_port)
+      cmd = "ssh -N -L\s"
+      cmd += "#{start_port}:#{target_machine_ingress_ip}:#{end_port}\s"
+      cmd += "\s" + first_hop.get_local_port_forward_string if has_hop?
+      return cmd
     end
 
     protected

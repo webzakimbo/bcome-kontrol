@@ -9,13 +9,8 @@ module ::Bcome::Ssh
       connection_wrangler.get_rsync_command(local_path, remote_path) 
     end
 
-    # TODO
     def local_port_forward_command(start_port, end_port)
-      if has_proxy?
-        "ssh -N -L #{start_port}:#{@context_node.internal_ip_address}:#{end_port} #{bastion_host_user}@#{@proxy_data.host}"
-      else
-        "ssh -N -L #{start_port}:#{@context_node.public_ip_address}:#{end_port}"
-     end
+      connection_wrangler.get_local_port_forward_command(start_port, end_port)
     end
 
   end

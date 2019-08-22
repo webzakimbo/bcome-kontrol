@@ -60,6 +60,17 @@ module Bcome::Ssh
       con_str
     end
 
+    def get_local_port_forward_string
+      con_str = ""
+
+      if has_parent?
+        con_str += "#{parent.get_local_port_forward_string}"
+      end
+
+      con_str += "#{user}@#{host}\s"
+      con_str
+    end
+
     private
 
     def valid_host_lookups
