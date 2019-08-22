@@ -49,9 +49,7 @@ module Bcome::Ssh
     def get_rsync_command(local_path, remote_path)
       cmd = "rsync -av -e\s"
       cmd += "\""
-         
       cmd += first_hop.get_rsync_string if has_hop?
-
       cmd += "\sssh -o StrictHostKeyChecking=no\""
       cmd += "\s#{local_path}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}:#{remote_path}"
       cmd
