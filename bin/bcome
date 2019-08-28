@@ -1,15 +1,31 @@
+#frozen_string_literal: true
 #!/usr/bin/env ruby
-# frozen_string_literal: true
 
 require 'bcome'
+
+def close_connections
+  ::Bcome::Bootup.instance.estate.close_ssh_connections
+  ::Bcome::Ssh::TunnelKeeper.instance.close_tunnels
+end  
+
+trap("INT") {
+  puts "bcome terminated unexpectedly".warning
+  close_connections
+  exit
+}
 
 begin
   spawn_into_console = true
   arguments = ARGV - [ARGV[0]]
   ::Bcome::Bootup.set_and_do({ breadcrumbs: ARGV[0], arguments: arguments }, spawn_into_console)
 
-  # close any trailing connections
-  Bcome::Bootup.instance.estate.close_ssh_connections
+  close_connections
 rescue ::Bcome::Exception::Base
+  close_connections
   puts 'bcome terminated unexpectedly'.warning
 end
+
+
+
+
+

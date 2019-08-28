@@ -15,6 +15,9 @@ module ::Bcome::Ssh
     def local_port_forward(start_port, end_port)
       tunnel_command = local_port_forward_command(start_port, end_port)
       tunnel = ::Bcome::Ssh::Tunnel::LocalPortForward.new(tunnel_command)
+
+      ::Bcome::Ssh::TunnelKeeper.instance << tunnel
+
       tunnel.open!
       tunnel
     end

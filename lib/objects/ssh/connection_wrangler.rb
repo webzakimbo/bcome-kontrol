@@ -5,8 +5,6 @@ require 'net/ssh/proxy/jump'
 module Bcome::Ssh
   class ConnectionWrangler
 
-    PROXY_SSH_PREFIX = '-o UserKnownHostsFile=/dev/null -o "ProxyCommand ssh -W %h:%p'
-
     def initialize(ssh_driver)
       @ssh_driver = ssh_driver
       @config = ssh_driver.config[:proxy]
@@ -56,6 +54,7 @@ module Bcome::Ssh
     end
 
     def get_local_port_forward_command(start_port, end_port)
+      raise ::Bcome::Exception::InvalidPortForwardRequest, "Connections to this node are not via a proxy. Rather than port forward, try connecting directly." unless has_hop?
       cmd = "ssh -N -L\s"
       cmd += "#{start_port}:#{target_machine_ingress_ip}:#{end_port}\s"
       cmd += "\s" + first_hop.get_local_port_forward_string if has_hop?
