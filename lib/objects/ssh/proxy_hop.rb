@@ -56,7 +56,7 @@ module Bcome::Ssh
         con_str += "#{parent.get_rsync_string}\s"
       end
 
-      con_str += "ssh -A -t #{user}@#{host}"
+      con_str += "'ssh -o \"ProxyCommand ssh -A #{user}@#{host} -W %h:%p\"'"
       con_str
     end
 

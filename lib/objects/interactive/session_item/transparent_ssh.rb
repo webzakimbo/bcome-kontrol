@@ -26,7 +26,7 @@ module Bcome::Interactive::SessionItem
       input = get_input
 
       if exit?(input)
-        close_ssh_connections
+        #close_ssh_connections
         return
       end
 

@@ -33,6 +33,10 @@ module Bcome::Ssh
     end
 
     def proxy
+      @proxy ||= create_proxy
+    end
+
+    def create_proxy
       proxy = Net::SSH::Proxy::Jump.new(hops.reverse.collect(&:get_ssh_string).join(","))
       return proxy
     end
@@ -45,10 +49,8 @@ module Bcome::Ssh
     end
 
     def get_rsync_command(local_path, remote_path)
-      cmd = "rsync -av -e\s"
-      cmd += "\""
+      cmd = "rsync -azv -e\s"
       cmd += first_hop.get_rsync_string if has_hop?
-      cmd += "\sssh -o StrictHostKeyChecking=no\""
       cmd += "\s#{local_path}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}:#{remote_path}"
       return cmd
     end
