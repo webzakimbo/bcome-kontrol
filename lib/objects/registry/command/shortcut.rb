@@ -5,13 +5,16 @@ module Bcome::Registry::Command
     # In which the bcome context is a shortcut to a more complex command
 
     def execute(node, _arguments) ## We'll add in arguments later
-      if run_as_pseudo_tty?
-        node.pseudo_tty command
-      else
-        node.run command
+      begin
+        if run_as_pseudo_tty?
+          node.pseudo_tty command
+        else
+          node.run command
+        end
+      rescue Interrupt
+        puts "\nExiting gracefully from interrupt\n".warning
       end
-    rescue Interrupt
-      puts "\nExiting gracefully from interrupt\n".warning
+      return
     end
 
     def command
