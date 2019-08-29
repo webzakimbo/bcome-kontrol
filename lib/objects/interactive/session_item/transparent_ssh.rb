@@ -108,7 +108,7 @@ module Bcome::Interactive::SessionItem
        begin
          machine.run(user_input)
        rescue IOError => e
-         puts "Reopening connections to\s".informational +  machine.identifier
+         puts "Reopening connection to\s".informational +  machine.identifier
          machine.reopen_ssh_connection
          machine.run(user_input)
         end
