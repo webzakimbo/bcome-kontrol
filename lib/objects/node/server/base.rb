@@ -108,6 +108,11 @@ module Bcome::Node::Server
       ssh_driver.local_port_forward(start_port, end_port)
     end
 
+    def reopen_ssh_connection
+      close_ssh_connection
+      open_ssh_connection
+    end
+
     def open_ssh_connection
       ssh_driver.ssh_connection
     end
@@ -214,7 +219,6 @@ module Bcome::Node::Server
 
     def run(*raw_commands)
       raise ::Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
-
       commands = do_run(raw_commands)
       commands
     end

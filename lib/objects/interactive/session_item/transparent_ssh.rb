@@ -105,7 +105,13 @@ module Bcome::Interactive::SessionItem
 
     def execute_on_machines(user_input)
       machines.pmap do |machine|
-        machine.run(user_input)
+       begin
+         machine.run(user_input)
+       rescue IOError => e
+         puts "Reopening connections to\s".informational +  machine.identifier
+         machine.reopen_ssh_connection
+         machine.run(user_input)
+        end
       end
     end
   end
