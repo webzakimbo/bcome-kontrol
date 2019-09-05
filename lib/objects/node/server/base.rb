@@ -109,6 +109,7 @@ module Bcome::Node::Server
     end
 
     def reopen_ssh_connection
+      puts "Lost connection to #{identifier}. Reopening".warning
       close_ssh_connection
       open_ssh_connection
     end
@@ -218,10 +219,24 @@ module Bcome::Node::Server
     end
 
     def run(*raw_commands)
-      raise ::Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
-      commands = do_run(raw_commands)
-      commands
+      begin
+        raise ::Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
+        return do_run(raw_commands)
+     rescue IOError, Errno::EBADF
+       reopen_ssh_connection
+       return do_run(raw_commands)
+      rescue Exception => e
+        if e.message == "Unexpected spurious read wakeup"
+          reopen_ssh_connection
+          return do_run(raw_commands)
+        else
+          raise e
+        end  
+     end
     end
+
+    
+
 
     def has_description?
       !@description.nil?
