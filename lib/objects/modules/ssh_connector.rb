@@ -6,6 +6,7 @@ module Bcome
     SIGNAL_STOP = "HUP" 
 
     def global_connect
+      puts "\n\nInitiating connections to all nodes".informational
 
       ## Fork a progress loader, but retain its pid so we can increment it
       progress_size = machines.size
@@ -25,7 +26,6 @@ module Bcome
         end
 
         indicator.progress
-        #puts "\n\sdone".informational
       end
 
       machines.pmap do |machine|

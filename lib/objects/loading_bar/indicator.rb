@@ -22,8 +22,12 @@ module LoadingBar
         #print multi_line
 
         # Normal indicator
-        print "\r#{@progression}#{glyph.bc_green}\s"
+        print_progress
       end
+    end
+
+    deft print_progress
+      print "\r#{@progression}#{glyph.bc_green} (#{@results.size}/#{@progress_size})\s"
     end
 
     def multi_line
@@ -31,17 +35,19 @@ module LoadingBar
       line = ""
       @results.map{|r| line += (r == 1 ? "#{progressed_glyph}".bc_green.bold : "#{progressed_glyph}".bc_red.bold ) }
       line += "#{glyph.bc_orange}" * (@progress_size - @results.size)
-      return "\r#{line}\s"
+      print "\r#{line}\s(#{@results.size}/#{@progress_size})\s"
     end
 
     def increment_success
       @results << 1
       @progression += progressed_glyph.bc_green.bold
+      #print_progress 
     end
 
     def increment_failure
       @results << 0
       @progression += progressed_glyph.bc_red.bold
+      #print_progress
     end
 
     private

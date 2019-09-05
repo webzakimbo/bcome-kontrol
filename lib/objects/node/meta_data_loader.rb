@@ -46,7 +46,7 @@ module Bcome::Node
 
       print "\n#{decryption_key_prompt}"
       @decryption_key = STDIN.noecho(&:gets).chomp
-      print "\r#{decryption_key_prompt}" + "**********"
+      print "\r#{decryption_key_prompt}" + "**********\n\n"
     end
 
     def load_file_data_for(filepath)
@@ -58,6 +58,7 @@ module Bcome::Node
         begin
           YAML.load(decrypted_contents)
         rescue Exception => e
+           @decryption_key = nil
           raise ::Bcome::Exception::InvalidMetaDataConfig.new "#{e.class} #{e.message} - " + decrypted_contents
         end
 
