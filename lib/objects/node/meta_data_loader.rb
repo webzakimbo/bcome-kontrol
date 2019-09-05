@@ -42,8 +42,11 @@ module Bcome::Node
     end
 
     def prompt_for_decryption_key
-      print "\nEnter your decryption key: ".informational
+      decryption_key_prompt =  "Enter your decryption key: ".informational
+
+      print "\n#{decryption_key_prompt}"
       @decryption_key = STDIN.noecho(&:gets).chomp
+      print "\r#{decryption_key_prompt}" + "**********"
     end
 
     def load_file_data_for(filepath)
