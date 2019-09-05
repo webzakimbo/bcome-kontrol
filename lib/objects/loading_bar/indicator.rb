@@ -24,7 +24,6 @@ module LoadingBar
         # Normal indicator
         print "\r#{@progression}#{glyph.bc_green}\s"
       end
-      print "\rXXX"
     end
 
     def multi_line
