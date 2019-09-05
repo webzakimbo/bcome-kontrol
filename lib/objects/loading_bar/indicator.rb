@@ -26,7 +26,7 @@ module LoadingBar
       end
     end
 
-    deft print_progress
+    def print_progress
       print "\r#{@progression}#{glyph.bc_green} (#{@results.size}/#{@progress_size})\s"
     end
 
