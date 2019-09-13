@@ -14,12 +14,17 @@ module ::Bcome::Ssh
 
     def local_port_forward(start_port, end_port)
       tunnel_command = local_port_forward_command(start_port, end_port)
-      tunnel = ::Bcome::Ssh::Tunnel::LocalPortForward.new(tunnel_command)
 
-      ::Bcome::Ssh::TunnelKeeper.instance << tunnel
+      puts "\sOpening tunnel:\s".informational + "#{tunnel_command}".terminal_prompt 
 
-      tunnel.open!
-      tunnel
+      if ::Bcome::Workspace.instance.console_set?
+        tunnel = ::Bcome::Ssh::Tunnel::LocalPortForward.new(tunnel_command)
+        ::Bcome::Ssh::TunnelKeeper.instance << tunnel
+        tunnel.open!
+        return tunnel
+      else
+         ::Bcome::Command::Local.run(tunnel_command)
+      end 
     end
 
     def ping

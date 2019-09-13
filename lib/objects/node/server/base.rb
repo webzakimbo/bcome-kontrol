@@ -77,7 +77,7 @@ module Bcome::Node::Server
     end
 
     def enabled_menu_items
-      (super + %i[get ssh tags pseudo_tty]) - %i[enable disable enable! disable!]
+      (super + %i[get ssh tags pseudo_tty tunnel]) - %i[enable disable enable! disable!]
     end
 
     def menu_items
@@ -100,6 +100,12 @@ module Bcome::Node::Server
         usage: 'pseudo_tty "your command"',
         terminal_usage: 'pseudo_tty "your command"'
       }
+      base_items[:tunnel] = {
+        description: 'Create a Tunnel over SSH',
+        console_only: false,
+        usage: 'tunnel(local_port, destination_port)',
+        terminal_usage: 'tunnel local_port destination_port'
+      }
 
       base_items
     end
@@ -107,6 +113,7 @@ module Bcome::Node::Server
     def local_port_forward(start_port, end_port)
       ssh_driver.local_port_forward(start_port, end_port)
     end
+    alias :tunnel :local_port_forward
 
     def reopen_ssh_connection
       puts "Lost connection to #{identifier}. Reopening".warning

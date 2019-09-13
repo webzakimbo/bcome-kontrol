@@ -8,12 +8,11 @@ module Bcome::Ssh::Tunnel
     end
 
     def open!
-      puts "Opening tunnel: #{@tunnel_command}".informational
       @process_pid = spawn(@tunnel_command)
     end
 
     def close!
-      puts "Closing tunnel with process pid ##{@process_pid}: #{@tunnel_command}".informational
+      puts "Closing tunnel:\s".informational + "#{@tunnel_command}".terminal_prompt
       ::Process.kill('HUP', @process_pid)
     end
   end

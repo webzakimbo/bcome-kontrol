@@ -59,7 +59,7 @@ module Bcome::Ssh
       raise ::Bcome::Exception::InvalidPortForwardRequest, "Connections to this node are not via a proxy. Rather than port forward, try connecting directly." unless has_hop?
       cmd = "ssh -N -L\s"
       cmd += "#{start_port}:#{target_machine_ingress_ip}:#{end_port}\s"
-      cmd += "\s" + first_hop.get_local_port_forward_string if has_hop?
+      cmd += "\s" + hops.reverse.collect(&:get_ssh_string).join("\s") if has_hop?
       return cmd
     end
 
