@@ -36,19 +36,6 @@ module Bcome::Ssh
       return con_str
     end
 
-    def get_connection_string
-      con_str = has_parent? ? "\"ProxyCommand ssh -W %h:%p" : ""
-      
-      if has_parent?
-        con_str += "\s#{parent.get_connection_string}\s"
-      end
-      
-      con_str += "#{user}@#{host}"
-      con_str += "\"" unless has_parent?
-
-      con_str
-    end
-
     def get_rsync_string
       con_str = "" 
  

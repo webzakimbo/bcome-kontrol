@@ -22,8 +22,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    addressable (2.6.0)
-      public_suffix (>= 2.0.2, < 4.0)
+    addressable (2.7.0)
+      public_suffix (>= 2.0.2, < 5.0)
     ast (2.4.0)
     awesome_print (1.8.0)
     builder (3.2.3)
@@ -74,9 +74,9 @@ GEM
       addressable (~> 2.3)
     memoist (0.16.0)
     metaclass (0.0.4)
-    mime-types (3.2.2)
+    mime-types (3.3)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2019.0331)
+    mime-types-data (3.2019.0904)
     mini_portile2 (2.4.0)
     minitest (5.11.3)
     mocha (1.9.0)
@@ -90,11 +90,11 @@ GEM
       mini_portile2 (~> 2.4.0)
     os (1.0.1)
     parallel (1.17.0)
-    parser (2.6.3.0)
+    parser (2.6.4.1)
       ast (~> 2.4.0)
     pmap (1.1.1)
     power_assert (1.1.5)
-    public_suffix (3.1.1)
+    public_suffix (4.0.1)
     rainbow (2.2.2)
       rake
     rake (12.3.3)
@@ -144,4 +144,4 @@ DEPENDENCIES
   test-unit-activesupport
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
