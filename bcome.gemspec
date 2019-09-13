@@ -3,12 +3,15 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'bcome'
-  spec.version       = '1.3.4'
+  spec.version       = '1.3.5'
   spec.authors       = ['Guillaume Roderick (Webzakimbo)']
   spec.email         = ['guillaume@webzakimbo.com']
-  spec.summary       = 'Organise your world, then integrate absolutely whatever you want in pure Ruby.'
-  spec.description   = "An orchestration framework for AWS EC2"
-  spec.homepage      = "https://bcome-kontrol.readthedocs.io/en/latest/"
+  spec.summary       = 'A DevOps Application development framework'
+  spec.description   = "Orchestration & Automation framework for the Cloud."
+  spec.homepage      = "https://github.com/webzakimbo/bcome-kontrol"
+  spec.metadata = {
+    "documentation_uri" => "https://bcome-kontrol.readthedocs.io/en/latest/"
+  }
   spec.license       = 'GPL-3.0'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
@@ -23,4 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rainbow', '~> 2.2'
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'rsync', '~> 1.0'
+  spec.post_install_message = %q{
+  We'd love your feedack about this Gem: How can we improve?  Email guillaume@webzakimbo.com
+}
 end
