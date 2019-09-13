@@ -49,8 +49,8 @@ module Bcome::Ssh
     end
 
     def get_rsync_command(local_path, remote_path)
-      cmd = "rsync -azv -e\s"
-      cmd += first_hop.get_rsync_string if has_hop?
+      cmd = "rsync -azv"
+      cmd += "\s-e 'ssh\s-A -J\s" + hops.collect(&:get_ssh_string).join(",") + "'" if has_hop?
       cmd += "\s#{local_path}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}:#{remote_path}"
       return cmd
     end
