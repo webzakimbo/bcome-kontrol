@@ -8,7 +8,6 @@ def close_connections
 end  
 
 trap("INT") {
-  puts "bcome terminated unexpectedly".warning
   close_connections
   exit
 }
@@ -23,8 +22,3 @@ rescue ::Bcome::Exception::Base
   close_connections
   puts 'bcome terminated unexpectedly'.warning
 end
-
-
-
-
-
