@@ -37,7 +37,7 @@ module Bcome
         # along the way. Once connected any subsequent failures will be handled gracefully, with re-connection automatic.
         while @servers_to_connect.any? && connection_attempt <= MAX_CONNECTION_ATTEMPTS
           title = connection_attempt > 1 ? "Retrying failed connections" : "Connecting"
-          start_indicator(@servers_to_connect.size, title, "done") if show_progress?
+          start_progress_indicator(@servers_to_connect.size, title, "done") if show_progress?
           open_connections
           connection_attempt += 1
           signal_stop if show_progress?

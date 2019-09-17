@@ -24,9 +24,28 @@ module Bcome::Driver
       end
     end
 
+    include ::LoadingBar::Handler
+
     def has_network_credentials?
       false
     end
+
+    def start_loader
+      start_basic_indicator("Loading".bc_green + "\s#{pretty_provider_name}\s#{pretty_resource_location}".informational, "done") 
+    end
+
+    def stop_loader
+      signal_success
+      signal_stop
+    end
+
+    def pretty_provider_name
+      raise "Should be overriden"
+    end
+
+    def pretty_resource_location
+      raise "Should be overidden"
+    end  
 
     def network_credentials
       raise "Should be overidden"

@@ -10,7 +10,17 @@ module Bcome::Driver
       validate_authentication_scheme
     end
 
+    def pretty_provider_name
+      "gcp"
+    end
+
+    def pretty_resource_location
+      "#{@params[:project]}/#{@params[:zone]}"
+    end
+
     def fetch_server_list(_filters)
+      start_loader
+
       begin
         instances = gcp_service.list_instances(@params[:project], @params[:zone])
       rescue Google::Apis::AuthorizationError
@@ -21,6 +31,8 @@ module Bcome::Driver
         raise ::Bcome::Exception::Generic, "Cannot reach GCP - do you have an internet connection?"
       end
 
+      signal_stop
+      puts "\n"
       instances.items
     end
 

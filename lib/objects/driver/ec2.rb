@@ -9,6 +9,10 @@ module Bcome::Driver
       raise Bcome::Exception::Ec2DriverMissingProvisioningRegion, params.inspect unless provisioning_region
     end
 
+    def pretty_provider_name
+      "ec2"
+    end
+
     def fog_client
       @fog_client ||= get_fog_client
     end

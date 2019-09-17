@@ -17,29 +17,31 @@ module LoadingBar
       @results = []
     end
 
+    def basic
+      print "\n"
+      loop do
+        increment
+        print_basic
+      end
+    end
+
     def progress
       print "\n"
       loop do
         increment
- 
-        ## Multi indicator
-        print multi_line
-
-        # Normal indicator
-        #print_progress
+        print_progress
       end
     end
 
-    def print_progress
-      print "\r#{@progression}#{glyph.bc_green} (#{@results.size}/#{@progress_size})\s"
+    def print_basic
+      print "\r#{@title}\s#{glyph.bc_green}\s"
     end
 
-    def multi_line
-      #title = (@progress_size == @results.size) ? @completed_title : @title
+    def print_progress
       line = ""
       @results.map{|r| line += (r == 1 ? "#{progressed_glyph}".bc_green.bold : "#{progressed_glyph}".bc_red.bold ) }
       line += "#{glyph.bc_orange}" * (@progress_size - @results.size)
-      print "\r#{@title.informational}\s#{line}\s(#{@results.size}/#{@progress_size})\s"
+      print "\r#{@title}\s#{line}\s(#{@results.size}/#{@progress_size})\s"
     end
 
     def increment_success
