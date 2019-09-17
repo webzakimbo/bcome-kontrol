@@ -70,7 +70,7 @@ module Bcome
       def open_connections
         @servers_to_connect.pmap do |machine|
           begin
-            machine.open_ssh_connection
+            machine.open_ssh_connection(ping?)
             if machine.has_ssh_connection?
               @servers_to_connect -= [machine]
               @connected_machines << machine

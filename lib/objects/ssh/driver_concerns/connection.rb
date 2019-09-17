@@ -36,8 +36,13 @@ module ::Bcome::Ssh
       @connection = nil
     end
 
-    def ssh_connection
-      has_open_ssh_con? ? @connection : do_ssh_connect!
+    def ssh_connection(ping = false)
+      if ping
+        # We do not cache ping results
+        do_ssh_connect!
+      else
+        has_open_ssh_con? ? @connection : do_ssh_connect!
+      end
     end
 
     def has_open_ssh_con?

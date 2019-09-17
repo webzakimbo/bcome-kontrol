@@ -121,8 +121,8 @@ module Bcome::Node::Server
       open_ssh_connection
     end
 
-    def open_ssh_connection
-      ssh_driver.ssh_connection
+    def open_ssh_connection(ping = false)
+      ssh_driver.ssh_connection(ping)
     end
 
     def close_ssh_connection

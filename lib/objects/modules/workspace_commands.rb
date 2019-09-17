@@ -3,7 +3,7 @@
 module Bcome
   module WorkspaceCommands
 
-    def ssh_connect(params)
+    def ssh_connect(params = {})
       ::Bcome::Ssh::Connector.connect(self, params)
     end
 
@@ -98,7 +98,7 @@ module Bcome
     end
 
     def ping
-      ssh_connect(is_ping: true)
+      ssh_connect(is_ping: true, show_progress: true)
     end
 
     def pretty_description(is_active = true)
