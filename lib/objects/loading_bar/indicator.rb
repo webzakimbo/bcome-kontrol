@@ -2,6 +2,10 @@ module LoadingBar
   class Indicator
 
     CHARACTERS = %w(⣾ ⣷ ⣯ ⣟ ⡿ ⢿ ⣻ ⣽)
+
+    SIGNAL_SUCCESS = "USR1"
+    SIGNAL_FAILURE = "USR2"
+    SIGNAL_STOP = "HUP" 
  
     def initialize(config)
       @progress_size = config[:size]
@@ -19,10 +23,10 @@ module LoadingBar
         increment
  
         ## Multi indicator
-        #print multi_line
+        print multi_line
 
         # Normal indicator
-        print_progress
+        #print_progress
       end
     end
 
@@ -35,19 +39,17 @@ module LoadingBar
       line = ""
       @results.map{|r| line += (r == 1 ? "#{progressed_glyph}".bc_green.bold : "#{progressed_glyph}".bc_red.bold ) }
       line += "#{glyph.bc_orange}" * (@progress_size - @results.size)
-      print "\r#{line}\s(#{@results.size}/#{@progress_size})\s"
+      print "\r#{@title.informational}\s#{line}\s(#{@results.size}/#{@progress_size})\s"
     end
 
     def increment_success
       @results << 1
       @progression += progressed_glyph.bc_green.bold
-      #print_progress 
     end
 
     def increment_failure
       @results << 0
       @progression += progressed_glyph.bc_red.bold
-      #print_progress
     end
 
     private

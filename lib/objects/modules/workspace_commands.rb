@@ -2,6 +2,11 @@
 
 module Bcome
   module WorkspaceCommands
+
+    def ssh_connect(params)
+      ::Bcome::Ssh::Connector.connect(self, params)
+    end
+
     def ls(active_only = false)
       puts "\n\n" + visual_hierarchy.hierarchy + "\n"
       puts "\t" + "Available #{list_key}s:".title + "\n\n"
@@ -83,7 +88,7 @@ module Bcome
 
       results = {}
 
-      ::Bcome::Ssh::ConnectionHandler.connect(self, {})
+      ssh_connect
 
       machines.pmap do |machine|
         commands = machine.do_run(raw_commands)
@@ -93,7 +98,7 @@ module Bcome
     end
 
     def ping
-      ::Bcome::Ssh::ConnectionHandler.connect(self, is_ping: true)
+      ssh_connect(is_ping: true)
     end
 
     def pretty_description(is_active = true)

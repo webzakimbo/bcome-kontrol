@@ -1,11 +1,11 @@
 module ::Bcome::Ssh
   module DriverConnection
 
-    DEFAULT_TIMEOUT_IN_SECONDS = 5
+    DEFAULT_TIMEOUT_IN_SECONDS = 1
 
     ## CONNECTION --
 
-    def ssh_connect!(_verbose = false)
+    def ssh_connect!
       @connection = nil
       begin
         @connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
@@ -15,6 +15,20 @@ module ::Bcome::Ssh
       @connection
     end
 
+    def do_ssh_connect!
+      connection_attempts = 0
+      while connection_attempts < ::Bcome::Ssh::Connector::MAX_CONNECTION_ATTEMPTS
+        begin
+          connection = ssh_connect!
+          return connection
+        rescue Bcome::Exception::CouldNotInitiateSshConnection => e
+          puts "Could not connect to #{@context_node.namespace}. Retrying".warning
+          connection_attempts += 1
+          raise e if connection_attempts == ::Bcome::Ssh::Connector::MAX_CONNECTION_ATTEMPTS
+        end
+      end
+    end
+ 
     def close_ssh_connection
       return unless @connection
 
@@ -23,7 +37,7 @@ module ::Bcome::Ssh
     end
 
     def ssh_connection
-      has_open_ssh_con? ? @connection : ssh_connect!
+      has_open_ssh_con? ? @connection : do_ssh_connect!
     end
 
     def has_open_ssh_con?
@@ -34,13 +48,13 @@ module ::Bcome::Ssh
       has_proxy? ? @context_node.internal_ip_address : @context_node.public_ip_address
     end
 
-    def net_ssh_params(verbose = false)
+    def net_ssh_params
       raise Bcome::Exception::InvalidSshConfig, "Missing ssh keys for #{@context_node.namespace}" unless ssh_keys
 
       params = { keys: ssh_keys, paranoid: false }
       params[:proxy] = proxy if has_proxy?
       params[:timeout] = timeout_in_seconds
-      params[:verbose] = :debug if verbose
+      params[:verbose] = :fatal # All but silent
 
       params
     end

@@ -4,7 +4,6 @@ module Bcome::Node
   class Base
 
     include Bcome::Context
-    include Bcome::SshConnector
     include Bcome::WorkspaceCommands
     include Bcome::Node::Attributes
     include Bcome::WorkspaceMenu

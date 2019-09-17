@@ -82,7 +82,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def open_ssh_connections
-      ::Bcome::Ssh::ConnectionHandler.connect(node, show_progress: true)
+      ::Bcome::Ssh::Connector.connect(node, show_progress: true)
       system('clear')
     end
 
