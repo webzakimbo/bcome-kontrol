@@ -22,6 +22,7 @@ require 'googleauth/stores/file_token_store'
 require 'google/api_client/auth/storage'
 require 'google/api_client/auth/storages/file_store'
 require 'fileutils'
+require 'pry'
 
 require_all "#{File.dirname(__FILE__)}/../patches"
 require_all "#{File.dirname(__FILE__)}/../lib/objects"
