@@ -36,6 +36,10 @@ module Bcome::Node
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
     end
 
+    def ssh_connect
+      ::Bcome::Ssh::Connector.connect(self, { show_progress: true })
+    end
+
     def collection?
       false
     end
@@ -82,16 +86,19 @@ module Bcome::Node
       nil
     end
 
-    def put(local_path, remote_path)
+    def put(local_path, remote_path, connect = true)
+      ssh_connect if connect # Initiate connect at highest namespace level
+
       scoped_resources.each do |resource|
-        resource.put(local_path, remote_path)
+        resource.put(local_path, remote_path, false)
       end
       nil
     end
 
-    def put_str(string, remote_path)
+    def put_str(string, remote_path, connect = true)
+      ssh_connect if connect  # Initiate connect at highest namespace level
       scoped_resources.each do |resource|
-        resource.put_str(string, remote_path)
+        resource.put_str(string, remote_path, false)
       end
       nil
     end
@@ -232,13 +239,6 @@ module Bcome::Node
             resource.close_ssh_connections
           end
         end
-      end
-      nil
-    end
-
-    def open_ssh_connections
-      machines.pmap do |machine|
-        machine.open_ssh_connection unless machine.has_ssh_connection?
       end
       nil
     end

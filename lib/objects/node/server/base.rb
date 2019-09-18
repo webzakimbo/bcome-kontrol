@@ -157,11 +157,11 @@ module Bcome::Node::Server
       ssh_driver.rsync(local_path, remote_path)
     end
 
-    def put(local_path, remote_path)
+    def put(local_path, remote_path, *params)
       ssh_driver.put(local_path, remote_path)
     end
 
-    def put_str(string, remote_path)
+    def put_str(string, remote_path, *params)
       ssh_driver.put_str(string, remote_path)
     end
 

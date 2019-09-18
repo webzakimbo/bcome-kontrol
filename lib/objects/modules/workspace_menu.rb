@@ -95,7 +95,7 @@ module Bcome
         },
         put_str: {
           description: 'Write a file /to/remote/path from a string',
-          usage: 'put_str',
+          usage: 'put_str "string" "remote/path"',
           console_only: false,
           terminal_usage: "put_str '<file contents>', 'remote/path'"
         },
