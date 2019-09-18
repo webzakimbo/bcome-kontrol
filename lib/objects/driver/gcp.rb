@@ -11,7 +11,7 @@ module Bcome::Driver
     end
 
     def pretty_provider_name
-      "gcp"
+      "GCP"
     end
 
     def pretty_resource_location
