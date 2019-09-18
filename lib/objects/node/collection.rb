@@ -30,7 +30,7 @@ module Bcome::Node
       filtered_set
     end
 
-    def machines(skip_for_hidden = false)
+    def machines(skip_for_hidden = true)
       set = []
  
       resources = skip_for_hidden ? @resources.active.select{|resource| !resource.hide? } : @resources.active

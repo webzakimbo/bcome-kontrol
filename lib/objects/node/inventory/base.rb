@@ -81,7 +81,7 @@ module Bcome
           :server
         end
 
-        def machines(skip_for_hidden = false)
+        def machines(skip_for_hidden = true)
           skip_for_hidden ? resources.active : resources.active.select{|r| !r.hide? }
         end
 
