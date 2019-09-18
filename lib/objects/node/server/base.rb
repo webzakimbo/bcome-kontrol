@@ -242,9 +242,6 @@ module Bcome::Node::Server
      end
     end
 
-    
-
-
     def has_description?
       !@description.nil?
     end
