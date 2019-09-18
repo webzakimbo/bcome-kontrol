@@ -7,6 +7,14 @@ def close_connections
   ::Bcome::Ssh::TunnelKeeper.instance.close_tunnels
 end  
 
+def pack_metadata?
+  ARGV[0] == "pack_metadata"
+end
+
+def unpack_metadata?
+  ARGV[0] == "unpack_metadata"
+end
+
 trap("INT") {
   close_connections
   exit
@@ -15,6 +23,15 @@ trap("INT") {
 begin
   spawn_into_console = true
   arguments = ARGV - [ARGV[0]]
+
+  if pack_metadata? 
+    ::Bcome::Encryptor.instance.pack
+    exit
+  elsif unpack_metadata?
+    ::Bcome::Encryptor.instance.unpack
+    exit
+  end
+
   ::Bcome::Bootup.set_and_do({ breadcrumbs: ARGV[0], arguments: arguments }, spawn_into_console)
 
   close_connections

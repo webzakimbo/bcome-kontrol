@@ -123,12 +123,6 @@ module Bcome
         meta: {
           description: 'Print out all metadata related to this node'
         },
-        pack_metadata: {
-          description: 'Encrypt your metadata files'
-        },
-        unpack_metadata: {
-          description: 'Decrypt and expose your encrypted metadata files'
-        },
         registry: {
           description: 'List all user defined commands present in your registry, and available to this namespace',
           console_only: false

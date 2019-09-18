@@ -24,6 +24,7 @@ module Bcome
     end
 
     def prompt_for_key
+      puts "\n"
       print 'Please enter an encryption key (and if your data is already encrypted, you must provide the same key): '.informational
       @key = STDIN.noecho(&:gets).chomp
       puts "\n"

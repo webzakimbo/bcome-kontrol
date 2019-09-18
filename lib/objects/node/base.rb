@@ -53,7 +53,7 @@ module Bcome::Node
     end
 
     def enabled_menu_items
-      %i[ls lsa workon enable disable enable! disable! run tree ping put put_str rsync cd meta pack_metadata unpack_metadata registry interactive execute_script]
+      %i[ls lsa workon enable disable enable! disable! run tree ping put put_str rsync cd meta registry interactive execute_script]
     end
 
     def has_proxy?
@@ -110,14 +110,6 @@ module Bcome::Node
         results[machine.namespace] = command
       end
       results
-    end
-
-    def pack_metadata
-      ::Bcome::Encryptor.instance.pack
-    end
-
-    def unpack_metadata
-      ::Bcome::Encryptor.instance.unpack
     end
 
     def hide?
