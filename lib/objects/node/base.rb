@@ -32,6 +32,7 @@ module Bcome::Node
 
       set_view_attributes if @views
       validate_attributes
+
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
     end
 
@@ -109,7 +110,6 @@ module Bcome::Node
 
     def hide?
       return true if @views.has_key?(:hidden) && @views[:hidden]
-      #return parent.hide? if has_parent?
       return false
     end
 
@@ -260,7 +260,7 @@ module Bcome::Node
     private
 
     def set_view_attributes
-      @views.keys.each do |view_attribute_key|
+      @views.keys.sort.each do |view_attribute_key|
         next if view_attributes_to_skip_on_setup.include?(view_attribute_key)
 
         instance_variable_set("@#{view_attribute_key}", @views[view_attribute_key])
