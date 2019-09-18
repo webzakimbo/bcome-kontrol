@@ -87,7 +87,7 @@ module Bcome
       raise Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
       results = {}
 
-      ssh_connect
+      ssh_connect(show_progress: true)
 
       machines.pmap do |machine|
         commands = machine.do_run(raw_commands)
