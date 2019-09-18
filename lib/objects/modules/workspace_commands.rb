@@ -85,7 +85,6 @@ module Bcome
 
     def run(*raw_commands)
       raise Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
-
       results = {}
 
       ssh_connect
