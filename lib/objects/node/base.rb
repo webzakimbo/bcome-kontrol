@@ -62,30 +62,35 @@ module Bcome::Node
       ssh_driver.proxy
     end
 
+    def scoped_resources
+      # Active & not hidden
+      return resources.active.select{|resource| !resource.hide? }
+    end
+
     # TODO: - why not do these in parallel?
     def scp(local_path, remote_path)
-      resources.active.each do |resource|
+      scoped_resources.each do |resource|
         resource.put(local_path, remote_path)
       end
       nil
     end
 
     def rsync(local_path, remote_path)
-      resources.active.each do |resource|
+      scoped_resources.each do |resource|
         resource.rsync(local_path, remote_path)
       end
       nil
     end
 
     def put(local_path, remote_path)
-      resources.active.each do |resource|
+      scoped_resources.each do |resource|
         resource.put(local_path, remote_path)
       end
       nil
     end
 
     def put_str(string, remote_path)
-      resources.active.each do |resource|
+      scoped_resources.each do |resource|
         resource.put_str(string, remote_path)
       end
       nil
@@ -241,6 +246,7 @@ module Bcome::Node
     def execute_local(command)
       puts "(local) > #{command}"
       system(command)
+      puts ""
     end
 
     def data_print_from_hash(data, heading)
