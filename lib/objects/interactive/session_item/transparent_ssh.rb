@@ -5,7 +5,7 @@ module Bcome::Interactive::SessionItem
     END_SESSION_KEY = '\\q'
     HELP_KEY = '\\?'
     LIST_KEY = '\\l'
-
+    RECONNECT_CMD = '\\r'
     DANGER_CMD = "rm\s+-r|rm\s+-f|rm\s+-fr|rm\s+-rf|rm"
 
     def machines
@@ -16,6 +16,7 @@ module Bcome::Interactive::SessionItem
     def do
       puts ''
       open_ssh_connections
+      puts "\nINTERACTIVE COMMAND SESSION".underline
       show_menu
       puts ''
       list_machines
@@ -26,7 +27,6 @@ module Bcome::Interactive::SessionItem
       input = get_input
 
       if exit?(input)
-        #close_ssh_connections
         return
       end
 
@@ -43,10 +43,9 @@ module Bcome::Interactive::SessionItem
     end
 
     def show_menu
-      warning = "\n\sCommands entered here will be executed on " + 'EVERY'.underline + ' machine in your selection.'
-      second_warning = "\n\n\s" + 'Use with CAUTION.'.warning
-      info = "\n\n\s\\l list machines\n\s\\q to quit\n\s\\? this message".informational
-      puts "#{warning}#{second_warning}#{info}\n"
+      warning = "\nCommands entered here will be executed on" + "\severy\s".warning + "machine in your selection. \n\nUse with caution or hit \q if you're unsure what this is."
+      info = "\n\n\\l list machines\n\\q to quit\n\\? this message".informational
+      puts warning + "#{info}\n"
     end
 
     def handle_the_unwise(input)
@@ -66,7 +65,7 @@ module Bcome::Interactive::SessionItem
     def start_message; end
 
     def terminal_prompt
-      ">\s".bold.terminal_prompt
+      "~$\s".bold.terminal_prompt
     end
 
     def exit?(input)
@@ -83,7 +82,7 @@ module Bcome::Interactive::SessionItem
 
     def open_ssh_connections
       ::Bcome::Ssh::Connector.connect(node, show_progress: true)
-      system('clear')
+      #system('clear')
     end
 
     def close_ssh_connections
@@ -92,14 +91,14 @@ module Bcome::Interactive::SessionItem
 
     def indicate_failed_nodes(unconnected_nodes)
       unconnected_nodes.each do |node|
-        puts "\s\s - #{node.namespace}".bc_cyan
+        puts "\s\s - #{node.namespace}"
       end
     end
 
     def list_machines
       puts "\n"
       machines.each do |machine|
-        puts "\s- #{machine.namespace}"
+        puts "- #{machine.namespace}"
       end
     end
 

@@ -32,8 +32,7 @@ module Bcome::Driver
       end
 
       signal_stop
-      puts "\n"
-      instances.items
+      return instances.items
     end
 
     def has_network_credentials?

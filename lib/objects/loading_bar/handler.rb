@@ -35,7 +35,6 @@ module LoadingBar
     end
 
     def signal_stop
-      sleep(1)
       do_signal(::LoadingBar::Indicator::SIGNAL_STOP)
     end
 

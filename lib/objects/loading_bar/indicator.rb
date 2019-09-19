@@ -7,7 +7,7 @@ module LoadingBar
     SIGNAL_FAILURE = "USR2"
     SIGNAL_STOP = "HUP" 
  
-    def initialize(config)
+    def initialize(config = {})
       @progress_size = config[:size]
       @title = config[:title]
       @completed_title = config[:completed_title]
@@ -15,6 +15,14 @@ module LoadingBar
       @current_character = 0
       @progression = ""
       @results = []
+    end
+
+    def simple
+      print "\n"
+      loop do
+        increment
+        print_simple
+      end
     end
 
     def basic
@@ -31,6 +39,10 @@ module LoadingBar
         increment
         print_progress
       end
+    end
+
+    def print_simple
+      print "\r#{glyph.bc_green}\s"
     end
 
     def print_basic

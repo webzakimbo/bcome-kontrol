@@ -30,6 +30,8 @@ module Bcome
       end
 
       def connect
+        return if number_unconnected_machines == 0
+
         connection_attempt = 0
 
         # We may have difficulty connecting to many machines simultaneously, especially if, for examples, connections are being proxied via
@@ -89,7 +91,11 @@ module Bcome
       def set_servers
         @servers_to_connect = machines.dup
       end
-      
+     
+      def number_unconnected_machines
+        @servers_to_connect.collect{|machine| !machine.has_ssh_connection? }.size
+      end
+  
       def machines
         skip_for_hidden = true # Skip servers with hidden namespaces
         @node.server? ? [@node] : @node.machines(skip_for_hidden)

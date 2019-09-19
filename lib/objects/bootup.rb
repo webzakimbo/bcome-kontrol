@@ -33,6 +33,7 @@ module Bcome
 
     def init_context(context)
       if @spawn_into_console
+        puts "\n\n"
         ::Bcome::Workspace.instance.set(context: context)
       else
         context
@@ -57,9 +58,8 @@ module Bcome
         end
         starting_context = next_context
       end
-
       # Set our workspace to our last context - we're not invoking a method call and so we're entering a console session
-      init_context(starting_context)
+      init_context(starting_context)    
     end
 
     def estate
