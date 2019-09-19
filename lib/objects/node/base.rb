@@ -36,8 +36,8 @@ module Bcome::Node
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
     end
 
-    def ssh_connect
-      ::Bcome::Ssh::Connector.connect(self, { show_progress: true })
+    def ssh_connect(params = {})
+      ::Bcome::Ssh::Connector.connect(self, params)
     end
 
     def collection?
