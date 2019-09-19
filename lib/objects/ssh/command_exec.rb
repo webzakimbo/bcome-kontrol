@@ -25,6 +25,7 @@ module ::Bcome::Ssh
           ssh_exec!(ssh, command)
         rescue IOError # Typically occurs after a timeout if the session has been left idle
           node.reopen_ssh_connection
+          ssh = node.ssh_driver.ssh_connection
           ssh_exec!(ssh, command) # retry, once
         end
 
