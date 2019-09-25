@@ -45,7 +45,7 @@ module Bcome
 
           cached_machines = raw_static_machines_from_cache
  
-          if cached_machines.any?
+          if cached_machines&.any?
             start_basic_indicator("Loading" + "\scache".bc_blue.bold + "\s" + "#{namespace}".underline, "done")
 
             cached_machines.each do |server_config|
