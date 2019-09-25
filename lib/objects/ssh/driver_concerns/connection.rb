@@ -33,9 +33,12 @@ module ::Bcome::Ssh
  
     def close_ssh_connection
       return unless @connection
-
-      @connection.close unless @connection.closed?
-      @connection = nil
+      begin
+        @connection.close unless @connection.closed?
+        @connection = nil
+      rescue Net::SCP::Error
+        @connection = nil
+      end
     end
 
     def ssh_connection(ping = false)

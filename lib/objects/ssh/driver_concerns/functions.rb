@@ -77,7 +77,7 @@ module ::Bcome::Ssh
         scp.download!(remote_path, local_path, recursive: true) do |_ch, name, sent, total|
           puts "#{name}: #{sent}/#{total}".progress
         end
-      rescue Exception => e # scp just throws generic exceptions :-/
+      rescue Exception => e 
         puts e.message.error
       end
     end
