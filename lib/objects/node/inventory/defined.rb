@@ -74,18 +74,22 @@ module Bcome
 
         def save
           @answer = ::Bcome::Interactive::Session.run(self,
-                                                      :capture_input, terminal_prompt: "\nAre you sure you want to cache these machines (saving will overwrite any previous selections) [Y|N] ? ")
+                                                      :capture_input, terminal_prompt: "Are you sure you want to cache these machines (saving will overwrite any previous selections) [Y|N] ? ")
 
           if @answer && @answer == 'Y'
             cache_nodes_in_memory
             data = load_machines_config
+
+            data.delete(namespace)
+            data.delete(namespace.to_sym)
+
             data[namespace] = views[:static_servers]
 
             File.open(machines_cache_path, 'w') do |file|
               file.write data.to_yaml
             end
             mark_as_cached!
-            puts "Machines have been cached for node #{namespace}".informational
+            puts "\nMachines have been cached for node #{namespace}".informational
           else
             puts 'Nothing saved'.warning
           end
