@@ -42,7 +42,7 @@ module Bcome::Node
     end
 
     def prompt_for_decryption_key
-      decryption_key_prompt =  "Enter your decryption key: ".informational
+      decryption_key_prompt =  "Enter your metadata decryption key: ".informational
 
       print "\n#{decryption_key_prompt}"
       @decryption_key = STDIN.noecho(&:gets).chomp

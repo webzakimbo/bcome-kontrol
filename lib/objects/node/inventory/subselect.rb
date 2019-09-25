@@ -11,6 +11,20 @@ module Bcome
           update_nodes
         end
 
+        def enabled_menu_items
+          super + %i[reload]
+        end
+
+        def menu_items
+          base_items = super.dup
+
+          base_items[:reload] = {
+            description: "Restock this inventory from remote",
+            console_only: true
+          }
+          base_items
+        end
+
         def resources
           @resources ||= do_set_resources
         end
