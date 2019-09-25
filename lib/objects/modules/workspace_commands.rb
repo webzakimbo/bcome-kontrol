@@ -165,8 +165,8 @@ module Bcome
     end
 
     def method_missing(method_sym, *arguments)
-      raise ::Bcome::Exception::UnknownMethodForNamespace, "\s'#{method_sym}'" unless method_is_available_on_node?(method_sym)
-
+      super unless method_is_available_on_node?(method_sym)
+      
       if resource_identifiers.include?(method_sym.to_s)
         method_sym.to_s
       elsif instance_variable_defined?("@#{method_sym}")
