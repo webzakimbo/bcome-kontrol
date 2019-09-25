@@ -10,7 +10,7 @@ module Bcome::Node
       @all_metadata_filenames = Dir["#{META_DATA_FILE_PATH_PREFIX}/*"]
     end
 
-    attr_reader :decryption_key
+    attr_accessor :decryption_key
 
     def data
       @data ||= do_load

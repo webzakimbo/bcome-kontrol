@@ -27,6 +27,7 @@ class String
     crypt << cipher.final
     crypt
   rescue Exception
+    ::Bcome::Node::MetaDataLoader.instance.decryption_key = nil
     raise ::Bcome::Exception::InvalidMetaDataEncryptionKey
   end
 
