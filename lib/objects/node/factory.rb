@@ -2,6 +2,7 @@
 
 module Bcome::Node
   class Factory
+
     include Singleton
 
     attr_reader :estate

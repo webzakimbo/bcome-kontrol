@@ -4,6 +4,9 @@ module Bcome
   module Node
     module Inventory
       class Defined < ::Bcome::Node::Inventory::Base
+
+        include ::LoadingBar::Handler
+
         MACHINES_CACHE_PATH = 'machines-cache.yml'
 
         def self.to_s
@@ -35,12 +38,23 @@ module Bcome
         def reload
           resources.reset_duplicate_nodes!
           do_reload
-          puts "\nDone. Hit 'ls' to see the refreshed inventory.\n".informational
+          puts "\n\nDone. Hit 'ls' to see the refreshed inventory.\n".informational
         end
 
         def set_static_servers
-          raw_static_machines_from_cache&.each do |server_config|
-            resources << ::Bcome::Node::Server::Static.new(views: server_config, parent: self)
+
+          cached_machines = raw_static_machines_from_cache
+ 
+          if cached_machines.any?
+            start_basic_indicator("Loading" + "\scache".bc_blue.bold + "\s" + "#{namespace}".underline, "done")
+
+            cached_machines.each do |server_config|
+              resources << ::Bcome::Node::Server::Static.new(views: server_config, parent: self)
+            end
+  
+            signal_success
+            signal_stop
+
           end
         end
 
