@@ -9,6 +9,7 @@ module Bcome::Driver::Gcp::Authentication
       @service = service
       @scopes = scopes
       @node = node
+    
       @path_to_secrets = "#{CREDENTIAL_DIRECTORY}/#{path_to_secrets}"
       # All credentials are held in .gauth
       ensure_credential_directory

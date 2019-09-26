@@ -2,6 +2,7 @@
 
 module Bcome::Driver
   class Gcp < Bcome::Driver::Base
+
     APPLICATION_NAME = 'Bcome console'
 
     def initialize(*params)
