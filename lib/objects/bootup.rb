@@ -6,12 +6,6 @@ module Bcome
     def self.set_and_do(params, spawn_into_console = true)
       instance.set(params, spawn_into_console)
       instance.do
-    rescue Bcome::Exception::Base => e
-      ::Bcome::LoadingBar::PidBucket.instance.kill_all
-      puts e.pretty_display
-    rescue Excon::Error::Socket => e
-      ::Bcome::LoadingBar::PidBucket.instance.kill_all
-      puts "\nNo network access - please check your connection and try again\n".red
     end
 
     def self.traverse(breadcrumbs = nil, _spawn_into_console = false)

@@ -43,7 +43,13 @@ begin
 
   ::Bcome::Bootup.set_and_do({ breadcrumbs: ARGV[0], arguments: arguments }, spawn_into_console)
   clean_up
-rescue ::Bcome::Exception::Base
+rescue ::Bcome::Exception::Base => e
   clean_up
-  puts 'bcome terminated unexpectedly'.warning
+  puts e.pretty_display
+rescue Excon::Error::Socket => e
+  clean_up
+  puts "\nNo network access - please check your connection and try again\n".error
+rescue Exception => e
+  clean_up
+  raise e # We do need to see unexpected exceptions.
 end
