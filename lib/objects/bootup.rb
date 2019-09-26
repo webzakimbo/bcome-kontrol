@@ -66,6 +66,15 @@ module Bcome
       @estate ||= ::Bcome::Node::Factory.instance.init_tree
     end
 
+    def estate_loaded?
+      !@estate.nil?
+    end
+
+    def close_ssh_connections
+      return unless estate_loaded?
+      estate.close_ssh_connections
+    end
+
     def parser
       ::Bcome::Parser::BreadCrumb.new(@breadcrumbs)
     end
