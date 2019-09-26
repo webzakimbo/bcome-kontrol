@@ -12,7 +12,7 @@ module Bcome
       end
 
       def pretty_display
-        puts "\n#{message}\n".error
+        puts "\n\n#{message}\n".error
       end
     end
   end

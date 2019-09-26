@@ -22,7 +22,19 @@ module Bcome::Driver
       start_loader
 
       begin
-        instances = gcp_service.list_instances(@params[:project], @params[:zone])
+        instances = do_fetch_server_list(_filters)
+      rescue Exception => e
+        signal_failure
+        raise e
+      end 
+ 
+      signal_stop
+      return instances.items
+    end
+
+    def do_fetch_server_list(_filters)
+      begin
+        return gcp_service.list_instances(@params[:project], @params[:zone])
       rescue Google::Apis::AuthorizationError
         raise ::Bcome::Exception::CannotAuthenticateToGcp
       rescue Google::Apis::ClientError => e
@@ -30,9 +42,6 @@ module Bcome::Driver
       rescue Google::Apis::TransmissionError => e
         raise ::Bcome::Exception::Generic, "Cannot reach GCP - do you have an internet connection?"
       end
-
-      signal_stop
-      return instances.items
     end
 
     def has_network_credentials?

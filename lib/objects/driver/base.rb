@@ -24,7 +24,7 @@ module Bcome::Driver
       end
     end
 
-    include ::LoadingBar::Handler
+    include ::Bcome::LoadingBar::Handler
 
     def has_network_credentials?
       false

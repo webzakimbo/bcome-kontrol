@@ -2,7 +2,7 @@ module Bcome
   module Ssh
     class Connector 
 
-      include ::LoadingBar::Handler
+      include ::Bcome::LoadingBar::Handler
 
       MAX_CONNECTION_ATTEMPTS = 3
 

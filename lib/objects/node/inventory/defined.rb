@@ -5,7 +5,7 @@ module Bcome
     module Inventory
       class Defined < ::Bcome::Node::Inventory::Base
 
-        include ::LoadingBar::Handler
+        include ::Bcome::LoadingBar::Handler
 
         MACHINES_CACHE_PATH = 'machines-cache.yml'
 
