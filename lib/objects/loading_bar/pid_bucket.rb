@@ -13,6 +13,10 @@ module Bcome
       def <<(pid)
         @pids << pid
       end
+  
+      def -(pid)
+        @pids = @pids - [pid]
+      end
 
       def kill_all
         @pids.map{|pid|

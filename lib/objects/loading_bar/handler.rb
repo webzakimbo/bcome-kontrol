@@ -38,6 +38,7 @@ module Bcome
 
       def signal_stop
         do_signal(::Bcome::LoadingBar::Indicator::Base::SIGNAL_STOP)
+        ::Bcome::LoadingBar::PidBucket.instance - @pid
       end
 
       def signal_success
