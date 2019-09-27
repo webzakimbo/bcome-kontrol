@@ -13,7 +13,7 @@ module Bcome
         end
 
         def progress_prefix
-          "\s#{@title}\s#{glyph.send(progress_colour)}"
+          "#{@title}\s#{glyph.send(progress_colour)}"
         end
 
         def progress_colour
