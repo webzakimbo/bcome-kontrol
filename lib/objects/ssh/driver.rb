@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'net/scp'
+
 module Bcome::Ssh
   class Driver
 

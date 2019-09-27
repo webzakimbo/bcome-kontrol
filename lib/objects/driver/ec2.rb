@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'fog/aws'
 
 module Bcome::Driver
   class Ec2 < Bcome::Driver::Base

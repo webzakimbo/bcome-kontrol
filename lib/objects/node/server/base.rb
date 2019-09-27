@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'awesome_print'
+
 module Bcome::Node::Server
   class Base < Bcome::Node::Base
     attr_reader :origin_object_id

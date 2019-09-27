@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+require 'google/api_client/auth/storage'
+require 'google/api_client/auth/storages/file_store'
+require 'google/api_client/client_secrets'
+
 module Bcome::Driver::Gcp::Authentication
   class Oauth
     CREDENTIAL_DIRECTORY = '.gauth'
@@ -44,6 +48,9 @@ module Bcome::Driver::Gcp::Authentication
     def do!
       authorize!
       if @storage.authorization.nil?
+        # Total bloat for google's installed_app; requiring at last possible moment.
+        require 'google/api_client/auth/installed_app'
+
         print "\nAuthenticating with GCP for #{@node.namespace}.\n\nWhen done, close the browser window and a secrets file named '#{credential_file}' will be placed in your project root.".informational
         print "\n\nDo not commit this file to source control!\n".warning
 
@@ -63,7 +70,7 @@ module Bcome::Driver::Gcp::Authentication
     end
 
     def ensure_credential_directory
-      FileUtils.mkdir_p CREDENTIAL_DIRECTORY
+      `mkdir -p #{CREDENTIAL_DIRECTORY}`
     end
   end
 end

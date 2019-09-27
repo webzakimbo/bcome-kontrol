@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+## TODO - two calls to AUTH?
+
+require 'google/apis/compute_beta'
+
 module Bcome::Driver
   class Gcp < Bcome::Driver::Base
 
@@ -79,11 +83,13 @@ module Bcome::Driver
       }
     end
 
-    def get_gcp_compute_service
-      # Service scopes are now specified directly from the network config
+    def get_authenticated_gcp_service
+      # Service scopes are specified directly from the network config
       # A minumum scope of https://www.googleapis.com/auth/compute.readonly is required in order to list resources.
-      authentication = auth_scheme.new(gcp_service, service_scopes, @node, @params[:secrets_path])
+      service = ::Google::Apis::ComputeBeta::ComputeService.new
+      authentication = auth_scheme.new(service, service_scopes, @node, @params[:secrets_path])
       authentication.do!
+      service
     end
 
     def gcp_service
@@ -96,13 +102,6 @@ module Bcome::Driver
 
     def authorization
       gcp_service.authorization
-    end
-
-    def get_authenticated_gcp_service
-      service = ::Google::Apis::ComputeBeta::ComputeService.new
-      authentication = auth_scheme.new(service, service_scopes, @node, @params[:secrets_path])
-      authentication.do!
-      service
     end
 
     def service_scopes

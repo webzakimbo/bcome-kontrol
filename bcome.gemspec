@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Guillaume Roderick (Webzakimbo)']
   spec.email         = ['guillaume@webzakimbo.com']
   spec.summary       = 'Organise your world, then integrate absolutely whatever you want in pure Ruby.'
-  spec.description   = 'A cloud agnostic orchestration framework supporting AWS EC2 and GCP'
+  spec.description   = 'A Multi-Cloud DevOps application framework supporting AWS EC2 and GCP'
   spec.homepage      = 'https://bcome-kontrol.readthedocs.io/en/latest/'
   spec.license       = 'GPL-3.0'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
@@ -26,5 +26,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'pmap', '1.1.1'
   spec.add_dependency 'rainbow', '~> 2.2'
   spec.add_dependency 'require_all', '1.3.3'
-  spec.add_dependency 'pry', '~> 0.12.2'
 end
