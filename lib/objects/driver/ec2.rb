@@ -11,7 +11,11 @@ module Bcome::Driver
     end
 
     def pretty_provider_name
-      "ec2"
+      "EC2"
+    end
+
+    def pretty_resource_location
+      @node.network_data[:provisioning_region]
     end
 
     def fog_client
@@ -19,7 +23,9 @@ module Bcome::Driver
     end
 
     def fetch_server_list(filters)
+      start_loader
       servers = unfiltered_server_list.all(filters)
+      signal_stop
       servers
     end
 
