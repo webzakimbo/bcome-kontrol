@@ -17,9 +17,8 @@ module IRB
   end
 
   class Context
-    def overriden_evaluate(line, line_no)
-      @line_no = line_no
-      set_last_value(@workspace.evaluate(self, line, irb_path, line_no))
+    def overriden_evaluate(*_params)
+      evaluate_without_overriden(*_params)
     rescue ::Bcome::Exception::Base => e
       puts e.pretty_display
     end
