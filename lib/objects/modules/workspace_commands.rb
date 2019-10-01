@@ -177,6 +177,14 @@ module Bcome
       end
     end
 
+    def parent
+      @parent 
+    end
+
+    def views
+      @views
+    end
+
     def method_in_registry?(method_sym)
       ::Bcome::Registry::CommandList.instance.command_in_list?(self, method_sym)
     end
