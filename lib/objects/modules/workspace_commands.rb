@@ -164,9 +164,9 @@ module Bcome
       respond_to?(method_sym) || method_is_available_on_node?(method_sym)
     end
 
-    def method_missing(method_sym, *arguments)
-      super unless method_is_available_on_node?(method_sym)
-      
+    def method_missing(method_sym, *arguments) 
+      raise NameError, "undefined local variable or method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym) 
+
       if resource_identifiers.include?(method_sym.to_s)
         method_sym.to_s
       elsif instance_variable_defined?("@#{method_sym}")
