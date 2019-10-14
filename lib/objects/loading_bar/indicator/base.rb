@@ -7,7 +7,7 @@ module Bcome
 
         SIGNAL_SUCCESS = "USR1"
         SIGNAL_FAILURE = "USR2"
-        SIGNAL_STOP = "HUP" 
+        SIGNAL_STOP = "SIGKILL" 
  
         def initialize(config = {})
           @progress_size = config[:size]

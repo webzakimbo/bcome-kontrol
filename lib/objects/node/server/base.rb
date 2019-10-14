@@ -118,7 +118,7 @@ module Bcome::Node::Server
     alias :tunnel :local_port_forward
 
     def reopen_ssh_connection
-      puts "#{identifier}:\s".informational + "reconnecting".warning
+      puts "Connecting\s".informational + identifier
       close_ssh_connection
       open_ssh_connection
     end

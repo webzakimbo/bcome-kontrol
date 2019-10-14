@@ -1,9 +1,9 @@
 module Bcome
   module LoadingBar
     module Handler
-      
+     
       def start_progress_indicator(progress_size, title, completed_title)
-        indicator = ::Bcome::LoadingBar::Indicator::Progress.new(
+       indicator = ::Bcome::LoadingBar::Indicator::Progress.new(
           size: progress_size,
           title: title,
           completed_title: completed_title
@@ -28,7 +28,8 @@ module Bcome
             indicator.increment_failure
           end
           indicator.indicate
-        end
+        end 
+
         ::Bcome::LoadingBar::PidBucket.instance << @pid
       end  
 
@@ -36,9 +37,12 @@ module Bcome
         ::Process.kill(signal, @pid)
       end
 
+      def alive?(pid)
+        !!Process.kill(0, pid) rescue false
+      end
+
       def signal_stop
         do_signal(::Bcome::LoadingBar::Indicator::Base::SIGNAL_STOP)
-        ::Bcome::LoadingBar::PidBucket.instance - @pid
       end
 
       def signal_success
