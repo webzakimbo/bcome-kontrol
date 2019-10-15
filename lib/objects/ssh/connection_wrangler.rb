@@ -45,7 +45,8 @@ module Bcome::Ssh
       cmd = has_hop? ? "ssh -J" : "ssh"
       cmd += "\s" + hops.collect(&:get_ssh_string).join(",") if has_hop?
       cmd += "\s#{@ssh_driver.node_level_ssh_key_connection_string}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}"
-      return cmd 
+
+      return config[:as_pseudo_tty] ? "#{cmd} -t" : cmd
     end
 
     def get_rsync_command(local_path, remote_path)

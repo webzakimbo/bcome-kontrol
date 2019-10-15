@@ -24,7 +24,7 @@ module ::Bcome::Ssh
           connection = ssh_connect!
           return connection
         rescue Bcome::Exception::CouldNotInitiateSshConnection => e
-          puts "Could not connect to #{@context_node.namespace}. Retrying".warning
+          #puts "Could not connect to #{@context_node.namespace}. Retrying".warning
           connection_attempts += 1
           raise e if connection_attempts == ::Bcome::Ssh::Connector::MAX_CONNECTION_ATTEMPTS
         end
