@@ -28,22 +28,6 @@ class NodeTest < ActiveSupport::TestCase
     assert node.type == type
   end
 
-  def test_ad_hoc_attributes_are_set
-    # Given
-    params = given_estate_setup_params
-
-    #  Given a random attribute set to a random value
-    random_attribute = given_a_random_string_of_length(10)
-    random_value = given_a_random_string_of_length(10)
-    params[:views][random_attribute] = random_value
-
-    # When
-    node = Bcome::Node::Collection.new(params)
-
-    # Then
-    assert node.send(random_attribute) == random_value
-  end
-
   def test_description_is_required
     # Given
     config = {

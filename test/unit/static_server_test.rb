@@ -64,7 +64,6 @@ class StaticServerTest < ActiveSupport::TestCase
     # Then
     assert server.description == description
     assert server.has_description?
-    assert server.list_attributes.keys.include?(:description)
   end
 
 end
