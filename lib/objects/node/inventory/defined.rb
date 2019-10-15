@@ -4,7 +4,6 @@ module Bcome
   module Node
     module Inventory
       class Defined < ::Bcome::Node::Inventory::Base
-
         include ::Bcome::LoadingBar::Handler
 
         MACHINES_CACHE_PATH = 'machines-cache.yml'
@@ -42,16 +41,15 @@ module Bcome
         end
 
         def set_static_servers
-
           cached_machines = raw_static_machines_from_cache
- 
+
           if cached_machines&.any?
-            start_basic_indicator("Loading" + "\scache".bc_blue.bold + "\s" + "#{namespace}".underline, "done")
+            start_basic_indicator('Loading' + "\scache".bc_blue.bold + "\s" + namespace.to_s.underline, 'done')
 
             cached_machines.each do |server_config|
               resources << ::Bcome::Node::Server::Static.new(views: server_config, parent: self)
             end
-  
+
             signal_success
             signal_stop
 
@@ -74,7 +72,7 @@ module Bcome
 
         def save
           @answer = ::Bcome::Interactive::Session.run(self,
-                                                      :capture_input, terminal_prompt: "Are you sure you want to cache these machines (saving will overwrite any previous selections) [Y|N] ? ")
+                                                      :capture_input, terminal_prompt: 'Are you sure you want to cache these machines (saving will overwrite any previous selections) [Y|N] ? ')
 
           if @answer && @answer == 'Y'
             cache_nodes_in_memory
@@ -121,7 +119,7 @@ module Bcome
         def load_dynamic_nodes
           raw_servers = fetch_server_list
 
-          raw_servers = raw_servers ? raw_servers : []
+          raw_servers ||= []
 
           raw_servers.each do |raw_server|
             if raw_server.is_a?(Google::Apis::ComputeBeta::Instance)

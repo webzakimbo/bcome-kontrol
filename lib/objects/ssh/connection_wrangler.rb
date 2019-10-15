@@ -4,7 +4,6 @@ require 'net/ssh/proxy/jump'
 
 module Bcome::Ssh
   class ConnectionWrangler
-
     def initialize(ssh_driver)
       @ssh_driver = ssh_driver
       @config = ssh_driver.config[:proxy]
@@ -15,11 +14,9 @@ module Bcome::Ssh
     ## Accessors --
 
     def proxy_details
-      return hops.reverse.collect{ |hop|
-        hop.proxy_details
-      }
+      hops.reverse.collect(&:proxy_details)
     end
- 
+
     def first_hop
       hops.reverse.first
     end
@@ -37,31 +34,32 @@ module Bcome::Ssh
     end
 
     def create_proxy
-      proxy = Net::SSH::Proxy::Jump.new(hops.reverse.collect(&:get_ssh_string).join(","))
-      return proxy
+      proxy = Net::SSH::Proxy::Jump.new(hops.reverse.collect(&:get_ssh_string).join(','))
+      proxy
     end
 
-    def get_ssh_command(config = {}, proxy_only = false)
-      cmd = has_hop? ? "ssh -J" : "ssh"
-      cmd += "\s" + hops.collect(&:get_ssh_string).join(",") if has_hop?
+    def get_ssh_command(config = {}, _proxy_only = false)
+      cmd = has_hop? ? 'ssh -J' : 'ssh'
+      cmd += "\s" + hops.collect(&:get_ssh_string).join(',') if has_hop?
       cmd += "\s#{@ssh_driver.node_level_ssh_key_connection_string}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}"
 
-      return config[:as_pseudo_tty] ? "#{cmd} -t" : cmd
+      config[:as_pseudo_tty] ? "#{cmd} -t" : cmd
     end
 
     def get_rsync_command(local_path, remote_path)
-      cmd = "rsync -azv"
-      cmd += "\s-e 'ssh\s-A -J\s" + hops.collect(&:get_ssh_string).join(",") + "'" if has_hop?
+      cmd = 'rsync -azv'
+      cmd += "\s-e 'ssh\s-A -J\s" + hops.collect(&:get_ssh_string).join(',') + "'" if has_hop?
       cmd += "\s#{local_path}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}:#{remote_path}"
-      return cmd
+      cmd
     end
 
     def get_local_port_forward_command(start_port, end_port)
-      raise ::Bcome::Exception::InvalidPortForwardRequest, "Connections to this node are not via a proxy. Rather than port forward, try connecting directly." unless has_hop?
+      raise ::Bcome::Exception::InvalidPortForwardRequest, 'Connections to this node are not via a proxy. Rather than port forward, try connecting directly.' unless has_hop?
+
       cmd = "ssh -N -L\s"
       cmd += "#{start_port}:#{target_machine_ingress_ip}:#{end_port}\s"
       cmd += "\s" + hops.reverse.collect(&:get_ssh_string).join("\s") if has_hop?
-      return cmd
+      cmd
     end
 
     protected
@@ -69,12 +67,12 @@ module Bcome::Ssh
     def target_machine_ingress_ip
       has_hop? ? @context_node.internal_ip_address : @context_node.public_ip_address
     end
- 
+
     def hops
       @hops ||= set_hops
     end
 
-    private    
+    private
 
     def set_hops
       hop_collection = []
@@ -86,7 +84,7 @@ module Bcome::Ssh
         parent = hop
       end
 
-      return hop_collection
+      hop_collection
     end
 
     def set_proxy_hop(config, parent)
@@ -95,8 +93,7 @@ module Bcome::Ssh
     end
 
     def iterable_configs
-      @iterable ||=  @config ? (@config.is_a?(Hash) ? [@config] : @config) : []
+      @iterable ||= @config ? (@config.is_a?(Hash) ? [@config] : @config) : []
     end
-
   end
 end

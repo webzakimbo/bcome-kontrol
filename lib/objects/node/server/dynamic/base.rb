@@ -20,8 +20,8 @@ module Bcome::Node::Server::Dynamic
       end
     end
 
-    def do_generate_cloud_tags 
-      raise "Should be overidden"
+    def do_generate_cloud_tags
+      raise 'Should be overidden'
     end
 
     def cloud_server

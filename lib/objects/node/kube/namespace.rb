@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Node::Kube
   class Namespace < Bcome::Node::Kube::Base
     # CONTAINS PODS
@@ -12,12 +14,11 @@ module Bcome::Node::Kube
 
     def get_child_config_from_line(raw_line)
       name, ready, status, restarts, age = raw_line.split("\s")
-      return { name: name, ready: ready, status: status, reastarts: restarts, age: age }
+      { name: name, ready: ready, status: status, reastarts: restarts, age: age }
     end
 
     def name
       @config[:name]
-    end  
-
+    end
   end
 end

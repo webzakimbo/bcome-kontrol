@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'bcome'
 
@@ -10,30 +11,30 @@ end
 def close_connections
   ::Bcome::Bootup.instance.close_ssh_connections
   ::Bcome::Ssh::TunnelKeeper.instance.close_tunnels
-end  
+end
 
 def kill_trailing_forked_loading_bars
   ::Bcome::LoadingBar::PidBucket.instance.kill_all
 end
 
 def pack_metadata?
-  ARGV[0] == "pack_metadata"
+  ARGV[0] == 'pack_metadata'
 end
 
 def unpack_metadata?
-  ARGV[0] == "unpack_metadata"
+  ARGV[0] == 'unpack_metadata'
 end
 
-trap("INT") {
-  puts "bcome terminated unexpectedly".error
+trap('INT') do
+  puts 'bcome terminated unexpectedly'.error
   exit
-}
+end
 
 begin
   spawn_into_console = true
   arguments = ARGV - [ARGV[0]]
 
-  if pack_metadata? 
+  if pack_metadata?
     ::Bcome::Encryptor.instance.pack
     exit
   elsif unpack_metadata?

@@ -82,7 +82,7 @@ module Bcome
         end
 
         def machines(skip_for_hidden = true)
-          skip_for_hidden ? resources.active : resources.active.select{|r| !r.hide? }
+          skip_for_hidden ? resources.active : resources.active.reject(&:hide?)
         end
 
         def inventory?

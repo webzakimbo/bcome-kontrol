@@ -26,9 +26,7 @@ module Bcome::Interactive::SessionItem
     def action
       input = get_input
 
-      if exit?(input)
-        return
-      end
+      return if exit?(input)
 
       if show_menu?(input)
         show_menu
@@ -82,7 +80,7 @@ module Bcome::Interactive::SessionItem
 
     def open_ssh_connections
       ::Bcome::Ssh::Connector.connect(node, show_progress: true)
-      #system('clear')
+      # system('clear')
     end
 
     def close_ssh_connections
@@ -104,13 +102,13 @@ module Bcome::Interactive::SessionItem
 
     def execute_on_machines(user_input)
       machines.pmap do |machine|
-       begin
-         machine.run(user_input)
-       rescue IOError => e
-         puts "Reopening connection to\s".informational +  machine.identifier
-         machine.reopen_ssh_connection
-         machine.run(user_input)
-        end
+        begin
+           machine.run(user_input)
+        rescue IOError => e
+          puts "Reopening connection to\s".informational + machine.identifier
+          machine.reopen_ssh_connection
+          machine.run(user_input)
+         end
       end
     end
   end

@@ -2,7 +2,6 @@
 
 module Bcome::Node
   class Base
-
     include Bcome::Context
     include Bcome::WorkspaceCommands
     include Bcome::Node::Attributes
@@ -19,7 +18,7 @@ module Bcome::Node
 
     attr_reader :params
 
-    DEFAULT_IDENTIFIER = "bcome"
+    DEFAULT_IDENTIFIER = 'bcome'
 
     def initialize(params)
       @params = params
@@ -68,7 +67,7 @@ module Bcome::Node
 
     def scoped_resources
       # Active & not hidden
-      return resources.active.select{|resource| !resource.hide? }
+      resources.active.reject(&:hide?)
     end
 
     def scp(local_path, remote_path)
@@ -95,7 +94,7 @@ module Bcome::Node
     end
 
     def put_str(string, remote_path, connect = true)
-      ssh_connect if connect  # Initiate connect at highest namespace level
+      ssh_connect if connect # Initiate connect at highest namespace level
       scoped_resources.each do |resource|
         resource.put_str(string, remote_path, false)
       end
@@ -112,8 +111,9 @@ module Bcome::Node
     end
 
     def hide?
-      return true if @views.has_key?(:hidden) && @views[:hidden]
-      return false
+      return true if @views.key?(:hidden) && @views[:hidden]
+
+      false
     end
 
     def validate_attributes
@@ -224,11 +224,11 @@ module Bcome::Node
       # For every loaded server, we'll close any lingering ssh connection
       if resources.any?
         resources.pmap do |resource|
-         if resource.is_a?(::Bcome::Node::Server::Base)
+          if resource.is_a?(::Bcome::Node::Server::Base)
             resource.close_ssh_connection
           else
             resource.close_ssh_connections
-          end
+           end
         end
       end
       nil
@@ -237,7 +237,7 @@ module Bcome::Node
     def execute_local(command)
       puts "(local) > #{command}"
       system(command)
-      puts ""
+      puts ''
     end
 
     def data_print_from_hash(data, heading)

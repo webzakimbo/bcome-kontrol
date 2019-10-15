@@ -25,9 +25,9 @@ module ::Bcome::Ssh
 
       unless is_success?
         cmd_output += "\nExit code: #{@exit_code}"
-        cmd_output += "\nSTDERR: #{@stderr}" if !@stderr.empty?
+        cmd_output += "\nSTDERR: #{@stderr}" unless @stderr.empty?
       end
-      return "\n#{cmd_output}"
+      "\n#{cmd_output}"
     end
 
     def is_success?

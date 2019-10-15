@@ -16,14 +16,14 @@ module Bcome::Driver::Gcp::Authentication
       @scopes = scopes
       @node = node
       @driver = driver
-    
+
       @path_to_secrets = "#{credential_directory}/#{path_to_secrets}"
       # All credentials are held in .gauth
       ensure_credential_directory
     end
 
     def start_loader
-      start_basic_indicator("Authenticating" + "\s#{@driver.pretty_provider_name.bc_blue.bold}\s#{@driver.pretty_resource_location.underline}".bc_green, "done")
+      start_basic_indicator('Authenticating' + "\s#{@driver.pretty_provider_name.bc_blue.bold}\s#{@driver.pretty_resource_location.underline}".bc_green, "")
     end
 
     def stop_loader
@@ -40,7 +40,7 @@ module Bcome::Driver::Gcp::Authentication
     end
 
     def credential_directory
-     '.gauth'
+      '.gauth'
     end
 
     def credential_file_suffix

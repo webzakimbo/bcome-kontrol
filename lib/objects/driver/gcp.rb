@@ -4,7 +4,6 @@ require 'google/apis/compute_beta'
 
 module Bcome::Driver
   class Gcp < Bcome::Driver::Base
-
     APPLICATION_NAME = 'Bcome console'
 
     def initialize(*params)
@@ -14,7 +13,7 @@ module Bcome::Driver
     end
 
     def pretty_provider_name
-      "GCP"
+      'GCP'
     end
 
     def pretty_resource_location
@@ -24,8 +23,7 @@ module Bcome::Driver
     def fetch_server_list(_filters)
       unless authentication_scheme.authorized?
         get_authenticated_gcp_service
-        raise ::Bcome::Exception::Generic, "GCP authentication process failed" unless authentication_scheme.authorized?
-        authentication_scheme.notify_success
+        raise ::Bcome::Exception::Generic, 'GCP authentication process failed' unless authentication_scheme.authorized?
       end
 
       start_loader
@@ -35,22 +33,20 @@ module Bcome::Driver
       rescue Exception => e
         signal_failure
         raise e
-      end 
- 
+      end
+
       signal_stop
-      return instances.items
+      instances.items
     end
 
     def do_fetch_server_list(_filters)
-      begin
-        return gcp_service.list_instances(@params[:project], @params[:zone])
-      rescue Google::Apis::AuthorizationError
-        raise ::Bcome::Exception::CannotAuthenticateToGcp
-      rescue Google::Apis::ClientError => e
-        raise ::Bcome::Exception::Generic, "Namespace #{@node.namespace} / #{e.message}"
-      rescue Google::Apis::TransmissionError => e
-        raise ::Bcome::Exception::Generic, "Cannot reach GCP - do you have an internet connection?"
-      end
+      gcp_service.list_instances(@params[:project], @params[:zone])
+    rescue Google::Apis::AuthorizationError
+      raise ::Bcome::Exception::CannotAuthenticateToGcp
+    rescue Google::Apis::ClientError => e
+      raise ::Bcome::Exception::Generic, "Namespace #{@node.namespace} / #{e.message}"
+    rescue Google::Apis::TransmissionError => e
+      raise ::Bcome::Exception::Generic, 'Cannot reach GCP - do you have an internet connection?'
     end
 
     def has_network_credentials?
@@ -96,18 +92,18 @@ module Bcome::Driver
       compute_service
     end
 
-    def authentication_scheme  
+    def authentication_scheme
       # Service scopes are specified directly from the network config
       # A minumum scope of https://www.googleapis.com/auth/compute.readonly is required in order to list resources.
       @authentication_scheme ||= auth_scheme.new(self, compute_service, service_scopes, @node, @params[:secrets_path])
-    end  
+    end
 
     def gcp_service
       @gcp_service ||= get_authenticated_gcp_service
     end
 
     def access_token
-      gcp_service.authorization.access_token   
+      gcp_service.authorization.access_token
     end
 
     def authorization

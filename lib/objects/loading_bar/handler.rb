@@ -1,9 +1,10 @@
+# frozen_string_literal: true
+
 module Bcome
   module LoadingBar
     module Handler
-     
       def start_progress_indicator(progress_size, title, completed_title)
-       @indicator = ::Bcome::LoadingBar::Indicator::Progress.new(
+        @indicator = ::Bcome::LoadingBar::Indicator::Progress.new(
           size: progress_size,
           title: title,
           completed_title: completed_title
@@ -18,7 +19,7 @@ module Bcome
         )
         fork_process
       end
- 
+
       def fork_process
         @pid = fork do
           Signal.trap(::Bcome::LoadingBar::Indicator::Base::SIGNAL_SUCCESS) do
@@ -28,10 +29,10 @@ module Bcome
             @indicator.increment_failure
           end
           @indicator.indicate
-        end 
+        end
 
         ::Bcome::LoadingBar::PidBucket.instance << @pid
-      end  
+      end
 
       def do_signal(signal)
         ::Process.kill(signal, @pid)
@@ -46,7 +47,7 @@ module Bcome
 
         # Show the PARENT process indicator, which has been kept in sync with the forked process. We do this due to race condition where the forked indicator
         # does not gets final status before it is killed, so that it looks as if it has not completed
-        @indicator.show 
+        @indicator.show
       end
 
       def signal_success

@@ -25,10 +25,10 @@ module Bcome::Node::Server::Dynamic
     end
 
     def host
-      "EC2"
-    end 
+      'EC2'
+    end
 
-    def do_generate_cloud_tags  
+    def do_generate_cloud_tags
       raw_tags = cloud_server ? cloud_server.tags.deep_symbolize_keys : {}
       ::Bcome::Node::Meta::Cloud.new(raw_tags)
     end

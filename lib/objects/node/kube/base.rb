@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ## Bcome's kubernetes node namespaces
 module Bcome::Node
   module Kube
@@ -16,33 +18,33 @@ module Bcome::Node
 
       def run(command)
         @kube_wrap.run(command)
-      end  
+      end
 
-      def build 
+      def build
         child_node_lookup_result = run(get_child_node_command)
         parse(child_node_lookup_result)
-      end 
+      end
 
       def parse(child_node_lookup_result)
         # Get the output
         output = child_node_lookup_result.stdout
         # Remove the title & form array
         data = output.remove_lines(1).split("\n")
- 
+
         structured_data = {}
         data.each do |raw_namespace_line|
           child_config = get_child_config_from_line(raw_namespace_line)
           child_config.merge!(parent: self)
-          @resources << child_node_klass.new(@kube_wrap, child_config )
+          @resources << child_node_klass.new(@kube_wrap, child_config)
         end
       end
 
       def get_child_node_command
-        raise "should be overriden"
+        raise 'should be overriden'
       end
 
-      def get_child_config_from_line(*params)
-        raise "should be overidden"
+      def get_child_config_from_line(*_params)
+        raise 'should be overidden'
       end
     end
   end

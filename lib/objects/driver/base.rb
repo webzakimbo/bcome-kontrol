@@ -36,7 +36,7 @@ module Bcome::Driver
     end
 
     def start_loader
-      start_basic_indicator("Loading" + "\s#{pretty_provider_name.bc_blue.bold}\s#{pretty_resource_location.underline}".bc_green, "done") 
+      start_basic_indicator('Loading' + "\s#{pretty_provider_name.bc_blue.bold}\s#{pretty_resource_location.underline}".bc_green, 'done')
     end
 
     def stop_loader
@@ -45,15 +45,15 @@ module Bcome::Driver
     end
 
     def pretty_provider_name
-      raise "Should be overriden"
+      raise 'Should be overriden'
     end
 
     def pretty_resource_location
-      raise "Should be overidden"
-    end  
+      raise 'Should be overidden'
+    end
 
     def network_credentials
-      raise "Should be overidden"
+      raise 'Should be overidden'
     end
 
     def config

@@ -4,7 +4,7 @@ require 'bundler/gem_tasks'
 require 'rake/testtask'
 
 Rake::TestTask.new do |t|
-  if filename = ENV['TEST']
+  if (filename = ENV['TEST'])
     raise "Missing test file #{filename}" unless File.exist?(filename)
 
     t.test_files = [filename]

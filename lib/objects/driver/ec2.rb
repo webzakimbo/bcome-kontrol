@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'fog/aws'
 
 module Bcome::Driver
@@ -11,7 +12,7 @@ module Bcome::Driver
     end
 
     def pretty_provider_name
-      "EC2"
+      'EC2'
     end
 
     def pretty_resource_location
@@ -46,8 +47,8 @@ module Bcome::Driver
         access_key: raw_fog_credentials['aws_access_key_id'],
         secret_key: raw_fog_credentials['aws_secret_access_key']
       }
-    end  
- 
+    end
+
     def raw_fog_credentials
       @raw_fog_credentials ||= YAML.load_file(PATH_TO_FOG_CREDENTIALS)[credentials_key]
     end

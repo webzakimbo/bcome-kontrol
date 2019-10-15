@@ -4,7 +4,6 @@ require 'net/scp'
 
 module Bcome::Ssh
   class Driver
-
     attr_reader :config, :context_node
 
     include Bcome::Ssh::DriverConnection
@@ -19,7 +18,7 @@ module Bcome::Ssh
 
     def connection_wrangler
       @connection_wrangler ||= set_connection_wrangler
-    end  
+    end
 
     def set_connection_wrangler
       @set_connection_wrangler ||= ::Bcome::Ssh::ConnectionWrangler.new(self)
@@ -38,7 +37,7 @@ module Bcome::Ssh
         config[:host_or_ip] = @context_node.public_ip_address
       end
 
-      return config
+      config
     end
 
     def proxy_config_value
@@ -47,7 +46,7 @@ module Bcome::Ssh
 
     def multi_hop_proxy_config
       @config[:multi_hop_proxy]
-    end 
+    end
 
     def node_level_ssh_key_connection_string
       key_specified_at_node_level? ? "-i #{node_level_ssh_key}\s" : ''
@@ -67,8 +66,8 @@ module Bcome::Ssh
 
     def has_proxy?
       return false if proxy_config_value && proxy_config_value == -1
+
       !@config[:proxy].nil?
     end
-
   end
 end

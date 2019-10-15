@@ -37,6 +37,7 @@ module Bcome::Terraform
 
     def resources
       return {} unless config_exists?
+
       config['resources'][0]
     end
   end

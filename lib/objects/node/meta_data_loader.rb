@@ -27,19 +27,19 @@ module Bcome::Node
 
       terraform_data = {}
 
-      if attributes && attributes.keys.any?
+      if attributes&.keys&.any?
         # Radical departure, this makes way more sense than previous:
         # Make the entire state accessible
         terraform_data['terraform_tf_state'] = parser.state.config
         # And provide a convenience accessor for our outputs
-        terraform_data['terraform_outputs'] = parser.state.config["outputs"] 
+        terraform_data['terraform_outputs'] = parser.state.config['outputs']
      end
 
       terraform_data
     end
 
     def prompt_for_decryption_key
-      decryption_key_prompt =  "Enter your metadata decryption key: ".informational
+      decryption_key_prompt = 'Enter your metadata decryption key: '.informational
 
       print "\n#{decryption_key_prompt}"
       @decryption_key = STDIN.noecho(&:gets).chomp
@@ -53,10 +53,10 @@ module Bcome::Node
         decrypted_contents = encrypted_contents.decrypt(decryption_key)
 
         begin
-          YAML.load(decrypted_contents)
+          YAML.safe_load(decrypted_contents)
         rescue Exception => e
-           @decryption_key = nil
-          raise ::Bcome::Exception::InvalidMetaDataConfig.new "#{e.class} #{e.message} - " + decrypted_contents
+          @decryption_key = nil
+          raise ::Bcome::Exception::InvalidMetaDataConfig, "#{e.class} #{e.message} - " + decrypted_contents
         end
 
       else # unencrypted

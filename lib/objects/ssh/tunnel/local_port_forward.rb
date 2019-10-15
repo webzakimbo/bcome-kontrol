@@ -12,7 +12,7 @@ module Bcome::Ssh::Tunnel
     end
 
     def close!
-      puts "Closing tunnel:\s".informational + "#{@tunnel_command}".terminal_prompt
+      puts "Closing tunnel:\s".informational + @tunnel_command.to_s.terminal_prompt
       ::Process.kill('HUP', @process_pid)
     end
   end

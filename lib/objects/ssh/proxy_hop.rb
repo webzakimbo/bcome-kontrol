@@ -2,7 +2,6 @@
 
 module Bcome::Ssh
   class ProxyHop
-
     attr_reader :parent
 
     def initialize(config, context_node, parent)
@@ -13,10 +12,9 @@ module Bcome::Ssh
 
     def proxy_details
       @config.merge(
-      {
         proxy_host: host,
         user: user
-      })
+      )
     end
 
     def host
@@ -31,28 +29,24 @@ module Bcome::Ssh
       !parent.nil?
     end
 
-    def get_ssh_string(is_first_hop = false)
+    def get_ssh_string(_is_first_hop = false)
       con_str = "#{user}@#{host}"
-      return con_str
+      con_str
     end
 
     def get_rsync_string
-      con_str = "" 
- 
-      if has_parent?
-        con_str += "#{parent.get_rsync_string}\s"
-      end
+      con_str = ''
+
+      con_str += "#{parent.get_rsync_string}\s" if has_parent?
 
       con_str += "'ssh -o \"ProxyCommand ssh -A #{user}@#{host} -W %h:%p\"'"
       con_str
     end
 
     def get_local_port_forward_string
-      con_str = ""
+      con_str = ''
 
-      if has_parent?
-        con_str += "#{parent.get_local_port_forward_string}"
-      end
+      con_str += parent.get_local_port_forward_string.to_s if has_parent?
 
       con_str += "#{user}@#{host}\s"
       con_str

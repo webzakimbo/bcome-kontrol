@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Node::Kube
   class Pod < Bcome::Node::Kube::Base
     # CONTAINS CONTAINERS
@@ -16,8 +18,7 @@ module Bcome::Node::Kube
 
     def get_child_config_from_line(raw_line)
       name = raw_line.split("\s")
-      return { name: name }
+      { name: name }
     end
-
   end
 end

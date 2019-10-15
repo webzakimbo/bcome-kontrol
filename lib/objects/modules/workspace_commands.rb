@@ -2,7 +2,6 @@
 
 module Bcome
   module WorkspaceCommands
-
     def ssh_connect(params = {})
       ::Bcome::Ssh::Connector.connect(self, params)
     end
@@ -16,7 +15,8 @@ module Bcome
       if iterate_over.any?
 
         iterate_over.sort_by(&:identifier).each do |resource|
-          next if resource.hide? 
+          next if resource.hide?
+
           is_active = @resources.is_active_resource?(resource)
           puts resource.pretty_description(is_active)
           puts "\n"
@@ -85,6 +85,7 @@ module Bcome
 
     def run(*raw_commands)
       raise Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
+
       results = {}
 
       ssh_connect(show_progress: true)
@@ -103,7 +104,8 @@ module Bcome
     def pretty_description(is_active = true)
       desc = ''
       list_attributes.each do |key, value|
-        next unless respond_to?(value) || instance_variable_defined?("@#{value}")  
+        next unless respond_to?(value) || instance_variable_defined?("@#{value}")
+
         attribute_value = send(value)
         next unless attribute_value
 
@@ -164,8 +166,8 @@ module Bcome
       respond_to?(method_sym) || method_is_available_on_node?(method_sym)
     end
 
-    def method_missing(method_sym, *arguments) 
-      raise NameError, "undefined local variable or method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym) 
+    def method_missing(method_sym, *arguments)
+      raise NameError, "undefined local variable or method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym)
 
       if resource_identifiers.include?(method_sym.to_s)
         method_sym.to_s
@@ -178,7 +180,7 @@ module Bcome
     end
 
     def parent
-      @parent 
+      @parent
     end
 
     def views
@@ -196,7 +198,7 @@ module Bcome
     def visual_hierarchy
       tabs = 0
       hierarchy = ''
-      tree_descriptions.each do |d| 
+      tree_descriptions.each do |d|
         hierarchy += "#{"\s\s\s" * tabs}|- #{d}\n"
         tabs += 1
       end

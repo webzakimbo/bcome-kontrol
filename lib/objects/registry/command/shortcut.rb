@@ -14,7 +14,7 @@ module Bcome::Registry::Command
       rescue Interrupt
         puts "\nExiting gracefully from interrupt\n".warning
       end
-      return
+      nil
     end
 
     def command

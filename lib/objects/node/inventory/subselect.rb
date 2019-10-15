@@ -19,7 +19,7 @@ module Bcome
           base_items = super.dup
 
           base_items[:reload] = {
-            description: "Restock this inventory from remote",
+            description: 'Restock this inventory from remote',
             console_only: true
           }
           base_items

@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module ::Bcome::Ssh
   module DriverConnection
-
     DEFAULT_TIMEOUT_IN_SECONDS = 1
 
     attr_reader :connection
@@ -24,15 +25,16 @@ module ::Bcome::Ssh
           connection = ssh_connect!
           return connection
         rescue Bcome::Exception::CouldNotInitiateSshConnection => e
-          #puts "Could not connect to #{@context_node.namespace}. Retrying".warning
+          # puts "Could not connect to #{@context_node.namespace}. Retrying".warning
           connection_attempts += 1
           raise e if connection_attempts == ::Bcome::Ssh::Connector::MAX_CONNECTION_ATTEMPTS
         end
       end
     end
- 
+
     def close_ssh_connection
       return unless @connection
+
       begin
         @connection.close unless @connection.closed?
         @connection = nil
@@ -82,8 +84,7 @@ module ::Bcome::Ssh
     ## PROXYING --
 
     def proxy
-      return connection_wrangler.proxy
+      connection_wrangler.proxy
     end
-
   end
 end

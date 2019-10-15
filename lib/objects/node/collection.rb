@@ -32,8 +32,8 @@ module Bcome::Node
 
     def machines(skip_for_hidden = true)
       set = []
- 
-      resources = skip_for_hidden ? @resources.active.select{|resource| !resource.hide? } : @resources.active
+
+      resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
 
       resources.each do |resource|
         if resource.inventory?
@@ -46,7 +46,7 @@ module Bcome::Node
 
       set.flatten!
       filtered_machines = filter_duplicates(set)
-      return filtered_machines
+      filtered_machines
     end
 
     def collection?

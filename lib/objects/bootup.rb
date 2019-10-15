@@ -2,7 +2,6 @@
 
 module Bcome
   class Bootup
-
     def self.set_and_do(params, spawn_into_console = true)
       instance.set(params, spawn_into_console)
       instance.do
@@ -56,7 +55,7 @@ module Bcome
         starting_context = next_context
       end
       # Set our workspace to our last context - we're not invoking a method call and so we're entering a console session
-      init_context(starting_context)    
+      init_context(starting_context)
     end
 
     def estate
@@ -69,6 +68,7 @@ module Bcome
 
     def close_ssh_connections
       return unless estate_loaded?
+
       estate.close_ssh_connections
     end
 

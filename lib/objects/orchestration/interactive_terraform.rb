@@ -50,15 +50,15 @@ module Bcome::Orchestration
 
       terraform_vars.each do |key, value|
         # Join arrays into a string (note we cannot handle nested arrays yet)
-        terraform_vars[key] = value.join(",") if value.is_a?(Array)
+        terraform_vars[key] = value.join(',') if value.is_a?(Array)
       end
 
-      cleaned_data = terraform_vars.select do |_k, v|
-        !v.is_a?(Hash)
+      cleaned_data = terraform_vars.reject do |_k, v|
+        v.is_a?(Hash)
       end # we can't yet handle nested terraform metadata on the command line so no hashes
 
       all_vars = cleaned_data
-     
+
       if @node.network_driver.has_network_credentials?
         network_credentials = @node.network_driver.network_credentials
         all_vars = cleaned_data.merge(network_credentials)

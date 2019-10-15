@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module ::Bcome::Ssh
   module DriverUser
-
     def user
       # If we have a user explictly set in the config, then return it
       return @config[:user] if @config[:user]
@@ -25,7 +26,7 @@ module ::Bcome::Ssh
     end
 
     def fallback_bastion_host_user
-      return user
+      user
     end
   end
 end

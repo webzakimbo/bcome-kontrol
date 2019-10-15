@@ -2,7 +2,6 @@
 
 module Bcome::Node::Resources
   class Merged < Bcome::Node::Resources::Inventory
-
     def initialize(config)
       super
       @inventory = config[:inventory]
@@ -10,8 +9,8 @@ module Bcome::Node::Resources
     end
 
     def run_select
-      @inventory.contributing_inventories.each {|inventory| inventory.load_nodes unless inventory.nodes_loaded? }
-      @nodes = @inventory.contributing_inventories.collect{|inv| inv.resources.nodes }.flatten
+      @inventory.contributing_inventories.each { |inventory| inventory.load_nodes unless inventory.nodes_loaded? }
+      @nodes = @inventory.contributing_inventories.collect { |inv| inv.resources.nodes }.flatten
       @nodes
     end
 
@@ -30,6 +29,5 @@ module Bcome::Node::Resources
       end
       @nodes = new_set
     end
-
   end
 end

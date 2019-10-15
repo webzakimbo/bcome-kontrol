@@ -7,7 +7,7 @@ module Bcome::Node::Server
     end
 
     def host
-      "static"
+      'static'
     end
 
     def initialize(params)

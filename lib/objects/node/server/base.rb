@@ -13,8 +13,8 @@ module Bcome::Node::Server
     end
 
     def host
-      raise "Should be overidden"
-    end 
+      raise 'Should be overidden'
+    end
 
     # override a server namespace's parameters. This enables features such as specific SSH parameters for a specific server, e.g. my use case was a
     # single debian box within an ubuntu network, where I needed to access the machine with the 'admin' rather 'ubuntu' username.
@@ -115,7 +115,7 @@ module Bcome::Node::Server
     def local_port_forward(start_port, end_port)
       ssh_driver.local_port_forward(start_port, end_port)
     end
-    alias :tunnel :local_port_forward
+    alias tunnel local_port_forward
 
     def reopen_ssh_connection
       puts "Connecting\s".informational + identifier
@@ -159,11 +159,11 @@ module Bcome::Node::Server
       ssh_driver.rsync(local_path, remote_path)
     end
 
-    def put(local_path, remote_path, *params)
+    def put(local_path, remote_path, *_params)
       ssh_driver.put(local_path, remote_path)
     end
 
-    def put_str(string, remote_path, *params)
+    def put_str(string, remote_path, *_params)
       ssh_driver.put_str(string, remote_path)
     end
 
@@ -187,14 +187,14 @@ module Bcome::Node::Server
         namespace => {
           'connection' => ping_result[:success] ? 'success' : 'failed',
           'ssh_config' => ssh_driver.pretty_ssh_config
-       }
+        }
       }
 
       result[namespace]['error'] = ping_result[:error].message unless ping_result[:success]
 
       colour = ping_result[:success] ? :green : :red
 
-      ap(result, { indent: -2, color:  { hash: colour, symbol: colour, string: colour, keyword: colour, variable: colour, array: "cyan" }} )
+      ap(result, indent: -2, color:  { hash: colour, symbol: colour, string: colour, keyword: colour, variable: colour, array: 'cyan' })
     end
 
     def list_attributes
@@ -205,7 +205,7 @@ module Bcome::Node::Server
         "host": :host
       }
 
-      #attribs.merge!("description": :description) if has_description?
+      # attribs.merge!("description": :description) if has_description?
       attribs
     end
 
@@ -228,20 +228,19 @@ module Bcome::Node::Server
     end
 
     def run(*raw_commands)
-      begin
-        raise ::Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
-        return do_run(raw_commands)
-     rescue IOError, Errno::EBADF
-       reopen_ssh_connection
-       return do_run(raw_commands)
-      rescue Exception => e
-        if e.message == "Unexpected spurious read wakeup"
-          reopen_ssh_connection
-          return do_run(raw_commands)
-        else
-          raise e
-        end  
-     end
+      raise ::Bcome::Exception::MethodInvocationRequiresParameter, "Please specify commands when invoking 'run'" if raw_commands.empty?
+
+      do_run(raw_commands)
+    rescue IOError, Errno::EBADF
+      reopen_ssh_connection
+      do_run(raw_commands)
+    rescue Exception => e
+      if e.message == 'Unexpected spurious read wakeup'
+        reopen_ssh_connection
+        do_run(raw_commands)
+      else
+        raise e
+      end
     end
 
     def has_description?

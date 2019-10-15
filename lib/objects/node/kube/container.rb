@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Node::Kube
   class Container < Bcome::Node::Kube::Base
     # Expose shell

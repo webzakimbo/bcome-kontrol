@@ -2,7 +2,6 @@
 
 module Bcome::Node
   class Factory
-
     include Singleton
 
     attr_reader :estate
@@ -83,7 +82,7 @@ module Bcome::Node
         INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
         SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect,
         MERGE_KEY => ::Bcome::Node::Inventory::Merge,
-        KUBE_CLUSTER => ::Bcome::Node::Kube::Estate 
+        KUBE_CLUSTER => ::Bcome::Node::Kube::Estate
       }
     end
 
@@ -116,6 +115,7 @@ module Bcome::Node
       raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in network config' + e.message
     rescue Errno::ENOENT
       raise Bcome::Exception::DeprecationWarning if is_running_deprecated_configs?
+
       raise Bcome::Exception::MissingNetworkConfig, config_path
     end
 

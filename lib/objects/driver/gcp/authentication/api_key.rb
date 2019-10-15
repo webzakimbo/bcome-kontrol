@@ -2,6 +2,5 @@
 
 module Bcome::Driver::Gcp::Authentication
   class ApiKey
-
   end
 end

@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module ::Bcome::Ssh
   module DriverFunctions
-
     def do_ssh
       cmd = ssh_command
       @context_node.execute_local(cmd)
@@ -8,6 +9,7 @@ module ::Bcome::Ssh
 
     def rsync(local_path, remote_path)
       raise Bcome::Exception::MissingParamsForRsync, "'rsync' requires a local_path and a remote_path" if local_path.to_s.empty? || remote_path.to_s.empty?
+
       command = rsync_command(local_path, remote_path)
       @context_node.execute_local(command)
     end
@@ -15,7 +17,7 @@ module ::Bcome::Ssh
     def local_port_forward(start_port, end_port)
       tunnel_command = local_port_forward_command(start_port, end_port)
 
-      puts "\sOpening tunnel:\s".informational + "#{tunnel_command}".terminal_prompt 
+      puts "\sOpening tunnel:\s".informational + tunnel_command.to_s.terminal_prompt
 
       if ::Bcome::Workspace.instance.console_set?
         tunnel = ::Bcome::Ssh::Tunnel::LocalPortForward.new(tunnel_command)
@@ -23,8 +25,8 @@ module ::Bcome::Ssh
         tunnel.open!
         return tunnel
       else
-         ::Bcome::Command::Local.run(tunnel_command)
-      end 
+        ::Bcome::Command::Local.run(tunnel_command)
+      end
     end
 
     def ping
@@ -77,10 +79,9 @@ module ::Bcome::Ssh
         scp.download!(remote_path, local_path, recursive: true) do |_ch, name, sent, total|
           puts "#{name}: #{sent}/#{total}".progress
         end
-      rescue Exception => e 
+      rescue Exception => e
         puts e.message.error
       end
     end
-
   end
 end
