@@ -65,7 +65,7 @@ module Bcome::Interactive::SessionItem
     def start_message; end
 
     def terminal_prompt
-      "~$\s".bold.terminal_prompt
+      "enter a command>\s"
     end
 
     def exit?(input)
