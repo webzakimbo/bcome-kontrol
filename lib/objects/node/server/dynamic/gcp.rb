@@ -11,14 +11,11 @@ module Bcome::Node::Server::Dynamic
         identifier = gcp_instance.name
         identifier = override_identifier(parent, identifier)
 
-        # TODO - Allow for selection (at any namespace level incl. machine) the network interface to use
-        # TODO - ditto the access config to use
-
-        ## Hack until we can figure out what's happening with network interfaces
+        ## For now we support only the first network interface
         first_interface = gcp_instance.network_interfaces.first
         network_ip = first_interface.network_ip
         
-        # Second hack until can figure out what's going on with access configs
+        ## And we get the first access config (terraform uses the same pattern for accessing GCP machines also)
         first_access_config = first_interface.access_configs ? first_interface.access_configs.first : nil
         nat_ip = first_access_config ? first_access_config.nat_ip : nil
 
