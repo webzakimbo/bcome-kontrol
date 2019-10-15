@@ -71,7 +71,6 @@ module Bcome::Node
       return resources.active.select{|resource| !resource.hide? }
     end
 
-    # TODO: - why not do these in parallel?
     def scp(local_path, remote_path)
       scoped_resources.each do |resource|
         resource.put(local_path, remote_path)
