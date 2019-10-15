@@ -26,6 +26,11 @@ module Bcome::Driver
 
     include ::Bcome::LoadingBar::Handler
 
+    def initialize(params, node)
+      @params = params
+      @node = node
+    end
+
     def has_network_credentials?
       false
     end
@@ -49,11 +54,6 @@ module Bcome::Driver
 
     def network_credentials
       raise "Should be overidden"
-    end
-
-    def initialize(params, node)
-      @params = params
-      @node = node
     end
 
     def config

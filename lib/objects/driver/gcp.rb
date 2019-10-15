@@ -24,6 +24,12 @@ module Bcome::Driver
     end
 
     def fetch_server_list(_filters)
+      unless authentication_scheme.authorized?
+        get_authenticated_gcp_service
+        raise ::Bcome::Exception::Generic, "GCP authentication process failed" unless authentication_scheme.authorized?
+        authentication_scheme.notify_success
+      end
+
       start_loader
 
       begin
@@ -83,14 +89,20 @@ module Bcome::Driver
       }
     end
 
+    def compute_service
+      @compute_service ||= ::Google::Apis::ComputeBeta::ComputeService.new
+    end
+
     def get_authenticated_gcp_service
+      authentication_scheme.do!
+      compute_service
+    end
+
+    def authentication_scheme  
       # Service scopes are specified directly from the network config
       # A minumum scope of https://www.googleapis.com/auth/compute.readonly is required in order to list resources.
-      service = ::Google::Apis::ComputeBeta::ComputeService.new
-      authentication = auth_scheme.new(service, service_scopes, @node, @params[:secrets_path])
-      authentication.do!
-      service
-    end
+      @authentication_scheme ||= auth_scheme.new(self, compute_service, service_scopes, @node, @params[:secrets_path])
+    end  
 
     def gcp_service
       @gcp_service ||= get_authenticated_gcp_service

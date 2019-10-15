@@ -6,29 +6,53 @@ require 'google/api_client/client_secrets'
 
 module Bcome::Driver::Gcp::Authentication
   class Oauth
-    CREDENTIAL_DIRECTORY = '.gauth'
-    CREDENTIAL_FILE_SUFFIX = 'oauth2.json'
+    credential_directory = '.gauth'
+    credential_file_suffix = 'oauth2.json'
 
-    def initialize(service, scopes, node, path_to_secrets)
+    include ::Bcome::LoadingBar::Handler
+
+    def initialize(driver, service, scopes, node, path_to_secrets)
       @service = service
       @scopes = scopes
       @node = node
+      @driver = driver
     
-      @path_to_secrets = "#{CREDENTIAL_DIRECTORY}/#{path_to_secrets}"
+      @path_to_secrets = "#{credential_directory}/#{path_to_secrets}"
       # All credentials are held in .gauth
       ensure_credential_directory
+    end
+
+    def start_loader
+      start_basic_indicator("Authenticating" + "\s#{@driver.pretty_provider_name.bc_blue.bold}\s#{@driver.pretty_resource_location.underline}".bc_green, "done")
+    end
+
+    def stop_loader
+      signal_success
+      signal_stop
+    end
+
+    def authorized?
+      storage && !@storage.authorization.nil?
     end
 
     def storage
       @storage ||= ::Google::APIClient::Storage.new(Google::APIClient::FileStore.new(full_path_to_credential_file))
     end
 
+    def credential_directory
+     '.gauth'
+    end
+
+    def credential_file_suffix
+      'oauth2.json'
+    end
+
     def full_path_to_credential_file
-      "#{CREDENTIAL_DIRECTORY}/#{credential_file}"
+      "#{credential_directory}/#{credential_file}"
     end
 
     def credential_file
-      "#{@node.keyed_namespace}:#{CREDENTIAL_FILE_SUFFIX}"
+      "#{@node.keyed_namespace}:#{credential_file_suffix}"
     end
 
     def authorize!
@@ -48,11 +72,10 @@ module Bcome::Driver::Gcp::Authentication
     def do!
       authorize!
       if @storage.authorization.nil?
-        # Total bloat for google's installed_app; requiring at last possible moment.
+        # Total bloat from google here. Thanks google... requiring at last possible moment.
         require 'google/api_client/auth/installed_app'
 
-        print "\nAuthenticating with GCP for #{@node.namespace}.\n\nWhen done, close the browser window and a secrets file named '#{credential_file}' will be placed in your project root.".informational
-        print "\n\nDo not commit this file to source control!\n".warning
+        start_loader
 
         flow = Google::APIClient::InstalledAppFlow.new(
           client_id: client_secrets.client_id,
@@ -61,16 +84,23 @@ module Bcome::Driver::Gcp::Authentication
         )
         begin
           @service.authorization = flow.authorize(storage)
+          signal_success
+          stop_loader
         rescue ArgumentError => e
+          signal_failure
           raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
         end
-
       end
+
       @service
     end
 
+    def notify_success
+      print "[\s" + "Credentials file written to\s" + full_path_to_credential_file + "\s]" + "\n"
+    end
+
     def ensure_credential_directory
-      `mkdir -p #{CREDENTIAL_DIRECTORY}`
+      `mkdir -p #{credential_directory}`
     end
   end
 end
