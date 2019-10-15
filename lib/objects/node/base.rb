@@ -20,7 +20,7 @@ module Bcome::Node
     attr_reader :params
 
     DEFAULT_IDENTIFIER = "bcome"
- 
+
     def initialize(params)
       @params = params
       @identifier = nil

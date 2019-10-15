@@ -3,31 +3,31 @@ module Bcome
     module Handler
      
       def start_progress_indicator(progress_size, title, completed_title)
-       indicator = ::Bcome::LoadingBar::Indicator::Progress.new(
+       @indicator = ::Bcome::LoadingBar::Indicator::Progress.new(
           size: progress_size,
           title: title,
           completed_title: completed_title
         )
-        fork_process(indicator)
+        fork_process
       end
 
       def start_basic_indicator(title, completed_title)
-        indicator = ::Bcome::LoadingBar::Indicator::Basic.new(
+        @indicator = ::Bcome::LoadingBar::Indicator::Basic.new(
           title: title,
           completed_title: completed_title
         )
-        fork_process(indicator)
+        fork_process
       end
  
-      def fork_process(indicator)
+      def fork_process
         @pid = fork do
           Signal.trap(::Bcome::LoadingBar::Indicator::Base::SIGNAL_SUCCESS) do
-            indicator.increment_success
+            @indicator.increment_success
           end
           Signal.trap(::Bcome::LoadingBar::Indicator::Base::SIGNAL_FAILURE) do
-            indicator.increment_failure
+            @indicator.increment_failure
           end
-          indicator.indicate
+          @indicator.indicate
         end 
 
         ::Bcome::LoadingBar::PidBucket.instance << @pid
@@ -37,20 +37,23 @@ module Bcome
         ::Process.kill(signal, @pid)
       end
 
-      def alive?(pid)
-        !!Process.kill(0, pid) rescue false
-      end
-
       def signal_stop
         do_signal(::Bcome::LoadingBar::Indicator::Base::SIGNAL_STOP)
+        # Show the PARENT process indicator, which has been kept in sync with the forked process. We do this due to race condition where the forked indicator
+        # does not gets final status before it is killed, so that it looks as if it has not completed
+        @indicator.show 
       end
 
       def signal_success
         do_signal(::Bcome::LoadingBar::Indicator::Base::SIGNAL_SUCCESS)
+        # Keep parent indicator in sync (see #signal_stop)
+        @indicator.increment_success
       end
 
       def signal_failure
         do_signal(::Bcome::LoadingBar::Indicator::Base::SIGNAL_FAILURE)
+        # Keeo parent indicator in sync (see #signal_stop)
+        @indicator.increment_failure
       end
     end
   end

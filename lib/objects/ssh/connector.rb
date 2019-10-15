@@ -42,9 +42,6 @@ module Bcome
           start_progress_indicator(@servers_to_connect.size, title, "done") if show_progress?
           open_connections
           connection_attempt += 1
-
-          signal_stop if show_progress?
-
         end
 
         report_connection_outcome
@@ -86,6 +83,7 @@ module Bcome
             @connection_exceptions[machine] = e
           end
         end
+        signal_stop if show_progress?
       end
 
       private
