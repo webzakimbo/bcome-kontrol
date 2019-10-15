@@ -28,6 +28,11 @@ module Bcome::Node::Server::Dynamic
       "EC2"
     end 
 
+    def do_generate_cloud_tags  
+      raw_tags = cloud_server ? cloud_server.tags.deep_symbolize_keys : {}
+      ::Bcome::Node::Meta::Cloud.new(raw_tags)
+    end
+
     def cloud_server
       views[:ec2_server]
     end
