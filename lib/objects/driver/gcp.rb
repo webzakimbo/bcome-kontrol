@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-## TODO - two calls to AUTH?
-
 require 'google/apis/compute_beta'
 
 module Bcome::Driver
