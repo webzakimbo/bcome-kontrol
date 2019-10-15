@@ -43,7 +43,7 @@ module Bcome::Interactive::SessionItem
     end
 
     def show_menu
-      warning = "\nCommands entered here will be executed on" + "\severy\s".warning + "machine in your selection. \n\nUse with caution or hit \q if you're unsure what this is."
+      warning = "\nCommands entered here will be executed on" + "\severy\s".warning + "machine in your selection. \n\nUse with caution or hit \\q if you're unsure what this is."
       info = "\n\n\\l list machines\n\\q to quit\n\\? this message".informational
       puts warning + "#{info}\n"
     end
