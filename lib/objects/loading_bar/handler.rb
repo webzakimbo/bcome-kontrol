@@ -38,7 +38,12 @@ module Bcome
       end
 
       def signal_stop
+        # Stop the loader
         do_signal(::Bcome::LoadingBar::Indicator::Base::SIGNAL_STOP)
+
+        # De-register its pid
+        ::Bcome::LoadingBar::PidBucket.instance - @pid
+
         # Show the PARENT process indicator, which has been kept in sync with the forked process. We do this due to race condition where the forked indicator
         # does not gets final status before it is killed, so that it looks as if it has not completed
         @indicator.show 

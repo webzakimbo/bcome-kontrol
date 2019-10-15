@@ -20,10 +20,9 @@ module Bcome
 
       def kill_all
         @pids.map{|pid|
-          ::Process.kill(::Bcome::LoadingBar::Indicator::Base::SIGNAL_STOP, pid)
+          ::Process.kill(::Bcome::LoadingBar::Indicator::Base::SIGNAL_STOP, pid) if pid_alive?(pid)
         }
       end
-
     end
   end
 end
