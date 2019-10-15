@@ -77,42 +77,6 @@ class NetworkDriverTest < ActiveSupport::TestCase
     # and also that all our expectations are met
   end
 
-  def test_ec2_driver_filters_wiring
-    # Given
-    mocked_node = mock("Bcome node")
-    mocked_ec2_provider = mock('Ec2 provider')
-
-    credentials_key = 'webzakimbo'
-    provisioning_region = 'whatever'
-    config = {
-      type: 'ec2',
-      credentials_key: credentials_key,
-      provisioning_region: provisioning_region
-    }
-
-    driver = Bcome::Driver::Base.create_from_config(config, mocked_node)
-
-    ::Fog.expects(:credential=).with(credentials_key)
-    ::Fog::Compute.expects(:new).with(provider: 'AWS', region: provisioning_region).returns(mocked_ec2_provider)
-
-    filters = { foo: :bar }
-
-    mocked_all_servers = mock('All ec2 servers')
-    mocked_all_servers.expects(:all).returns(mocked_all_servers)
-
-    mocked_filtered_servers = mock('Filtered servers')
-    mocked_all_servers.expects(:all).with(filters).returns(mocked_filtered_servers)
-    mocked_ec2_provider.expects(:servers).returns(mocked_all_servers)
-
-    # When
-    servers = driver.fetch_server_list(filters)
-
-    # Then
-    assert servers == mocked_filtered_servers
-
-    # And also that all our expectations are met.
-  end
-
   def test_should_be_able_to_instantiate_a_static_driver
     # Given
     mocked_node = mock("Bcome node")
