@@ -51,7 +51,7 @@ module Bcome::Registry::Command
       ::Bcome::System::Local.instance.in_console_session?
     end
 
-    def pretty_print ## TODO - revisit. This is a mess
+    def pretty_print 
       puts "\nRegistry commands".title + "\sfor #{@node.class} #{@node.keyed_namespace}".resource_value + "\n\n"
       all_commands.sort.each do |group_name, commands|
         puts tab_spacing + group_name.title + "\n\n"
