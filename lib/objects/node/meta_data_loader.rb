@@ -22,9 +22,6 @@ module Bcome::Node
     end
 
     def terraform_data_for_namespace(namespace)
-      ## TODO Not sure what was being smoked, but this only adds in data for the first module
-      ## Until I can fix, we will:
-
       parser = Bcome::Terraform::Parser.new(namespace)
       attributes = parser.attributes
 
