@@ -13,24 +13,10 @@ module ::Bcome::Ssh
       begin
         raise ::Bcome::Exception::InvalidProxyConfig, "missing target ip address for #{@context_node.identifier}. Perhaps you meant to configure a proxy?" unless node_host_or_ip
         @connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
-      rescue Net::SSH::Proxy::ConnectError, Net::SSH::ConnectionTimeout, Errno::EPIPE => e
+      rescue Net::SSH::Proxy::ConnectError, Net::SSH::ConnectionTimeout => e
         raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"
       end
       @connection
-    end
-
-    def do_ssh_connect!
-      connection_attempts = 0
-      while connection_attempts < ::Bcome::Ssh::Connector::MAX_CONNECTION_ATTEMPTS
-        begin
-          connection = ssh_connect!
-          return connection
-        rescue Bcome::Exception::CouldNotInitiateSshConnection => e
-          # puts "Could not connect to #{@context_node.namespace}. Retrying".warning
-          connection_attempts += 1
-          raise e if connection_attempts == ::Bcome::Ssh::Connector::MAX_CONNECTION_ATTEMPTS
-        end
-      end
     end
 
     def close_ssh_connection
@@ -47,9 +33,9 @@ module ::Bcome::Ssh
     def ssh_connection(ping = false)
       if ping
         # We do not cache ping results
-        do_ssh_connect!
+        ssh_connect!
       else
-        has_open_ssh_con? ? @connection : do_ssh_connect!
+        has_open_ssh_con? ? @connection : ssh_connect!
       end
     end
 

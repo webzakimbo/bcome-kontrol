@@ -20,6 +20,8 @@ module Bcome::Node
 
     DEFAULT_IDENTIFIER = 'bcome'
 
+    include Bcome::LoadingBar::Handler
+
     def initialize(params)
       @params = params
       @identifier = nil

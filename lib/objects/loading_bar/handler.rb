@@ -3,6 +3,7 @@
 module Bcome
   module LoadingBar
     module Handler
+
       def start_progress_indicator(progress_size, title, completed_title)
         @indicator = ::Bcome::LoadingBar::Indicator::Progress.new(
           size: progress_size,
@@ -20,17 +21,39 @@ module Bcome
         fork_process
       end
 
+      def start_indicator(config)
+        klass = config[:type] == :progress ? ::Bcome::LoadingBar::Indicator::Progress : ::Bcome::LoadingBar::Indicator::Basic
+        @indicator = klass.new(config)
+        fork_process
+      end
+ 
+      def stop_indicator
+        signal_stop
+      end
+
+      def wrap_indicator(config, &block) 
+        begin
+          start_indicator(config)
+          block.call
+        rescue IRB::Abort
+          #stop_indicator
+          raise Bcome::Exception::Generic, "Interrupt"
+        end
+        stop_indicator
+      end
+ 
       def fork_process
         @pid = fork do
-          Signal.trap(::Bcome::LoadingBar::Indicator::Base::SIGNAL_SUCCESS) do
-            @indicator.increment_success
-          end
-          Signal.trap(::Bcome::LoadingBar::Indicator::Base::SIGNAL_FAILURE) do
-            @indicator.increment_failure
-          end
-          @indicator.indicate
-        end
+         Signal.trap(::Bcome::LoadingBar::Indicator::Base::SIGNAL_SUCCESS) do
+           @indicator.increment_success
+         end
 
+         Signal.trap(::Bcome::LoadingBar::Indicator::Base::SIGNAL_FAILURE) do
+           @indicator.increment_failure
+         end
+
+         @indicator.indicate
+        end
         ::Bcome::LoadingBar::PidBucket.instance << @pid
       end
 

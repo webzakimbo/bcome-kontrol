@@ -5,8 +5,6 @@ module Bcome
     class Connector
       include ::Bcome::LoadingBar::Handler
 
-      MAX_CONNECTION_ATTEMPTS = 3
-
       class << self
         def connect(node, config = {})
           handler = new(node, config)
@@ -33,16 +31,12 @@ module Bcome
       def connect
         return if number_unconnected_machines == 0
 
-        connection_attempt = 0
-
-        # We may have difficulty connecting to many machines simultaneously, especially if, for examples, connections are being proxied via
-        # a single jump host. Here we have a slight hack - we'll keep on attempting to connect up to MAX_CONNECTION_ATTEMPTS, moping up failures
-        # along the way. Once connected any subsequent failures will be handled gracefully, with re-connection automatic.
-        while @servers_to_connect.any? && connection_attempt <= MAX_CONNECTION_ATTEMPTS
-          title = connection_attempt > 1 ? 'Retrying failed connections' : 'Connecting'
-          start_progress_indicator(@servers_to_connect.size, title, 'done') if show_progress?
+        if show_progress?
+          wrap_indicator type: :progress, size: @servers_to_connect.size, title: "Opening connections" do
+            open_connections
+          end       
+        else
           open_connections
-          connection_attempt += 1
         end
 
         report_connection_outcome
@@ -82,9 +76,10 @@ module Bcome
             end
           rescue Bcome::Exception::CouldNotInitiateSshConnection => e
             @connection_exceptions[machine] = e
+          rescue Errno::EPIPE
+            raise ::Bcome::Exception::Generic.new "Process terminated"
           end
         end
-        signal_stop if show_progress?
       end
 
       private

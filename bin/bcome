@@ -4,7 +4,7 @@
 require 'bcome'
 
 def clean_up
-  kill_trailing_forked_loading_bars
+  stop_loading_bars
   close_connections
 end
 
@@ -13,8 +13,8 @@ def close_connections
   ::Bcome::Ssh::TunnelKeeper.instance.close_tunnels
 end
 
-def kill_trailing_forked_loading_bars
-  ::Bcome::LoadingBar::PidBucket.instance.kill_all
+def stop_loading_bars
+  ::Bcome::LoadingBar::PidBucket.instance.stop_all
 end
 
 def pack_metadata?
@@ -25,10 +25,15 @@ def unpack_metadata?
   ARGV[0] == 'unpack_metadata'
 end
 
-trap('INT') do
-  puts 'bcome terminated unexpectedly'.error
-  exit
+trap('SIGINT') do
+  stop_loading_bars
 end
+
+trap('INT') do
+  stop_loading_bars
+end
+
+Thread.report_on_exception = false
 
 begin
   spawn_into_console = true

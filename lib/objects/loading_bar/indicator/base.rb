@@ -25,7 +25,6 @@ module Bcome
           loop do
             increment
             show
-            break if @stop
           end
         end
 

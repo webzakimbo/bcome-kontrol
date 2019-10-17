@@ -17,7 +17,7 @@ module Bcome
         @pids -= [pid]
       end
 
-      def kill_all
+      def stop_all
         @pids.map do |pid|
           ::Process.kill(::Bcome::LoadingBar::Indicator::Base::SIGNAL_STOP, pid)
         end
