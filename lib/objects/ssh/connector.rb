@@ -74,7 +74,8 @@ module Bcome
             else
               signal_failure if show_progress?
             end
-          rescue Bcome::Exception::CouldNotInitiateSshConnection => e
+          rescue Bcome::Exception::CouldNotInitiateSshConnection, ::Bcome::Exception::InvalidProxyConfig => e
+            signal_failure if show_progress?
             @connection_exceptions[machine] = e
           rescue Errno::EPIPE
             raise ::Bcome::Exception::Generic.new "Process terminated"

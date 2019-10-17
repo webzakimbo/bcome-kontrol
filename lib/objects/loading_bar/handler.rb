@@ -36,8 +36,10 @@ module Bcome
           start_indicator(config)
           block.call
         rescue IRB::Abort
-          #stop_indicator
+          stop_indicator
           raise Bcome::Exception::Generic, "Interrupt"
+        rescue
+          stop_indicator
         end
         stop_indicator
       end
