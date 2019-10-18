@@ -53,7 +53,7 @@ module Bcome::Node
         decrypted_contents = encrypted_contents.decrypt(decryption_key)
 
         begin
-          YAML.safe_load(decrypted_contents)
+          YAML.load(decrypted_contents) # NOTE: safe_load is buggy and incorrectly parses the yaml. 
         rescue Exception => e
           @decryption_key = nil
           raise ::Bcome::Exception::InvalidMetaDataConfig, "#{e.class} #{e.message} - " + decrypted_contents
