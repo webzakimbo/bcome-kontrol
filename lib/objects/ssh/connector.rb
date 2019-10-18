@@ -90,7 +90,7 @@ module Bcome
       end
 
       def number_unconnected_machines
-        @servers_to_connect.collect { |machine| !machine.has_ssh_connection? }.size
+        @servers_to_connect.select { |machine| !machine.has_ssh_connection? }.size
       end
 
       def machines
