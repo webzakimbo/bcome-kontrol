@@ -35,13 +35,12 @@ module Bcome::Driver
       false
     end
 
-    def start_loader
-      start_basic_indicator('Loading' + "\s#{pretty_provider_name.bc_blue.bold}\s#{pretty_resource_location.underline}".bc_green, 'done')
+    def loader_title
+      'Loading' + "\s#{pretty_provider_name.bc_blue.bold}\s#{pretty_resource_location.underline}".bc_green
     end
-
-    def stop_loader
-      signal_success
-      signal_stop
+   
+    def loader_completed_title
+      'done'
     end
 
     def pretty_provider_name

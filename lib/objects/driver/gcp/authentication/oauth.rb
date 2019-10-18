@@ -22,15 +22,6 @@ module Bcome::Driver::Gcp::Authentication
       ensure_credential_directory
     end
 
-    def start_loader
-      start_basic_indicator('Authenticating' + "\s#{@driver.pretty_provider_name.bc_blue.bold}\s#{@driver.pretty_resource_location.underline}".bc_green, "")
-    end
-
-    def stop_loader
-      signal_success
-      signal_stop
-    end
-
     def authorized?
       storage && !@storage.authorization.nil?
     end
@@ -69,26 +60,31 @@ module Bcome::Driver::Gcp::Authentication
       raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
     end
 
+    def loader_title
+      'Authenticating' + "\s#{@driver.pretty_provider_name.bc_blue.bold}\s#{@driver.pretty_resource_location.underline}".bc_green
+    end
+ 
     def do!
       authorize!
       if @storage.authorization.nil?
         # Total bloat from google here. Thanks google... requiring at last possible moment.
         require 'google/api_client/auth/installed_app'
 
-        start_loader
+        wrap_indicator type: :basic, title: loader_title, completed_title: "done" do
 
-        flow = Google::APIClient::InstalledAppFlow.new(
-          client_id: client_secrets.client_id,
-          client_secret: client_secrets.client_secret,
-          scope: @scopes
-        )
-        begin
-          @service.authorization = flow.authorize(storage)
-          signal_success
-          stop_loader
-        rescue ArgumentError => e
-          signal_failure
-          raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
+          flow = Google::APIClient::InstalledAppFlow.new(
+            client_id: client_secrets.client_id,
+            client_secret: client_secrets.client_secret,
+            scope: @scopes
+          )
+   
+         begin
+            @service.authorization = flow.authorize(storage)
+            signal_success
+          rescue ArgumentError => e
+            signal_failure
+            raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
+          end
         end
       end
 

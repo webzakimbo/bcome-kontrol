@@ -24,10 +24,17 @@ module Bcome::Driver
     end
 
     def fetch_server_list(filters)
-      start_loader
-      servers = unfiltered_server_list.all(filters)
-      signal_stop
-      servers
+      wrap_indicator type: :basic, title: loader_title, completed_title: loader_completed_title do
+        begin
+          @servers = unfiltered_server_list.all(filters)
+          signal_success
+        rescue Exception => e
+          signal_failure
+          raise e
+        end
+      end
+
+      return @servers
     end
 
     def unfiltered_server_list

@@ -26,17 +26,16 @@ module Bcome::Driver
         raise ::Bcome::Exception::Generic, 'GCP authentication process failed' unless authentication_scheme.authorized?
       end
 
-      start_loader
-
-      begin
-        instances = do_fetch_server_list(_filters)
-      rescue Exception => e
-        signal_failure
-        raise e
+      wrap_indicator type: :basic, title: loader_title, completed_title: loader_completed_title do
+        begin
+          @instances = do_fetch_server_list(_filters)
+          signal_success
+        rescue Exception => e
+          signal_failure
+          raise e
+        end
       end
-
-      signal_stop
-      instances.items
+      return @instances.items
     end
 
     def do_fetch_server_list(_filters)

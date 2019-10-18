@@ -4,23 +4,6 @@ module Bcome
   module LoadingBar
     module Handler
 
-      def start_progress_indicator(progress_size, title, completed_title)
-        @indicator = ::Bcome::LoadingBar::Indicator::Progress.new(
-          size: progress_size,
-          title: title,
-          completed_title: completed_title
-        )
-        fork_process
-      end
-
-      def start_basic_indicator(title, completed_title)
-        @indicator = ::Bcome::LoadingBar::Indicator::Basic.new(
-          title: title,
-          completed_title: completed_title
-        )
-        fork_process
-      end
-
       def start_indicator(config)
         klass = config[:type] == :progress ? ::Bcome::LoadingBar::Indicator::Progress : ::Bcome::LoadingBar::Indicator::Basic
         @indicator = klass.new(config)
@@ -37,9 +20,10 @@ module Bcome
           block.call
         rescue IRB::Abort
           stop_indicator
-          raise Bcome::Exception::Generic, "Interrupt"
-        rescue
+          raise ::Bcome::Exception::Generic, "Interrupt"
+        rescue StandardError => e
           stop_indicator
+          raise ::Bcome::Exception::Generic.new e.message if config[:type] == :basic
         end
         stop_indicator
       end

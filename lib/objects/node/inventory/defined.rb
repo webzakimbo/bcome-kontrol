@@ -44,15 +44,12 @@ module Bcome
           cached_machines = raw_static_machines_from_cache
 
           if cached_machines&.any?
-            start_basic_indicator('Loading' + "\scache".bc_blue.bold + "\s" + namespace.to_s.underline, 'done')
-
-            cached_machines.each do |server_config|
-              resources << ::Bcome::Node::Server::Static.new(views: server_config, parent: self)
+            wrap_indicator type: :basic, title: 'Loading' + "\sCACHE".bc_blue.bold + "\s" + namespace.to_s.underline, completed_title: 'done' do
+              cached_machines.each do |server_config|
+                resources << ::Bcome::Node::Server::Static.new(views: server_config, parent: self)
+              end
+              signal_success
             end
-
-            signal_success
-            signal_stop
-
           end
         end
 
