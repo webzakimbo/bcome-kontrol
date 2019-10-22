@@ -57,13 +57,19 @@ module Bcome
         end
 
         def direct_invoke_server(method, identifier)
-          unless identifier
-            puts "\nPlease provide a machine identifier, e.g. #{method} machinename\n".warning unless identifier
-            return
+          # If we only have a single resource in our inventory, then just allow direct invocation 
+          if resources.size == 1
+            resource = resources.first
+          else
+            # Otherwise, we expect to find the resource by its identifier
+            unless identifier
+              puts "\nPlease provide a machine identifier, e.g. #{method} machinename\n".warning unless identifier
+              return
+            end
+     
+            resource = resources.for_identifier(identifier)
+            raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'" unless resource
           end
-
-          resource = resources.for_identifier(identifier)
-          raise Bcome::Exception::InvalidBreadcrumb, "Cannot find a node named '#{identifier}'" unless resource
 
           resource.send(method)
         end
