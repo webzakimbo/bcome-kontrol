@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Interactive::SessionItem
   class CaptureInput < ::Bcome::Interactive::SessionItem::Base
     def do

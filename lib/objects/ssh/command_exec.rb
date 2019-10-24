@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ::Bcome::Ssh
   class CommandExec
     attr_reader :commands
@@ -15,9 +17,6 @@ module ::Bcome::Ssh
     end
 
     def execute!
-      # TODO: - catch IOError: closed stream here and re-connect gracefully
-      # to reproduce: open connections, and let them timeout then re-enter command (interactive mode)
-
       @commands.each do |command|
         node = command.node
         ssh = node.ssh_driver.ssh_connection
@@ -25,7 +24,8 @@ module ::Bcome::Ssh
         begin
           ssh_exec!(ssh, command)
         rescue IOError # Typically occurs after a timeout if the session has been left idle
-          node.open_ssh_connection
+          node.reopen_ssh_connection
+          ssh = node.ssh_driver.ssh_connection
           ssh_exec!(ssh, command) # retry, once
         end
 
@@ -38,9 +38,7 @@ module ::Bcome::Ssh
     def ssh_exec!(ssh, command) #  NON PTY (i.e no pseudo-terminal)
       ssh.open_channel do |channel|
         channel.exec(command.raw) do |_cha, success|
-          unless success
-            abort "FAILED: couldn't execute command (ssh.channel.exec)"
-          end
+          abort "FAILED: couldn't execute command (ssh.channel.exec)" unless success
 
           channel.on_data do |_ch, data|
             command.stdout += data

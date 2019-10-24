@@ -1,18 +1,22 @@
+# frozen_string_literal: true
+
 module Bcome::Interactive::SessionItem
   class TransparentSsh < ::Bcome::Interactive::SessionItem::Base
-    END_SESSION_KEY = '\\q'.freeze
-    HELP_KEY = '\\?'.freeze
-    LIST_KEY = '\\l'.freeze
-
-    DANGER_CMD = "rm\s+-r|rm\s+-f|rm\s+-fr|rm\s+-rf|rm".freeze
+    END_SESSION_KEY = '\\q'
+    HELP_KEY = '\\?'
+    LIST_KEY = '\\l'
+    RECONNECT_CMD = '\\r'
+    DANGER_CMD = "rm\s+-r|rm\s+-f|rm\s+-fr|rm\s+-rf|rm"
 
     def machines
-      node.server? ? [node] : node.machines
+      skip_for_hidden = true
+      node.server? ? [node] : node.machines(skip_for_hidden)
     end
 
     def do
       puts ''
       open_ssh_connections
+      puts "\nINTERACTIVE COMMAND SESSION".underline
       show_menu
       puts ''
       list_machines
@@ -22,10 +26,7 @@ module Bcome::Interactive::SessionItem
     def action
       input = get_input
 
-      if exit?(input)
-        close_ssh_connections
-        return
-      end
+      return if exit?(input)
 
       if show_menu?(input)
         show_menu
@@ -40,16 +41,13 @@ module Bcome::Interactive::SessionItem
     end
 
     def show_menu
-      warning = "\n\sCommands entered here will be executed on " + 'EVERY'.underline + ' machine in your selection.'
-      second_warning = "\n\n\s" + 'Use with CAUTION.'.warning
-      info = "\n\n\s\\l list machines\n\s\\q to quit\n\s\\? this message".informational
-      puts "#{warning}#{second_warning}#{info}\n"
+      warning = "\nCommands entered here will be executed on" + "\severy\s".warning + "machine in your selection. \n\nUse with caution or hit \\q if you're unsure what this is."
+      info = "\n\n\\l list machines\n\\q to quit\n\\? this message".informational
+      puts warning + "#{info}\n"
     end
 
     def handle_the_unwise(input)
-      if prompt_for_confirmation('Command may be dangerous to run on all machines. Are you sure you want to proceed? [Y|N] > '.error)
-        execute_on_machines(input)
-      end
+      execute_on_machines(input) if prompt_for_confirmation('Command may be dangerous to run on all machines. Are you sure you want to proceed? [Y|N] > '.error)
     end
 
     def command_may_be_unwise?(input)
@@ -65,7 +63,7 @@ module Bcome::Interactive::SessionItem
     def start_message; end
 
     def terminal_prompt
-      ">\s".bold.terminal_prompt
+      "enter a command>\s"
     end
 
     def exit?(input)
@@ -81,8 +79,8 @@ module Bcome::Interactive::SessionItem
     end
 
     def open_ssh_connections
-      ::Bcome::Ssh::ConnectionHandler.connect(node, show_progress: true)
-      system('clear')
+      ::Bcome::Ssh::Connector.connect(node, show_progress: true)
+      # system('clear')
     end
 
     def close_ssh_connections
@@ -91,20 +89,26 @@ module Bcome::Interactive::SessionItem
 
     def indicate_failed_nodes(unconnected_nodes)
       unconnected_nodes.each do |node|
-        puts "\s\s - #{node.namespace}".bc_cyan
+        puts "\s\s - #{node.namespace}"
       end
     end
 
     def list_machines
       puts "\n"
       machines.each do |machine|
-        puts "\s- #{machine.namespace}"
+        puts "- #{machine.namespace}"
       end
     end
 
     def execute_on_machines(user_input)
       machines.pmap do |machine|
-        machine.run(user_input)
+        begin
+           machine.run(user_input)
+        rescue IOError => e
+          puts "Reopening connection to\s".informational + machine.identifier
+          machine.reopen_ssh_connection
+          machine.run(user_input)
+         end
       end
     end
   end

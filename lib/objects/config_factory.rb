@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Bcome::ConfigFactory
   attr_reader :tree
 
@@ -31,6 +33,7 @@ class Bcome::ConfigFactory
 
   def hash_for_identifier_from_view(identifier, views)
     raise Bcome::Exception::InventoriesCannotHaveSubViews, 'Inventories cannot hold other inventories - invalid network config' unless views.key?(:views)
+
     views[:views].select { |v| v[:identifier].to_s == identifier.to_s }.first
   end
 end

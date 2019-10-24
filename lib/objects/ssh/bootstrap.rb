@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Ssh
   class Bootstrap
     def initialize(config)
@@ -7,7 +9,7 @@ module Bcome::Ssh
     def ssh_key_path
       key_path = `eval directory=#{@config[:ssh_key_path]}; echo $directory`
       key_path =~ /(.+)\n/
-      $1
+      Regexp.last_match(1)
     end
 
     def user

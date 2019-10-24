@@ -1,18 +1,23 @@
+# frozen_string_literal: true
+
 module Bcome::Node
   class Factory
     include Singleton
 
     attr_reader :estate
 
-    CONFIG_PATH = 'bcome'.freeze
-    DEFAULT_CONFIG_NAME = 'networks.yml'.freeze
-    SERVER_OVERRIDE_CONFIG_NAME = 'machines-data.yml'.freeze
-    LOCAL_OVERRIDE_CONFIG_NAME = 'me.yml'.freeze
+    CONFIG_PATH = 'bcome'
+    DEFAULT_CONFIG_NAME = 'networks.yml'
+    SERVER_OVERRIDE_CONFIG_NAME = 'machines-data.yml'
+    LOCAL_OVERRIDE_CONFIG_NAME = 'me.yml'
 
-    INVENTORY_KEY = 'inventory'.freeze
-    COLLECTION_KEY = 'collection'.freeze
-    SUBSELECT_KEY = 'inventory-subselect'.freeze
-    BCOME_RC_FILENAME = '.bcomerc'.freeze
+    INVENTORY_KEY = 'inventory'
+    COLLECTION_KEY = 'collection'
+    SUBSELECT_KEY = 'inventory-subselect'
+    MERGE_KEY = 'inventory-merge'
+    KUBE_CLUSTER = 'kube-cluster'
+
+    BCOME_RC_FILENAME = '.bcomerc'
 
     def bucket
       @bucket ||= {}
@@ -32,7 +37,7 @@ module Bcome::Node
     end
 
     def config_file_name
-      @config_file_name ||= ENV['CONF'] ? ENV['CONF'] : DEFAULT_CONFIG_NAME
+      @config_file_name ||= ENV['CONF'] || DEFAULT_CONFIG_NAME
     end
 
     def create_tree(context_node, views)
@@ -53,11 +58,11 @@ module Bcome::Node
       raise Bcome::Exception::InvalidNetworkConfig, 'missing config type' unless config[:type]
 
       klass = klass_for_view_type[config[:type]]
- 
+
       raise Bcome::Exception::InvalidNetworkConfig, "invalid config type #{config[:type]}" unless klass
 
       node = klass.new(views: config, parent: parent)
-      create_tree(node, config[:views]) if config[:views] && config[:views].any?
+      create_tree(node, config[:views]) if config[:views]&.any?
       parent.resources << node if parent
 
       bucket[node.keyed_namespace] = node
@@ -66,20 +71,18 @@ module Bcome::Node
     end
 
     def validate_view(breadcrumb, data)
-      unless data && data[:type]
-        raise Bcome::Exception::InvalidNetworkConfig, "Missing namespace type for for namespace '#{breadcrumb}'"
-      end
+      raise Bcome::Exception::InvalidNetworkConfig, "Missing namespace type for for namespace '#{breadcrumb}'" unless data && data[:type]
 
-      unless is_valid_view_type?(data[:type])
-        raise Bcome::Exception::InvalidNetworkConfig, "Invalid View Type '#{data[:type]}' for namespace '#{breadcrumb}'. Expecting View Type to be one of: #{klass_for_view_type.keys.join(', ')}"
-      end
+      raise Bcome::Exception::InvalidNetworkConfig, "Invalid View Type '#{data[:type]}' for namespace '#{breadcrumb}'. Expecting View Type to be one of: #{klass_for_view_type.keys.join(', ')}" unless is_valid_view_type?(data[:type])
     end
 
     def klass_for_view_type
       {
         COLLECTION_KEY => ::Bcome::Node::Collection,
         INVENTORY_KEY => ::Bcome::Node::Inventory::Defined,
-        SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect
+        SUBSELECT_KEY => ::Bcome::Node::Inventory::Subselect,
+        MERGE_KEY => ::Bcome::Node::Inventory::Merge,
+        KUBE_CLUSTER => ::Bcome::Node::Kube::Estate
       }
     end
 
@@ -96,7 +99,7 @@ module Bcome::Node
     end
 
     def machines_data_for_namespace(namespace)
-      machines_data[namespace] ? machines_data[namespace] : {}
+      machines_data[namespace] || {}
     end
 
     def rewrite_estate_config(data)
@@ -107,25 +110,27 @@ module Bcome::Node
 
     def load_estate_config
       config = YAML.load_file(config_path).deep_symbolize_keys
-      return config
+      config.deep_merge(local_data)
     rescue ArgumentError, Psych::SyntaxError => e
       raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in network config' + e.message
     rescue Errno::ENOENT
       raise Bcome::Exception::DeprecationWarning if is_running_deprecated_configs?
+
       raise Bcome::Exception::MissingNetworkConfig, config_path
     end
 
     def load_machines_data
-      return {} unless File.exist?(machines_data_path)    
+      return {} unless File.exist?(machines_data_path)
+
       config = YAML.load_file(machines_data_path).deep_symbolize_keys
-      return config
+      config
     rescue ArgumentError, Psych::SyntaxError => e
       raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in machines data config' + e.message
     end
 
     def local_data
       @local_data ||= load_local_data
-    end  
+    end
 
     def local_data_path
       "#{CONFIG_PATH}/#{LOCAL_OVERRIDE_CONFIG_NAME}"
@@ -133,16 +138,17 @@ module Bcome::Node
 
     def load_local_data
       return {} unless File.exist?(local_data_path)
-      config = YAML.load_file(local_data_path) 
+
+      config = YAML.load_file(local_data_path)
       return {} if config.nil?
-      return config
+
+      config
     rescue ArgumentError, Psych::SyntaxError => e
       raise Bcome::Exception::InvalidNetworkConfig, 'Invalid yaml in machines data config' + e.message
     end
 
     def is_running_deprecated_configs?
-      File.exist?("bcome/config/platform.yml")
+      File.exist?('bcome/config/platform.yml')
     end
-
   end
 end

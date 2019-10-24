@@ -1,11 +1,22 @@
+# frozen_string_literal: true
+
+require 'fog/aws'
+
 module Bcome::Driver
   class Ec2 < Bcome::Driver::Base
-  
-    PATH_TO_FOG_CREDENTIALS = "#{ENV['HOME']}/.fog".freeze
+    PATH_TO_FOG_CREDENTIALS = "#{ENV['HOME']}/.fog"
 
     def initialize(*params)
       super
       raise Bcome::Exception::Ec2DriverMissingProvisioningRegion, params.inspect unless provisioning_region
+    end
+
+    def pretty_provider_name
+      'EC2'
+    end
+
+    def pretty_resource_location
+      @node.network_data[:provisioning_region]
     end
 
     def fog_client
@@ -13,8 +24,17 @@ module Bcome::Driver
     end
 
     def fetch_server_list(filters)
-      servers = unfiltered_server_list.all(filters)
-      servers
+      wrap_indicator type: :basic, title: loader_title, completed_title: loader_completed_title do
+        begin
+          @servers = unfiltered_server_list.all(filters)
+          signal_success
+        rescue Exception => e
+          signal_failure
+          raise e
+        end
+      end
+
+      return @servers
     end
 
     def unfiltered_server_list
@@ -23,6 +43,17 @@ module Bcome::Driver
 
     def loading
       fog_client.servers.all({})
+    end
+
+    def has_network_credentials?
+      true
+    end
+
+    def network_credentials
+      {
+        access_key: raw_fog_credentials['aws_access_key_id'],
+        secret_key: raw_fog_credentials['aws_secret_access_key']
+      }
     end
 
     def raw_fog_credentials

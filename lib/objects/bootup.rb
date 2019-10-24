@@ -1,12 +1,10 @@
+# frozen_string_literal: true
+
 module Bcome
   class Bootup
     def self.set_and_do(params, spawn_into_console = true)
       instance.set(params, spawn_into_console)
       instance.do
-    rescue Bcome::Exception::Base => e
-      puts e.pretty_display
-    rescue Excon::Error::Socket => e
-      puts "\nNo network access - please check your connection and try again\n".red
     end
 
     def self.traverse(breadcrumbs = nil, _spawn_into_console = false)
@@ -31,6 +29,7 @@ module Bcome
 
     def init_context(context)
       if @spawn_into_console
+        puts "\n\n"
         ::Bcome::Workspace.instance.set(context: context)
       else
         context
@@ -55,13 +54,22 @@ module Bcome
         end
         starting_context = next_context
       end
-
       # Set our workspace to our last context - we're not invoking a method call and so we're entering a console session
       init_context(starting_context)
     end
 
     def estate
       @estate ||= ::Bcome::Node::Factory.instance.init_tree
+    end
+
+    def estate_loaded?
+      !@estate.nil?
+    end
+
+    def close_ssh_connections
+      return unless estate_loaded?
+
+      estate.close_ssh_connections
     end
 
     def parser

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Bcome::Registry
   class Loader
     include ::Singleton
 
-    FILE_PATH = 'bcome/registry.yml'.freeze
+    FILE_PATH = 'bcome/registry.yml'
 
     def data
       @data ||= do_load
@@ -17,19 +19,17 @@ module Bcome::Registry
 
       data.each do |key, commands|
         begin
-          if /^#{key.to_s}$/.match(node.keyed_namespace)
+          if /^#{key}$/.match(node.keyed_namespace)
             commands.each do |c|
-
               unless c[:console_command]
                 error_message = "Registry method is missing key 'console_command'."
                 error_message += "\n\n#{c.inspect}"
-                raise Bcome::Exception::InvalidRegistryDataConfig.new error_message
+                raise Bcome::Exception::InvalidRegistryDataConfig, error_message
               end
 
               # Verify that the proposed user registered method does not conflict with either an existing method name, instance var, or other registry command name for this node
-              if node.is_node_level_method?(c[:console_command]) || command_group.console_method_name_exists?(c[:console_command])
-                raise Bcome::Exception::MethodNameConflictInRegistry, "'#{c[:console_command]}'"
-              end
+              raise Bcome::Exception::MethodNameConflictInRegistry, "'#{c[:console_command]}'" if node.is_node_level_method?(c[:console_command]) || command_group.console_method_name_exists?(c[:console_command])
+
               command_group << ::Bcome::Registry::Command::Base.new_from_raw_command(c) unless restrict_config?(node, c)
               ::Bcome::Registry::CommandList.instance.register(node, c[:console_command].to_sym)
             end
@@ -47,11 +47,10 @@ module Bcome::Registry
 
     def restrict_config?(node, command_config)
       return false unless command_config.key?(:restrict_to_node)
+
       node_klass_mapping = restriction_to_node_klass_mappings[command_config[:restrict_to_node].to_sym]
 
-      unless node_klass_mapping
-        raise Bcome::Exception::InvalidRestrictionKeyInRegistry, "'#{command_config[:restrict_to_node]}' is invalid. Valid keys: #{restriction_to_node_klass_mappings.keys.join(', ')}"
-      end
+      raise Bcome::Exception::InvalidRestrictionKeyInRegistry, "'#{command_config[:restrict_to_node]}' is invalid. Valid keys: #{restriction_to_node_klass_mappings.keys.join(', ')}" unless node_klass_mapping
 
       !node.is_a?(node_klass_mapping)
     end
@@ -66,6 +65,7 @@ module Bcome::Registry
 
     def do_load
       return {} unless File.exist?(FILE_PATH)
+
       begin
         file_data = YAML.load_file(FILE_PATH).deep_symbolize_keys
       rescue Psych::SyntaxError => e

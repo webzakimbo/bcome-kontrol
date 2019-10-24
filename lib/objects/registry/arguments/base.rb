@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Registry::Arguments
   class Base
     attr_reader :arguments, :defaults, :processed_arguments, :merged_arguments
@@ -10,7 +12,7 @@ module Bcome::Registry::Arguments
     end
 
     def initialize(_arguments, defaults)
-      @defaults = defaults ? defaults : {}
+      @defaults = defaults || {}
       validate
     end
 

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 module ::Bcome::Ssh
   class Command
-    attr_reader :raw, :stdout, :stderr, :exit_code, :node, :bootstrap
+    attr_reader :raw, :stdout, :stderr, :exit_code, :node
 
     def initialize(params)
       @raw = params[:raw]
@@ -18,11 +20,14 @@ module ::Bcome::Ssh
       is_success? ? 'success'.success : 'failure'.error
     end
 
-    attr_writer :bootstrap
-
     def output
-      command_output = is_success? ? @stdout : "Exit code: #{@exit_code}\n\nSTDERR: #{@stderr}"
-      "\n#{command_output}"
+      cmd_output = @stdout
+
+      unless is_success?
+        cmd_output += "\nExit code: #{@exit_code}"
+        cmd_output += "\nSTDERR: #{@stderr}" unless @stderr.empty?
+      end
+      "\n#{cmd_output}"
     end
 
     def is_success?

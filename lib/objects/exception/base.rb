@@ -1,15 +1,19 @@
-module Bcome::Exception
-  class Base < RuntimeError
-    def initialize(message_suffix = nil)
-      @message_suffix = message_suffix
-    end
+# frozen_string_literal: true
 
-    def message
-      "#{message_prefix}#{@message_suffix ? ": #{@message_suffix}" : ''}"
-    end
+module Bcome
+  module Exception
+    class Base < RuntimeError
+      def initialize(message_suffix = nil)
+        @message_suffix = message_suffix
+      end
 
-    def pretty_display
-      puts "\n#{message}\n".error
+      def message
+        "#{message_prefix}#{@message_suffix ? + "#{!message_prefix.empty? ? ":" : ""}" + " #{@message_suffix}" : ''}"
+      end
+
+      def pretty_display
+        puts "\n\n#{message}\n".error
+      end
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Node
   class CacheHandler
     def initialize(inventory_node)

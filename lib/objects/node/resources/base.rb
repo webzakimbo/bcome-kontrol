@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Node::Resources
   class Base
     include Enumerable
@@ -23,7 +25,7 @@ module Bcome::Node::Resources
     end
 
     def should_rename_initial_duplicate?
-      return false
+      false
     end
 
     def clear!
@@ -56,12 +58,14 @@ module Bcome::Node::Resources
     def disable(identifier)
       resource = for_identifier(identifier)
       raise Bcome::Exception::NoNodeNamedByIdentifier, identifier unless resource
+
       @disabled_resources << resource unless @disabled_resources.include?(resource)
     end
 
     def enable(identifier)
       resource = for_identifier(identifier)
       raise Bcome::Exception::NoNodeNamedByIdentifier, identifier unless resource
+
       @disabled_resources -= [resource]
     end
 

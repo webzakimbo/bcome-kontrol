@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Registry::Command
   class Group
     def initialize(node)
@@ -32,7 +34,8 @@ module Bcome::Registry::Command
     end
 
     def item_spacing(item)
-      raise ::Bcome::Exception::InvalidRegistryCommandNameLength.new "command '#{item}' exceeds length limit of #{menu_item_spacing_length}" if item.length > menu_item_spacing_length
+      raise ::Bcome::Exception::InvalidRegistryCommandNameLength, "command '#{item}' exceeds length limit of #{menu_item_spacing_length}" if item.length > menu_item_spacing_length
+
       "\s" * (menu_item_spacing_length - item.length)
     end
 
@@ -48,7 +51,7 @@ module Bcome::Registry::Command
       ::Bcome::System::Local.instance.in_console_session?
     end
 
-    def pretty_print ## TODO - revisit. This is a mess
+    def pretty_print
       puts "\nRegistry commands".title + "\sfor #{@node.class} #{@node.keyed_namespace}".resource_value + "\n\n"
       all_commands.sort.each do |group_name, commands|
         puts tab_spacing + group_name.title + "\n\n"

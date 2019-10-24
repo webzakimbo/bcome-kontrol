@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Node
   class Collection < ::Bcome::Node::Base
     def self.to_s
@@ -28,20 +30,23 @@ module Bcome::Node
       filtered_set
     end
 
-    def machines
+    def machines(skip_for_hidden = true)
       set = []
-      @resources.active.each do |resource|
+
+      resources = skip_for_hidden ? @resources.active.reject(&:hide?) : @resources.active
+
+      resources.each do |resource|
         if resource.inventory?
           resource.load_nodes unless resource.nodes_loaded?
           set << resource.resources.active
         else
-          set << resource.machines
+          set << resource.machines(skip_for_hidden)
         end
       end
 
       set.flatten!
-
-      filter_duplicates(set)
+      filtered_machines = filter_duplicates(set)
+      filtered_machines
     end
 
     def collection?

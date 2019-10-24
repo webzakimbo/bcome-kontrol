@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Bcome::Terraform
   class State
     require 'json'
 
-    TSTATE_FILENAME = "terraform.tfstate".freeze
+    TSTATE_FILENAME = 'terraform.tfstate'
 
     def initialize(namespace)
       @namespace = namespace
@@ -10,7 +12,7 @@ module Bcome::Terraform
 
     def terraform_installation_path
       # Look for a terraform config installation in the path belonging to this node
-      @terraform_installation_path ||= "terraform/environments/#{@namespace.gsub(":","_")}"
+      @terraform_installation_path ||= "terraform/environments/#{@namespace.gsub(':', '_')}"
     end
 
     def config_path
@@ -23,18 +25,20 @@ module Bcome::Terraform
 
     def config
       return {} unless config_exists?
+
       JSON.parse(File.read(config_path))
     end
 
     def modules
       return {} unless config_exists?
-      return config["modules"]
+
+      config['modules']
     end
-  
+
     def resources
-      # TODO What was I thinking ...  We need all the modules...
       return {} unless config_exists?
-      return modules[0]["resources"]
+
+      config['resources'][0]
     end
   end
 end

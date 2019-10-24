@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Terraform
   class Parser
     def initialize(namespace)
@@ -5,11 +7,7 @@ module Bcome::Terraform
     end
 
     def attributes
-      a = {}
-      resources.keys.each do |key|
-        a[key] = resources[key]["primary"]["attributes"]
-      end
-      a
+      resources
     end
 
     def resources

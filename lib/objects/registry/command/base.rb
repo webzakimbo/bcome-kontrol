@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 module Bcome::Registry::Command
   class Base
     class << self
       def new_from_raw_command(data)
         raise Bcome::Exception::InvalidContextCommand, "#{data.inspect} is missing key type" unless data[:type]
         raise Bcome::Exception::InvalidContextCommand, "#{data.inspect} has invalid type '#{data[:type]}'" unless is_valid_type?(data[:type])
+
         valid_types[data[:type].to_sym].new(data)
       end
 

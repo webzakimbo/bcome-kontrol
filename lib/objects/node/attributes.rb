@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Node::Attributes
   ## -- Attributes --
 
@@ -24,7 +26,8 @@ module Bcome::Node::Attributes
 
   def network_driver
     return nil if !network_data || (network_data.is_a?(Hash) && network_data.empty?)
-    @network_driver ||= ::Bcome::Driver::Bucket.instance.driver_for_network_data(network_data)
+
+    @network_driver ||= ::Bcome::Driver::Bucket.instance.driver_for_network_data(network_data, self)
     @network_driver
   end
 

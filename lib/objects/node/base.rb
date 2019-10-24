@@ -1,23 +1,26 @@
+# frozen_string_literal: true
+
 module Bcome::Node
   class Base
-
     include Bcome::Context
     include Bcome::WorkspaceCommands
     include Bcome::Node::Attributes
     include Bcome::WorkspaceMenu
     include Bcome::Node::LocalMetaDataFactory
     include Bcome::Node::RegistryManagement
- 
-    DEFAULT_IDENTIFIER = "bcome"
 
     def self.const_missing(constant)
       ## Hook for direct access to node level resources by constant name where
       ## cd ServerName should yield the same outcome as cd "ServerName"
-      set_context  = ::IRB.CurrentContext.workspace.main
-      return (set_context.resource_for_identifier(constant.to_s)) ? constant.to_s : super
+      set_context = ::IRB.CurrentContext.workspace.main
+      set_context.resource_for_identifier(constant.to_s) ? constant.to_s : super
     end
 
     attr_reader :params
+
+    DEFAULT_IDENTIFIER = 'bcome'
+
+    include Bcome::LoadingBar::Handler
 
     def initialize(params)
       @params = params
@@ -30,11 +33,12 @@ module Bcome::Node
 
       set_view_attributes if @views
       validate_attributes
+
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
     end
 
-    def bootstrap?
-      false
+    def ssh_connect(params = {})
+      ::Bcome::Ssh::Connector.connect(self, params)
     end
 
     def collection?
@@ -50,48 +54,53 @@ module Bcome::Node
     end
 
     def enabled_menu_items
-      [:ls, :lsa, :workon, :enable, :disable, :enable!, :disable!, :run, :tree, :ping, :put, :put_str, :rsync, :cd, :meta, :pack_metadata, :unpack_metadata, :registry, :interactive, :execute_script] 
+      %i[ls lsa workon enable disable enable! disable! run tree ping put put_str rsync cd meta registry interactive execute_script]
     end
 
     def has_proxy?
       ssh_driver.has_proxy?
     end
 
-    def identifier=(new_identifier)
-      @identifier = new_identifier
-    end
+    attr_writer :identifier
 
     def proxy
       ssh_driver.proxy
     end
-   
-    # TODO - why not do these in parallel?
+
+    def scoped_resources
+      # Active & not hidden
+      resources.active.reject(&:hide?)
+    end
+
     def scp(local_path, remote_path)
-      resources.active.each do |resource|
+      scoped_resources.each do |resource|
         resource.put(local_path, remote_path)
       end
-      return
+      nil
     end
 
     def rsync(local_path, remote_path)
-      resources.active.each do |resource|
+      scoped_resources.each do |resource|
         resource.rsync(local_path, remote_path)
-      end   
-      return
+      end
+      nil
     end
 
-    def put(local_path, remote_path)
-      resources.active.each do |resource|
-        resource.put(local_path, remote_path)
+    def put(local_path, remote_path, connect = true)
+      ssh_connect if connect # Initiate connect at highest namespace level
+
+      scoped_resources.each do |resource|
+        resource.put(local_path, remote_path, false)
       end
-      return
+      nil
     end
 
-    def put_str(string, remote_path)
-      resources.active.each do |resource|
-        resource.put_str(string, remote_path)
+    def put_str(string, remote_path, connect = true)
+      ssh_connect if connect # Initiate connect at highest namespace level
+      scoped_resources.each do |resource|
+        resource.put_str(string, remote_path, false)
       end
-      return
+      nil
     end
 
     def execute_script(script_name)
@@ -103,30 +112,28 @@ module Bcome::Node
       results
     end
 
-    def pack_metadata
-      ::Bcome::Encryptor.instance.pack
+    def hide?
+      return true if @views.key?(:hidden) && @views[:hidden]
+
+      false
     end
 
-    def unpack_metadata
-      ::Bcome::Encryptor.instance.unpack
-    end 
- 
     def validate_attributes
-      validate_identifier 
-      raise ::Bcome::Exception::MissingDescriptionOnView.new(@views.inspect) if requires_description? && !@description
-      raise ::Bcome::Exception::MissingTypeOnView.new(@views.inspect) if requires_type? && !@type
+      validate_identifier
+      raise ::Bcome::Exception::MissingDescriptionOnView, @views.inspect if requires_description? && !@description
+      raise ::Bcome::Exception::MissingTypeOnView, @views.inspect if requires_type? && !@type
     end
 
     def validate_identifier
-      @identifier = DEFAULT_IDENTIFIER if is_top_level_node? && !@identifier && !is_a?(::Bcome::Node::Server::Base)
+      @identifier = DEFAULT_IDENTIFIER.dup if is_top_level_node? && !@identifier && !is_a?(::Bcome::Node::Server::Base)
 
-      @identifier = "NO-ID_#{Time.now.to_i}" unless @identifier
+      @identifier ||= "NO-ID_#{Time.now.to_i}".dup
 
-      #raise ::Bcome::Exception::MissingIdentifierOnView.new(@views.inspect) unless @identifier
-      @identifier.gsub!(/\s/, "_") # Remove whitespace 
-      @identifier.gsub!("-", "_") # change hyphens to undescores, hyphens don't play well in var names in irb
+      # raise ::Bcome::Exception::MissingIdentifierOnView.new(@views.inspect) unless @identifier
+      @identifier.gsub!(/\s/, '_') # Remove whitespace
+      @identifier.gsub!('-', '_') # change hyphens to undescores, hyphens don't play well in var names in irb
 
-      #raise ::Bcome::Exception::InvalidIdentifier.new("'#{@identifier}' contains whitespace") if @identifier =~ /\s/
+      # raise ::Bcome::Exception::InvalidIdentifier.new("'#{@identifier}' contains whitespace") if @identifier =~ /\s/
     end
 
     def requires_description?
@@ -144,7 +151,7 @@ module Bcome::Node
     def nodes_loaded?
       resources.any?
     end
-   
+
     def resources
       @resources ||= ::Bcome::Node::Resources::Base.new
     end
@@ -155,16 +162,16 @@ module Bcome::Node
 
     def invoke(method_name, arguments = [])
       if method_is_available_on_node?(method_name)
-        if respond_to?(method_name)        
+        if respond_to?(method_name)
           # Invoke a method on node that's defined by the system
           begin
-            if arguments && arguments.any?
+            if arguments&.any?
               send(method_name, *arguments)
             else
               send(method_name)
             end
           rescue ArgumentError => e
-            raise ::Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine.new method_name + "error message - #{e.message}"
+            raise ::Bcome::Exception::ArgumentErrorInvokingMethodFromCommmandLine, method_name + " error message - #{e.message}"
           end
         else
           # Invoke a user defined (registry) method
@@ -173,7 +180,7 @@ module Bcome::Node
         end
       else
         # Final crumb is neither a node level context nor an executable method on the penultimate node level context
-        raise ::Bcome::Exception::InvalidBreadcrumb.new("Method '#{method_name}' is not available on bcome node of type #{self.class}, at namespace #{namespace}")
+        raise ::Bcome::Exception::InvalidBreadcrumb, "Method '#{method_name}' is not available on bcome node of type #{self.class}, at namespace #{namespace}"
       end
     end
 
@@ -183,20 +190,20 @@ module Bcome::Node
 
     def recurse_resource_for_identifier(identifier)
       resource = resource_for_identifier(identifier)
-      return resource ? resource : (has_parent? ? parent.recurse_resource_for_identifier(identifier) : nil)
+      resource || (has_parent? ? parent.recurse_resource_for_identifier(identifier) : nil)
     end
 
     def prompt_breadcrumb
-      "#{has_parent? ? "#{parent.prompt_breadcrumb}> " : "" }#{ is_current_context? ? (has_parent? ? identifier.terminal_prompt : identifier) : identifier}" 
+      "#{has_parent? ? "#{parent.prompt_breadcrumb}> " : ''}#{current_context? ? (has_parent? ? identifier.terminal_prompt : identifier) : identifier}"
     end
 
     def namespace
-      "#{ parent ? "#{parent.namespace}:" : "" }#{identifier}"
+      "#{parent ? "#{parent.namespace}:" : ''}#{identifier}"
     end
 
     def keyed_namespace
-      splits = namespace.split(":") ; 
-      splits[1..splits.size].join(":")
+      splits = namespace.split(':')
+      splits[1..splits.size].join(':')
     end
 
     def has_parent?
@@ -205,10 +212,10 @@ module Bcome::Node
 
     def is_top_level_node?
       !has_parent?
-    end 
+    end
 
     def list_attributes
-      { 
+      {
         "Identifier": :identifier,
         "Description": :description,
         "Type": :type
@@ -216,49 +223,51 @@ module Bcome::Node
     end
 
     def close_ssh_connections
-      machines.pmap do |machine|
-        machine.close_ssh_connection
+      # For every loaded server, we'll close any lingering ssh connection
+      if resources.any?
+        resources.pmap do |resource|
+          if resource.is_a?(::Bcome::Node::Server::Base)
+            resource.close_ssh_connection
+          else
+            resource.close_ssh_connections
+           end
+        end
       end
-      return
-    end
-
-    def open_ssh_connections
-      machines.pmap do |machine|
-        machine.open_ssh_connection unless machine.has_ssh_connection?
-      end
-      return
+      nil
     end
 
     def execute_local(command)
       puts "(local) > #{command}"
       system(command)
+      puts ''
     end
 
     def data_print_from_hash(data, heading)
       puts "\n#{heading.title}"
-      puts ""
+      puts ''
 
       if data.keys.any?
         data.each do |key, value|
           puts "#{key.to_s.resource_key}: #{value.to_s.informational}"
         end
       else
-        puts "No values found".warning
+        puts 'No values found'.warning
       end
-      puts ""
+      puts ''
     end
 
     private
 
     def set_view_attributes
-      @views.keys.each do |view_attribute_key|
+      @views.keys.sort.each do |view_attribute_key|
         next if view_attributes_to_skip_on_setup.include?(view_attribute_key)
+
         instance_variable_set("@#{view_attribute_key}", @views[view_attribute_key])
       end
     end
 
     def view_attributes_to_skip_on_setup
-      [:views] 
+      [:views]
     end
 
     private
@@ -268,6 +277,5 @@ module Bcome::Node
       # with thanks to https://tenderlovemaking.com/2011/06/28/til-its-ok-to-return-nil-from-to_ary.html & http://yehudakatz.com/2010/01/02/the-craziest-fing-bug-ive-ever-seen/
       nil
     end
-
   end
 end

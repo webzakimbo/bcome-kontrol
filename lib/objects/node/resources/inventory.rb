@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bcome::Node::Resources
   class Inventory < Bcome::Node::Resources::Base
     def <<(node)
@@ -16,14 +18,14 @@ module Bcome::Node::Resources
     end
 
     def should_rename_initial_duplicate?
-      return true
-    end    
+      true
+    end
 
     def rename_initial_duplicate
-      duplicate_nodes.each do |node_identifier, count|
+      duplicate_nodes.each do |node_identifier, _count|
         node = for_identifier(node_identifier)
         node.identifier = "#{node.identifier}_1"
-      end 
+      end
     end
 
     def duplicate_nodes
@@ -32,7 +34,7 @@ module Bcome::Node::Resources
 
     def reset_duplicate_nodes!
       @duplicate_nodes = {}
-    end   
+    end
 
     def dynamic_nodes
       active.select(&:dynamic_server?)

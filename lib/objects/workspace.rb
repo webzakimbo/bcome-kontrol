@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ::Bcome::Workspace
   include ::Singleton
 
@@ -20,7 +22,6 @@ class ::Bcome::Workspace
 
     @context.irb_workspace = main_context.workspace if main_context
     @context.previous_irb_workspace = params[:current_context] if params[:current_context]
-    set_irb_prompt
     spawn_into_console_for_context
     nil
   end
@@ -38,9 +39,7 @@ class ::Bcome::Workspace
   end
 
   def spawn_into_console_for_context
-    require 'irb/ext/multi-irb'
-    IRB.parse_opts_with_ignoring_script
-    IRB.irb nil, @context
+    ::IRB.start_session(self, @context)
   end
 
   def has_context?
@@ -63,13 +62,4 @@ class ::Bcome::Workspace
     console_set!
   end
 
-  def set_irb_prompt
-    IRB.conf[:PROMPT][:CUSTOM] = {
-      PROMPT_N: "\e[1m:\e[m ",
-      PROMPT_I: "\e[1m#{irb_prompt} >\e[m ",
-      PROMPT_C: "\e[1m#{irb_prompt} >\e[m ",
-      RETURN: "%s \n"
-    }
-    IRB.conf[:PROMPT_MODE] = :CUSTOM
-  end
 end
