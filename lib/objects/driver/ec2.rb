@@ -34,7 +34,7 @@ module Bcome::Driver
         end
       end
 
-      return @servers
+      @servers
     end
 
     def unfiltered_server_list

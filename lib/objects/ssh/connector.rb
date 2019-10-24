@@ -29,12 +29,12 @@ module Bcome
       end
 
       def connect
-        return if (number_unconnected_machines == 0 && !ping?)
+        return if number_unconnected_machines == 0 && !ping?
 
         if show_progress?
-          wrap_indicator type: :progress, size: @servers_to_connect.size, title: "Opening connections" do
+          wrap_indicator type: :progress, size: @servers_to_connect.size, title: 'Opening connections' do
             open_connections
-          end       
+          end
         else
           open_connections
         end
@@ -78,7 +78,7 @@ module Bcome
             signal_failure if show_progress?
             @connection_exceptions[machine] = e
           rescue Errno::EPIPE
-            raise ::Bcome::Exception::Generic.new "Process terminated"
+            raise ::Bcome::Exception::Generic, 'Process terminated'
           end
         end
       end
@@ -90,7 +90,7 @@ module Bcome
       end
 
       def number_unconnected_machines
-        @servers_to_connect.select { |machine| !machine.has_ssh_connection? }.size
+        @servers_to_connect.reject(&:has_ssh_connection?).size
       end
 
       def machines

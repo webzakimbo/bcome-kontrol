@@ -38,7 +38,7 @@ module Bcome::Driver
     def loader_title
       'Loading' + "\s#{pretty_provider_name.bc_blue.bold}\s#{pretty_resource_location.underline}".bc_green
     end
-   
+
     def loader_completed_title
       'done'
     end

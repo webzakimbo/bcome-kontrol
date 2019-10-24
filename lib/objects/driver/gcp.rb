@@ -35,7 +35,7 @@ module Bcome::Driver
           raise e
         end
       end
-      return @instances.items
+      @instances.items
     end
 
     def do_fetch_server_list(_filters)

@@ -74,8 +74,8 @@ module Bcome::Ssh
       raise Bcome::Exception::InvalidProxyConfig, "#{@config[:host_lookup]} is not a valid host lookup method" unless host_lookup_method
 
       h = send(host_lookup_method)
-    
-      return h
+
+      h
     end
 
     def get_host_or_ip_from_config

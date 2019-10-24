@@ -9,12 +9,12 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Guillaume Roderick (Webzakimbo)']
   spec.email         = ['guillaume@webzakimbo.com']
   spec.summary       = 'A DevOps Application development framework'
-  spec.description   = "Orchestration & Automation framework for the Cloud."
-  spec.homepage      = "https://github.com/webzakimbo/bcome-kontrol"
+  spec.description   = 'Orchestration & Automation framework for the Cloud.'
+  spec.homepage      = 'https://github.com/webzakimbo/bcome-kontrol'
   spec.metadata = {
-    "documentation_uri" => "https://bcome-kontrol.readthedocs.io/en/latest/"
+    'documentation_uri' => 'https://bcome-kontrol.readthedocs.io/en/latest/'
   }
-  spec.license       = 'GPL-3.0'
+  spec.license = 'GPL-3.0'
   spec.files = Dir.glob('{bin,lib,filters,patches}/**/*')
   spec.bindir = 'bin'
   spec.executables = ['bcome']

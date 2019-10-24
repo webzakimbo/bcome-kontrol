@@ -63,28 +63,27 @@ module Bcome::Driver::Gcp::Authentication
     def loader_title
       'Authenticating' + "\s#{@driver.pretty_provider_name.bc_blue.bold}\s#{@driver.pretty_resource_location.underline}".bc_green
     end
- 
+
     def do!
       authorize!
       if @storage.authorization.nil?
         # Total bloat from google here. Thanks google... requiring at last possible moment.
         require 'google/api_client/auth/installed_app'
 
-        wrap_indicator type: :basic, title: loader_title, completed_title: "done" do
-
+        wrap_indicator type: :basic, title: loader_title, completed_title: 'done' do
           flow = Google::APIClient::InstalledAppFlow.new(
             client_id: client_secrets.client_id,
             client_secret: client_secrets.client_secret,
             scope: @scopes
           )
-   
-         begin
-            @service.authorization = flow.authorize(storage)
-            signal_success
+
+          begin
+             @service.authorization = flow.authorize(storage)
+             signal_success
           rescue ArgumentError => e
             signal_failure
             raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
-          end
+           end
         end
       end
 

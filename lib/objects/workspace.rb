@@ -61,5 +61,4 @@ class ::Bcome::Workspace
     IRB.conf[:MAIN_CONTEXT] = IRB::Irb.new.context
     console_set!
   end
-
 end
