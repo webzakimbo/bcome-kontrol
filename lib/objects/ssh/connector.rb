@@ -29,7 +29,7 @@ module Bcome
       end
 
       def connect
-        return if number_unconnected_machines == 0
+        return if (number_unconnected_machines == 0 && !ping?)
 
         if show_progress?
           wrap_indicator type: :progress, size: @servers_to_connect.size, title: "Opening connections" do
