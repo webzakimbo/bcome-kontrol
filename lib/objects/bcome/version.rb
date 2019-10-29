@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 module Bcome
-  VERSION = '1.3.6'
+  VERSION = '2.0.0'
   RELEASE = 'multicloud'
 end

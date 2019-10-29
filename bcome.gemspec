@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'bcome'
-  spec.version       = '1.3.6'
+  spec.version       = '2.0.0'
   spec.authors       = ['Guillaume Roderick (Webzakimbo)']
   spec.email         = ['guillaume@webzakimbo.com']
   spec.summary       = 'A DevOps Application development framework'
