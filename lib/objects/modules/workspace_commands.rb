@@ -167,7 +167,7 @@ module Bcome
     end
 
     def method_missing(method_sym, *arguments)
-      raise NameError, "undefined local variable or method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym)
+      raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym)
 
       if resource_identifiers.include?(method_sym.to_s)
         method_sym.to_s
