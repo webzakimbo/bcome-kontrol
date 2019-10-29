@@ -25,6 +25,12 @@ def unpack_metadata?
   ARGV[0] == 'unpack_metadata'
 end
 
+if ["-v","--version", "--v"].include?(ARGV[0])
+  puts "bcome #{::Bcome::VERSION} #{::Bcome::RELEASE}"
+  exit 0
+end
+
+
 trap('SIGINT') do
   stop_loading_bars
 end

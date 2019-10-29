@@ -2,4 +2,5 @@
 
 module Bcome
   VERSION = '1.3.6'
+  RELEASE = 'multicloud'
 end
