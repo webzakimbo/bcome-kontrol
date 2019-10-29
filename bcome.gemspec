@@ -3,9 +3,11 @@
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
+require 'objects/bcome/version'
+
 Gem::Specification.new do |spec|
-  spec.name          = 'bcome'
-  spec.version       = '2.0.0'
+  spec.name          = ::Bcome::Version.name
+  spec.version       = ::Bcome::Version.release
   spec.authors       = ['Guillaume Roderick (Webzakimbo)']
   spec.email         = ['guillaume@webzakimbo.com']
   spec.summary       = 'A DevOps Application development framework'
