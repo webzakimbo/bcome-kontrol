@@ -3,11 +3,11 @@
 module Bcome
   module Version
     def self.release
-      "2.0.0"
-    end 
+      '2.0.0'
+    end
 
     def self.name
-      "multicloud"
+      'multicloud'
     end
 
     def self.display

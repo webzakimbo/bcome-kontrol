@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module Bcome
   class Startup
-
     def initialize(breadcrumbs, arguments)
       @breadcrumbs = breadcrumbs
       @arguments = arguments
@@ -8,11 +9,11 @@ module Bcome
 
     def do
       case @breadcrumbs
-      when "-v", "--version", "--v"
+      when '-v', '--version', '--v'
         puts ::Bcome::Version.display
-      when "pack_metadata"
+      when 'pack_metadata'
         ::Bcome::Encryptor.instance.pack
-      when "unpack_metadata"
+      when 'unpack_metadata'
         ::Bcome::Encryptor.instance.unpack
       else
         bootup
@@ -20,20 +21,18 @@ module Bcome
     end
 
     def bootup
-      begin
-        spawn_into_console = true
-        ::Bcome::Bootup.set_and_do({ breadcrumbs: @breadcrumbs, arguments: @arguments }, spawn_into_console)
-        clean_up
-      rescue ::Bcome::Exception::Base => e
-        clean_up
-        puts e.pretty_display
-      rescue Excon::Error::Socket => e
-        clean_up
-        puts "\nNo network access - please check your connection and try again\n".error
-      rescue Exception => e
-        clean_up
-        raise e
-      end
+      spawn_into_console = true
+      ::Bcome::Bootup.set_and_do({ breadcrumbs: @breadcrumbs, arguments: @arguments }, spawn_into_console)
+      clean_up
+    rescue ::Bcome::Exception::Base => e
+      clean_up
+      puts e.pretty_display
+    rescue Excon::Error::Socket => e
+      clean_up
+      puts "\nNo network access - please check your connection and try again\n".error
+    rescue Exception => e
+      clean_up
+      raise e
     end
 
     def clean_up
@@ -49,6 +48,5 @@ module Bcome
     def stop_loading_bars
       ::Bcome::LoadingBar::PidBucket.instance.stop_all
     end
-
   end
 end
