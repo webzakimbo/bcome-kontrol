@@ -31,5 +31,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'pmap', '1.1.1'
   spec.add_dependency 'rainbow', '~> 2.2'
   spec.add_dependency 'require_all', '1.3.3'
+  spec.add_dependency 'tty-cursor', '0.2.0'
   spec.post_install_message = "We'd love your feedack about this Gem: How can we improve?  Email guillaume@webzakimbo.com"
 end

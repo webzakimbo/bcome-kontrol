@@ -13,10 +13,16 @@ module Bcome
         signal_stop
       end
 
+      def cursor
+        ::TTY::Cursor
+      end
+
       def wrap_indicator(config, &block)
         begin
           start_indicator(config)
-          block.call
+          cursor.invisible {
+            block.call
+          }
         rescue IRB::Abort
           stop_indicator
           raise ::Bcome::Exception::Generic, 'Interrupt'

@@ -70,7 +70,7 @@ module Bcome::Driver::Gcp::Authentication
         # Total bloat from google here. Thanks google... requiring at last possible moment.
         require 'google/api_client/auth/installed_app'
 
-        wrap_indicator type: :basic, title: loader_title, completed_title: 'done' do
+        wrap_indicator type: :basic, title: loader_title, completed_title: '' do
           flow = Google::APIClient::InstalledAppFlow.new(
             client_id: client_secrets.client_id,
             client_secret: client_secrets.client_secret,

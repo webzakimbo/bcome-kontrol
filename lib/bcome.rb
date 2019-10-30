@@ -6,6 +6,7 @@ require 'active_support/core_ext'
 require 'pmap'
 require 'singleton'
 require 'require_all'
+require 'tty-cursor'
 
 require_all "#{File.dirname(__FILE__)}/../patches"
 require_all "#{File.dirname(__FILE__)}/../lib/objects"
