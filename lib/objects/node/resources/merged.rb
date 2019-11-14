@@ -10,7 +10,12 @@ module Bcome::Node::Resources
 
     def run_select
       @inventory.contributing_inventories.each { |inventory| inventory.load_nodes unless inventory.nodes_loaded? }
-      @nodes = @inventory.contributing_inventories.collect { |inv| inv.resources.nodes }.flatten
+      @nodes = @inventory.contributing_inventories.collect { |inv| inv.resources.nodes }.flatten.collect(&:clone)
+   
+      @nodes.map{|node|
+        node.add_list_attributes(origin: :origin_namespace)
+      }
+
       @nodes
     end
 

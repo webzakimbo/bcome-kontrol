@@ -2,13 +2,14 @@
 
 module Bcome
   module WorkspaceCommands
+
     def ssh_connect(params = {})
       ::Bcome::Ssh::Connector.connect(self, params)
     end
 
     def ls(active_only = false)
       puts "\n\n" + visual_hierarchy.hierarchy + "\n"
-      puts "\t" + "Available #{list_key}s:".title + "\n\n"
+      puts "\t" + "Available #{list_key}s:" + "\n\n"
 
       iterate_over = active_only ? @resources.active : @resources
 
@@ -19,6 +20,7 @@ module Bcome
 
           is_active = @resources.is_active_resource?(resource)
           puts resource.pretty_description(is_active)
+
           puts "\n"
         end
       else

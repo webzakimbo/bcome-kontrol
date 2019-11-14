@@ -17,7 +17,7 @@ class String
       bc_cyan: '#2aa198',
       bc_green: '#859900',
       bc_white: '#ffffff',
-      bc_grey: '#1c1c1c'
+      bc_grey: '#808080'
     }
   end
 
