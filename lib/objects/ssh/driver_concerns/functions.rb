@@ -18,13 +18,13 @@ module ::Bcome::Ssh
       tunnel_command = local_port_forward_command(start_port, end_port)
 
       if ::Bcome::Workspace.instance.console_set?
-        puts "\sOpening tunnel:\s".informational + tunnel_command.to_s.terminal_prompt
+        puts "\sOpening ssh tunnel:\s".informational + tunnel_command.to_s.terminal_prompt
         tunnel = ::Bcome::Ssh::Tunnel::LocalPortForward.new(tunnel_command)
         ::Bcome::Ssh::TunnelKeeper.instance << tunnel
         tunnel.open!
         return tunnel
       else
-        puts "\n\nOpening tunnel".informational
+        puts "\n\nOpening ssh tunnel".informational + "\slocalhost:#{start_port} ~> #{@context_node.namespace}:#{end_port}"
         puts "\nTo use, navigate to another terminal window or application."
         puts "\nctrl+c to close."
         ::Bcome::Command::Local.run(tunnel_command)
