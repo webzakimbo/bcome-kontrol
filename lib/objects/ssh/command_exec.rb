@@ -12,6 +12,10 @@ module ::Bcome::Ssh
       @output_string = "#{@output_string}#{output_string}"
     end
 
+    def log_window
+      ::Bcome::Ssh::Window.instance
+    end
+
     def print_output
       print "#{@output_string}\n\n"
     end
@@ -32,7 +36,10 @@ module ::Bcome::Ssh
         output_append("\n(#{node.namespace})$".terminal_prompt + ">\s#{command.raw} (#{command.pretty_result})\n")
         output_append(command.output.to_s)
       end
-      print_output unless ::Bcome::Orchestrator.instance.command_output_silenced?
+
+      unless ::Bcome::Orchestrator.instance.command_output_silenced? || ::Bcome::Orchestrator.instance.tail_all_command_output?
+        print_output
+      end
     end
 
     def ssh_exec!(ssh, command) #  NON PTY (i.e no pseudo-terminal)
@@ -41,6 +48,7 @@ module ::Bcome::Ssh
           abort "FAILED: couldn't execute command (ssh.channel.exec)" unless success
 
           channel.on_data do |_ch, data|
+            log_window.add(command.node, data) if ::Bcome::Orchestrator.instance.tail_all_command_output?
             command.stdout += data
           end
 
