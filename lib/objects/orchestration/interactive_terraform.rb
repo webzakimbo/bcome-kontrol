@@ -23,6 +23,16 @@ module Bcome::Orchestration
     # PROCESSING INTERACTIVE COMMANDS
     #
     def process_command(raw_command)
+
+      if raw_command =~ /destroy/
+        are_you_sure_message = "Are you SURE you want to 'destroy'? Make sure you know what will be destroyed before you continue. (y/n):".warning
+        response = wait_for_input(are_you_sure_message)
+        while(!["y", "n"].include?(response)) do
+          response = wait_for_input(are_you_sure_message)          
+        end
+        return if response == "n"
+      end
+
       full_command = command(raw_command)
       @node.execute_local(full_command)
       wait_for_command_input
