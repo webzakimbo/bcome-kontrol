@@ -7,33 +7,37 @@ module Bcome
       ::Bcome::Ssh::Connector.connect(self, params)
     end
 
-    def ls(active_only = false)
-      puts "\n\n" + visual_hierarchy.hierarchy + "\n"
-      puts "\t" + "Available #{list_key}s:" + "\n\n"
-
-      iterate_over = active_only ? @resources.active : @resources
-
-      if iterate_over.any?
-
-        iterate_over.sort_by(&:identifier).each do |resource|
-          next if resource.hide?
-
-          is_active = @resources.is_active_resource?(resource)
-          puts resource.pretty_description(is_active)
-
-          puts "\n"
-        end
+    def ls(node = self, active_only = false)
+      if node != self && (resource = resources.for_identifier(node))
+        resource.send(:ls, active_only)
       else
-        puts "\tNo resources found".informational
-      end
+        puts "\n\n" + visual_hierarchy.hierarchy + "\n"
+        puts "\t" + "Available #{list_key}s:" + "\n\n"
 
-      new_line
-      nil
+        iterate_over = active_only ? @resources.active : @resources
+
+        if iterate_over.any?
+
+          iterate_over.sort_by(&:identifier).each do |resource|
+            next if resource.hide?
+
+            is_active = @resources.is_active_resource?(resource)
+            puts resource.pretty_description(is_active)
+
+            puts "\n"
+          end
+        else
+          puts "\tNo resources found".informational
+        end
+  
+        new_line
+        nil
+      end
     end
 
     def lsa
       show_active_only = true
-      ls(show_active_only)
+      ls(self, show_active_only)
     end
 
     def interactive
