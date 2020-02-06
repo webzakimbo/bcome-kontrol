@@ -10,9 +10,6 @@ module Bcome::Registry::Command
       orchestrator.do_execute
     rescue Interrupt
       puts "\nExiting gracefully from interrupt\n".warning
-
-    rescue StandardError => e
-      puts e.backtrace.join("\n")
     end
 
     def validate(*params)
