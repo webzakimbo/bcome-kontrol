@@ -39,8 +39,12 @@ module Bcome::Node
 
     def method_missing(method_sym, *arguments)
       if ::Bcome::System::Local.instance.in_console_session?
+        ## Don't show a stack trace, just a generic bcome error that'll be caught further down with a basic error message returned to the UI.
         raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}"
       else
+        ## This is a design decision here:  I'm assuming that should Bcome::Node::[Whatever] have been monkey patched, then it'll be during the context
+        ## of an orchestration call where the user will very much want to see a stack trace. Otherwise, we're assumed to be in the :wscope of a bcome console
+        ## session, where we won't show stack traces, as commented above.
         raise NameError, "NameError (undefined local variable or method '#{method_sym}' for #{self.class}"
       end
     end
