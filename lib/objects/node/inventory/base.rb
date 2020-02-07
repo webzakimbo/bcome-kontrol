@@ -96,7 +96,7 @@ module Bcome
         end
 
         def override_server_identifier?
-          !@override_identifier.nil?
+          respond_to?(:override_identifier) && !override_identifier.nil?
         end
       end
     end

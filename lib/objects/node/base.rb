@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 
 module Bcome::Node
   class Base
@@ -37,15 +36,23 @@ module Bcome::Node
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
     end
 
+    def parent
+      @parent
+    end
+  
+    def views
+      @views
+    end
+
     def method_missing(method_sym, *arguments)
-      if ::Bcome::System::Local.instance.in_console_session?
-        ## Don't show a stack trace, just a generic bcome error that'll be caught further down with a basic error message returned to the UI.
-        raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}"
+      raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym)
+
+      if resource_identifiers.include?(method_sym.to_s)
+        return method_sym.to_s
+      elsif command = user_command_wrapper.command_for_console_command_name(method_sym)
+        command.execute(self, arguments)
       else
-        ## This is a design decision here:  I'm assuming that should Bcome::Node::[Whatever] have been monkey patched, then it'll be during the context
-        ## of an orchestration call where the user will very much want to see a stack trace. Otherwise, we're assumed to be in the :wscope of a bcome console
-        ## session, where we won't show stack traces, as commented above.
-        raise NameError, "NameError (undefined local variable or method '#{method_sym}' for #{self.class}"
+        super
       end
     end
 
@@ -132,8 +139,8 @@ module Bcome::Node
 
     def validate_attributes
       validate_identifier
-      raise ::Bcome::Exception::MissingDescriptionOnView, @views.inspect if requires_description? && !@description
-      raise ::Bcome::Exception::MissingTypeOnView, @views.inspect if requires_type? && !@type
+      raise ::Bcome::Exception::MissingDescriptionOnView, views.inspect if requires_description? && !description
+      raise ::Bcome::Exception::MissingTypeOnView, views.inspect if requires_type? && !type
     end
 
     def validate_identifier
@@ -270,11 +277,25 @@ module Bcome::Node
 
     private
 
+    def singleton_class
+      class << self
+        self
+      end
+    end  
+
     def set_view_attributes
+      @identifier = @views[:identifier]
+
       @views.keys.sort.each do |view_attribute_key|
         next if view_attributes_to_skip_on_setup.include?(view_attribute_key)
 
-        instance_variable_set("@#{view_attribute_key}", @views[view_attribute_key])
+        next if view_attribute_key == :identifier
+
+        singleton_class.class_eval { 
+          define_method(view_attribute_key) {
+            @views[view_attribute_key]
+          }
+        } 
       end
     end
 

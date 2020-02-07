@@ -111,7 +111,6 @@ module Bcome
       desc = ''
       list_attributes.each do |key, value|
         next unless respond_to?(value) || instance_variable_defined?("@#{value}")
-
         attribute_value = send(value)
         next unless attribute_value
 
@@ -172,33 +171,12 @@ module Bcome
       respond_to?(method_sym) || method_is_available_on_node?(method_sym)
     end
 
-    def method_missing(method_sym, *arguments)
-      raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym)
-
-      if resource_identifiers.include?(method_sym.to_s)
-        method_sym.to_s
-      elsif instance_variable_defined?("@#{method_sym}")
-        instance_variable_get("@#{method_sym}")
-      else
-        command = user_command_wrapper.command_for_console_command_name(method_sym)
-        command.execute(self, arguments)
-      end
-    end
-
-    def parent
-      @parent
-    end
-
-    def views
-      @views
-    end
-
     def method_in_registry?(method_sym)
       ::Bcome::Registry::CommandList.instance.command_in_list?(self, method_sym)
     end
 
     def method_is_available_on_node?(method_sym)
-      resource_identifiers.include?(method_sym.to_s) || instance_variable_defined?("@#{method_sym}") || method_in_registry?(method_sym) || respond_to?(method_sym)
+      resource_identifiers.include?(method_sym.to_s) || method_in_registry?(method_sym) || respond_to?(method_sym) || instance_variable_defined?("@#{method_sym}")
     end
 
     def visual_hierarchy
