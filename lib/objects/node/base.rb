@@ -41,12 +41,7 @@ module Bcome::Node
       if ::Bcome::System::Local.instance.in_console_session?
         raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}"
       else
-        begin
-          raise NameError, "NameError (undefined local variable or method '#{method_sym}' for #{self.class}"
-        rescue NameError => e
-          puts e.message
-          puts e.backtrace.join("\n")
-        end
+        raise NameError, "NameError (undefined local variable or method '#{method_sym}' for #{self.class}"
       end
     end
 

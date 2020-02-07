@@ -13,14 +13,9 @@ module Bcome::Orchestration
     end
 
     def method_missing(method_sym, *arguments)
-      begin
-        ## A thread error deep in the bowels of IRB is not playing well with orchestration missing methods within the orchestration namespace. Until this can be resolved,
-        ## I've re-implemented it here.
-        raise NameError, "NameError (undefined local variable or method '#{method_sym}' for #{self.class}"
-      rescue StandardError => e
-        puts e.message
-        puts e.backtrace.join("\n")
-      end
+      ## A thread error deep in the bowels of IRB is not playing well with orchestration missing methods within the orchestration namespace. Until this can be resolved,
+      ## I've re-implemented it here.
+      raise NameError, "NameError (undefined local variable or method '#{method_sym}' for #{self.class}"
     end
 
   end
