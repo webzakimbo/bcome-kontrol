@@ -21,6 +21,7 @@ module Bcome::Node::Server::Dynamic
 
         params = {
           identifier: identifier,
+          description: "GCP server - #{identifier}",
           internal_ip_address: network_ip,
           public_ip_address: nat_ip,
           gcp_server: gcp_instance

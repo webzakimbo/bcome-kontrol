@@ -22,8 +22,11 @@ module Bcome::Node::Server
       super
       overridden_attributes = ::Bcome::Node::Factory.instance.machines_data_for_namespace(namespace.to_sym)
       overridden_attributes.each do |override_key, override_value|
-        instance_variable_name = "@#{override_key}"
-        instance_variable_set(instance_variable_name, override_value)
+        singleton_class.class_eval {
+          define_method(override_key) {
+            override_value
+          }
+        }
       end
     end
 

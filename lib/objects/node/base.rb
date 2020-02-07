@@ -52,7 +52,7 @@ module Bcome::Node
       elsif command = user_command_wrapper.command_for_console_command_name(method_sym)
         command.execute(self, arguments)
       else
-        super
+        raise NameError, "Missing method #{method_sym} for #{self.class}"
       end
     end
 
