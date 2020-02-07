@@ -37,6 +37,19 @@ module Bcome::Node
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
     end
 
+    def method_missing(method_sym, *arguments)
+      if ::Bcome::System::Local.instance.in_console_session?
+        raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}"
+      else
+        begin
+          raise NameError, "NameError (undefined local variable or method '#{method_sym}' for #{self.class}"
+        rescue NameError => e
+          puts e.message
+          puts e.backtrace.join("\n")
+        end
+      end
+    end
+
     def ssh_connect(params = {})
       ::Bcome::Ssh::Connector.connect(self, params)
     end
