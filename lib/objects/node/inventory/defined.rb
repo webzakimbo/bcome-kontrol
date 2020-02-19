@@ -8,10 +8,6 @@ module Bcome
 
         MACHINES_CACHE_PATH = 'machines-cache.yml'
 
-        def self.to_s
-          'inventory'
-        end
-
         attr_reader :dynamic_nodes_loaded
 
         def initialize(*params)

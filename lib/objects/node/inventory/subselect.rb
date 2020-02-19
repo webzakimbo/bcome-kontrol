@@ -46,10 +46,6 @@ module Bcome
           @views[:filters] || {}
         end
 
-        def self.to_s
-          'sub-inventory'
-        end
-
         def reload
           do_reload
         end

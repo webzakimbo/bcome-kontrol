@@ -8,6 +8,10 @@ module Bcome::Node
     include Bcome::Node::LocalMetaDataFactory
     include Bcome::Node::RegistryManagement
 
+    def inspect
+      "<##{self.class}: #{self.namespace} @network_driver=#{self.network_driver}>"
+    end
+
     def self.const_missing(constant)
       ## Hook for direct access to node level resources by constant name where
       ## cd ServerName should yield the same outcome as cd "ServerName"

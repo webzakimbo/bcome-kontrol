@@ -4,10 +4,6 @@ module Bcome
   module Node
     module Inventory
       class Merge < ::Bcome::Node::Inventory::Base
-        def self.to_s
-          'merged inventory'
-        end
-
         attr_reader :dynamic_nodes_loaded
 
         def initialize(*params)
