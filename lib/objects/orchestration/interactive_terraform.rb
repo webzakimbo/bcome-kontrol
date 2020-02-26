@@ -108,11 +108,11 @@ module Bcome::Orchestration
 
     # Formulate a terraform command
     def command(raw_command)
-      if raw_command == "init"
-        "cd #{path_to_env_config} ; terraform #{raw_command} #{backend_config_parameter_string}"
-      else
+      #if raw_command == "init"
+      #  "cd #{path_to_env_config} ; terraform #{raw_command} #{backend_config_parameter_string}"
+      #else
         "cd #{path_to_env_config} ; terraform #{raw_command} #{var_string}"
-      end
+      #end
     end
   end
 end
