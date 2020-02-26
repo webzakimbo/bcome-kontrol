@@ -22,20 +22,11 @@ module Bcome::Node
     end
 
     def terraform_data_for_namespace(namespace)
-      parser = Bcome::Terraform::Parser.new(namespace)
-      attributes = parser.attributes
-
+      # Radical departure II - all we care is the outputs. This will then work across any terraform backend, and any version
+      tf_state = ::Bcome::Terraform::Output.new(namespace)
       terraform_data = {}
-
-      if attributes&.keys&.any?
-        # Radical departure, this makes way more sense than previous:
-        # Make the entire state accessible
-        terraform_data['terraform_tf_state'] = parser.state.config
-        # And provide a convenience accessor for our outputs
-        terraform_data['terraform_outputs'] = parser.state.config['outputs']
-     end
-
-      terraform_data
+      terraform_data['terraform_outputs'] = tf_state.output
+      return terraform_data
     end
 
     def prompt_for_decryption_key
