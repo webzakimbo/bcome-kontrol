@@ -2,6 +2,13 @@
 
 module Bcome::Orchestration
   class InteractiveTerraform < Bcome::Orchestration::Base
+
+    ## Prototype interactive terraform shell embedded within bcome.
+
+    # * Provides access to the metadata framework, so that data may be shared between Orchestrative processes and Terraform
+    # * Transparent authorization, by passing in cloud authorisation details from the bcome session
+    # * Passes in SSH credentials directly, which can be used to bootstrap machines.
+
     QUIT = '\\q'
     COMMAND_PROMPT = "enter command or '#{QUIT}' to quit: " + 'terraform'.informational + "\s"
 
@@ -84,6 +91,16 @@ module Bcome::Orchestration
       @var_string ||= form_var_string
     end
 
+    def backend_config_parameter_string
+      ## Backend configs are loaded before Terraform Core which means that we cannot use variables directly in our backend config.
+      ## This is a pain as we'll have authorised with GCP via the console, and so all sesssion have an access token readily available.
+      ## This patch passes the access token directly to terraform as a parameter.
+
+      ## GCP only for now. Support for AWS may come later as needed/requested.
+      return "" unless @node.network_driver.is_a?(::Bcome::Driver::Gcp)
+      return "\s-backend-config \"access_token=#{@node.network_driver.network_credentials[:access_token]}\"\s"
+    end
+
     # Retrieve the path to the terraform configurations for this stack
     def path_to_env_config
       @path_to_env_config ||= "terraform/environments/#{@node.namespace.gsub(':', '_')}"
@@ -91,7 +108,11 @@ module Bcome::Orchestration
 
     # Formulate a terraform command
     def command(raw_command)
-      "cd #{path_to_env_config} ; terraform #{raw_command} #{var_string}"
+      if raw_command == "init"
+        "cd #{path_to_env_config} ; terraform #{raw_command} #{backend_config_parameter_string}"
+      else
+        "cd #{path_to_env_config} ; terraform #{raw_command} #{var_string}"
+      end
     end
   end
 end
