@@ -61,7 +61,7 @@ module ::Bcome::Ssh
           end
 
           channel.on_request('exit-signal') do |_ch, data|
-            command.exit_signal = data.read_long
+            command.exit_code = data.read_long
           end
         end
       end
