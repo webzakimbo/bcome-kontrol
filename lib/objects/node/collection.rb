@@ -2,10 +2,6 @@
 
 module Bcome::Node
   class Collection < ::Bcome::Node::Base
-    def self.to_s
-      'collection'
-    end
-
     def inventories
       inv = []
       @resources.active.each do |r|

@@ -2,7 +2,7 @@
 
 module Bcome::Registry::Command
   class Internal < Base
-    # In which the bcome context is an external (extended framework) call
+    # In which the bcome context is an internal (extended framework) call
 
     def execute(node, arguments)
       merged_arguments = process_arguments(arguments)

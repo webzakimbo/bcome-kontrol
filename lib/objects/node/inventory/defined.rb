@@ -8,10 +8,6 @@ module Bcome
 
         MACHINES_CACHE_PATH = 'machines-cache.yml'
 
-        def self.to_s
-          'inventory'
-        end
-
         attr_reader :dynamic_nodes_loaded
 
         def initialize(*params)
@@ -44,7 +40,7 @@ module Bcome
           cached_machines = raw_static_machines_from_cache
 
           if cached_machines&.any?
-            wrap_indicator type: :basic, title: 'Loading' + "\sCACHE".bc_blue.bold + "\s" + namespace.to_s.underline, completed_title: 'done' do
+            wrap_indicator type: :basic, title: 'Loading' + "\sCACHE".bc_blue.bold + "\s" + namespace.to_s.underline, completed_title: '' do
               cached_machines.each do |server_config|
                 resources << ::Bcome::Node::Server::Static.new(views: server_config, parent: self)
               end

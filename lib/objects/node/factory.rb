@@ -29,7 +29,7 @@ module Bcome::Node
     end
 
     def config_path
-      "#{CONFIG_PATH}/#{config_file_name}"
+      ENV['CONF'] || "#{CONFIG_PATH}/#{config_file_name}"
     end
 
     def machines_data_path
@@ -37,7 +37,7 @@ module Bcome::Node
     end
 
     def config_file_name
-      @config_file_name ||= ENV['CONF'] || DEFAULT_CONFIG_NAME
+      @config_file_name || DEFAULT_CONFIG_NAME
     end
 
     def create_tree(context_node, views)

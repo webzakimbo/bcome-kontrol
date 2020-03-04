@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 
 module Bcome::Node
   class Base
@@ -8,6 +7,10 @@ module Bcome::Node
     include Bcome::WorkspaceMenu
     include Bcome::Node::LocalMetaDataFactory
     include Bcome::Node::RegistryManagement
+
+    def inspect
+      "<##{self.class}: #{self.namespace} @network_driver=#{self.network_driver}>"
+    end
 
     def self.const_missing(constant)
       ## Hook for direct access to node level resources by constant name where
@@ -35,6 +38,26 @@ module Bcome::Node
       validate_attributes
 
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
+    end
+
+    def parent
+      @parent
+    end
+  
+    def views
+      @views
+    end
+
+    def method_missing(method_sym, *arguments)
+      raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym)
+
+      if resource_identifiers.include?(method_sym.to_s)
+        return method_sym.to_s
+      elsif command = user_command_wrapper.command_for_console_command_name(method_sym)
+        command.execute(self, arguments)
+      else
+        raise NameError, "Missing method #{method_sym} for #{self.class}"
+      end
     end
 
     def ssh_connect(params = {})
@@ -120,8 +143,8 @@ module Bcome::Node
 
     def validate_attributes
       validate_identifier
-      raise ::Bcome::Exception::MissingDescriptionOnView, @views.inspect if requires_description? && !@description
-      raise ::Bcome::Exception::MissingTypeOnView, @views.inspect if requires_type? && !@type
+      raise ::Bcome::Exception::MissingDescriptionOnView, views.inspect if requires_description? && !description
+      raise ::Bcome::Exception::MissingTypeOnView, views.inspect if requires_type? && !type
     end
 
     def validate_identifier
@@ -237,7 +260,7 @@ module Bcome::Node
     end
 
     def execute_local(command)
-      puts "(local) > #{command}"
+      puts "(local) > #{command}" unless ::Bcome::Orchestrator.instance.command_output_silenced?
       system(command)
       puts ''
     end
@@ -258,11 +281,25 @@ module Bcome::Node
 
     private
 
+    def singleton_class
+      class << self
+        self
+      end
+    end  
+
     def set_view_attributes
+      @identifier = @views[:identifier]
+
       @views.keys.sort.each do |view_attribute_key|
         next if view_attributes_to_skip_on_setup.include?(view_attribute_key)
 
-        instance_variable_set("@#{view_attribute_key}", @views[view_attribute_key])
+        next if view_attribute_key == :identifier
+
+        singleton_class.class_eval { 
+          define_method(view_attribute_key) {
+            @views[view_attribute_key]
+          }
+        } 
       end
     end
 

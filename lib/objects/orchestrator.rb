@@ -6,7 +6,17 @@ class ::Bcome::Orchestrator
   attr_reader :context
 
   def initialize
+    reset!
+  end
+
+  def reset!
     @silence = false
+    @tail_command_output = false
+    @multi_node = false
+  end
+
+  def is_multi_node?
+    @multi_node == true
   end
 
   def silence_command_output!
@@ -15,6 +25,15 @@ class ::Bcome::Orchestrator
 
   def command_output_silenced?
     @silence == true
+  end
+
+  def tail_all_command_output!(node)
+    @multi_node = (node.machines.size > 1) ? true : false
+    @tail_command_output = true
+  end
+
+  def tail_all_command_output?
+    @tail_command_output == true
   end
 
   def get(breadcrumb = nil)

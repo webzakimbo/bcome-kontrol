@@ -3,59 +3,18 @@
 
 require 'bcome'
 
-def clean_up
-  stop_loading_bars
-  close_connections
-end
-
-def close_connections
-  ::Bcome::Bootup.instance.close_ssh_connections
-  ::Bcome::Ssh::TunnelKeeper.instance.close_tunnels
-end
-
-def stop_loading_bars
-  ::Bcome::LoadingBar::PidBucket.instance.stop_all
-end
-
-def pack_metadata?
-  ARGV[0] == 'pack_metadata'
-end
-
-def unpack_metadata?
-  ARGV[0] == 'unpack_metadata'
-end
+breadcrumbs = ARGV[0]
+arguments = ARGV - [ARGV[0]]
+handler = ::Bcome::Startup.new(breadcrumbs, arguments)
 
 trap('SIGINT') do
-  stop_loading_bars
+  handler.stop_loading_bars
 end
 
 trap('INT') do
-  stop_loading_bars
+  handler.stop_loading_bars
 end
 
 Thread.report_on_exception = false
 
-begin
-  spawn_into_console = true
-  arguments = ARGV - [ARGV[0]]
-
-  if pack_metadata?
-    ::Bcome::Encryptor.instance.pack
-    exit
-  elsif unpack_metadata?
-    ::Bcome::Encryptor.instance.unpack
-    exit
-  end
-
-  ::Bcome::Bootup.set_and_do({ breadcrumbs: ARGV[0], arguments: arguments }, spawn_into_console)
-  clean_up
-rescue ::Bcome::Exception::Base => e
-  clean_up
-  puts e.pretty_display
-rescue Excon::Error::Socket => e
-  clean_up
-  puts "\nNo network access - please check your connection and try again\n".error
-rescue Exception => e
-  clean_up
-  raise e # We do need to see unexpected exceptions.
-end
+handler.do

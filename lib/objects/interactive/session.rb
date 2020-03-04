@@ -3,10 +3,12 @@
 module Bcome::Interactive
   class Session
     class << self
+
       def run(node, session_type, init_data = {})
         session_end_message = "\ninteractive session ended\n".informational
         begin
-          session = ::Bcome::Interactive::Session.new(node, session_type_to_klass[session_type], init_data)
+          session_klass = session_type.is_a?(Symbol) ? session_type_to_klass[session_type] : session_type
+          session = ::Bcome::Interactive::Session.new(node, session_klass, init_data)
           session.start
         rescue ::Bcome::Exception::InteractiveSessionHalt => e
           puts session_end_message
