@@ -257,7 +257,7 @@ module Bcome::Node::Server
     end
 
     def has_description?
-      !@description.nil?
+      !description.nil?
     end
 
     def static_server?

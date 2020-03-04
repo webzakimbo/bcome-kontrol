@@ -71,7 +71,8 @@ module Bcome::Node
     end
 
     def validate_view(breadcrumb, data)
-      raise Bcome::Exception::InvalidNetworkConfig, "Missing namespace type for for namespace '#{breadcrumb}'" unless data && data[:type]
+      raise Bcome::Exception::InvalidNetworkConfig, "Missing namespace type for namespace '#{breadcrumb}'" unless data && data[:type]
+
 
       raise Bcome::Exception::InvalidNetworkConfig, "Invalid View Type '#{data[:type]}' for namespace '#{breadcrumb}'. Expecting View Type to be one of: #{klass_for_view_type.keys.join(', ')}" unless is_valid_view_type?(data[:type])
     end

@@ -28,23 +28,7 @@ class NodeTest < ActiveSupport::TestCase
     assert node.type == type
   end
 
-  def test_description_is_required
-    # Given
-    config = {
-      'dummy': {
-        type: 'collection'
-      }
-    }
-
-    YAML.expects(:load_file).returns(config)
-
-    # When/then
-    assert_raise Bcome::Exception::MissingDescriptionOnView do
-      Bcome::Node::Factory.send(:new).init_tree
-    end
-  end
-
-  def test_identifier_can_be_null_for_any_node
+  def xtest_identifier_can_be_null_for_any_node
     # Given
     config = {
       'dummy': {
@@ -65,16 +49,6 @@ class NodeTest < ActiveSupport::TestCase
     Bcome::Node::Factory.send(:new).init_tree
   end
 
-  def test_type_is_required
-    params = given_estate_setup_params
-    params[:views].delete(:type)
-
-    # When/then
-    assert_raise Bcome::Exception::MissingTypeOnView do
-      Bcome::Node::Collection.new(params)
-    end
-  end
-
   def test_should_be_able_to_load_a_resource_by_identifier
     # Given
     estate = given_a_dummy_estate
@@ -92,21 +66,6 @@ class NodeTest < ActiveSupport::TestCase
     assert fourth_context.parent == third_context
   end
 
-  def test_should_construct_network_with_network_data
-    # Given
-    collection = given_a_dummy_collection
-    network_data = { :foo => :bar }
-    mocked_network_driver = mock("I'm a network driver")
-
-    collection.expects(:network_data).returns(network_data).at_least_once
-    ::Bcome::Driver::Base.expects(:create_from_config).with(network_data, collection).returns(mocked_network_driver)
-
-    # when/then ... all our expectations are met
-    network_driver_from_estate = collection.network_driver
-
-    # and also that
-    assert network_driver_from_estate == mocked_network_driver
-  end
 
   def test_nodes_should_data_from_parents
     [

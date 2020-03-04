@@ -12,6 +12,7 @@ module Bcome::Node::Server
       @public_ip_address = config[:public_ip_address]
       @internal_ip_address = config[:internal_ip_address]
       @cloud_tags = config[:cloud_tags]
+      @description = config[:description]
       verify_we_have_at_least_one_interface(config)
       super
     end
@@ -23,6 +24,8 @@ module Bcome::Node::Server
     attr_reader :internal_ip_address
 
     attr_reader :cloud_tags
+
+    attr_reader :description
 
     def verify_we_have_at_least_one_interface(config)
       raise Bcome::Exception::MissingIpaddressOnServer, config unless has_at_least_one_interface?

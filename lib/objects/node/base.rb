@@ -140,8 +140,8 @@ module Bcome::Node
 
     def validate_attributes
       validate_identifier
-      raise ::Bcome::Exception::MissingDescriptionOnView, views.inspect if requires_description? && !description
-      raise ::Bcome::Exception::MissingTypeOnView, views.inspect if requires_type? && !type
+      raise ::Bcome::Exception::MissingDescriptionOnView, views.inspect if requires_description? && !defined?(:description)
+      raise ::Bcome::Exception::MissingTypeOnView, views.inspect if requires_type? && !defined?(:type)
     end
 
     def validate_identifier
