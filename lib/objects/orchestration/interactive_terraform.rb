@@ -2,7 +2,6 @@
 
 module Bcome::Orchestration
   class InteractiveTerraform < Bcome::Orchestration::Base
-
     ## Prototype interactive terraform shell embedded within bcome.
 
     # * Provides access to the metadata framework, so that data may be shared between Orchestrative processes and Terraform
@@ -30,14 +29,11 @@ module Bcome::Orchestration
     # PROCESSING INTERACTIVE COMMANDS
     #
     def process_command(raw_command)
-
       if raw_command =~ /destroy/
         are_you_sure_message = "Are you SURE you want to 'destroy'? Make sure you know what will be destroyed before you continue. (y/n):".warning
         response = wait_for_input(are_you_sure_message)
-        while(!["y", "n"].include?(response)) do
-          response = wait_for_input(are_you_sure_message)          
-        end
-        return if response == "n"
+        response = wait_for_input(are_you_sure_message) until %w[y n].include?(response)
+        return if response == 'n'
       end
 
       full_command = command(raw_command)
@@ -97,8 +93,9 @@ module Bcome::Orchestration
       ## This patch passes the access token directly to terraform as a parameter.
 
       ## GCP only for now. Support for AWS may come later as needed/requested.
-      return "" unless @node.network_driver.is_a?(::Bcome::Driver::Gcp)
-      return "\s-backend-config \"access_token=#{@node.network_driver.network_credentials[:access_token]}\"\s"
+      return '' unless @node.network_driver.is_a?(::Bcome::Driver::Gcp)
+
+      "\s-backend-config \"access_token=#{@node.network_driver.network_credentials[:access_token]}\"\s"
     end
 
     # Retrieve the path to the terraform configurations for this stack
@@ -108,11 +105,11 @@ module Bcome::Orchestration
 
     # Formulate a terraform command
     def command(raw_command)
-      #if raw_command == "init"
+      # if raw_command == "init"
       #  "cd #{path_to_env_config} ; terraform #{raw_command} #{backend_config_parameter_string}"
-      #else
-        "cd #{path_to_env_config} ; terraform #{raw_command} #{var_string}"
-      #end
+      # else
+      "cd #{path_to_env_config} ; terraform #{raw_command} #{var_string}"
+      # end
     end
   end
 end

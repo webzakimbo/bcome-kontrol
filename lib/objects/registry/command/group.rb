@@ -66,7 +66,7 @@ module Bcome::Registry::Command
           puts tab_spacing + ("\s" * menu_item_spacing_length) + 'usage: '.instructional + usage_string
 
           if defaults.keys.any?
-            defaults_usage = in_console_session? ? "\s#{defaults.collect { |key, _value| "\"#{key}=your-value\"" }.join(",\s") }" : "\s" + defaults.collect { |key, _value| "#{key}=your-value" }.join("\s")
+            defaults_usage = in_console_session? ? "\s#{defaults.collect { |key, _value| "\"#{key}=your-value\"" }.join(",\s")}" : "\s" + defaults.collect { |key, _value| "#{key}=your-value" }.join("\s")
             puts tab_spacing + ("\s" * menu_item_spacing_length) + "defaults:\s".instructional + defaults.collect { |k, v| "#{k}=#{v}" }.join(', ')
             puts tab_spacing + ("\s" * menu_item_spacing_length) + "override:\s".instructional + usage_string + defaults_usage
           end
