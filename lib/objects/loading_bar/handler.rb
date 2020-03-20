@@ -20,9 +20,9 @@ module Bcome
       def wrap_indicator(config, &block)
         begin
           start_indicator(config)
-          cursor.invisible {
+          cursor.invisible do
             block.call
-          }
+          end
         rescue IRB::Abort
           stop_indicator
           raise ::Bcome::Exception::Generic, 'Interrupt'

@@ -37,9 +37,7 @@ module ::Bcome::Ssh
         output_append(command.output.to_s)
       end
 
-      unless ::Bcome::Orchestrator.instance.command_output_silenced? || ::Bcome::Orchestrator.instance.tail_all_command_output?
-        print_output
-      end
+      print_output unless ::Bcome::Orchestrator.instance.command_output_silenced? || ::Bcome::Orchestrator.instance.tail_all_command_output?
     end
 
     def ssh_exec!(ssh, command) #  NON PTY (i.e no pseudo-terminal)

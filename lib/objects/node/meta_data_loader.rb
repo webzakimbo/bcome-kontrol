@@ -26,7 +26,7 @@ module Bcome::Node
       tf_state = ::Bcome::Terraform::Output.new(namespace)
       terraform_data = {}
       terraform_data['terraform_outputs'] = tf_state.output
-      return terraform_data
+      terraform_data
     end
 
     def prompt_for_decryption_key

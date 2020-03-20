@@ -10,9 +10,8 @@ module Bcome
         end
 
         def show(done = false)
-          begin
-            print "\r#{progress_prefix}#{done ? "\s#{@completed_title}\s" : ''}\s"
-          rescue ThreadError ; end
+          print "\r#{progress_prefix}#{done ? "\s#{@completed_title}\s" : ''}\s"
+        rescue ThreadError
         end
 
         def progress_prefix

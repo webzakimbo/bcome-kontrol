@@ -7,7 +7,7 @@ module Bcome
     end
 
     def self.release
-      '2.0.0'
+      '1.4.0'
     end
 
     def self.release_name

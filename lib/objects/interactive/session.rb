@@ -3,7 +3,6 @@
 module Bcome::Interactive
   class Session
     class << self
-
       def run(node, session_type, init_data = {})
         session_end_message = "\ninteractive session ended\n".informational
         begin

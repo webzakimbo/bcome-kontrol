@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 module Bcome::Node
   class Base
@@ -9,7 +10,7 @@ module Bcome::Node
     include Bcome::Node::RegistryManagement
 
     def inspect
-      "<##{self.class}: #{self.namespace} @network_driver=#{self.network_driver}>"
+      "<##{self.class}: #{namespace} @network_driver=#{network_driver}>"
     end
 
     def self.const_missing(constant)
@@ -40,19 +41,15 @@ module Bcome::Node
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
     end
 
-    def parent
-      @parent
-    end
-  
-    def views
-      @views
-    end
+    attr_reader :parent
+
+    attr_reader :views
 
     def method_missing(method_sym, *arguments)
       raise Bcome::Exception::Generic, "undefined method '#{method_sym}' for #{self.class}" unless method_is_available_on_node?(method_sym)
 
       if resource_identifiers.include?(method_sym.to_s)
-        return method_sym.to_s
+        method_sym.to_s
       elsif command = user_command_wrapper.command_for_console_command_name(method_sym)
         command.execute(self, arguments)
       else
@@ -143,8 +140,8 @@ module Bcome::Node
 
     def validate_attributes
       validate_identifier
-      raise ::Bcome::Exception::MissingDescriptionOnView, views.inspect if requires_description? && !description
-      raise ::Bcome::Exception::MissingTypeOnView, views.inspect if requires_type? && !type
+      raise ::Bcome::Exception::MissingDescriptionOnView, views.inspect if requires_description? && !defined?(:description)
+      raise ::Bcome::Exception::MissingTypeOnView, views.inspect if requires_type? && !defined?(:type)
     end
 
     def validate_identifier
@@ -285,7 +282,7 @@ module Bcome::Node
       class << self
         self
       end
-    end  
+    end
 
     def set_view_attributes
       @identifier = @views[:identifier]
@@ -295,11 +292,11 @@ module Bcome::Node
 
         next if view_attribute_key == :identifier
 
-        singleton_class.class_eval { 
-          define_method(view_attribute_key) {
+        singleton_class.class_eval do
+          define_method(view_attribute_key) do
             @views[view_attribute_key]
-          }
-        } 
+          end
+        end
       end
     end
 

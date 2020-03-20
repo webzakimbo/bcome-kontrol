@@ -2,7 +2,6 @@
 
 module Bcome
   module WorkspaceCommands
-
     def ssh_connect(params = {})
       ::Bcome::Ssh::Connector.connect(self, params)
     end
@@ -29,7 +28,7 @@ module Bcome
         else
           puts "\tNo resources found".informational
         end
-  
+
         new_line
         nil
       end
@@ -111,6 +110,7 @@ module Bcome
       desc = ''
       list_attributes.each do |key, value|
         next unless respond_to?(value) || instance_variable_defined?("@#{value}")
+
         attribute_value = send(value)
         next unless attribute_value
 

@@ -28,7 +28,7 @@ class ::Bcome::Orchestrator
   end
 
   def tail_all_command_output!(node)
-    @multi_node = (node.machines.size > 1) ? true : false
+    @multi_node = node.machines.size > 1
     @tail_command_output = true
   end
 

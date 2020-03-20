@@ -22,11 +22,11 @@ module Bcome::Node::Server
       super
       overridden_attributes = ::Bcome::Node::Factory.instance.machines_data_for_namespace(namespace.to_sym)
       overridden_attributes.each do |override_key, override_value|
-        singleton_class.class_eval {
-          define_method(override_key) {
+        singleton_class.class_eval do
+          define_method(override_key) do
             override_value
-          }
-        }
+          end
+        end
       end
     end
 
@@ -192,7 +192,7 @@ module Bcome::Node::Server
           'ssh_config' => ssh_driver.pretty_ssh_config
         }
       }
-     
+
       result[namespace]['error'] = ping_result[:error].message if !ping_result[:success] && ping_result[:error]
       colour = ping_result[:success] ? :green : :red
 
@@ -201,9 +201,9 @@ module Bcome::Node::Server
 
     def add_list_attributes(attrs)
       @attribs = list_attributes.merge(attrs)
-    end 
+    end
 
-    def origin_namespace 
+    def origin_namespace
       parent.namespace
     end
 
@@ -257,7 +257,7 @@ module Bcome::Node::Server
     end
 
     def has_description?
-      !@description.nil?
+      !description.nil?
     end
 
     def static_server?

@@ -103,16 +103,15 @@ module Bcome::Interactive::SessionItem
     def execute_on_machines(user_input)
       machines.pmap do |machine|
         begin
-           machine.run(user_input)
+          machine.run(user_input)
         rescue IOError => e
           puts "Reopening connection to\s".informational + machine.identifier
           machine.reopen_ssh_connection
           machine.run(user_input)
         rescue Exception => e
-          puts "Error connecting to #{machine.identifier} (#{e.message})".error 
+          puts "Error connecting to #{machine.identifier} (#{e.message})".error
         end
       end
     end
-
   end
 end

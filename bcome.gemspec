@@ -32,5 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'rainbow', '~> 2.2'
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'tty-cursor', '0.2.0'
-  spec.post_install_message = "\nWe'd love your feedback about this Gem: \nHow can we improve?  Email guillaume@webzakimbo.com"
+  spec.add_dependency 'pry', '0.12.2'
+  spec.post_install_message = "\nWe'd love your feedback about this tool: \nHow can we improve?  Email guillaume@webzakimbo.com"
 end

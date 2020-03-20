@@ -5,7 +5,7 @@ module Bcome::Node::Attributes
 
   def identifier
     @identifier
-  end  
+  end
 
   def ssh_driver
     @ssh_driver ||= ::Bcome::Ssh::Driver.new(ssh_data, self)

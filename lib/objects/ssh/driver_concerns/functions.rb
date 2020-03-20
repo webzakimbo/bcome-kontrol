@@ -22,7 +22,7 @@ module ::Bcome::Ssh
         tunnel = ::Bcome::Ssh::Tunnel::LocalPortForward.new(tunnel_command)
         ::Bcome::Ssh::TunnelKeeper.instance << tunnel
         tunnel.open!
-        return tunnel
+        tunnel
       else
         puts "\n\nOpening ssh tunnel".informational + "\slocalhost:#{start_port} ~> #{@context_node.namespace}:#{end_port}"
         puts "\nTo use, navigate to another terminal window or application."
