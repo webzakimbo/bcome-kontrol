@@ -5,11 +5,8 @@ require 'google/api_client/auth/storages/file_store'
 require 'google/api_client/client_secrets'
 
 module Bcome::Driver::Gcp::Authentication
-  class Oauth
+  class Oauth < Base
     credential_directory = '.gauth'
-    credential_file_suffix = 'oauth2.json'
-
-    include ::Bcome::LoadingBar::Handler
 
     def initialize(driver, service, scopes, node, path_to_secrets)
       @service = service
@@ -30,20 +27,8 @@ module Bcome::Driver::Gcp::Authentication
       @storage ||= ::Google::APIClient::Storage.new(Google::APIClient::FileStore.new(full_path_to_credential_file))
     end
 
-    def credential_directory
-      '.gauth'
-    end
-
     def credential_file_suffix
       'oauth2.json'
-    end
-
-    def full_path_to_credential_file
-      "#{credential_directory}/#{credential_file}"
-    end
-
-    def credential_file
-      "#{@node.keyed_namespace}:#{credential_file_suffix}"
     end
 
     def authorize!
@@ -58,10 +43,6 @@ module Bcome::Driver::Gcp::Authentication
       ::Google::APIClient::ClientSecrets.load(@path_to_secrets)
     rescue Exception => e
       raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
-    end
-
-    def loader_title
-      'Authenticating' + "\s#{@driver.pretty_provider_name.bc_blue.bold}\s#{@driver.pretty_resource_location.underline}".bc_green
     end
 
     def do!
@@ -94,8 +75,5 @@ module Bcome::Driver::Gcp::Authentication
       print "[\s" + "Credentials file written to\s" + full_path_to_credential_file + "\s]" + "\n"
     end
 
-    def ensure_credential_directory
-      `mkdir -p #{credential_directory}`
-    end
   end
 end

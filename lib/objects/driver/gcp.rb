@@ -77,8 +77,8 @@ module Bcome::Driver
     def auth_schemes
       {
         oauth: ::Bcome::Driver::Gcp::Authentication::Oauth,
-        serviceaccount: ::Bcome::Driver::Gcp::Authentication::ServiceAccount,
-        api_key: ::Bcome::Driver::Gcp::Authentication::ApiKey
+        service_account: ::Bcome::Driver::Gcp::Authentication::ServiceAccount
+        #api_key: ::Bcome::Driver::Gcp::Authentication::ApiKey
       }
     end
 
@@ -94,7 +94,19 @@ module Bcome::Driver
     def authentication_scheme
       # Service scopes are specified directly from the network config
       # A minumum scope of https://www.googleapis.com/auth/compute.readonly is required in order to list resources.
-      @authentication_scheme ||= auth_scheme.new(self, compute_service, service_scopes, @node, @params[:secrets_path])
+
+      auth_scheme_key = @params[:authentication_scheme].to_sym
+      auth_scheme = auth_schemes[auth_scheme_key]
+      raise ::Bcome::Exception::InvalidGcpAuthenticationScheme, "Invalid GCP authentication scheme '#{auth_scheme_key}' for node #{@node.namespace}" unless auth_scheme
+
+      case auth_scheme_key
+      when :oauth
+        @authentication_scheme ||= auth_scheme.new(self, compute_service, service_scopes, @node, @params[:secrets_path])  
+      when :service_account
+        @authentication_scheme ||= auth_scheme.new(compute_service, service_scopes, @node, self)
+      else
+        raise ::Bcome::Exception::InvalidGcpAuthenticationScheme, "Invalid GCP authentication scheme '#{auth_scheme_key}' for node #{@node.namespace}"
+      end
     end
 
     def gcp_service
