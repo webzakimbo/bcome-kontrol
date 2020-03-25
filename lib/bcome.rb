@@ -8,6 +8,8 @@ require 'singleton'
 require 'require_all'
 require 'tty-cursor'
 require 'pry'
+require 'rbnacl'
+require 'bcrypt_pbkdf'
 
 require_all "#{File.dirname(__FILE__)}/../patches"
 require_all "#{File.dirname(__FILE__)}/../lib/objects"
