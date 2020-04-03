@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    bcome (2.0.0)
+    bcome (1.4.0)
       activesupport (= 5.2.3)
       awesome_print (= 1.8.0)
       fog-aws (~> 0.12.0)
