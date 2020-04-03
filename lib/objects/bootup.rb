@@ -30,6 +30,9 @@ module Bcome
     def init_context(context)
       if @spawn_into_console
         puts "\n\n"
+        puts "Welcome to bcome v#{::Bcome::Version.release}".bc_yellow
+        puts "\nType\s" + "menu".underline + "\sfor a command list."
+        puts "\n"
         ::Bcome::Workspace.instance.set(context: context)
       else
         context
