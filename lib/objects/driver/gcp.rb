@@ -39,7 +39,9 @@ module Bcome::Driver
     end
 
     def do_fetch_server_list(_filters)
-      gcp_service.list_instances(@params[:project], @params[:zone])
+      list_filter = @params[:list_filter] ? @params[:list_filter] : ""
+
+      gcp_service.list_instances(@params[:project], @params[:zone], filter: list_filter)
     rescue Google::Apis::AuthorizationError
       raise ::Bcome::Exception::CannotAuthenticateToGcp
     rescue Google::Apis::ClientError => e
