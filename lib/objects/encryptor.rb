@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'diffy'
+
 module Bcome
   class Encryptor
     UNENC_SIGNIFIER = ''
@@ -47,9 +49,66 @@ module Bcome
     end
 
     def unpack
+       diff
+#      prompt_for_key
+#      toggle_packed_files(all_encrypted_filenames, :decrypt)
+#      nil
+    end
+
+
+    ##---
+
+    def decrypt_file_data(filename)
+      raw_contents = File.read(filename)
+      return raw_contents.send(:decrypt, @key)
+    end
+
+    def enc_file_diff(filename)
+      # Get decrypted file data
+      decrypted_data_for_filename = decrypt_file_data(filename)
+
+      # Get unpacked file data
+      opposing_filename = opposing_file_for_filename(filename)
+      unpacked_file_data = File.read(opposing_filename)
+
+      # there are no differences
+      return nil if decrypted_data_for_filename.eql?(unpacked_file_data)
+  
+      # return the left and right diffs 
+      all_diffs = file_diffs(decrypted_data_for_filename, unpacked_file_data, :left) + file_diffs(decrypted_data_for_filename, unpacked_file_data, :right)
+      
+      return all_diffs.collect{|line|   
+        line =~ /^\+(.+)$/ ? line.bc_green : line.bc_red
+      }.join("\n")
+    end
+
+    def opposing_file_for_filename(filename)
+      filename =~ %r{#{path_to_metadata}/(.+)\.enc}
+      return "#{path_to_metadata}/#{Regexp.last_match(1)}" 
+    end
+
+    def left_diffs(file_one, file_two)
+      file_diffs(file_one, file_two, :left)
+    end
+
+    def right_diffs(file_one, file_two)
+      file_diffs(file_one, file_two, :right)
+    end
+
+    def file_diffs(file_one, file_two, method)
+      all_lines = ::Diffy::SplitDiff.new(file_one, file_two).send(method).split("\n")
+      diffed_lines = all_lines.select{|line| line =~ /^[+-](.+)$/}
+      return diffed_lines
+    end
+
+    def diff
       prompt_for_key
-      toggle_packed_files(all_encrypted_filenames, :decrypt)
-      nil
+      all_encrypted_filenames.each do |filename|
+        if diffs = enc_file_diff(filename)
+          puts "\n+/- diff\s".warning + filename + "\shas differences that would overwrite changes in your local unpacked version\n\n"
+          puts diffs
+        end   
+      end
     end
 
     def toggle_packed_files(filenames, packer_method)
