@@ -44,11 +44,12 @@ module Bcome
     end
 
     def tree
-      puts "\nTree view\n".title
+      view_str = "\n\nTree view\n".title
       tab = ''
-      print_tree_view_for_resource(tab, self)
-      list_in_tree("#{tab}\t", resources)
-      print "\n"
+      view_str += print_tree_view_for_resource(tab, self)
+      view_str += list_in_tree("#{tab}\t", resources)
+      view_str += "\n\n"
+      print view_str
     end
 
     def parents
@@ -58,21 +59,23 @@ module Bcome
     end
 
     def list_in_tree(tab, resources)
+      view_str = ""
       resources.sort_by(&:identifier).each do |resource|
         next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
         next if resource.hide?
 
         resource.load_nodes if resource.inventory? && !resource.nodes_loaded?
-        print_tree_view_for_resource(tab, resource)
-        list_in_tree("#{tab}\t", resource.resources)
+        view_str += print_tree_view_for_resource(tab, resource)
+        view_str += list_in_tree("#{tab}\t", resource.resources)
       end
+      return view_str
     end
 
     def print_tree_view_for_resource(tab, resource)
       separator = '-'
       tree_item = tab.to_s + separator.resource_key + " #{resource.type.resource_key} \s#{resource.identifier.resource_value}"
       tree_item += ' (empty set)' if !resource.server? && !resource.resources.has_active_nodes?
-      puts tree_item
+      return "\n" + tree_item
     end
 
     def cd(identifier)
