@@ -11,6 +11,11 @@ module Bcome::Orchestration
     QUIT = '\\q'
     COMMAND_PROMPT = "enter command or '#{QUIT}' to quit: " + 'terraform'.informational + "\s"
 
+    def initialize(*params)
+      super
+      raise ::Bcome::Exception::Generic, "Missing terraform configuration directory #{path_to_env_config}" unless File.exist?(path_to_env_config)
+    end 
+
     def execute
       show_intro_text
       wait_for_command_input
@@ -78,7 +83,7 @@ module Bcome::Orchestration
       end
 
       all_vars[:ssh_user] = @node.ssh_driver.user
-      all_vars[:ssh_key_path] = @node.ssh_driver.ssh_keys.first
+      all_vars[:ssh_key_path] = @node.ssh_driver.ssh_keys.first if @node.ssh_driver.ssh_keys
 
       all_vars.collect { |key, value| "-var #{key}=\"#{value}\"" }.join("\s")
     end
@@ -105,11 +110,7 @@ module Bcome::Orchestration
 
     # Formulate a terraform command
     def command(raw_command)
-      # if raw_command == "init"
-      #  "cd #{path_to_env_config} ; terraform #{raw_command} #{backend_config_parameter_string}"
-      # else
       "cd #{path_to_env_config} ; terraform #{raw_command} #{var_string}"
-      # end
     end
   end
 end
