@@ -28,7 +28,7 @@ class String
     crypt
   rescue Exception
     ::Bcome::Node::MetaDataLoader.instance.decryption_key = nil
-    raise ::Bcome::Exception::InvalidMetaDataEncryptionKey
+    raise ::Bcome::Exception::InvalidMetaDataEncryptionKey.new
   end
 
   def as_256_bit_key

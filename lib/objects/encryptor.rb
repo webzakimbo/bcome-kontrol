@@ -30,7 +30,7 @@ module Bcome
       puts "\n"
       print 'Please enter an encryption key (and if your data is already encrypted, you must provide the same key): '.informational
       @key = STDIN.noecho(&:gets).chomp
-      puts "\n"
+      #puts "\n"
     end
 
     def prompt_to_overwrite
@@ -160,6 +160,7 @@ module Bcome
 
         # Write encrypted/decryption action
         enc_decrypt_result = raw_contents.send(packer_method, @key)
+        print "\n\n"
         puts "#{action}\s".informational + filename + "\sto\s".informational + "#{path_to_metadata}/" + opposing_filename
         write_file(opposing_filename, enc_decrypt_result)
       end

@@ -8,17 +8,21 @@ module Bcome
     end
 
     def do
-      case @breadcrumbs
-      when '-v', '--version', '--v'
-        puts ::Bcome::Version.display
-      when 'pack_metadata'
-        ::Bcome::Encryptor.instance.pack
-      when 'unpack_metadata'
-        ::Bcome::Encryptor.instance.unpack
-      when 'diff_metadata'
-        ::Bcome::Encryptor.instance.diff
-      else
-        bootup
+      begin
+        case @breadcrumbs
+        when '-v', '--version', '--v'
+          puts ::Bcome::Version.display
+        when 'pack_metadata'
+          ::Bcome::Encryptor.instance.pack
+        when 'unpack_metadata'
+          ::Bcome::Encryptor.instance.unpack
+        when 'diff_metadata'
+          ::Bcome::Encryptor.instance.diff
+        else
+          bootup
+        end
+      rescue Bcome::Exception::Base => e
+        print e.pretty_display
       end
     end
 
