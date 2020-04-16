@@ -22,8 +22,18 @@ class ::Bcome::Workspace
 
     @context.irb_workspace = main_context.workspace if main_context
     @context.previous_irb_workspace = params[:current_context] if params[:current_context]
+
+    show_welcome if params[:show_welcome]
+
     spawn_into_console_for_context
     nil
+  end
+
+  def show_welcome
+    puts "\n\n"
+    puts "Welcome to bcome v#{::Bcome::Version.release}".bc_yellow
+    puts "\nType\s" + "menu".underline + "\sfor a command list."
+    puts "\n\n"
   end
 
   def console_set!
