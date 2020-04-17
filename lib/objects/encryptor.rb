@@ -98,7 +98,7 @@ module Bcome
       return nil if diffed_lines.empty?
 
       return diffed_lines.collect{|line|
-        line =~ /^\[0-9]+:\s+(.+)$/ ? line.bc_green : line.bc_red
+        line =~ /^[0-9]+:\s\+(.+)$/ ? line.bc_green : line.bc_red
       }.join("\n")
     end
 
