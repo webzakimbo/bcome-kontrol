@@ -80,15 +80,8 @@ module Bcome
 
       # there are no differences
       return nil if decrypted_data_for_filename.eql?(unpacked_file_data)
-  
-      # return the left and right diffs 
-      all_diffs = file_diffs(unpacked_file_data, decrypted_data_for_filename, :left) + file_diffs(unpacked_file_data, decrypted_data_for_filename, :right)
-
-      return nil if all_diffs.empty?
  
-      return all_diffs.collect{|line|   
-        line =~ /^\+(.+)$/ ? line.bc_green : line.bc_red
-      }.join("\n")
+      return get_diffs(unpacked_file_data, decrypted_data_for_filename)
     end
 
     def opposing_file_for_filename(filename)
@@ -96,18 +89,17 @@ module Bcome
       return "#{path_to_metadata}/#{Regexp.last_match(1)}" 
     end
 
-    def left_diffs(file_one, file_two)
-      file_diffs(file_one, file_two, :left)
-    end
+    def get_diffs(file_one, file_two)
+      diffy = ::Diffy::SplitDiff.new(file_one, file_two)
+      left_diffs = diffy.left.split("\n").each_with_index.collect {|l,index| "#{index + 1}:\s#{l}" }
+      right_diffs = diffy.right.split("\n").each_with_index.collect {|l,index| "#{index + 1}:\s#{l}" }
 
-    def right_diffs(file_one, file_two)
-      file_diffs(file_one, file_two, :right)
-    end
+      diffed_lines = (left_diffs + right_diffs).select{|line| line =~ /^[0-9]+:\s[+-](.+)$/}
+      return nil if diffed_lines.empty?
 
-    def file_diffs(file_one, file_two, method)
-      all_lines = ::Diffy::SplitDiff.new(file_one, file_two).send(method).split("\n")
-      diffed_lines = all_lines.select{|line| line =~ /^[+-](.+)$/}
-      return diffed_lines
+      return diffed_lines.collect{|line|
+        line =~ /^\[0-9]+:\s+(.+)$/ ? line.bc_green : line.bc_red
+      }.join("\n")
     end
 
     def diff
