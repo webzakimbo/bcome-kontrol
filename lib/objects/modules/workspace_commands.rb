@@ -52,21 +52,33 @@ module Bcome
       print view_str
     end
 
+    def dr
+      view_str = "\n\nDeep Registry\n".title
+      tab = ''
+      view_str += print_registry_tree_view_for_resource(tab, self)
+      for_registry = true
+      view_str += list_in_tree("#{tab}\t", resources, for_registry)
+      view_str += "\n\n"
+      print view_str
+    end
+
     def parents
       ps = []
       ps << [parent, parent.parents] if has_parent?
       ps.flatten
     end
 
-    def list_in_tree(tab, resources)
+    def list_in_tree(tab, resources, registry = false)
       view_str = ""
       resources.sort_by(&:identifier).each do |resource|
         next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
         next if resource.hide?
-
         resource.load_nodes if resource.inventory? && !resource.nodes_loaded?
-        view_str += print_tree_view_for_resource(tab, resource)
-        view_str += list_in_tree("#{tab}\t", resource.resources)
+
+        tree_method = registry ? :print_registry_tree_view_for_resource : :print_tree_view_for_resource
+        view_str += send(tree_method, tab, resource)
+
+        view_str += list_in_tree("#{tab}\t", resource.resources, registry)
       end
       return view_str
     end
@@ -75,6 +87,12 @@ module Bcome
       separator = '-'
       tree_item = tab.to_s + separator.resource_key + " #{resource.type.resource_key} \s#{resource.identifier.resource_value}"
       tree_item += ' (empty set)' if !resource.server? && !resource.resources.has_active_nodes?
+      return "\n" + tree_item
+    end
+
+    def print_registry_tree_view_for_resource(tab, resource)
+      separator = '-'
+      tree_item = tab.to_s + separator.resource_key + "\s#{resource.identifier.resource_key} #{resource.pretty_list_for_node.resource_value}"
       return "\n" + tree_item
     end
 
