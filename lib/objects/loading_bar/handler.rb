@@ -72,7 +72,7 @@ module Bcome
 
       def signal_failure
         do_signal(::Bcome::LoadingBar::Indicator::Base::SIGNAL_FAILURE)
-        # Keeo parent indicator in sync (see #signal_stop)
+        # Keep parent indicator in sync (see #signal_stop)
         @indicator.increment_failure
       end
     end

@@ -22,8 +22,8 @@ module Bcome::Orchestration
     end
 
     def show_intro_text
-      puts "\n"
-      puts "INTERACTIVE TERRAFORM\n".underline
+      puts "\n\n"
+      puts "Interactive Terraform\n".underline 
       puts "Namespace:\s" + @node.namespace.to_s.informational
       puts "Configuration Path:\s" + "#{path_to_env_config}/*".informational
       puts "\nConfigured metadata:\s" + terraform_metadata.inspect.informational

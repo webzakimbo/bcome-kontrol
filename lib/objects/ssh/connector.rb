@@ -67,18 +67,19 @@ module Bcome
       def open_connections
         @servers_to_connect.pmap do |machine|
           begin
-           machine.open_ssh_connection(ping?)
-           if machine.has_ssh_connection?
-             @servers_to_connect -= [machine]
-             @connected_machines << machine
-             signal_success if show_progress?
-           else
-             signal_failure if show_progress?
-           end
+            machine.open_ssh_connection(ping?)
+
+            if machine.has_ssh_connection?
+              @servers_to_connect -= [machine]
+              @connected_machines << machine
+              signal_success if show_progress?
+            else
+              signal_failure if show_progress?
+            end
           rescue Errno::EPIPE, Bcome::Exception::CouldNotInitiateSshConnection, ::Bcome::Exception::InvalidProxyConfig => e
             signal_failure if show_progress?
             @connection_exceptions[machine] = e
-         end
+          end
         end
       end
 
