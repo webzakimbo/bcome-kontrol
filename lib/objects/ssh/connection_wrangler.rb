@@ -41,7 +41,7 @@ module Bcome::Ssh
     def get_ssh_command(config = {}, _proxy_only = false)
       cmd = has_hop? ? 'ssh -J' : 'ssh'
       cmd += "\s" + hops.collect(&:get_ssh_string).join(',') if has_hop?
-      cmd += "\s#{@ssh_driver.node_level_ssh_key_connection_string}\s#{@ssh_driver.user}@#{target_machine_ingress_ip}"
+      cmd += "\s#{@ssh_driver.user}@#{target_machine_ingress_ip}"
 
       config[:as_pseudo_tty] ? "#{cmd} -t" : cmd
     end
