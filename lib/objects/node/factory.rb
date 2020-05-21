@@ -134,7 +134,7 @@ module Bcome::Node
     end
 
     def local_data_path
-      "#{CONFIG_PATH}/#{LOCAL_OVERRIDE_CONFIG_NAME}"
+      ENV['ME'] || "#{CONFIG_PATH}/#{LOCAL_OVERRIDE_CONFIG_NAME}"
     end
 
     def load_local_data
