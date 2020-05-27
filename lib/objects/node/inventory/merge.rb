@@ -12,7 +12,11 @@ module Bcome
         end
 
         def nodes_loaded?
-          true
+          !contributing_inventories.collect(&:nodes_loaded?).include?(false)
+        end
+
+        def load_nodes
+          contributing_inventories.each(&:load_nodes)
         end
 
         def contributing_inventories

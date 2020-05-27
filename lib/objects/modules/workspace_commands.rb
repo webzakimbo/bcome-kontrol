@@ -47,7 +47,10 @@ module Bcome
       view_str = "\n\nTree view\n".title
       tab = ''
       view_str += print_tree_view_for_resource(tab, self)
-      view_str += list_in_tree("#{tab}\t", resources)
+
+      always_list = self.is_a?(Bcome::Node::Inventory::Merge) ? true : false
+
+      view_str += list_in_tree("#{tab}\t", resources, always_list)
       view_str += "\n\n"
       print view_str
     end
@@ -58,16 +61,24 @@ module Bcome
       ps.flatten
     end
 
-    def list_in_tree(tab, resources)
+    def list_in_tree(tab, resources, always_list = false)
       view_str = ""
+
       resources.sort_by(&:identifier).each do |resource|
-        next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
+
+        unless always_list
+          next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
+        end
+       
         next if resource.hide?
 
         resource.load_nodes if resource.inventory? && !resource.nodes_loaded?
+
         view_str += print_tree_view_for_resource(tab, resource)
-        view_str += list_in_tree("#{tab}\t", resource.resources)
+        always_list = true if resource.is_a?(Bcome::Node::Inventory::Merge)
+        view_str += list_in_tree("#{tab}\t", resource.resources, always_list)
       end
+      
       return view_str
     end
 
