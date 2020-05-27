@@ -35,7 +35,7 @@ module Bcome::Orchestration
     #
     def process_command(raw_command)
       if raw_command =~ /destroy/
-        are_you_sure_message = "Are you SURE you want to 'destroy'? Make sure you know what will be destroyed before you continue. (y/n):".warning
+        are_you_sure_message = "Are you SURE you want to 'destroy'? Make sure you know what will be destroyed before you continue. (y/n):\s".warning
         response = wait_for_input(are_you_sure_message)
         response = wait_for_input(are_you_sure_message) until %w[y n].include?(response)
         return if response == 'n'
