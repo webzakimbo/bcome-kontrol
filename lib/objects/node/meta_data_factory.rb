@@ -16,7 +16,7 @@ module Bcome::Node::LocalMetaDataFactory
   end
 
   def raw_metadata
-    has_parent? ? parent.raw_metadata.merge(metadata_for_namespace) : metadata_for_namespace
+    has_parent? ? parent.raw_metadata.deep_merge(metadata_for_namespace) : metadata_for_namespace
   end
 
   def metadata_for_namespace
