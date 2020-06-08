@@ -105,7 +105,7 @@ module Bcome::Driver
       when :oauth
         @authentication_scheme ||= auth_scheme.new(self, compute_service, service_scopes, @node, @params[:secrets_path])  
       when :service_account
-        @authentication_scheme ||= auth_scheme.new(compute_service, service_scopes, @node, self)
+        @authentication_scheme ||= auth_scheme.new(compute_service, service_scopes, @node, @params[:service_account_credentials_file], self)
       else
         raise ::Bcome::Exception::InvalidGcpAuthenticationScheme, "Invalid GCP authentication scheme '#{auth_scheme_key}' for node #{@node.namespace}"
       end
