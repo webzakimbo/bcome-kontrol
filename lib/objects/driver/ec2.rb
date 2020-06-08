@@ -4,11 +4,14 @@ require 'fog/aws'
 
 module Bcome::Driver
   class Ec2 < Bcome::Driver::Base
-    PATH_TO_FOG_CREDENTIALS = "#{ENV['HOME']}/.fog"
+
+    PATH_TO_FOG_CREDENTIALS = ".aws/keys"
 
     def initialize(*params)
       super
       raise Bcome::Exception::Ec2DriverMissingProvisioningRegion, params.inspect unless provisioning_region
+      raise ::Bcome::Exception::Ec2DriverMissingAuthorizationKeys, PATH_TO_FOG_CREDENTIALS unless File.exist?(PATH_TO_FOG_CREDENTIALS)
+      ENV["FOG_RC"] = PATH_TO_FOG_CREDENTIALS
     end
 
     def pretty_provider_name
@@ -72,6 +75,7 @@ module Bcome::Driver
 
     def get_fog_client
       ::Fog.credential = credentials_key
+
       client = ::Fog::Compute.new(
         provider: 'AWS',
         region: provisioning_region
