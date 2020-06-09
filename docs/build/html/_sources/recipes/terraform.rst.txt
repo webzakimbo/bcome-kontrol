@@ -1,6 +1,0 @@
-*********
-Terraform
-*********
-.. contents:: contents
-
-
