@@ -103,12 +103,6 @@ module Bcome::Node
       machines_data[namespace] || {}
     end
 
-    def rewrite_estate_config(data)
-      File.open(config_path, 'w') do |file|
-        file.write data.to_yaml
-      end
-    end
-
     def load_estate_config
       config = YAML.load_file(config_path).deep_symbolize_keys
       config.deep_merge(local_data)

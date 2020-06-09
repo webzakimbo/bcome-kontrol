@@ -13,7 +13,7 @@ module Bcome::Node
     end
 
     def write_to_in_memory_cache!(nodes)
-      @inventory_node.views[:load_machines_from_cache] = true
+      #@inventory_node.views[:load_machines_from_cache] = true
       static_server_data = dynamic_nodes_to_cache_hash(nodes)
       @inventory_node.views[:static_servers] = static_server_data
       nil

@@ -116,9 +116,9 @@ module Bcome
           usage: 'cd identifier',
           console_only: true
         },
-        save: {
-          description: 'Save the current tree state',
-          console_only: true
+        cache: {
+          description: 'Cache the current tree state',
+          console_only: false
         },
         meta: {
           description: 'Print out all metadata related to this node'

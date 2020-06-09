@@ -6,7 +6,7 @@ module Bcome
       class Defined < ::Bcome::Node::Inventory::Base
         include ::Bcome::LoadingBar::Handler
 
-        MACHINES_CACHE_PATH = 'machines-cache.yml'
+        MACHINES_CACHE_PATH = 'static-cache.yml'
 
         attr_reader :dynamic_nodes_loaded
 
@@ -17,14 +17,14 @@ module Bcome
         end
 
         def enabled_menu_items
-          super + %i[save reload]
+          super + %i[cache reload]
         end
 
         def menu_items
           base_items = super.dup
 
           base_items[:reload] = {
-            description: "Restock this inventory from remote (hit 'save' after to persist)",
+            description: "Restock this inventory from remote (hit 'cache' after to persist)",
             console_only: true
           }
           base_items
@@ -40,7 +40,7 @@ module Bcome
           cached_machines = raw_static_machines_from_cache
 
           if cached_machines&.any?
-            wrap_indicator type: :basic, title: 'Loading' + "\sCACHE".bc_blue.bold + "\s" + namespace.to_s.underline, completed_title: '' do
+            wrap_indicator type: :basic, title: 'Loading' + "\sCACHE".bc_orange.bold + "\s" + namespace.to_s.underline, completed_title: '' do
               cached_machines.each do |server_config|
                 resources << ::Bcome::Node::Server::Static.new(views: server_config, parent: self)
               end
@@ -57,13 +57,7 @@ module Bcome
           "#{::Bcome::Node::Factory::CONFIG_PATH}/#{MACHINES_CACHE_PATH}"
         end
 
-        def mark_as_cached!
-          data = ::Bcome::Node::Factory.instance.load_estate_config
-          data[namespace.to_sym][:load_machines_from_cache] = true
-          ::Bcome::Node::Factory.instance.rewrite_estate_config(data)
-        end
-
-        def save
+        def cache
           @answer = ::Bcome::Interactive::Session.run(self,
                                                       :capture_input, terminal_prompt: 'Are you sure you want to cache these machines (saving will overwrite any previous selections) [Y|N] ? ')
 
@@ -79,8 +73,7 @@ module Bcome
             File.open(machines_cache_path, 'w') do |file|
               file.write data.to_yaml
             end
-            mark_as_cached!
-            puts "\nMachines have been cached for node #{namespace}".informational
+            puts "\nMachines have been cached to #{machines_cache_path} for node #{namespace}".informational
           else
             puts 'Nothing saved'.warning
           end
@@ -106,7 +99,7 @@ module Bcome
 
         def load_nodes
           set_static_servers
-          load_dynamic_nodes unless @load_machines_from_cache
+          load_dynamic_nodes unless resources.any?
         end
 
         def load_dynamic_nodes
