@@ -83,8 +83,6 @@ module Bcome::Orchestration
       end
 
       all_vars[:ssh_user] = @node.ssh_driver.user
-      all_vars[:ssh_key_path] = @node.ssh_driver.ssh_keys.first if @node.ssh_driver.ssh_keys
-
       all_vars.collect { |key, value| "-var #{key}=\"#{value}\"" }.join("\s")
     end
 

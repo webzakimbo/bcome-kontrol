@@ -27,7 +27,6 @@ module Bcome::Ssh
     def pretty_ssh_config
       config = {
         user: user,
-        ssh_keys: ssh_keys,
         timeout: timeout_in_seconds
       }
 
@@ -46,18 +45,6 @@ module Bcome::Ssh
 
     def multi_hop_proxy_config
       @config[:multi_hop_proxy]
-    end
-
-    def node_level_ssh_key_connection_string
-      key_specified_at_node_level? ? "-i #{node_level_ssh_key}\s" : ''
-    end
-
-    def key_specified_at_node_level?
-      !node_level_ssh_key.nil?
-    end
-
-    def node_level_ssh_key
-      @config[:ssh_keys] ? @config[:ssh_keys].first : nil
     end
 
     def has_multi_hop_proxy?
