@@ -9,7 +9,12 @@ module Bcome::Node::Resources
     end
 
     def run_select
-      @inventory.contributing_inventories.each { |inventory| inventory.load_nodes unless inventory.nodes_loaded? }
+      @inventory.contributing_inventories.each { |inventory| 
+        raise ::Bcome::Exception::Generic, "#{inventory.namespace} is not an inventory, and cannot be merged."  unless inventory.is_a?(::Bcome::Node::Inventory::Base)
+   
+        inventory.load_nodes unless inventory.nodes_loaded? 
+      }
+
       @nodes = @inventory.contributing_inventories.collect { |inv| inv.resources.nodes }.flatten.collect(&:clone)
 
       @nodes.map do |node|
