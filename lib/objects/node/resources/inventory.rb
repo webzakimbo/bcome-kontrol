@@ -2,7 +2,18 @@
 
 module Bcome::Node::Resources
   class Inventory < Bcome::Node::Resources::Base
+
+    def initialize(inventory)
+      @inventory = inventory
+      super
+    end
+
     def <<(node)
+      if @inventory.override_server_identifier?
+        node.identifier =~ /#{@inventory.override_identifier}/
+        node.update_identifier(Regexp.last_match(1)) if Regexp.last_match(1)
+      end
+
       if existing_node = for_identifier(node.identifier)
         if existing_node.static_server? && node.dynamic_server?
           # We've got a duplicate, but we'll treat the remote node as authoritative

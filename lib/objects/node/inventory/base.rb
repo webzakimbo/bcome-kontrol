@@ -45,7 +45,7 @@ module Bcome
         end
 
         def resources
-          @resources ||= ::Bcome::Node::Resources::Inventory.new
+          @resources ||= ::Bcome::Node::Resources::Inventory.new(self)
         end
 
         def ssh(identifier = nil)
