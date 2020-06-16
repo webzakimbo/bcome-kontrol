@@ -67,7 +67,7 @@ module Bcome::Ssh
     end
 
     def get_host
-      raise Bcome::Exception::InvalidProxyConfig, 'Missing host id or namespace' unless @config[:host_id] || @config[:namespace]
+      raise Bcome::Exception::InvalidProxyConfig, 'Missing host id or namespace' unless @config[:node_identifier] || @config[:host_id] || @config[:namespace]
       raise Bcome::Exception::InvalidProxyConfig, 'Missing host lookup method' unless @config[:host_lookup]
 
       host_lookup_method = valid_host_lookups[@config[:host_lookup].to_sym]
@@ -83,7 +83,7 @@ module Bcome::Ssh
     end
 
     def get_host_by_inventory_node
-      identifier = @config[:host_id]
+      identifier = @config[:host_id] ? @config[:host_id] : @config[:node_identifier]
       resource = @context_node.recurse_resource_for_identifier(identifier)
       raise Bcome::Exception::CantFindProxyHostByIdentifier, identifier unless resource
       raise Bcome::Exception::ProxyHostNodeDoesNotHavePublicIp, identifier unless resource.public_ip_address
