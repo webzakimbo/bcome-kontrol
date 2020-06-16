@@ -42,8 +42,7 @@ module Bcome
         end
 
         def filters
-          # Flex point for filters, as obviously we need to support more than just ec2 filtering eventually
-          @views[:filters] || {}
+          @views[:sub_filter] || @views[:filters] || {}
         end
 
         def reload

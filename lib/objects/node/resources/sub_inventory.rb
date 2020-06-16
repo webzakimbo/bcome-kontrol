@@ -53,7 +53,7 @@ module Bcome::Node::Resources
     end
 
     def tag_filters
-      filters[:by_tag] || filters[:by_label] || {}
+      filters[:by_tag] || filters[:by_label] || filters
     end
 
     def parent_inventory
