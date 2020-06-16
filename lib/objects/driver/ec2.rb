@@ -26,7 +26,13 @@ module Bcome::Driver
       @fog_client ||= get_fog_client
     end
 
-    def fetch_server_list(filters)
+    def fetch_server_list(legacy_ec2_filters)
+
+      # Filters should be defined within a namespace's :network element. Pre 2.0 the expection for AWS was
+      # to define filters at the root level of the namespace. Here we move :filters into :network, yet retain
+      # ec2_filters at the root level for backwards compaibility with pre 2.0 versions. 
+      filters = config.has_key?(:filters) ? config[:filters] : legacy_ec2_filters
+
       wrap_indicator type: :basic, title: loader_title, completed_title: loader_completed_title do
         begin
           @servers = unfiltered_server_list.all(filters)
