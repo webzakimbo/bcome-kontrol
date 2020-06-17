@@ -7,13 +7,15 @@ module Bcome::Node::Server
     end
 
     def initialize(params)
-      config = params[:views]
-      @identifier = config[:identifier]
-      @public_ip_address = config[:public_ip_address]
-      @internal_ip_address = config[:internal_ip_address]
-      @cloud_tags = config[:cloud_tags]
-      @description = config[:description]
-      verify_we_have_at_least_one_interface(config)
+      @config = params[:views]
+
+      @identifier = @config[:identifier]
+      @public_ip_address = @config[:public_ip_address]
+      @internal_ip_address = @config[:internal_ip_address]
+      @cloud_tags = @config[:cloud_tags]
+      @description = @config[:description]
+      verify_we_have_at_least_one_interface
+      verify_identifier_and_description
       super
     end
 
@@ -27,8 +29,13 @@ module Bcome::Node::Server
 
     attr_reader :description
 
-    def verify_we_have_at_least_one_interface(config)
-      raise Bcome::Exception::MissingIpaddressOnServer, config unless has_at_least_one_interface?
+    def verify_we_have_at_least_one_interface
+      raise Bcome::Exception::MissingIpaddressOnServer, @config unless has_at_least_one_interface?
+    end
+
+    def verify_identifier_and_description
+      raise Bcome::Exception::Generic, "Your static server defined by #{@config} is missing a description" unless @description
+      raise Bcome::Exception::Generic, "Your static server defined by #{@config} is missing an identifier" unless @identifier
     end
 
     def has_at_least_one_interface?
