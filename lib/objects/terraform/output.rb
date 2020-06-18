@@ -26,9 +26,8 @@ module Bcome::Terraform
       # Until this feature is officially featured, failure to get terraform data will fail silently
       # One thing not decided upon yet is how to indicate that we wish to load terraform data or not.
       if get_output_result.failed?
-        if get_output_result.stderr =~ /HTTP response code 401/
-          raise "Received authorisation error retrieving metadata from Terraform outputs for namespace #{@namespace}. Command was '#{get_output_command}'. Are you authorised to access the TFstate?"
-        end
+        raise "Received authorisation error retrieving metadata from Terraform outputs for namespace #{@namespace}. Command was '#{get_output_command}'. Are you authorised to access the TFstate?" if get_output_result.stderr =~ /HTTP response code 401/
+
         return {}
       end
 

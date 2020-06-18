@@ -48,7 +48,7 @@ module Bcome
       tab = ''
       view_str += print_tree_view_for_resource(tab, self)
 
-      always_list = self.is_a?(Bcome::Node::Inventory::Merge) ? true : false
+      always_list = is_a?(Bcome::Node::Inventory::Merge) ? true : false
 
       view_str += list_in_tree("#{tab}\t", resources, always_list)
       view_str += "\n\n"
@@ -62,14 +62,13 @@ module Bcome
     end
 
     def list_in_tree(tab, resources, always_list = false)
-      view_str = ""
+      view_str = ''
 
       resources.sort_by(&:identifier).each do |resource|
-
         unless always_list
           next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
         end
-       
+
         next if resource.hide?
 
         resource.load_nodes if resource.inventory? && !resource.nodes_loaded?
@@ -78,15 +77,15 @@ module Bcome
         always_list = true if resource.is_a?(Bcome::Node::Inventory::Merge)
         view_str += list_in_tree("#{tab}\t", resource.resources, always_list)
       end
-      
-      return view_str
+
+      view_str
     end
 
     def print_tree_view_for_resource(tab, resource)
       separator = '-'
       tree_item = tab.to_s + separator.resource_key + " #{resource.type.resource_key} \s#{resource.identifier.resource_value}"
       tree_item += ' (empty set)' if !resource.server? && !resource.resources.has_active_nodes?
-      return "\n" + tree_item
+      "\n" + tree_item
     end
 
     def cd(identifier)

@@ -1,16 +1,16 @@
 # frozen_string_literal: true
+
 module Bcome::Driver::Gcp::Authentication
   class SignetServiceAccountClient < Signet::OAuth2::Client
-
     def initialize(scopes, service_account_json_path)
       @scopes = scopes
       @service_account_json_path = service_account_json_path
-      raise ::Bcome::Exception::GcpAuthServiceAccountMissingCredentials.new @service_account_json_path unless File.exist?(@service_account_json_path)
+      raise ::Bcome::Exception::GcpAuthServiceAccountMissingCredentials, @service_account_json_path unless File.exist?(@service_account_json_path)
     end
 
-    def fetch_access_token(options={})
+    def fetch_access_token(_options = {})
       token = authorizer.fetch_access_token!
-      return token
+      token
     end
 
     def authorize
@@ -23,6 +23,5 @@ module Bcome::Driver::Gcp::Authentication
         scope: @scopes
       )
     end
-
   end
 end

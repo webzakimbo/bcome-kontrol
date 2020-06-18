@@ -74,6 +74,5 @@ module Bcome::Driver::Gcp::Authentication
     def notify_success
       print "[\s" + "Credentials file written to\s" + full_path_to_credential_file + "\s]" + "\n"
     end
-
   end
 end

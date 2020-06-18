@@ -12,6 +12,7 @@ module ::Bcome::Ssh
       @connection = nil
       begin
         raise ::Bcome::Exception::InvalidProxyConfig, "missing target ip address for #{@context_node.identifier}. Perhaps you meant to configure a proxy?" unless node_host_or_ip
+
         @connection = ::Net::SSH.start(node_host_or_ip, user, net_ssh_params)
       rescue Net::SSH::AuthenticationFailed, Net::SSH::Proxy::ConnectError, Net::SSH::ConnectionTimeout => e
         raise Bcome::Exception::CouldNotInitiateSshConnection, @context_node.namespace + "\s-\s#{e.message}"

@@ -2,14 +2,13 @@
 
 module Bcome::Driver::Gcp::Authentication
   class Base
-
     include ::Bcome::LoadingBar::Handler
 
     ## Overrides
     def authorized?
-      raise "Should be overidden"
+      raise 'Should be overidden'
     end
- 
+
     ## Loading bar -
 
     def loader_title
@@ -33,6 +32,5 @@ module Bcome::Driver::Gcp::Authentication
     def ensure_credential_directory
       `mkdir -p #{credential_directory}`
     end
-
   end
 end

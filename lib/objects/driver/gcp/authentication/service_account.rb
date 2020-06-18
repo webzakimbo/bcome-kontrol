@@ -1,7 +1,7 @@
 # frozen_string_literal: true
+
 module Bcome::Driver::Gcp::Authentication
   class ServiceAccount < Base
-
     def initialize(service, scopes, node, credentials_file_name, driver)
       @service = service
       @scopes = scopes
@@ -15,11 +15,11 @@ module Bcome::Driver::Gcp::Authentication
     def do!
       @service.authorization = service_account
     end
- 
+
     def authorized?
       !@service.authorization.nil?
-    end 
- 
+    end
+
     def service_account
       @service_account ||= ::Bcome::Driver::Gcp::Authentication::SignetServiceAccountClient.new(@scopes, credentials_file_path)
     end
@@ -31,14 +31,14 @@ module Bcome::Driver::Gcp::Authentication
     def ensure_credentials_file
       return if has_namespaced_keyed_filename?
       raise ::Bcome::Exception::MissingGcpServiceAccountCredentialsFilename unless @credentials_file_name
-    end  
- 
+    end
+
     ## New implementation - we take a defined file name for the service account credentials
     ## Clean & may be re-used
     def defined_credentials_files
       "#{credential_directory}/#{@credentials_file_name}"
     end
- 
+
     def has_namespaced_keyed_filename?
       @has_namespaced_keyed_filename ||= File.exist?(namespaced_keyed_filename)
     end
@@ -58,6 +58,5 @@ module Bcome::Driver::Gcp::Authentication
       storage.authorize
       @service.authorization = storage.authorization
     end
- 
   end
 end

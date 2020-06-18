@@ -18,9 +18,7 @@ module Bcome::Ssh
       ).except!(:bastion_host_user, :fallback_bastion_host_user)
     end
 
-    def host
-      @host 
-    end
+    attr_reader :host
 
     def user
       @user ||= get_user
@@ -71,7 +69,7 @@ module Bcome::Ssh
       return @bcome_proxy_node.ssh_driver.user if @bcome_proxy_node
 
       # Otherwise, we'll fallback
-      return @config[:fallback_bastion_host_user]
+      @config[:fallback_bastion_host_user]
     end
 
     def set_host
@@ -90,7 +88,7 @@ module Bcome::Ssh
 
     # Older lookup - within same parent-child tree only. Retained for backwards compatibility
     def get_host_by_inventory_node
-      identifier = @config[:host_id] ? @config[:host_id] : @config[:node_identifier]
+      identifier = @config[:host_id] || @config[:node_identifier]
       @bcome_proxy_node = @context_node.recurse_resource_for_identifier(identifier)
       raise Bcome::Exception::CantFindProxyHostByIdentifier, identifier unless @bcome_proxy_node
       raise Bcome::Exception::ProxyHostNodeDoesNotHavePublicIp, identifier unless @bcome_proxy_node.public_ip_address

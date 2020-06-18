@@ -21,7 +21,7 @@ module Bcome::Node::Server
     end
 
     # Override a server's namespace parameters. Enabled features such as specific SSH config for a particular server, i.e. overidding that of it's parent
-    # inventory namespace.  
+    #  inventory namespace.
     def set_network_configuration_overrides
       overridden_attributes = ::Bcome::Node::Factory.instance.machines_data_for_namespace(namespace.to_sym)
       overridden_attributes.each do |override_key, override_value|

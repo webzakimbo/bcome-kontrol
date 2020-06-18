@@ -16,7 +16,6 @@ module Bcome
         end
 
         def load_nodes
-
           contributing_inventories.each do |inventory|
             inventory.load_nodes unless inventory.nodes_loaded?
           end

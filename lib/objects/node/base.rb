@@ -244,7 +244,7 @@ module Bcome::Node
 
     def close_ssh_connections
       # For every loaded server, we'll close any lingering ssh connection
-      if @resources && @resources.any?
+      if @resources&.any?
         resources.pmap do |resource|
           if resource.is_a?(::Bcome::Node::Server::Base)
             resource.close_ssh_connection

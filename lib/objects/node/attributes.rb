@@ -20,8 +20,8 @@ module Bcome::Node::Attributes
   end
 
   # From 2.0.0 onwards, filters can be loaded from the network block only. The older key, 'ec2_filters'
-  # is retained at this level for backwards compatibility.  
-  def filters 
+  #  is retained at this level for backwards compatibility.
+  def filters
     recurse_hash_data_for_instance_key(:ec2_filters, :filters)
   end
 

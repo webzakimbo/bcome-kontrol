@@ -39,16 +39,15 @@ module Bcome::Driver
     end
 
     def do_fetch_server_list(_filters)
-      # Network filter key now called :filter. retained :list_filter for backwards compatibility. 
+      # Network filter key now called :filter. retained :list_filter for backwards compatibility.
       # Fallback is ""
       filters = (
-        @params[:filters] ? @params[:filters] : ( 
-          @params[:list_filter] ? @params[:list_filter] : ""
+        @params[:filters] || (
+          @params[:list_filter] || ''
         )
       )
 
       gcp_service.list_instances(@params[:project], @params[:zone], filter: filters)
-
     rescue Google::Apis::AuthorizationError
       raise ::Bcome::Exception::CannotAuthenticateToGcp
     rescue Google::Apis::ClientError => e
@@ -87,7 +86,7 @@ module Bcome::Driver
       {
         oauth: ::Bcome::Driver::Gcp::Authentication::Oauth,
         service_account: ::Bcome::Driver::Gcp::Authentication::ServiceAccount
-        #api_key: ::Bcome::Driver::Gcp::Authentication::ApiKey
+        # api_key: ::Bcome::Driver::Gcp::Authentication::ApiKey
       }
     end
 
@@ -110,7 +109,7 @@ module Bcome::Driver
 
       case auth_scheme_key
       when :oauth
-        @authentication_scheme ||= auth_scheme.new(self, compute_service, service_scopes, @node, @params[:secrets_path])  
+        @authentication_scheme ||= auth_scheme.new(self, compute_service, service_scopes, @node, @params[:secrets_path])
       when :service_account
         @authentication_scheme ||= auth_scheme.new(compute_service, service_scopes, @node, @params[:service_account_credentials], self)
       else

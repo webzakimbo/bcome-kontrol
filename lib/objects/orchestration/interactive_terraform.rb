@@ -14,7 +14,7 @@ module Bcome::Orchestration
     def initialize(*params)
       super
       raise ::Bcome::Exception::Generic, "Missing terraform configuration directory #{path_to_env_config}" unless File.exist?(path_to_env_config)
-    end 
+    end
 
     def execute
       show_intro_text
@@ -23,7 +23,7 @@ module Bcome::Orchestration
 
     def show_intro_text
       puts "\n\n"
-      puts "Interactive Terraform\n".underline 
+      puts "Interactive Terraform\n".underline
       puts "Namespace:\s" + @node.namespace.to_s.informational
       puts "Configuration Path:\s" + "#{path_to_env_config}/*".informational
       puts "\nConfigured metadata:\s" + terraform_metadata.inspect.informational

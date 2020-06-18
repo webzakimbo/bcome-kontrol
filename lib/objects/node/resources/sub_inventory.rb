@@ -24,7 +24,7 @@ module Bcome::Node::Resources
 
       @nodes.collect do |node|
         new_node = node.dup_with_new_parent(inventory)
-        set_overrides(inventory, new_node)        
+        set_overrides(inventory, new_node)
 
         # Register the new node with the registry
         ::Bcome::Registry::Loader.instance.set_command_group_for_node(new_node)

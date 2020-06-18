@@ -2,7 +2,6 @@
 
 module Bcome::Node::Resources
   class Inventory < Bcome::Node::Resources::Base
-
     def initialize(inventory)
       @inventory = inventory
       super

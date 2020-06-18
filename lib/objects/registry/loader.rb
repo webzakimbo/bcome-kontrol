@@ -22,7 +22,7 @@ module Bcome::Registry
           if /^#{key}$/.match(node.keyed_namespace)
 
             next if commands.nil?
- 
+
             commands.each do |c|
               unless c[:console_command]
                 error_message = "Registry method is missing key 'console_command'."

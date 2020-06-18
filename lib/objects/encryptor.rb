@@ -7,7 +7,7 @@ module Bcome
     UNENC_SIGNIFIER = ''
     ENC_SIGNIFIER = 'enc'
     AFFIRMATIVE = 'yes'
- 
+
     include Singleton
 
     attr_reader :key
@@ -30,18 +30,18 @@ module Bcome
       puts "\n"
       print 'Please enter an encryption key (and if your data is already encrypted, you must provide the same key): '.informational
       @key = STDIN.noecho(&:gets).chomp
-      #puts "\n"
+      # puts "\n"
     end
 
     def prompt_to_overwrite
-      valid_answers = [AFFIRMATIVE, "no"]
+      valid_answers = [AFFIRMATIVE, 'no']
       puts "\n"
-      print "Do you want to continue with unpacking this file? Your local changes would be overwritten [#{valid_answers.join(",")}]\s"
+      print "Do you want to continue with unpacking this file? Your local changes would be overwritten [#{valid_answers.join(',')}]\s"
       answer = STDIN.gets.chomp
       prompt_to_overwrite unless valid_answers.include?(answer)
-      return answer
+      answer
     end
- 
+
     def has_encrypted_files?
       all_encrypted_filenames.any?
     end
@@ -66,7 +66,7 @@ module Bcome
 
     def decrypt_file_data(filename)
       raw_contents = File.read(filename)
-      return raw_contents.send(:decrypt, @key)
+      raw_contents.send(:decrypt, @key)
     end
 
     def enc_file_diff(filename)
@@ -76,30 +76,31 @@ module Bcome
       # Get unpacked file data
       opposing_filename = opposing_file_for_filename(filename)
       return nil unless File.exist?(opposing_filename)
+
       unpacked_file_data = File.read(opposing_filename)
 
       # there are no differences
       return nil if decrypted_data_for_filename.eql?(unpacked_file_data)
- 
-      return get_diffs(unpacked_file_data, decrypted_data_for_filename)
+
+      get_diffs(unpacked_file_data, decrypted_data_for_filename)
     end
 
     def opposing_file_for_filename(filename)
       filename =~ %r{#{path_to_metadata}/(.+)\.enc}
-      return "#{path_to_metadata}/#{Regexp.last_match(1)}" 
+      "#{path_to_metadata}/#{Regexp.last_match(1)}"
     end
 
     def get_diffs(file_one, file_two)
       diffy = ::Diffy::SplitDiff.new(file_one, file_two)
-      left_diffs = diffy.left.split("\n").each_with_index.collect {|l,index| "#{index + 1}:\s#{l}" }
-      right_diffs = diffy.right.split("\n").each_with_index.collect {|l,index| "#{index + 1}:\s#{l}" }
+      left_diffs = diffy.left.split("\n").each_with_index.collect { |l, index| "#{index + 1}:\s#{l}" }
+      right_diffs = diffy.right.split("\n").each_with_index.collect { |l, index| "#{index + 1}:\s#{l}" }
 
-      diffed_lines = (left_diffs + right_diffs).select{|line| line =~ /^[0-9]+:\s[+-](.+)$/}
+      diffed_lines = (left_diffs + right_diffs).select { |line| line =~ /^[0-9]+:\s[+-](.+)$/ }
       return nil if diffed_lines.empty?
 
-      return diffed_lines.collect{|line|
+      diffed_lines.collect do |line|
         line =~ /^[0-9]+:\s\+(.+)$/ ? line.bc_green : line.bc_red
-      }.join("\n")
+      end.join("\n")
     end
 
     def diff
@@ -112,11 +113,11 @@ module Bcome
             puts "\n[+/-]\s".warning + filename + "\sis different to your local unpacked version\n\n"
             puts diffs + "\n\n"
           else
-            puts "#{filename}".informational + "\s- no differences".bc_green
-          end 
+            puts filename.to_s.informational + "\s- no differences".bc_green
+          end
         else
-          puts "#{filename}".informational + "\s- new file".warning
-        end     
+          puts filename.to_s.informational + "\s- new file".warning
+        end
       end
       puts "\n"
     end
@@ -143,7 +144,7 @@ module Bcome
               next
             end
             puts "\n"
-          end  
+          end
         else
           filename =~ %r{#{path_to_metadata}/(.*)}
           opposing_filename = "#{Regexp.last_match(1)}.enc"

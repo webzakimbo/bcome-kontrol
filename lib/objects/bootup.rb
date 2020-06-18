@@ -44,14 +44,10 @@ module Bcome
 
         # Attempt to load our next context resource
 
-        if crumb == "first"
-          next_context = starting_context.resources.active.first
-        end
-    
-        unless next_context     
-          next_context = starting_context.resource_for_identifier(crumb)
-        end
- 
+        next_context = starting_context.resources.active.first if crumb == 'first'
+
+        next_context ||= starting_context.resource_for_identifier(crumb)
+
         # Our current breadcrumb is not a node, and so we'll attempt to invoke a method call on the previous
         # e.g. given resource:foo, then invoke 'foo' on 'resource'
         unless next_context

@@ -4,14 +4,14 @@ require 'fog/aws'
 
 module Bcome::Driver
   class Ec2 < Bcome::Driver::Base
-
-    PATH_TO_FOG_CREDENTIALS = ".aws/keys"
+    PATH_TO_FOG_CREDENTIALS = '.aws/keys'
 
     def initialize(*params)
       super
       raise Bcome::Exception::Ec2DriverMissingProvisioningRegion, params.inspect unless provisioning_region
       raise ::Bcome::Exception::Ec2DriverMissingAuthorizationKeys, PATH_TO_FOG_CREDENTIALS unless File.exist?(PATH_TO_FOG_CREDENTIALS)
-      ENV["FOG_RC"] = PATH_TO_FOG_CREDENTIALS
+
+      ENV['FOG_RC'] = PATH_TO_FOG_CREDENTIALS
     end
 
     def pretty_provider_name
@@ -27,11 +27,10 @@ module Bcome::Driver
     end
 
     def fetch_server_list(legacy_ec2_filters)
-
       # Filters should be defined within a namespace's :network element. Pre 2.0 the expection for AWS was
       # to define filters at the root level of the namespace. Here we move :filters into :network, yet retain
-      # ec2_filters at the root level for backwards compaibility with pre 2.0 versions. 
-      filters = config.has_key?(:filters) ? config[:filters] : legacy_ec2_filters
+      # ec2_filters at the root level for backwards compaibility with pre 2.0 versions.
+      filters = config.key?(:filters) ? config[:filters] : legacy_ec2_filters
 
       wrap_indicator type: :basic, title: loader_title, completed_title: loader_completed_title do
         begin

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Bcome
   module Exception
     class MissingGcpServiceAccountCredentialsFilename < ::Bcome::Exception::Base
