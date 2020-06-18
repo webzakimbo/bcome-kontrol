@@ -64,6 +64,8 @@ module Bcome
         end
 
         def load_parent_inventory
+          raise ::Bcome::Exception::Generic, "Missing 'subselect_from' attribute on inventory-subselect with config #{@views}" unless @views[:subselect_from]
+
           parent_crumb = @views[:subselect_from]
           parent = ::Bcome::Node::Factory.instance.bucket[parent_crumb]
           raise Bcome::Exception::CannotFindSubselectionParent, "for key '#{parent_crumb}'" unless parent
