@@ -8,7 +8,7 @@ module Bcome::Node
 
     CONFIG_PATH = 'bcome'
     DEFAULT_CONFIG_NAME = 'networks.yml'
-    SERVER_OVERRIDE_CONFIG_NAME = 'machines-data.yml'
+    SERVER_OVERRIDE_CONFIG_NAME = 'server-overrides.yml'
     LOCAL_OVERRIDE_CONFIG_NAME = 'me.yml'
 
     INVENTORY_KEY = 'inventory'
