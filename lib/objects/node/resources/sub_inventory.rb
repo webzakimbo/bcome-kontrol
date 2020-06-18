@@ -24,10 +24,7 @@ module Bcome::Node::Resources
 
       @nodes.collect do |node|
         new_node = node.dup_with_new_parent(inventory)
-        if inventory.override_server_identifier?
-          new_node.identifier =~ /#{inventory.override_identifier}/
-          new_node.update_identifier(Regexp.last_match(1)) if Regexp.last_match(1)
-        end
+        set_overrides(inventory, new_node)        
 
         # Register the new node with the registry
         ::Bcome::Registry::Loader.instance.set_command_group_for_node(new_node)

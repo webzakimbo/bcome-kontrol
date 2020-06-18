@@ -9,7 +9,6 @@ module Bcome::Node::Server::Dynamic
 
       def new_from_gcp_instance(gcp_instance, parent)
         identifier = gcp_instance.name
-        identifier = override_identifier(parent, identifier)
 
         ## For now we support only the first network interface
         first_interface = gcp_instance.network_interfaces.first

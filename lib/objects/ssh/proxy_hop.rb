@@ -8,17 +8,18 @@ module Bcome::Ssh
       @config = config
       @context_node = context_node
       @parent = parent
+      set_host
     end
 
     def proxy_details
       @config.merge(
         proxy_host: host,
         user: user
-      )
+      ).except!(:bastion_host_user, :fallback_bastion_host_user)
     end
 
     def host
-      @host ||= get_host
+      @host 
     end
 
     def user
@@ -63,39 +64,46 @@ module Bcome::Ssh
     end
 
     def get_user
-      @config[:bastion_host_user] || @config[:fallback_bastion_host_user]
+      # If an explicit user has been set for this hop, use it.
+      return @config[:bastion_host_user] if @config[:bastion_host_user]
+
+      # Otherwise, if our proxy hop is a defined bcome server, i.e. it exists in the network map, we can infer the user and so we'll use that.
+      return @bcome_proxy_node.ssh_driver.user if @bcome_proxy_node
+
+      # Otherwise, we'll fallback
+      return @config[:fallback_bastion_host_user]
     end
 
-    def get_host
+    def set_host
       raise Bcome::Exception::InvalidProxyConfig, 'Missing host id or namespace' unless @config[:node_identifier] || @config[:host_id] || @config[:namespace]
       raise Bcome::Exception::InvalidProxyConfig, 'Missing host lookup method' unless @config[:host_lookup]
 
       host_lookup_method = valid_host_lookups[@config[:host_lookup].to_sym]
       raise Bcome::Exception::InvalidProxyConfig, "#{@config[:host_lookup]} is not a valid host lookup method" unless host_lookup_method
 
-      h = send(host_lookup_method)
-
-      h
+      @host = send(host_lookup_method)
     end
 
     def get_host_or_ip_from_config
       @config[:host_id]
     end
 
+    # Older lookup - within same parent-child tree only. Retained for backwards compatibility
     def get_host_by_inventory_node
       identifier = @config[:host_id] ? @config[:host_id] : @config[:node_identifier]
-      resource = @context_node.recurse_resource_for_identifier(identifier)
-      raise Bcome::Exception::CantFindProxyHostByIdentifier, identifier unless resource
-      raise Bcome::Exception::ProxyHostNodeDoesNotHavePublicIp, identifier unless resource.public_ip_address
+      @bcome_proxy_node = @context_node.recurse_resource_for_identifier(identifier)
+      raise Bcome::Exception::CantFindProxyHostByIdentifier, identifier unless @bcome_proxy_node
+      raise Bcome::Exception::ProxyHostNodeDoesNotHavePublicIp, identifier unless @bcome_proxy_node.public_ip_address
 
-      resource.public_ip_address
+      @bcome_proxy_node.public_ip_address
     end
 
+    # Newer lookup - across entire network
     def get_host_by_namespace
-      node = ::Bcome::Orchestrator.instance.get(@config[:namespace])
-      raise Bcome::Exception::CantFindProxyHostByNamespace, @config[:namespace] unless node
+      @bcome_proxy_node = ::Bcome::Orchestrator.instance.get(@config[:namespace])
+      raise Bcome::Exception::CantFindProxyHostByNamespace, @config[:namespace] unless @bcome_proxy_node
 
-      node.public_ip_address
+      @bcome_proxy_node.public_ip_address
     end
   end
 end

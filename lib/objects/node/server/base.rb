@@ -16,10 +16,13 @@ module Bcome::Node::Server
       raise 'Should be overidden'
     end
 
-    # override a server namespace's parameters. This enables features such as specific SSH parameters for a specific server, e.g. my use case was a
-    # single debian box within an ubuntu network, where I needed to access the machine with the 'admin' rather 'ubuntu' username.
     def set_view_attributes
       super
+    end
+
+    # Override a server's namespace parameters. Enabled features such as specific SSH config for a particular server, i.e. overidding that of it's parent
+    # inventory namespace.  
+    def set_network_configuration_overrides
       overridden_attributes = ::Bcome::Node::Factory.instance.machines_data_for_namespace(namespace.to_sym)
       overridden_attributes.each do |override_key, override_value|
         singleton_class.class_eval do

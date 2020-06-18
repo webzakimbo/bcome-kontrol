@@ -9,7 +9,6 @@ module Bcome::Node::Server::Dynamic
 
       def new_from_fog_instance(fog_instance, parent)
         identifier = fog_instance.tags['Name']
-        identifier = override_identifier(parent, identifier)
 
         params = {
           identifier: identifier,

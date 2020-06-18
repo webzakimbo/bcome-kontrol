@@ -8,11 +8,20 @@ module Bcome::Node::Resources
       super
     end
 
-    def <<(node)
-      if @inventory.override_server_identifier?
-        node.identifier =~ /#{@inventory.override_identifier}/
+    def set_overrides(inventory, node)
+      override_server_identifier(inventory, node)
+      node.set_network_configuration_overrides
+    end
+
+    def override_server_identifier(inventory, node)
+      if inventory.override_server_identifier?
+        node.identifier =~ /#{inventory.override_identifier}/
         node.update_identifier(Regexp.last_match(1)) if Regexp.last_match(1)
       end
+    end
+
+    def <<(node)
+      set_overrides(@inventory, node)
 
       if existing_node = for_identifier(node.identifier)
         if existing_node.static_server? && node.dynamic_server?
