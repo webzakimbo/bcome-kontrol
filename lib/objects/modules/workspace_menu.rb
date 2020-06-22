@@ -39,52 +39,52 @@ module Bcome
     def menu_items
       {
         ls: {
-          description: 'list all available resources',
+          description: 'list all available namespaces',
           console_only: false
         },
         lsa: {
-          description: 'list all active resources',
+          description: 'list all active namespaces',
           console_only: true
         },
         workon: {
-          description: 'work on specific resources only, inactivating all others from this selection',
+          description: 'work on specific namespaces only, inactivating all others from this selection',
           usage: 'workon identifier1, identifier2 ...',
           console_only: true
         },
         disable: {
-          description: 'remove a resource from this selection',
+          description: 'remove a namespace from this selection',
           usage: 'disable identifier1, identifier2 ...',
           console_only: true
         },
         enable: {
-          description: 're-enable a resource within this selection',
+          description: 're-enable a namespace within this selection',
           usage: 'enable identifier1, identifier2 ...',
           console_only: true
         },
         enable!: {
-          description: 'enable all resources within this selection',
+          description: 'enable all namespaces within this selection',
           console_only: true
         },
         disable!: {
-          description: 'disable all resources within this selection',
+          description: 'disable all namespaces within this selection',
           console_only: true
         },
         run: {
-          description: 'execute a command to be run over ssh against all active resources',
+          description: 'execute a command to be run over ssh against all active namespaces',
           usage: "run 'command1', 'command2', ...",
           console_only: false,
           terminal_usage: "run 'command1' 'command2' ..."
         },
         interactive: {
-          description: 'enter an interactive command session for all active resources',
+          description: 'enter an interactive command session for all active namespaces',
           console_only: false
         },
         tree: {
-          description: 'print a tree view for all resources and their sub-resources',
+          description: 'print a tree view for all namespaces and their sub-namespaces',
           console_only: false
         },
         ping: {
-          description: 'ping all resources to test connectivity',
+          description: 'ping all namespaces to test connectivity',
           console_only: false
         },
         put: {
@@ -112,7 +112,7 @@ module Bcome
           terminal_usage: "get 'remote/path' 'local/path"
         },
         cd: {
-          description: 'enter the namespace for a resource from this selection',
+          description: 'enter a console session for a child namespace from this selection',
           usage: 'cd identifier',
           console_only: true
         },
