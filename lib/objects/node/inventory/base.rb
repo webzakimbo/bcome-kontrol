@@ -30,7 +30,7 @@ module Bcome
         end
 
         def enabled_menu_items
-          super + %i[ssh]
+          super + %i[ssh tags]
         end
 
         def menu_items
@@ -39,6 +39,10 @@ module Bcome
             description: 'ssh directly into a resource',
             usage: 'ssh identifier',
             console_only: true
+          }
+
+          base_items[:tags] = {
+           description: 'print out server tags/labels'
           }
 
           base_items

@@ -85,13 +85,13 @@ module Bcome::Node::Server
     end
 
     def enabled_menu_items
-      (super + %i[get ssh tags pseudo_tty tunnel]) - %i[enable disable enable! disable!]
+      (super + %i[get ssh tags pseudo_tty tunnel]) - %i[workon enable disable enable! disable!]
     end
 
     def menu_items
       base_items = super.dup
       base_items[:tags] = {
-        description: 'print out remote EC2 tags'
+        description: 'print out server tags/labels'
       }
       base_items[:ssh] = {
         description: 'initiate an ssh connection to this server'
