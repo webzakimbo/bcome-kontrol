@@ -43,14 +43,13 @@ module Bcome
         starting_context.load_nodes if starting_context.inventory? && !starting_context.nodes_loaded?
 
         # Attempt to load our next context resource
-
         next_context = starting_context.resources.active.first if crumb == 'first'
-
         next_context ||= starting_context.resource_for_identifier(crumb)
 
         # Our current breadcrumb is not a node, and so we'll attempt to invoke a method call on the previous
         # e.g. given resource:foo, then invoke 'foo' on 'resource'
         unless next_context
+          puts "\n" # clean any trailing loading bars
           starting_context.invoke(crumb, @arguments)
           return
         end
