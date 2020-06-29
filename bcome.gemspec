@@ -23,16 +23,16 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.add_dependency 'activesupport', '5.2.4.3'
   spec.add_dependency 'awesome_print', '1.8.0'
+  spec.add_dependency 'diffy', '3.1.0'
   spec.add_dependency 'fog-aws', '~> 0.12.0'
   spec.add_dependency 'google-api-client', '0.29.1'
   spec.add_dependency 'launchy', '2.4.3'
   spec.add_dependency 'net-scp', '~> 1.2', '>= 1.2.1'
   spec.add_dependency 'net-ssh', '4.1.0'
   spec.add_dependency 'pmap', '1.1.1'
+  spec.add_dependency 'pry', '0.12.2'
   spec.add_dependency 'rainbow', '~> 2.2'
   spec.add_dependency 'require_all', '1.3.3'
   spec.add_dependency 'tty-cursor', '0.2.0'
-  spec.add_dependency 'pry', '0.12.2'
-  spec.add_dependency 'diffy', '3.1.0'
   spec.post_install_message = "\nWe'd love your feedback about this tool: \nHow can we improve?  Email guillaume@webzakimbo.com"
 end

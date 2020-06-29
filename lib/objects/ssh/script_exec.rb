@@ -13,7 +13,7 @@ module ::Bcome::Ssh
       @server = server
       @path_to_script = path_to_script
       @ssh_driver = server.ssh_driver
-      @output_string = ""
+      @output_string = ''
     end
 
     def execute
@@ -24,6 +24,7 @@ module ::Bcome::Ssh
 
     def execute_command
       raise Bcome::Exception::OrchestrationScriptDoesNotExist, @path_to_script unless File.exist?(@path_to_script)
+
       execute_script_command = "#{@ssh_driver.ssh_command} \"bash -s\" < #{@path_to_script}"
       command = ::Bcome::Command::Local.run(execute_script_command)
       command

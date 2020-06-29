@@ -119,7 +119,7 @@ module Bcome::Driver
 
     def oauth_filename
       @params[:secrets_path] || @params[:secrets_filename]
-    end  
+    end
 
     def gcp_service
       @gcp_service ||= get_authenticated_gcp_service

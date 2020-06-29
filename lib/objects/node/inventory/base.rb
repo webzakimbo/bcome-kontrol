@@ -42,7 +42,7 @@ module Bcome
           }
 
           base_items[:tags] = {
-           description: 'print out server tags/labels'
+            description: 'print out server tags/labels'
           }
 
           base_items
