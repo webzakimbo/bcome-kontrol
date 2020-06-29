@@ -47,6 +47,10 @@ module Bcome::Node::Server
       data_print_from_hash(cloud_tags.data, 'Tags')
     end
 
+    def tags_h
+      cloud_tags.data
+    end
+
     def cloud_tags
       @generated_tags ||= do_generate_cloud_tags
     end
