@@ -7,7 +7,7 @@ module Bcome::Node::Server
     end
 
     def initialize(params)
-      @config = params[:views]
+      @config = ActiveSupport::HashWithIndifferentAccess.new(params[:views])
 
       @identifier = @config[:identifier]
       @public_ip_address = @config[:public_ip_address]

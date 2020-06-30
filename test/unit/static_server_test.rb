@@ -9,6 +9,7 @@ class StaticServerTest < ActiveSupport::TestCase
     public_ip_address = "217.199.177.83" 
 
     config = { views: {
+      description: "Test server",
       identifier: identifier,
       public_ip_address: public_ip_address
       }
@@ -21,7 +22,6 @@ class StaticServerTest < ActiveSupport::TestCase
     assert static_server.is_a?(::Bcome::Node::Server::Static)
     assert static_server.identifier == identifier
     assert static_server.public_ip_address == public_ip_address
-    assert !static_server.has_description?
   end
 
   def test_should_set_internal_ip_address_if_provided
@@ -31,6 +31,7 @@ class StaticServerTest < ActiveSupport::TestCase
     internal_ip_address = "10.0.0.4"
 
     config = { views: {
+      description: "Test server",
       identifier: identifier,
       public_ip_address: public_ip_address,
       internal_ip_address: internal_ip_address
@@ -52,6 +53,7 @@ class StaticServerTest < ActiveSupport::TestCase
 
     config = {
       views: {
+        description: "Test server",
         identifier: identifier,
         public_ip_address: public_ip_address,
         description: description
