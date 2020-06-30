@@ -76,19 +76,4 @@ class NetworkDriverTest < ActiveSupport::TestCase
 
     # and also that all our expectations are met
   end
-
-  def test_should_be_able_to_instantiate_a_static_driver
-    # Given
-    mocked_node = mock("Bcome node")
-    config = {
-      type: 'static'
-    }
-
-    # When
-    driver = Bcome::Driver::Base.create_from_config(config, mocked_node)
-
-    # Then
-    assert driver.is_a?(Bcome::Driver::Base)
-    assert driver.is_a?(Bcome::Driver::Static)
-  end
 end
