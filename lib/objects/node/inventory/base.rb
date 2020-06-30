@@ -38,11 +38,13 @@ module Bcome
           base_items[:ssh] = {
             description: 'ssh directly into a resource',
             usage: 'ssh identifier',
-            console_only: true
-          }
+            console_only: true,
+            group: :ssh 
+         }
 
           base_items[:tags] = {
-            description: 'print out server tags/labels'
+            description: 'print out server tags/labels',
+            group: :informational
           }
 
           base_items

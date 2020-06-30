@@ -20,7 +20,8 @@ module Bcome
 
           base_items[:reload] = {
             description: 'Restock this inventory from remote',
-            console_only: true
+            console_only: true,
+            group: :miscellany
           }
           base_items
         end

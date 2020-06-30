@@ -95,28 +95,33 @@ module Bcome::Node::Server
     def menu_items
       base_items = super.dup
       base_items[:tags] = {
-        description: 'print out server tags/labels'
-      }
+        description: 'print out server tags/labels',
+        group: :informational 
+     }
       base_items[:ssh] = {
-        description: 'initiate an ssh connection to this server'
+        description: 'initiate an ssh connection to this server',
+        group: :ssh
       }
       base_items[:get] = {
         description: 'Download a file or directory',
         console_only: false,
         usage: 'get "/remote/path", "/local/path"',
-        terminal_usage: 'get "/remote/path" "/local/path"'
+        terminal_usage: 'get "/remote/path" "/local/path"',
+        group: :file
       }
       base_items[:pseudo_tty] = {
         description: 'Invoke a pseudo-tty session',
         console_only: false,
         usage: 'pseudo_tty "your command"',
-        terminal_usage: 'pseudo_tty "your command"'
+        terminal_usage: 'pseudo_tty "your command"',
+        group: :ssh
       }
       base_items[:tunnel] = {
         description: 'Create a Tunnel over SSH',
         console_only: false,
         usage: 'tunnel(local_port, destination_port)',
-        terminal_usage: 'tunnel local_port destination_port'
+        terminal_usage: 'tunnel local_port destination_port',
+        group: :ssh
       }
 
       base_items
