@@ -14,6 +14,8 @@ class NetworkDriverTest < ActiveSupport::TestCase
       provisioning_region: provisioning_region
     }
 
+    File.expects(:exist?).with(".aws/keys").returns(true)
+
     # When
     driver = Bcome::Driver::Base.create_from_config(config, mocked_node)
 
@@ -65,6 +67,8 @@ class NetworkDriverTest < ActiveSupport::TestCase
       credentials_key: credentials_key,
       provisioning_region: provisioning_region
     }
+
+    File.expects(:exist?).with(".aws/keys").returns(true)
 
     driver = Bcome::Driver::Base.create_from_config(config, mocked_node)
 

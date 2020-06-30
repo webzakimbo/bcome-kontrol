@@ -70,7 +70,7 @@ class BootupTest < ActiveSupport::TestCase
     estate = Bcome::Node::Collection.new(given_estate_setup_params)
     bootup.expects(:estate).returns(estate)
     workspace_instance = ::Bcome::Workspace.send(:new) 
-    workspace_instance.expects(:set).with(context: estate).returns(nil)
+    workspace_instance.expects(:set).with(context: estate, :show_welcome => true).returns(nil)
 
     Bcome::Workspace.expects(:instance).returns(workspace_instance)
 
@@ -108,7 +108,7 @@ class BootupTest < ActiveSupport::TestCase
     factory.expects(:init_tree).returns(estate)
 
     # We expect to have traversed to our found context, at which point we enter a console session, thus:
-    ::Bcome::Workspace.instance.expects(:set).with(context: found_context)
+    ::Bcome::Workspace.instance.expects(:set).with(context: found_context, :show_welcome => true)
 
     # When/then
     ::Bcome::Bootup.set_and_do(breadcrumbs: breadcrumbs)
