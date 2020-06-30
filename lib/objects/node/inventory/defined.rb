@@ -26,8 +26,8 @@ module Bcome
           base_items[:reload] = {
             description: "Restock this inventory from remote (hit 'cache' after to persist)",
             console_only: true,
-            group: :miscellany 
-         }
+            group: :miscellany
+          }
           base_items
         end
 

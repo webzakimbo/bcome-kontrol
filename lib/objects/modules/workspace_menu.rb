@@ -4,23 +4,20 @@ module Bcome
   module WorkspaceMenu
     def menu
       print "\n\n"
-      puts "COMMAND MENU".bc_cyan + "\sfor #{self.class} #{namespace}".resource_value
+      puts 'COMMAND MENU'.bc_cyan + "\sfor #{self.class} #{namespace}".resource_value
 
-      grouped_menu_items = menu_items.group_by {|m| m[1][:group] }
-      grouped_menu_items.each do |group_key, items| 
-       
-        # If we're not in a console session, we filter out console only methods 
-        unless ::Bcome::System::Local.instance.in_console_session?
-          items = items.reject{|item| item[1][:console_only] }
-        end
+      grouped_menu_items = menu_items.group_by { |m| m[1][:group] }
+      grouped_menu_items.each do |group_key, items|
+        # If we're not in a console session, we filter out console only methods
+        items = items.reject { |item| item[1][:console_only] } unless ::Bcome::System::Local.instance.in_console_session?
 
         next if items.empty?
-      
-        s_heading = "/ #{menu_group_names[group_key]}"        
-        print "\n\n" + tab_spacing + s_heading.upcase.bc_cyan 
-        print item_spacing(s_heading) + "#{"\s" * 110}".bc_cyan.underline
+
+        s_heading = "/ #{menu_group_names[group_key]}"
+        print "\n\n" + tab_spacing + s_heading.upcase.bc_cyan
+        print item_spacing(s_heading) + ("\s" * 110).to_s.bc_cyan.underline
         print "\n\n"
-        print_menu_items(items)  
+        print_menu_items(items)
       end
 
       nil
@@ -57,19 +54,18 @@ module Bcome
     def tab_spacing
       "\s" * 3
     end
- 
+
     def menu_group_names
       {
-        :ssh =>"Ssh",
-        :informational => "Informational",
-        :selection => "Selections",
-        :file => "File & Script",
-        :navigation => "Navigational",
-        :miscellany => "Miscellaneous",
-        :command_list => "Command lists"
+        ssh: 'Ssh',
+        informational: 'Informational',
+        selection: 'Selections',
+        file: 'File & Script',
+        navigation: 'Navigational',
+        miscellany: 'Miscellaneous',
+        command_list: 'Command lists'
       }
     end
-
 
     def menu_items
       {
@@ -87,7 +83,7 @@ module Bcome
           description: 'work on specific namespaces only, inactivating all others from this selection',
           usage: 'workon identifier1, identifier2 ...',
           console_only: true,
-          group: :selection,
+          group: :selection
         },
         disable: {
           description: 'remove a namespace from this selection',
@@ -168,14 +164,14 @@ module Bcome
           group: :navigation
         },
         exit!: {
-          description: "Quit out of bcome",
-          usage: "exit!",
+          description: 'Quit out of bcome',
+          usage: 'exit!',
           console_only: true,
           group: :navigation
         },
         back: {
-          description: "Go up a namespace, or exit",
-          usage: "back",
+          description: 'Go up a namespace, or exit',
+          usage: 'back',
           console_only: true,
           group: :navigation
         },
@@ -192,7 +188,7 @@ module Bcome
           description: 'List all user defined commands present in your registry, and available to this namespace',
           console_only: false,
           group: :command_list
-        }, 
+        },
         menu: {
           description: 'List all available commands',
           console_only: false,

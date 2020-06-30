@@ -96,8 +96,8 @@ module Bcome::Node::Server
       base_items = super.dup
       base_items[:tags] = {
         description: 'print out server tags/labels',
-        group: :informational 
-     }
+        group: :informational
+      }
       base_items[:ssh] = {
         description: 'initiate an ssh connection to this server',
         group: :ssh
