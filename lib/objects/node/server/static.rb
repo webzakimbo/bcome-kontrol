@@ -7,7 +7,9 @@ module Bcome::Node::Server
     end
 
     def initialize(params)
-      @config = ActiveSupport::HashWithIndifferentAccess.new(params[:views])
+      @config = params[:views]
+
+      set_cloud_tags
 
       @identifier = @config[:identifier]
       @public_ip_address = @config[:public_ip_address]
@@ -28,6 +30,12 @@ module Bcome::Node::Server
     attr_reader :cloud_tags
 
     attr_reader :description
+
+    def set_cloud_tags
+      unless @config[:cloud_tags].is_a?(::Bcome::Node::Meta::Cloud)
+        @config[:cloud_tags] = ::Bcome::Node::Meta::Cloud.new(@config[:cloud_tags])
+      end
+    end
 
     def verify_we_have_at_least_one_interface
       raise Bcome::Exception::MissingIpaddressOnServer, @config unless has_at_least_one_interface?
