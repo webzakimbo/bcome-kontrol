@@ -133,7 +133,7 @@ module Bcome::Node
     def load_local_data
       return {} unless File.exist?(local_data_path)
 
-      config = YAML.load_file(local_data_path)
+      config = YAML.load_file(local_data_path).deep_symbolize_keys
       return {} if config.nil?
 
       config
