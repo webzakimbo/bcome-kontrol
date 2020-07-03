@@ -33,6 +33,10 @@ module Bcome::Node::Server
       end
     end
 
+    def local_network?
+      defined?(local_network) && local_network
+    end
+
     def dup_with_new_parent(new_parent)
       new_node = clone
       new_node.update_parent(new_parent)
