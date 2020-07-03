@@ -4,19 +4,18 @@ require 'net/ssh/proxy/jump'
 
 module Bcome::Ssh
   class ConnectionWrangler
+
+    attr_accessor :proxy_details
+
     def initialize(ssh_driver)
       @ssh_driver = ssh_driver
       @config = ssh_driver.config[:proxy]
       @context_node = ssh_driver.context_node
       @user = ssh_driver.user
+      set_proxy_details
     end
 
     ## Accessors --
-
-    def proxy_details
-      hops.reverse.collect(&:proxy_details)
-    end
-
     def first_hop
       hops.reverse.first
     end
@@ -65,6 +64,10 @@ module Bcome::Ssh
     end
 
     protected
+
+    def set_proxy_details
+      @proxy_details ||= hops.reverse.collect(&:proxy_details)
+    end
 
     def target_machine_ingress_ip
       return @context_node.internal_ip_address if @context_node.local_network?
