@@ -21,7 +21,7 @@ module Bcome::Ssh
     end
 
     def set_connection_wrangler
-      @set_connection_wrangler ||= ::Bcome::Ssh::ConnectionWrangler.new(self)
+      @connection_wrangler = ::Bcome::Ssh::ConnectionWrangler.new(self)
     end
 
     def pretty_ssh_config
