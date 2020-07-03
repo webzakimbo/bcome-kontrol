@@ -14,13 +14,19 @@ module Bcome::Node::Resources
 
         inventory.load_nodes unless inventory.nodes_loaded?
       end
+
       @nodes = @inventory.contributing_inventories.collect { |inv| inv.resources.nodes }.flatten.collect(&:clone)
 
       @nodes.map do |node|
+        renamed_node_for_merged_inventory(node)
         node.add_list_attributes(origin: :origin_namespace)
       end
 
       @nodes
+    end
+
+    def renamed_node_for_merged_inventory(node)
+      node.identifier = node.namespace.gsub(":", "_")
     end
 
     def update_nodes
