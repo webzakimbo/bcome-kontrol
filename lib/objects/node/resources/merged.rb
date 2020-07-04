@@ -5,6 +5,7 @@ module Bcome::Node::Resources
     def initialize(config)
       super
       @inventory = config[:inventory]
+      @nodes = []
       run_select
     end
 
@@ -15,32 +16,35 @@ module Bcome::Node::Resources
         inventory.load_nodes unless inventory.nodes_loaded?
       end
 
-      @nodes = @inventory.contributing_inventories.collect { |inv| inv.resources.nodes }.flatten.collect(&:clone)
-
-      @nodes.map do |node|
-        renamed_node_for_merged_inventory(node)
-        node.add_list_attributes(origin: :origin_namespace)
-      end
+      contributing_nodes = @inventory.contributing_inventories.collect { |inv| inv.resources.nodes }.flatten
+      dup_nodes(contributing_nodes)
 
       @nodes
     end
 
-    def renamed_node_for_merged_inventory(node)
-      node.identifier = node.namespace.gsub(":", "_")
-    end
+    def dup_nodes(contributing_nodes)  
+      contributing_nodes.each do |original_node|
 
-    def update_nodes
-      new_set = []
-
-      @nodes.collect do |node|
-        new_node = node.dup_with_new_parent(@inventory)
+        # Duplicate the node, setting its origin inventory to this one, and 
+        # resetting its ssh_driver to the original node's driver.  
+        new_node = original_node.dup_with_new_parent(@inventory) 
         set_overrides(@inventory, new_node)
+        new_node.ssh_driver = original_node.ssh_driver
+
+        # Rename the node as contributing inventories may provide duplicate node names
+        rename_node_for_merged_inventory(new_node)
 
         # Register the new node with the registry
         ::Bcome::Registry::Loader.instance.set_command_group_for_node(new_node)
-        new_set << new_node
+ 
+        @nodes << new_node
       end
-      @nodes = new_set
+
     end
+
+    def rename_node_for_merged_inventory(node)
+      node.identifier = node.namespace.gsub(":", "_")
+    end
+
   end
 end
