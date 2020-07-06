@@ -137,10 +137,6 @@ module Bcome
       desc
     end
 
-    def back
-      exit
-    end
-
     def disable(*ids)
       ids.each { |id| resources.do_disable(id) }
     end
