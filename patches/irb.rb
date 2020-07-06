@@ -40,6 +40,34 @@ module IRB
     end
   end
 
+  module ExtendCommandBundle
+    class << self
+      # Allow us to redefine 'quit' by preventing it getting aliased in the first place.
+      def overriden_extend_object(*params)
+  
+        # Remove 'quit', as we want to write our own
+        @ALIASES.delete([:quit, :irb_exit, 1])
+
+        original_extend_object(*params)
+      end
+      alias original_extend_object extend_object
+      alias extend_object overriden_extend_object
+    end
+
+    def quit(*params)
+      ::Bcome::Bootup.instance.close_ssh_connections
+      ::Bcome::Ssh::TunnelKeeper.instance.close_tunnels
+      ::Bcome::LoadingBar::PidBucket.instance.stop_all
+      exit!
+    end  
+
+    def back
+      # Allow navigation back up a namespace tree, or 'exit' if at the highest level, or at the point of entry
+      irb_exit(0)
+    end
+ 
+  end
+
   class Context
     def overriden_evaluate(*_params)
       evaluate_without_overriden(*_params)
