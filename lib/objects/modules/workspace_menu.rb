@@ -163,14 +163,14 @@ module Bcome
           console_only: true,
           group: :navigation
         },
-        exit!: {
+        quit: {
           description: 'Quit out of bcome',
-          usage: 'exit!',
+          usage: 'quit',
           console_only: true,
           group: :navigation
         },
         back: {
-          description: 'Go up a namespace, or exit',
+          description: 'Go back up a namespace, or quit',
           usage: 'back',
           console_only: true,
           group: :navigation
