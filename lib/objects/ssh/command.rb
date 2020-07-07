@@ -20,7 +20,11 @@ module ::Bcome::Ssh
       cmd_output = @stdout
 
       cmd_output += "\nExit code:" + "\s#{@exit_code}"
-      cmd_output += "\nSTDERR: #{@stderr}" unless @stderr.empty?
+
+      if exit_code == 1 && !@stderr.empty?
+        cmd_output += "\nSTDERR: #{@stderr}"
+      end
+
       "\n#{cmd_output}"
     end
 
