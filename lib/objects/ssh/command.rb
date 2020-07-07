@@ -16,17 +16,11 @@ module ::Bcome::Ssh
       @node = nil
     end
 
-    def pretty_result
-      is_success? ? 'success'.success : 'failure'.error
-    end
-
     def output
       cmd_output = @stdout
 
-      unless is_success?
-        cmd_output += "\nExit code: #{@exit_code}"
-        cmd_output += "\nSTDERR: #{@stderr}" unless @stderr.empty?
-      end
+      cmd_output += "\nExit code:" + "\s#{@exit_code}"
+      cmd_output += "\nSTDERR: #{@stderr}" unless @stderr.empty?
       "\n#{cmd_output}"
     end
 

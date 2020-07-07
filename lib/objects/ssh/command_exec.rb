@@ -33,7 +33,7 @@ module ::Bcome::Ssh
           ssh_exec!(ssh, command) # retry, once
         end
 
-        output_append("\n(#{node.namespace})$".terminal_prompt + ">\s#{command.raw} (#{command.pretty_result})\n")
+        output_append("\n(#{node.namespace})$".terminal_prompt + ">\s#{command.raw}\n")
         output_append(command.output.to_s)
       end
 
