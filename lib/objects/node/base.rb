@@ -8,6 +8,7 @@ module Bcome::Node
     include Bcome::WorkspaceMenu
     include Bcome::Node::LocalMetaDataFactory
     include Bcome::Node::RegistryManagement
+    include Bcome::Tree
 
     def inspect
       "<##{self.class}: #{namespace} @network_driver=#{network_driver}>"
@@ -117,7 +118,7 @@ module Bcome::Node
 
     def put_str(string, remote_path, connect = true)
       ssh_connect if connect # Initiate connect at highest namespace level
-      scoped_resources.each do |resource|
+      scoped_resources.pmap do |resource|
         resource.put_str(string, remote_path, false)
       end
       nil
