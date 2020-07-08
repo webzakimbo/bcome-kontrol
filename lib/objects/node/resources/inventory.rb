@@ -13,8 +13,6 @@ module Bcome::Node::Resources
     end
 
     def override_server_identifier(inventory, node)
-      return if node.is_a?(::Bcome::Node::Server::Static)
-
       if inventory.override_server_identifier?
         node.identifier =~ /#{inventory.override_identifier}/
         node.update_identifier(Regexp.last_match(1)) if Regexp.last_match(1)
