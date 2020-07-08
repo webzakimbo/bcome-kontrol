@@ -1,13 +1,20 @@
 module Bcome
   module Tree
 
-    BOTTOM_ANCHOR = "└───\s"
-    MID_SHIPS = "├───\s"
+    BOTTOM_ANCHOR = "└──┈\s"
+    MID_SHIPS = "├──┈\s"
     BRANCH = "│"
+
+    def tree_lines=(line)
+      @tree_lines ||= []
+      @tree_lines << line
+    end
 
     def tree
       puts "\nNetwork Tree\n".title
+     
       content = ".#{namespace}\n"
+      content = "╷\n"
       list_data = tree_list(resources)
       print content + list_data[0] + "\n"
     end
@@ -57,6 +64,11 @@ module Bcome
          end
          content += full_line + "\n"
          content += recursed_content
+
+         if (index + 1) == number_lines
+           content += tab_padding + ("\s" * (label_start - tab_padding.length)) + "\s\n"
+         end 
+
        end
       return content
     end
