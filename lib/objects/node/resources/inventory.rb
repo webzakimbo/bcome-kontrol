@@ -8,11 +8,13 @@ module Bcome::Node::Resources
     end
 
     def set_overrides(inventory, node)
-      override_server_identifier(inventory, node)
+      override_server_identifier(inventory, node) 
       node.set_network_configuration_overrides
     end
 
     def override_server_identifier(inventory, node)
+      return if node.is_a?(::Bcome::Node::Server::Static)
+
       if inventory.override_server_identifier?
         node.identifier =~ /#{inventory.override_identifier}/
         node.update_identifier(Regexp.last_match(1)) if Regexp.last_match(1)
