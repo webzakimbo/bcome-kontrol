@@ -57,17 +57,17 @@ module ::Bcome::Ssh
       nil
     end
 
-    def put_str(string, remote_path)
-      raise Bcome::Exception::MissingParamsForScp, "'put' requires a string and a remote_path" if string.to_s.empty? || remote_path.to_s.empty?
+    def put_str(string, remote_path, silence_progress = false)
+      raise Bcome::Exception::MissingParamsForScp, "'put' requires a string and a remote_path" if string.nil? || remote_path.to_s.empty?
 
-      puts "\n(#{@context_node.namespace})\s".namespace + "Uploading from string to #{remote_path}\n".informational
+      puts "\n(#{@context_node.namespace})\s".namespace + "Uploading from string to #{remote_path}\n".informational unless silence_progress
 
       begin
         scp.upload!(StringIO.new(string), remote_path) do |_ch, name, sent, total|
-          puts "#{name}: #{sent}/#{total}".progress
+          puts "#{name}: #{sent}/#{total}".progress unless silence_progress
         end
-      rescue Exception => e # scp just throws generic exceptions :-/
-        puts e.message.error
+      rescue StandardError => e 
+        raise ::Bcome::Exception::Generic, e.message
       end
       nil
     end
