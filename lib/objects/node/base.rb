@@ -39,6 +39,8 @@ module Bcome::Node
       set_view_attributes if @views
       validate_attributes
 
+      @original_identifier = @identifier
+
       ::Bcome::Registry::Loader.instance.set_command_group_for_node(self)
     end
 
