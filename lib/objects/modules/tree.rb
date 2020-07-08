@@ -41,13 +41,9 @@ module Bcome
       lines_for_nodes.each_with_index do |data, index|
         anchor, branch = deduce_tree_structure(index, number_lines)
 
-        begin
         line = data[0]
         node = data[1]
         pad_length = (max_length > line.length)  ? (1 + (max_length - line.length)) : 1
-        rescue 
-          raise "Caught: #{lines_for_nodes.inspect}"
-        end
 
         full_line = "#{tab_padding}#{anchor}#{line}"
         label_start = full_line.length - line.length - anchor.length
