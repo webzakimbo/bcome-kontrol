@@ -21,7 +21,6 @@ module Bcome
       max_length = 0
       lines = nodes.sort_by(&:identifier).collect{|node|
 
-        # TODO - test all
         next if node.hide?
         node.load_nodes if node.inventory? && !node.nodes_loaded?
         unless node.is_a?(Bcome::Node::Inventory::Merge)
@@ -29,10 +28,9 @@ module Bcome
         end
 
         line = node.tree_line
-        length = line.length
-        max_length = length if max_length < length
+        max_length = line.length if max_length < line.length
         [line, node]
-      }
+      }.compact
       return lines, max_length
     end
 
@@ -43,9 +41,13 @@ module Bcome
       lines_for_nodes.each_with_index do |data, index|
         anchor, branch = deduce_tree_structure(index, number_lines)
 
+        begin
         line = data[0]
         node = data[1]
         pad_length = (max_length > line.length)  ? (1 + (max_length - line.length)) : 1
+        rescue 
+          raise "Caught: #{lines_for_nodes.inspect}"
+        end
 
         full_line = "#{tab_padding}#{anchor}#{line}"
         label_start = full_line.length - line.length - anchor.length
