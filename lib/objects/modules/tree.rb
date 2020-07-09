@@ -6,10 +6,6 @@ module Bcome
     BRANCH = "│"
     LEFT_PADDING = "\s" * 3
     INGRESS = "│" # ╷
-    def tree_lines=(line)
-      @tree_lines ||= []
-      @tree_lines << line
-    end
 
     def tree
       title = "#{namespace} tree".bc_cyan
