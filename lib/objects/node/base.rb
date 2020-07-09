@@ -90,6 +90,14 @@ module Bcome::Node
       ssh_driver.proxy
     end
 
+    def proxy_chain
+      ssh_driver.proxy_chain
+    end
+
+    def proxy_chain_link
+      @proxy_chain_link ||= ::Bcome::Ssh::ProxyChainLink.new(self)
+    end
+
     def scoped_resources
       # Active & not hidden
       resources.active.reject(&:hide?)

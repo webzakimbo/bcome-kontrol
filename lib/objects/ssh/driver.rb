@@ -20,6 +20,10 @@ module Bcome::Ssh
       @connection_wrangler ||= set_connection_wrangler
     end
 
+    def proxy_chain
+      @proxy_chain ||= ::Bcome::Ssh::ProxyChain.new(connection_wrangler)
+    end
+
     def set_connection_wrangler
       @connection_wrangler = ::Bcome::Ssh::ConnectionWrangler.new(self)
     end

@@ -5,86 +5,123 @@ module Bcome
     MID_SHIPS = "├──┈\s"
     BRANCH = "│"
     LEFT_PADDING = "\s" * 3
-    INGRESS = "│" # ╷
+    INGRESS = "│" 
+    BLIP = "▐▆"
 
     def tree
+      build_tree(:network_namespace_tree_data)
+    end  
+
+    def routes
+      build_tree(:routing_tree_data) 
+    end
+
+    def build_tree(data_build_method)
+      @lines = []
+      data = send(data_build_method)
+
+      @lines << "\n"
+      @lines << "#{BLIP}\s\s\s" + "#{namespace} tree".bc_cyan
+      @lines << "#{INGRESS}"
+
+      recurse_namespace_tree_lines(data)
+
+      @lines.each {|line|
+        print "#{LEFT_PADDING}#{line}\n"
+      }
+    end
+   
+    def routing_tree_data
+      @tree = {}
+
+       # TODO - Skip inactive nodes; load nodes that haven't been loaded
+       # same as for normal tree
+
+      # For each namespace, we have many proxy chains
+      proxy_chain_link.link.each do |proxy_chain, machines|
+        ## Machine data
+        machine_data = {}
+        machines.each {|machine|
+          key = machine. namespace_tree_line
+          machine_data[key] = nil
+        }
+
+        ## Construct Hop data
+        hops = proxy_chain.hops
+        hop_lines = hops.collect(&:pretty_proxy_details)
+        @tree.merge!(to_nested_hash(hop_lines, machine_data))
+      end
+      return @tree
+    end
+
+    def to_nested_hash(array, data)
+      nested = array.reverse.inject(data) { |a, n| {  n => a }}
+      nested.is_a?(String) ? { "#{nested}": nil } : nested
+    end
+
+    def network_namespace_tree_data
+      @tree = {}
+
+      if inventory?
+        load_nodes if !nodes_loaded?
+        return nil if resources.empty?
+      end
+   
+      resources.sort_by(&:identifier).each do |resource|
+        next if resource.hide?
+        unless resource.is_a?(Bcome::Node::Inventory::Merge)
+          next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
+        end
+        @tree[resource.namespace_tree_line] = resource.resources.any? ? resource.network_namespace_tree_data : nil
+      end
+
+      return @tree       
+    end
+
+    def namespace_tree_line
+      return "#{type.bc_green} #{identifier} (empty set)" if !server? && !resources.has_active_nodes?
+      return "#{type.bc_green} #{identifier}"
+    end
+
+    def build_tree(data_build_method)
+      data = send(data_build_method) 
+    
+      @lines = []
       title = "#{namespace} tree".bc_cyan
-      content = "\n\n#{LEFT_PADDING}▐▆\s\s\s#{title}\n"
-      content += "#{LEFT_PADDING}#{INGRESS}\n"
-      list_data = tree_list(resources)
-      print content + list_data[0] + "\n"
+      @lines << "\n"
+      @lines << "#{BLIP}\s\s\s#{title}"
+      @lines << "#{INGRESS}"
+
+      recurse_namespace_tree_lines(data)
+ 
+      @lines.each {|line|
+        print "#{LEFT_PADDING}#{line}\n"
+      } 
+    end
+
+    def recurse_namespace_tree_lines(data, padding = "")
+      data.each_with_index do |config, index|
+        key = config[0]
+        values = config[1]      
+
+        anchor, branch = deduce_tree_structure(index, data.size)
+        key_string = "#{anchor}\s#{key}"
+
+        entry_string = "#{padding}#{key_string}"
+        @lines << entry_string
+  
+        if values && values.is_a?(Hash)
+          tab_padding = padding + branch + ("\s" * (anchor.length + 1)) 
+          recurse_namespace_tree_lines(values, tab_padding)
+          @lines << padding + branch
+        end
+      end
+      return
     end
 
     def deduce_tree_structure(index, number_lines)
       return BOTTOM_ANCHOR, "\s" if (index + 1) == number_lines
       return MID_SHIPS, BRANCH
-    end
-
-    def get_tree_lines_for_nodes(nodes)
-      max_length = 0
-      lines = nodes.sort_by(&:identifier).collect{|node|
-
-        next if node.hide?
-        node.load_nodes if node.inventory? && !node.nodes_loaded?
-        unless node.is_a?(Bcome::Node::Inventory::Merge)
-          next if node.parent && !node.parent.resources.is_active_resource?(node)
-        end
-
-        line = node.tree_line
-        max_length = line.length if max_length < line.length
-        [line, node]
-      }.compact
-      return lines, max_length
-    end
-
-    def build_tree_from_node_lines(lines_for_nodes, max_length, tab_padding)
-      content = ""
-      number_lines = lines_for_nodes.size
-
-      lines_for_nodes.each_with_index do |data, index|
-        anchor, branch = deduce_tree_structure(index, number_lines)
-
-        line = data[0]
-        node = data[1]
-        pad_length = (max_length > line.length)  ? (1 + (max_length - line.length)) : 1
-
-        full_line = "#{tab_padding}#{anchor}#{line}"
-        label_start = full_line.length - line.length - anchor.length
-
-         ## Recurse
-         recursed_content = ""
-         if node.resources.any?
-           recursed_tab_padding = tab_padding + ("\s" * (label_start - tab_padding.length)) + branch + ("\s" * anchor.length)
-           r_box_string, r_max_length = tree_list(node.resources, recursed_tab_padding)
-           recursed_content += r_box_string
-         end
-         content += LEFT_PADDING + full_line + "\n"
-         content += recursed_content
-
-         if (index + 1) == number_lines
-           content += LEFT_PADDING + tab_padding + ("\s" * (label_start - tab_padding.length)) + "\s\n"
-         end 
-
-       end
-      return content
-    end
-
-    def tree_list(nodes, tab_padding = "")
-      content = ""
-
-      ## Get all our tree lines
-      lines_for_nodes, max_length = get_tree_lines_for_nodes(nodes)
-      total_line_length = max_length
-
-      ## Build our tree
-      content += build_tree_from_node_lines(lines_for_nodes, max_length, tab_padding)
-
-      return content, max_length
-    end
-
-    def tree_line
-      return "#{type.bc_green} #{identifier} (empty set)" if !server? && !resources.has_active_nodes?
-      return "#{type.bc_green} #{identifier}"
     end
 
   end

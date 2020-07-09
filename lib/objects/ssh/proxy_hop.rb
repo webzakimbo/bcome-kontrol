@@ -2,7 +2,8 @@
 
 module Bcome::Ssh
   class ProxyHop
-    attr_reader :parent
+
+    attr_reader :parent, :config, :host
 
     def initialize(config, context_node, parent)
       @config = config
@@ -18,7 +19,11 @@ module Bcome::Ssh
       ).except!(:bastion_host_user, :fallback_bastion_host_user)
     end
 
-    attr_reader :host
+    def pretty_proxy_details
+      line = "server".bc_green
+      line += @context_node ? "\s#{@context_node.identifier}\s#{host}" : "\s#{host}"
+      return line 
+    end
 
     def user
       @user ||= get_user
@@ -28,6 +33,14 @@ module Bcome::Ssh
       !parent.nil?
     end
 
+    def ==(other)
+      config == other.config
+    end
+
+    def eql?(other)
+      config == other.config
+    end   
+ 
     def get_ssh_string(_is_first_hop = false)
       con_str = "#{user}@#{host}"
       con_str

@@ -63,6 +63,10 @@ module Bcome::Ssh
       cmd
     end
 
+    def hops
+      @hops ||= set_hops
+    end
+
     protected
 
     def set_proxy_details
@@ -77,10 +81,6 @@ module Bcome::Ssh
       end
 
       has_hop? ? @context_node.internal_ip_address : @context_node.public_ip_address
-    end
-
-    def hops
-      @hops ||= set_hops
     end
 
     private
