@@ -21,10 +21,12 @@ module Bcome
 
       # For each namespace, we have many proxy chains
       proxy_chain_link.link.each do |proxy_chain, machines|
+        is_public = proxy_chain.hops.any? ? false : true
+
         ## Machine data
         machine_data = {}
         machines.each {|machine|
-          key = machine.routing_tree_line
+          key = machine.routing_tree_line(is_public)
           machine_data[key] = nil
         }
 
@@ -67,11 +69,19 @@ module Bcome
       return "#{type.bc_green} #{identifier}"
     end
 
-    def routing_tree_line
+    def routing_tree_line(public_only = true)
+      if public_only
+        address_title ="public ip address"
+        address = public_ip_address
+      else
+        address_title = "internal_ip_address"
+        address = internal_ip_address
+      end
+
       return [
         "#{type}".bc_cyan, 
         "namespace:\s".bc_green + namespace,
-        "ip address\s".bc_green + "#{internal_ip_address}",
+        "#{address_title}\s".bc_green + "#{address}",
         "user\s".bc_green + ssh_driver.user
       ] 
     end
@@ -100,8 +110,7 @@ module Bcome
     end
 
     def recurse_tree_lines(data, padding = "")
-
-       @lines << padding + BRANCH
+      #@lines << padding + BRANCH
 
       data.each_with_index do |config, index|
         key = config[0]

@@ -44,7 +44,5 @@ module Bcome
     def max_box_line_length(array_of_lines)
       array_of_lines.max_by{|string| string.sanitize.length }.sanitize.length
     end  
-
-
   end
 end
