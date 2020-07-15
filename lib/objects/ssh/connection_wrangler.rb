@@ -70,7 +70,7 @@ module Bcome::Ssh
     protected
 
     def set_proxy_details
-      @proxy_details ||= hops.reverse.collect(&:proxy_details)
+      @proxy_details ||= hops.collect(&:proxy_details)
     end
 
     def target_machine_ingress_ip
