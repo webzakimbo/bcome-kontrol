@@ -16,12 +16,13 @@ module Bcome
     def routing_tree_data
       @tree = {}
 
-       # TODO - Skip inactive nodes; load nodes that haven't been loaded
-       # same as for normal tree
-
       # For each namespace, we have many proxy chains
       proxy_chain_link.link.each do |proxy_chain, machines|
         is_public = proxy_chain.hops.any? ? false : true
+
+        if inventory?
+          load_nodes if !nodes_loaded?
+        end        
 
         ## Machine data
         machine_data = {}
@@ -48,13 +49,13 @@ module Bcome
     def network_namespace_tree_data
       @tree = {}
 
-      if inventory?
-        load_nodes if !nodes_loaded?
-        return nil if resources.empty?
-      end
-   
       resources.sort_by(&:identifier).each do |resource|
         next if resource.hide?
+ 
+        if resource.inventory?
+          resource.load_nodes unless resource.nodes_loaded?
+        end
+
         unless resource.is_a?(Bcome::Node::Inventory::Merge)
           next if resource.parent && !resource.parent.resources.is_active_resource?(resource)
         end
