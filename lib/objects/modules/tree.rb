@@ -1,36 +1,18 @@
 module Bcome
   module Tree
 
-    BOTTOM_ANCHOR = "└──┈\s"
-    MID_SHIPS = "├──┈\s"
-    BRANCH = "│"
-    LEFT_PADDING = "\s" * 3
-    INGRESS = "│" 
-    BLIP = "▐▆"
+    include Bcome::Draw
 
     def tree
-      build_tree(:network_namespace_tree_data)
+      title_prefix = "Namespace tree"
+      build_tree(:network_namespace_tree_data, title_prefix)
     end  
 
     def routes
-      build_tree(:routing_tree_data) 
+      title_prefix = "Ssh connection routes"
+      build_tree(:routing_tree_data, title_prefix) 
     end
 
-    def build_tree(data_build_method)
-      @lines = []
-      data = send(data_build_method)
-
-      @lines << "\n"
-      @lines << "#{BLIP}\s\s\s" + "#{namespace} tree".bc_cyan
-      @lines << "#{INGRESS}"
-
-      recurse_namespace_tree_lines(data)
-
-      @lines.each {|line|
-        print "#{LEFT_PADDING}#{line}\n"
-      }
-    end
-   
     def routing_tree_data
       @tree = {}
 
@@ -42,15 +24,17 @@ module Bcome
         ## Machine data
         machine_data = {}
         machines.each {|machine|
-          key = machine. namespace_tree_line
+          key = machine.routing_tree_line
           machine_data[key] = nil
         }
 
         ## Construct Hop data
         hops = proxy_chain.hops
-        hop_lines = hops.collect(&:pretty_proxy_details)
+        hop_lines = hops.enum_for(:each_with_index).collect{|hop,index| hop.pretty_proxy_details(index + 1) }
+
         @tree.merge!(to_nested_hash(hop_lines, machine_data))
       end
+
       return @tree
     end
 
@@ -83,36 +67,69 @@ module Bcome
       return "#{type.bc_green} #{identifier}"
     end
 
-    def build_tree(data_build_method)
+    def routing_tree_line
+      return [
+        "#{type}".bc_cyan, 
+        "namespace:\s".bc_green + namespace,
+        "ip address\s".bc_green + "#{internal_ip_address}",
+        "user\s".bc_green + ssh_driver.user
+      ] 
+    end
+
+    def build_tree(data_build_method, title_prefix)
       data = send(data_build_method) 
     
       @lines = []
-      title = "#{namespace} tree".bc_cyan
+      title = "#{title_prefix.informational}\s#{namespace}"
       @lines << "\n"
       @lines << "#{BLIP}\s\s\s#{title}"
       @lines << "#{INGRESS}"
 
-      recurse_namespace_tree_lines(data)
+      if data.nil?
+        parent.build_tree(data_build_method)
+        return
+      end
+    
+      recurse_tree_lines(data)
  
       @lines.each {|line|
         print "#{LEFT_PADDING}#{line}\n"
-      } 
+      }
+
+      print "\n\n" 
     end
 
-    def recurse_namespace_tree_lines(data, padding = "")
+    def recurse_tree_lines(data, padding = "")
+
+       @lines << padding + BRANCH
+
       data.each_with_index do |config, index|
         key = config[0]
         values = config[1]      
 
         anchor, branch = deduce_tree_structure(index, data.size)
-        key_string = "#{anchor}\s#{key}"
 
-        entry_string = "#{padding}#{key_string}"
-        @lines << entry_string
-  
+        labels = key.is_a?(Array) ? key : [key]
+
+        labels.each_with_index do |label, index|
+          if index == 0  # First line
+            key_string = "#{anchor}\s#{label}"
+          else # Any subsequent line
+            key_string = "#{branch}#{"\s" * 4}\s#{label}"
+          end
+
+          entry_string = "#{padding}#{key_string}"
+          @lines << entry_string
+
+        end # End labels group  
+
+        if labels.size > 1
+          @lines << "#{padding}#{branch}"
+        end 
+
         if values && values.is_a?(Hash)
-          tab_padding = padding + branch + ("\s" * (anchor.length + 1)) 
-          recurse_namespace_tree_lines(values, tab_padding)
+          tab_padding = padding + branch + ("\s" * (anchor.length + 4)) 
+          recurse_tree_lines(values, tab_padding)
           @lines << padding + branch
         end
       end

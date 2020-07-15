@@ -3,6 +3,8 @@
 module Bcome::Ssh
   class ProxyHop
 
+    include Bcome::Draw
+
     attr_reader :parent, :config, :host
 
     def initialize(config, context_node, parent)
@@ -19,10 +21,17 @@ module Bcome::Ssh
       ).except!(:bastion_host_user, :fallback_bastion_host_user)
     end
 
-    def pretty_proxy_details
-      line = "server".bc_green
-      line += @context_node ? "\s#{@context_node.identifier}\s#{host}" : "\s#{host}"
-      return line 
+    def pretty_proxy_details(n = 1)
+      lines = ["proxy\s".bc_cyan + "[#{n}]"]
+
+      if @bcome_proxy_node
+        lines << "bcome node\s".bc_yellow + @bcome_proxy_node.namespace
+      end  
+
+      lines << "host\s".bc_yellow + host
+      lines << "user\s".bc_yellow + user
+
+      return lines
     end
 
     def user
@@ -106,15 +115,20 @@ module Bcome::Ssh
       raise Bcome::Exception::CantFindProxyHostByIdentifier, identifier unless @bcome_proxy_node
       raise Bcome::Exception::ProxyHostNodeDoesNotHavePublicIp, identifier unless @bcome_proxy_node.public_ip_address
 
-      @bcome_proxy_node.public_ip_address
+      return bcome_node_host
     end
 
     # Newer lookup - across entire network
     def get_host_by_namespace
       @bcome_proxy_node = ::Bcome::Orchestrator.instance.get(@config[:namespace])
       raise Bcome::Exception::CantFindProxyHostByNamespace, @config[:namespace] unless @bcome_proxy_node
-
-      @bcome_proxy_node.public_ip_address
+      return bcome_node_host
     end
+
+    def bcome_node_host
+       @bcome_proxy_node.public_ip_address ? @bcome_proxy_node.public_ip_address : @bcome_proxy_node.internal_ip_address
+    end
+  
+
   end
 end

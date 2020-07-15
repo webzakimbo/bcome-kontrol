@@ -7,6 +7,7 @@ require 'pmap'
 require 'singleton'
 require 'require_all'
 require 'tty-cursor'
+require 'strings-ansi'
 require 'pry'
 
 require_all "#{File.dirname(__FILE__)}/../patches"

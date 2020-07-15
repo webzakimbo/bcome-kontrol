@@ -3,7 +3,16 @@
 require 'rainbow'
 
 class String
+
   include StringColourStylesheet
+
+  def ansi?
+    Strings::ANSI.ansi?(self)
+  end
+
+  def sanitize
+    ansi? ? Strings::ANSI.sanitize(self) : self
+  end
 
   # with thanks to http://simianuprising.com/wp-content/uploads/2012/08/solarized-reference-horizontal.png
   def colour_codes
