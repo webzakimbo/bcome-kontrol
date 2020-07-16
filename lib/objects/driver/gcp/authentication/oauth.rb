@@ -8,13 +8,16 @@ module Bcome::Driver::Gcp::Authentication
   class Oauth < Base
     credential_directory = '.gauth'
 
-    def initialize(driver, service, scopes, node, path_to_secrets)
+    attr_reader :scopes, :secrets_filename, :service, :client_config
+
+    def initialize(driver, service, client_config, node)
       @service = service
-      @scopes = scopes
+      @scopes = client_config.scopes
       @node = node
       @driver = driver
-
-      @path_to_secrets = "#{credential_directory}/#{path_to_secrets}"
+      @client_config = client_config
+      @secrets_filename = client_config.secrets_filename
+      @path_to_secrets = "#{credential_directory}/#{@secrets_filename}"
 
       raise ::Bcome::Exception::Generic, 'Missing Oauth client secrets file from GCP network configuration. Please ensure you have set the secrets_path attribute.' unless File.exist?(@path_to_secrets) && File.file?(@path_to_secrets)
 
@@ -24,10 +27,6 @@ module Bcome::Driver::Gcp::Authentication
 
     def authorized?
       storage && !@storage.authorization.nil?
-    end
-
-    def storage
-      @storage ||= ::Google::APIClient::Storage.new(Google::APIClient::FileStore.new(full_path_to_credential_file))
     end
 
     def credential_file_suffix
@@ -48,6 +47,16 @@ module Bcome::Driver::Gcp::Authentication
       raise ::Bcome::Exception::MissingOrInvalidClientSecrets, "#{@path_to_secrets}. Gcp exception: #{e.class} #{e.message}"
     end
 
+    def storage
+      @storage ||= ::Google::APIClient::Storage.new(Google::APIClient::FileStore.new(full_path_to_credential_file))
+    end
+
+    def credential_file
+      # If an authorization has the same scopes & secrets file, it is the same authorization. Hence we store the resulting oauth2 access credentials as the same file. This allows
+      # re-use of authorizations and prevents multiple oauth loops.
+      "#{@client_config.checksum}:#{credential_file_suffix}"
+    end
+
     def do!
       authorize!
       if @storage.authorization.nil?
@@ -60,7 +69,6 @@ module Bcome::Driver::Gcp::Authentication
             client_secret: client_secrets.client_secret,
             scope: @scopes
           )
-
           begin
              @service.authorization = flow.authorize(storage)
              signal_success
@@ -71,7 +79,7 @@ module Bcome::Driver::Gcp::Authentication
         end
       end
 
-      @service
+      return @service
     end
 
     def notify_success

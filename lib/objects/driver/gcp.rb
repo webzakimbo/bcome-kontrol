@@ -48,7 +48,7 @@ module Bcome::Driver
       )
 
       gcp_service.list_instances(@params[:project], @params[:zone], filter: filters)
-    rescue Google::Apis::AuthorizationError
+    rescue Google::Apis::AuthorizationError => e
       raise ::Bcome::Exception::CannotAuthenticateToGcp
     rescue Google::Apis::ClientError => e
       raise ::Bcome::Exception::Generic, "Namespace #{@node.namespace} / #{e.message}"
@@ -109,7 +109,27 @@ module Bcome::Driver
 
       case auth_scheme_key
       when :oauth
-        @authentication_scheme ||= auth_scheme.new(self, compute_service, service_scopes, @node, oauth_filename)
+
+        client_config = ::Bcome::Driver::Gcp::Authentication::OauthClientConfig.new(service_scopes, oauth_filename)
+
+        # Prevent second oauth flow during same session with same credentials, different inventory.
+        # If we already have an outh authentication scheme for the same scopes & oauth credentials, then we'll return that one
+
+        # If the scheme is set, return it
+        return @authentication_scheme if @authentication_scheme
+ 
+        # Look to see if we have an existing oauth scheme setup for the same scopes & credentials file
+        if @authentication_scheme = ::Bcome::Driver::Gcp::Authentication::OauthSessionStore.instance.in_memory_session_for(client_config)
+          @compute_service = @authentication_scheme.service       
+
+          return @authentication_scheme
+        end
+
+        # Otherwise, we'll create a new outh scheme and register it with the session store
+        @authentication_scheme = auth_scheme.new(self, compute_service, client_config, @node)
+        ::Bcome::Driver::Gcp::Authentication::OauthSessionStore.instance << @authentication_scheme
+        return @authentication_scheme
+
       when :service_account
         @authentication_scheme ||= auth_scheme.new(compute_service, service_scopes, @node, @params[:service_account_credentials], self)
       else
