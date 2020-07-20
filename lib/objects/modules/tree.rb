@@ -18,7 +18,7 @@ module Bcome
 
       # For each namespace, we have many proxy chains
       proxy_chain_link.link.each do |proxy_chain, machines|
-        is_public = proxy_chain.hops.any? ? false : true
+        is_direct = proxy_chain.hops.any? ? false : true
 
         if inventory?
           load_nodes if !nodes_loaded?
@@ -27,7 +27,7 @@ module Bcome
         ## Machine data
         machine_data = {}
         machines.each {|machine|
-          key = machine.routing_tree_line(is_public)
+          key = machine.routing_tree_line(is_direct)
           machine_data[key] = nil
         }
 
@@ -70,19 +70,17 @@ module Bcome
       return "#{type.bc_green} #{identifier}"
     end
 
-    def routing_tree_line(public_only = true)
-      if public_only
-        address_title ="public ip address"
+    def routing_tree_line(is_direct = true)
+      if is_direct && public_ip_address
         address = public_ip_address
       else
-        address_title = "internal_ip_address"
         address = internal_ip_address
       end
 
       return [
         "#{type}".bc_cyan, 
         "namespace:\s".bc_green + namespace,
-        "#{address_title}\s".bc_green + "#{address}",
+        "ip address\s".bc_green + "#{address}",
         "user\s".bc_green + ssh_driver.user
       ] 
     end
