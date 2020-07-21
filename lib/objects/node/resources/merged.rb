@@ -32,7 +32,7 @@ module Bcome::Node::Resources
         new_node.ssh_driver = original_node.ssh_driver
 
         # Rename the node as contributing inventories may provide duplicate node names
-        rename_node_for_merged_inventory(new_node)
+        rename_node_for_merged_inventory(original_node, new_node)
 
         # Register the new node with the registry
         ::Bcome::Registry::Loader.instance.set_command_group_for_node(new_node)
@@ -42,8 +42,8 @@ module Bcome::Node::Resources
 
     end
 
-    def rename_node_for_merged_inventory(node)
-      node.identifier = node.namespace.gsub(":", "_")
+    def rename_node_for_merged_inventory(original_node, new_node)
+      new_node.identifier = original_node.namespace.gsub(":", "_")
     end
 
   end
