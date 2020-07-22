@@ -5,7 +5,7 @@ module Bcome::Driver
     class << self
       def create_from_config(config, node)
         raise Bcome::Exception::InvalidNetworkDriverType, 'Your network configurtion is invalid' unless config.is_a?(Hash)
-        raise Bcome::Exception::InvalidNetworkDriverType, "Missing config parameter 'type'" unless config[:type]
+        raise Bcome::Exception::InvalidNetworkDriverType, "Missing config parameter 'type' for namespace '#{config.inspect}'" unless config[:type]
 
         config_klass_key = config[:type].to_sym
         driver_klass = klass_for_type[config_klass_key]
@@ -24,6 +24,16 @@ module Bcome::Driver
     end
 
     include ::Bcome::LoadingBar::Handler
+
+    def spoof_fetch_server_list(monkey_patched_inventory)
+     # wrap_indicator type: :basic, title: loader_title, completed_title: loader_completed_title do
+        #fake_delay_milliseconds = rand(1..500).to_f / 1000
+        #sleep fake_delay_milliseconds
+
+        monkey_patched_inventory.set_static_servers
+      #  signal_success
+      #end
+    end
 
     def initialize(params, node)
       @params = params
