@@ -108,7 +108,7 @@ module Bcome
         def load_nodes
           set_static_servers
           load_dynamic_nodes unless resources.any?
-          @nodes_loaded = true 
+          nodes_loaded!
        end
 
         def load_dynamic_nodes

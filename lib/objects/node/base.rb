@@ -186,6 +186,10 @@ module Bcome::Node
       @nodes_loaded
     end
 
+    def nodes_loaded!
+      @nodes_loaded = true
+    end
+
     def resources
       @resources ||= ::Bcome::Node::Resources::Base.new
     end

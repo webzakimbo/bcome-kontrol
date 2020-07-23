@@ -26,11 +26,16 @@ module Bcome::Driver
     include ::Bcome::LoadingBar::Handler
 
     def spoof_fetch_server_list(monkey_patched_inventory)
-      wrap_indicator type: :basic, title: loader_title, completed_title: loader_completed_title do
-        fake_delay_milliseconds = rand(1..400).to_f / 1000
-        sleep fake_delay_milliseconds
+      unless @node.nodes_loaded?
+        wrap_indicator type: :basic, title: loader_title, completed_title: loader_completed_title do
+          fake_delay_milliseconds = rand(1..400).to_f / 1000
+          sleep fake_delay_milliseconds
+          monkey_patched_inventory.set_static_servers
+         signal_success
+        end
+        @node.nodes_loaded!
+      else
         monkey_patched_inventory.set_static_servers
-       signal_success
       end
     end
 
