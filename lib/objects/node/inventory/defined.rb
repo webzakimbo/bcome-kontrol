@@ -41,16 +41,9 @@ module Bcome
           cached_machines = raw_static_machines_from_cache
 
           if cached_machines&.any?
-            # Make it look as if I'm pulling resources from the cloud when in fact they're coming from the cache
-
-            # Hack 1
-            #title = "Loading\s" + "GCP\s".bc_blue.bold + "wbznet/europe-west1-b".underline
-            #title = "Loading\s" + "EC2".bc_blue.bold + "\seu-west-1".underline
             print "\n"
             title = 'Loading' + "\sCACHE".bc_orange.bold + "\s" + namespace.to_s.underline           
             wrap_indicator type: :basic, title: title, completed_title: '' do
-             # Hack 2
-             #sleep 0.3 
              cached_machines.each do |server_config|
                 resources << ::Bcome::Node::Server::Static.new(views: server_config, parent: self)
               end
