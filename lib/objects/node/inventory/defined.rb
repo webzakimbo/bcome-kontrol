@@ -82,11 +82,6 @@ module Bcome
           end
         end
 
-        def give_me_raw_machines
-          cache_nodes_in_memory
-          return views[:static_servers]
-        end
-
         def load_machines_config
           config = YAML.load_file(machines_cache_path).deep_symbolize_keys
           config
