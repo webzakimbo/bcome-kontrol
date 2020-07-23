@@ -65,6 +65,11 @@ module Bcome::Node
       create_tree(node, config[:views]) if config[:views]&.any?
       parent.resources << node if parent
 
+      # Load inventory resources as early as possible
+      if node.is_a?(Bcome::Node::Inventory::Base)
+        node.load_nodes unless node.nodes_loaded?
+      end  
+
       bucket[node.keyed_namespace] = node
 
       node
