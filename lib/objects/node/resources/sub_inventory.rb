@@ -2,6 +2,7 @@
 
 module Bcome::Node::Resources
   class SubselectInventory < Bcome::Node::Resources::Inventory
+
     def initialize(config)
       @config = config
       super
@@ -56,5 +57,10 @@ module Bcome::Node::Resources
     def parent_inventory
       @config[:parent_inventory]
     end
+
+    def origin_inventory
+      @config[:origin_inventory]
+    end 
+
   end
 end

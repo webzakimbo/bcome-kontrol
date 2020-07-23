@@ -35,7 +35,7 @@ module Bcome
         end
 
         def do_set_resources
-          ::Bcome::Node::Resources::SubselectInventory.new(parent_inventory: parent_inventory, filters: filters)
+          ::Bcome::Node::Resources::SubselectInventory.new(origin_inventory: self, parent_inventory: parent_inventory, filters: filters)
         end
 
         def nodes_loaded?
