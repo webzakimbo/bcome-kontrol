@@ -35,6 +35,7 @@ module Bcome::Node
       @parent = params[:parent]
       @type = params[:type]
       @metadata = {}
+      @nodes_loaded = false
 
       set_view_attributes if @views
       validate_attributes
@@ -180,7 +181,9 @@ module Bcome::Node
     end
 
     def nodes_loaded?
-      resources.any?
+      #resources.any? # This was buggy:  an inventory may validly contain no resources. This does not mean that we haven't attempted to load them
+      # we no explicitly set a flag for when we've loaded nodes. This will prevents uneccessary lookups over the wire
+      @nodes_loaded
     end
 
     def resources
