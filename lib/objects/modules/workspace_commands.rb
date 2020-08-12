@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+e frozen_string_literal: true
 
 module Bcome
   module WorkspaceCommands
@@ -20,7 +20,7 @@ module Bcome
           iterate_over.sort_by(&:identifier).each do |resource|
             next if resource.hide?
 
-            is_active = @resources.is_active_resource?(resource)
+            is_active = resources.is_active_resource?(resource)
             puts resource.pretty_description(is_active)
 
             puts "\n"
