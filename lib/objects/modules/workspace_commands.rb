@@ -13,7 +13,7 @@ module Bcome
         puts "\n\n" + visual_hierarchy.hierarchy + "\n"
         puts "\t" + "Available #{list_key}s:" + "\n\n"
 
-        iterate_over = active_only ? @resources.active : @resources
+        iterate_over = active_only ? resources.active : resources
 
         if iterate_over.any?
 
