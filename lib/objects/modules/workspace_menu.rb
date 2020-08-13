@@ -150,13 +150,6 @@ module Bcome
           terminal_usage: "rsync 'local/path' 'remote/path'",
           group: :file
         },
-        get: {
-          description: 'download a file',
-          usage: "get 'remote/path', 'local/path'",
-          console_only: false,
-          terminal_usage: "get 'remote/path' 'local/path",
-          group: :file
-        },
         cd: {
           description: 'enter a console session for a child namespace from this selection',
           usage: 'cd identifier',
