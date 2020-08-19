@@ -69,6 +69,11 @@ module Bcome
 
     def menu_items
       {
+        routes: {
+          description: 'Print SSH routing tree',
+          console_only: false,
+          group: :informational 
+        },
         ls: {
           description: 'list all available namespaces',
           console_only: false,

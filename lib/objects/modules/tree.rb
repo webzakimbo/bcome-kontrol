@@ -9,8 +9,12 @@ module Bcome
     end  
 
     def routes
-      title_prefix = "Ssh connection routes"
-      build_tree(:routing_tree_data, title_prefix) 
+      if machines.empty?
+        puts "\nNo routes are found below this namespace (empty server list)\n".warning
+      else
+        title_prefix = "Ssh connection routes"
+        build_tree(:routing_tree_data, title_prefix) 
+      end
     end
 
     def routing_tree_data
