@@ -55,7 +55,7 @@ module Bcome::Node
     end
 
     def create_node(config, parent = nil)
-      raise Bcome::Exception::InvalidNetworkConfig, 'missing config type' unless config[:type]
+      raise Bcome::Exception::InvalidNetworkConfig, "missing config type for config #{config}" unless config[:type]
 
       klass = klass_for_view_type[config[:type]]
 

@@ -38,7 +38,7 @@ module Bcome::Registry::Command
     end
 
     def namespace_command(node, command)
-      "#{command} bcome_context=\"#{node.keyed_namespace}\""
+      "bcome_context=\"#{node.keyed_namespace}\" #{command}"
     end
 
     def local_command_substitutions
