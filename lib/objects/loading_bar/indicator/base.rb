@@ -24,7 +24,7 @@ module Bcome
           print "\n"
           loop do
             increment
-            sleep 0.2
+            sleep 0.1
             show
           end
         end
