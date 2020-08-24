@@ -3,7 +3,6 @@
 require 'rainbow'
 
 class String
-
   include StringColourStylesheet
 
   def ansi?

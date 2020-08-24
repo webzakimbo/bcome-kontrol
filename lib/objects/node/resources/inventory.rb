@@ -8,7 +8,7 @@ module Bcome::Node::Resources
     end
 
     def set_overrides(inventory, node)
-      override_server_identifier(inventory, node) 
+      override_server_identifier(inventory, node)
       node.set_network_configuration_overrides
     end
 

@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'digest/md5'
 
 module Bcome::Driver::Gcp::Authentication
   class OauthClientConfig
-
     attr_reader :scopes, :secrets_filename
 
     def initialize(scopes, secrets_filename)
@@ -17,6 +18,5 @@ module Bcome::Driver::Gcp::Authentication
     def checksum
       @checksum ||= ::Digest::MD5.hexdigest(Marshal.dump("#{@scopes}-#{@secrets_filename}"))
     end
- 
   end
 end

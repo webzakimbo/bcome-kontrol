@@ -4,7 +4,6 @@ require 'net/ssh/proxy/jump'
 
 module Bcome::Ssh
   class ConnectionWrangler
-
     attr_accessor :proxy_details
 
     def initialize(ssh_driver)

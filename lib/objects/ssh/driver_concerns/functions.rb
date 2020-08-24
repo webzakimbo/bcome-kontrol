@@ -66,7 +66,7 @@ module ::Bcome::Ssh
         scp.upload!(StringIO.new(string), remote_path) do |_ch, name, sent, total|
           puts "#{name}: #{sent}/#{total}".progress unless silence_progress
         end
-      rescue StandardError => e 
+      rescue StandardError => e
         raise ::Bcome::Exception::Generic, e.message
       end
       nil

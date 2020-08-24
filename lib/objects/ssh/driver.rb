@@ -37,7 +37,7 @@ module Bcome::Ssh
       if has_proxy?
         config[:proxy] = connection_wrangler.proxy_details
       else
-        config[:host_or_ip] = node_host_or_ip 
+        config[:host_or_ip] = node_host_or_ip
       end
 
       config

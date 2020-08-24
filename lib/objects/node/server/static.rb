@@ -32,9 +32,7 @@ module Bcome::Node::Server
     attr_reader :description
 
     def set_cloud_tags
-      unless @view_config[:cloud_tags].is_a?(::Bcome::Node::Meta::Cloud)
-        @view_config[:cloud_tags] = ::Bcome::Node::Meta::Cloud.new(@view_config[:cloud_tags])
-      end
+      @view_config[:cloud_tags] = ::Bcome::Node::Meta::Cloud.new(@view_config[:cloud_tags]) unless @view_config[:cloud_tags].is_a?(::Bcome::Node::Meta::Cloud)
     end
 
     def verify_we_have_at_least_one_interface

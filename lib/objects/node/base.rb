@@ -181,7 +181,7 @@ module Bcome::Node
     end
 
     def nodes_loaded?
-      #resources.any? # This was buggy:  an inventory may validly contain no resources. This does not mean that we haven't attempted to load them
+      # resources.any? # This was buggy:  an inventory may validly contain no resources. This does not mean that we haven't attempted to load them
       # we no explicitly set a flag for when we've loaded nodes. This will prevents uneccessary lookups over the wire
       @nodes_loaded
     end

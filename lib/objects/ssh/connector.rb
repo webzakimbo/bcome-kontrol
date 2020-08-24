@@ -90,7 +90,7 @@ module Bcome
 
         # Ensure that all connections are loaded. A machine might need to proxy through another that
         # has not yet been loaded. Here we ensure that we've traversed the tree for all required nodes.
-        @servers_to_connect.each do |server|  
+        @servers_to_connect.each do |server|
           server.ssh_driver.set_connection_wrangler
         end
       end

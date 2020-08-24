@@ -42,9 +42,9 @@ module Bcome
 
           if cached_machines&.any?
             print "\n"
-            title = 'Loading' + "\sCACHE".bc_orange.bold + "\s" + namespace.to_s.underline           
+            title = 'Loading' + "\sCACHE".bc_orange.bold + "\s" + namespace.to_s.underline
             wrap_indicator type: :basic, title: title, completed_title: '' do
-             cached_machines.each do |server_config|
+              cached_machines.each do |server_config|
                 resources << ::Bcome::Node::Server::Static.new(views: server_config, parent: self)
               end
               signal_success

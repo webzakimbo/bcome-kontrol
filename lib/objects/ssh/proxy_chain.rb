@@ -2,9 +2,8 @@
 
 module Bcome::Ssh
   class ProxyChain
-
     attr_reader :hops
-   
+
     def initialize(wrangler)
       @hops = wrangler.hops
     end
@@ -16,6 +15,5 @@ module Bcome::Ssh
     def ==(other_chain)
       eql?(other_chain)
     end
-
   end
 end

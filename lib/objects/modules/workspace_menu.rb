@@ -72,7 +72,7 @@ module Bcome
         routes: {
           description: 'Print SSH routing tree',
           console_only: false,
-          group: :informational 
+          group: :informational
         },
         ls: {
           description: 'list all available namespaces',

@@ -79,7 +79,7 @@ module Bcome::Driver::Gcp::Authentication
         end
       end
 
-      return @service
+      @service
     end
 
     def notify_success

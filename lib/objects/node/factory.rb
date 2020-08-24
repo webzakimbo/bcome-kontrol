@@ -68,7 +68,7 @@ module Bcome::Node
       # Load inventory resources as early as possible
       if node.is_a?(Bcome::Node::Inventory::Base)
         node.load_nodes unless node.nodes_loaded?
-      end  
+      end
 
       bucket[node.keyed_namespace] = node
 

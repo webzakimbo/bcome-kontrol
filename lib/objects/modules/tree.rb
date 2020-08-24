@@ -1,19 +1,20 @@
+# frozen_string_literal: true
+
 module Bcome
   module Tree
-
     include Bcome::Draw
 
     def tree
-      title_prefix = "Namespace tree"
+      title_prefix = 'Namespace tree'
       build_tree(:network_namespace_tree_data, title_prefix)
-    end  
+    end
 
     def routes
       if machines.empty?
         puts "\nNo routes are found below this namespace (empty server list)\n".warning
       else
-        title_prefix = "Ssh connection routes"
-        build_tree(:routing_tree_data, title_prefix) 
+        title_prefix = 'Ssh connection routes'
+        build_tree(:routing_tree_data, title_prefix)
       end
     end
 
@@ -25,28 +26,28 @@ module Bcome
         is_direct = proxy_chain.hops.any? ? false : true
 
         if inventory?
-          load_nodes if !nodes_loaded?
-        end        
+          load_nodes unless nodes_loaded?
+        end
 
         ## Machine data
         machine_data = {}
-        machines.each {|machine|
+        machines.each do |machine|
           key = machine.routing_tree_line(is_direct)
           machine_data[key] = nil
-        }
+        end
 
         ## Construct Hop data
         hops = proxy_chain.hops
-        hop_lines = hops.enum_for(:each_with_index).collect{|hop,index| hop.pretty_proxy_details(index + 1) }
+        hop_lines = hops.enum_for(:each_with_index).collect { |hop, index| hop.pretty_proxy_details(index + 1) }
 
         @tree.merge!(to_nested_hash(hop_lines, machine_data))
       end
 
-      return @tree
+      @tree
     end
 
     def to_nested_hash(array, data)
-      nested = array.reverse.inject(data) { |a, n| {  n => a }}
+      nested = array.reverse.inject(data) { |a, n| { n => a } }
       nested.is_a?(String) ? { "#{nested}": nil } : nested
     end
 
@@ -55,7 +56,7 @@ module Bcome
 
       resources.sort_by(&:identifier).each do |resource|
         next if resource.hide?
- 
+
         if resource.inventory?
           resource.load_nodes unless resource.nodes_loaded?
         end
@@ -66,92 +67,90 @@ module Bcome
         @tree[resource.namespace_tree_line] = resource.resources.any? ? resource.network_namespace_tree_data : nil
       end
 
-      return @tree       
+      @tree
     end
 
     def namespace_tree_line
       return "#{type.bc_green} #{identifier} (empty set)" if !server? && !resources.has_active_nodes?
-      return "#{type.bc_green} #{identifier}"
+
+      "#{type.bc_green} #{identifier}"
     end
 
     def routing_tree_line(is_direct = true)
-      if is_direct && public_ip_address
-        address = public_ip_address
-      else
-        address = internal_ip_address
-      end
+      address = if is_direct && public_ip_address
+                  public_ip_address
+                else
+                  internal_ip_address
+                end
 
-      return [
-        "#{type}".bc_cyan, 
+      [
+        type.to_s.bc_cyan,
         "namespace:\s".bc_green + namespace,
-        "ip address\s".bc_green + "#{address}",
+        "ip address\s".bc_green + address.to_s,
         "user\s".bc_green + ssh_driver.user
-      ] 
+      ]
     end
 
     def build_tree(data_build_method, title_prefix)
-      data = send(data_build_method) 
-    
+      data = send(data_build_method)
+
       @lines = []
       title = "#{title_prefix.informational}\s#{namespace}"
       @lines << "\n"
       @lines << "#{BLIP}\s\s\s#{title}"
-      @lines << "#{INGRESS}"
+      @lines << INGRESS.to_s
 
       if data.nil?
         parent.build_tree(data_build_method)
         return
       end
-    
-      recurse_tree_lines(data)
- 
-      @lines.each {|line|
-        print "#{LEFT_PADDING}#{line}\n"
-      }
 
-      print "\n\n" 
+      recurse_tree_lines(data)
+
+      @lines.each do |line|
+        print "#{LEFT_PADDING}#{line}\n"
+      end
+
+      print "\n\n"
     end
 
-    def recurse_tree_lines(data, padding = "")
-      #@lines << padding + BRANCH
+    def recurse_tree_lines(data, padding = '')
+      # @lines << padding + BRANCH
 
       data.each_with_index do |config, index|
         key = config[0]
-        values = config[1]      
+        values = config[1]
 
         anchor, branch = deduce_tree_structure(index, data.size)
 
         labels = key.is_a?(Array) ? key : [key]
 
         labels.each_with_index do |label, index|
-          if index == 0  # First line
-            key_string = "#{anchor}\s#{label}"
-          else # Any subsequent line
-            key_string = "#{branch}#{"\s" * 4}\s#{label}"
-          end
+          key_string = if index == 0 #  First line
+                         "#{anchor}\s#{label}"
+                       else # Any subsequent line
+                         "#{branch}#{"\s" * 4}\s#{label}"
+                       end
 
           entry_string = "#{padding}#{key_string}"
           @lines << entry_string
+        end # End labels group
 
-        end # End labels group  
+        @lines << "#{padding}#{branch}" if labels.size > 1
 
-        if labels.size > 1
-          @lines << "#{padding}#{branch}"
-        end 
+        next unless values&.is_a?(Hash)
 
-        if values && values.is_a?(Hash)
-          tab_padding = padding + branch + ("\s" * (anchor.length + 4)) 
-          recurse_tree_lines(values, tab_padding)
-          @lines << padding + branch
-        end
+        tab_padding = padding + branch + ("\s" * (anchor.length + 4))
+        recurse_tree_lines(values, tab_padding)
+        @lines << padding + branch
       end
-      return
+      nil
     end
 
     def deduce_tree_structure(index, number_lines)
       return BOTTOM_ANCHOR, "\s" if (index + 1) == number_lines
-      return MID_SHIPS, BRANCH
-    end
 
+      [MID_SHIPS, BRANCH]
+    end
   end
 end

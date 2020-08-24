@@ -60,7 +60,9 @@ module Bcome::Driver
 
     ## Spoof-fetch. Used with the network-socket linkup POC.
     def spoof_fetch_server_list(monkey_patched_inventory)
-      unless @node.nodes_loaded?
+      if @node.nodes_loaded?
+        monkey_patched_inventory.set_static_servers
+      else
         wrap_indicator type: :basic, title: loader_title, completed_title: loader_completed_title do
           fake_delay_milliseconds = rand(1..400).to_f / 1000
           sleep fake_delay_milliseconds
@@ -68,10 +70,7 @@ module Bcome::Driver
           signal_success
         end
         @node.nodes_loaded!
-      else
-        monkey_patched_inventory.set_static_servers
       end
     end
-
   end
 end

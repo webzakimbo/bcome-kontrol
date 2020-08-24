@@ -117,10 +117,10 @@ module Bcome::Driver
 
         # If the scheme is set, return it
         return @authentication_scheme if @authentication_scheme
- 
+
         # Look to see if we have an existing oauth scheme setup for the same scopes & credentials file
         if @authentication_scheme = ::Bcome::Driver::Gcp::Authentication::OauthSessionStore.instance.in_memory_session_for(client_config)
-          @compute_service = @authentication_scheme.service       
+          @compute_service = @authentication_scheme.service
 
           return @authentication_scheme
         end
@@ -128,7 +128,7 @@ module Bcome::Driver
         # Otherwise, we'll create a new outh scheme and register it with the session store
         @authentication_scheme = auth_scheme.new(self, compute_service, client_config, @node)
         ::Bcome::Driver::Gcp::Authentication::OauthSessionStore.instance << @authentication_scheme
-        return @authentication_scheme
+        @authentication_scheme
 
       when :service_account
         @authentication_scheme ||= auth_scheme.new(compute_service, service_scopes, @node, @params[:service_account_credentials], self)
