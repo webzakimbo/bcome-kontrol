@@ -1,6 +1,4 @@
-## Welcome to Bcome
+## Welcome to Bcome, the DevOps Control Panel Framework
 
-Bcome is an orchestration framework for Rubyists.
-
-Please see the documentation here: <a target="_blank" href="https://bcome-kontrol.readthedocs.io/en/latest/">https://bcome-kontrol.readthedocs.io/en/latest/</a>
+This repository has now moved to https://github.com/webzakimbo/bcome
 
